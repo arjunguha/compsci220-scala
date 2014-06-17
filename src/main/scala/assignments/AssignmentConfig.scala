@@ -4,6 +4,8 @@ import com.typesafe.config.{ConfigFactory, Config}
 import java.nio.file.{Paths, Files, Path}
 import org.apache.commons.codec.digest.DigestUtils
 
+case class ConfigException(message : String) extends Throwable
+
 class AssignmentConfig(base : Path, config : Config) {
 
   import scala.collection.JavaConversions._
@@ -11,12 +13,12 @@ class AssignmentConfig(base : Path, config : Config) {
   val name = config.getString("name")
   val step = config.getString("step")
   val submit = config.getStringList("submit").map(asSubPath _).toList
-  val boilerplate = config.getStringList("boilerplate").map(asSubPath _).toList
   val command = config.getString("command")
   val image = config.getString("image")
   /** List of path, file contents, and MD5 hash */
-  val boilerplateData : List[(String, Array[Byte], String)] =
-    boilerplate.map(loadBoilerplate)
+  val boilerplate : List[(String, Array[Byte], String)] =
+    config.getStringList("boilerplate").map(asSubPath _).map(loadBoilerplate)
+      .toList
 
   private def asSubPath(str: String) : String = {
     val resolvedPath = base.resolve(Paths.get(str))
@@ -32,6 +34,9 @@ class AssignmentConfig(base : Path, config : Config) {
     val md5 = DigestUtils.md5Hex(data)
     (str, data, md5)
   }
+
+  val boilerplateHashes = boilerplate.map { x => (x._1 -> x._3) }
+  val boilerplateData = boilerplate.map { x => (x._1 -> x._2) }
 }
 
 object AssignmentConfig {
