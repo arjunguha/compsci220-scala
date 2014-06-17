@@ -15,21 +15,22 @@ class AssignmentConfig(base : Path, config : Config) {
   val command = config.getString("command")
   val image = config.getString("image")
   /** List of path, file contents, and MD5 hash */
-  val boilerplateData : List[(Path, Array[Byte], String)] =
+  val boilerplateData : List[(String, Array[Byte], String)] =
     boilerplate.map(loadBoilerplate)
 
-  private def asSubPath(str: String) : Path = {
+  private def asSubPath(str: String) : String = {
     val resolvedPath = base.resolve(Paths.get(str))
     if (!resolvedPath.startsWith(base)) {
       throw new IllegalArgumentException(s"the path ${str} must be a sub-path")
     }
-    resolvedPath
+    str
   }
 
-  private def loadBoilerplate(path : Path) : (Path, Array[Byte], String) = {
+  private def loadBoilerplate(str : String) : (String, Array[Byte], String) = {
+    val path = base.resolve(Paths.get(str))
     val data = Files.readAllBytes(path)
     val md5 = DigestUtils.md5Hex(data)
-    (path, data, md5)
+    (str, data, md5)
   }
 }
 
