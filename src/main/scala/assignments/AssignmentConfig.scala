@@ -1,4 +1,4 @@
-package cs220.submission.storage
+package cs220.submission.assignments
 
 import com.typesafe.config.{ConfigFactory, Config}
 import java.nio.file.{Paths, Files, Path}

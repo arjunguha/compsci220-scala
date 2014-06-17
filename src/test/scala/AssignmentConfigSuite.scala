@@ -1,4 +1,4 @@
-package cs220.submission.storage
+package cs220.submission.assignments
 
 import org.scalatest.FunSuite
 import java.nio.file.{Paths, Files}
