@@ -17,10 +17,10 @@ case class Submit(files : Map[String, Array[Byte]],
                   memoryLimit : Long,
                   timeLimit : Duration)
 
-sealed trait Result
+sealed trait SubmitResult
 
-case class DidNotFinish(stdout : String, stderr : String) extends Result
-case class Complete(code : Int, stdout : String, stderr : String) extends Result
+case class DidNotFinish(stdout : String, stderr : String) extends SubmitResult
+case class Complete(code : Int, stdout : String, stderr : String) extends SubmitResult
 
 class GraderActor(config : GraderConfig) extends Actor with ActorLogging {
 
