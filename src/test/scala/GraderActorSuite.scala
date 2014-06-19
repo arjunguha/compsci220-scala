@@ -16,6 +16,9 @@ class GraderActorSuite extends FunSuite with ScalaFutures {
 
   val image = "ubuntu:14.04"
 
+  val memLimit = 100L * 1024L * 1024L
+  val timeLimit = 5.seconds
+
  // Controls timeout of whenReady and other features from ScalaFutures.
   implicit override val patienceConfig =
     PatienceConfig(Span(60, Seconds), Span(5, Seconds))
@@ -55,7 +58,8 @@ class GraderActorSuite extends FunSuite with ScalaFutures {
   test("running a simple command should succeed") { config =>
     import config._
 
-    val result = grader ? Submit(Map(), image, List("/bin/uname"), 50, 10)
+    val result = grader ? Submit(Map(), image, List("/bin/uname"),
+                                 memLimit, timeLimit)
     whenReady(result.mapTo[Complete]) { r =>
       assert(r.code == 0)
       assert(r.stdout == "Linux\n")
@@ -69,8 +73,8 @@ class GraderActorSuite extends FunSuite with ScalaFutures {
       Map(),
       image,
       List("bash", "-c", "while true; do true; done"),
-      50,
-      5)
+      memLimit,
+      timeLimit)
     Await.result(result.mapTo[DidNotFinish], 8.seconds)
   }
 
@@ -81,8 +85,8 @@ class GraderActorSuite extends FunSuite with ScalaFutures {
       Map("test" -> "CS220 test data\n".getBytes),
       image,
       List("/bin/cat", "test"),
-      50,
-      5)
+      memLimit,
+      timeLimit)
     whenReady(result.mapTo[Complete]) { r =>
       assert(r.code == 0)
       assert(r.stdout == "CS220 test data\n")

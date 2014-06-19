@@ -14,8 +14,8 @@ import java.util.concurrent.TimeoutException
 case class Submit(files : Map[String, Array[Byte]],
                   image : String,
                   command : List[String],
-                  memoryMegabytes : Int,
-                  timeoutSeconds : Int)
+                  memoryLimit : Long,
+                  timeLimit : Duration)
 
 sealed trait Result
 
@@ -67,9 +67,7 @@ class GraderActor(config : GraderConfig) extends Actor with ActorLogging {
   }
 
   def receive = {
-    case Submit(files, image, command, memoryMegabytes, timeoutSeconds) => {
-      val memLimit = memoryMegabytes.toLong * 1024L * 1024L
-      val timeLimit = timeoutSeconds.seconds
+    case Submit(files, image, command, memLimit, timeLimit) => {
       runInContainer(files, image, command, memLimit, timeLimit) pipeTo sender
     }
   }

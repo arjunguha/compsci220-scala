@@ -2,7 +2,9 @@ package cs220.submission.assignments
 
 import com.typesafe.config.{ConfigFactory, Config}
 import java.nio.file.{Paths, Files, Path}
+import java.util.concurrent.TimeUnit
 import org.apache.commons.codec.digest.DigestUtils
+import scala.concurrent.duration._
 
 case class ConfigException(message : String) extends Throwable
 
@@ -12,9 +14,14 @@ class AssignmentConfig(base : Path, config : Config) {
 
   val name = config.getString("name")
   val step = config.getString("step")
+  val memoryLimit = config.getBytes("memory-limit")
+  val timeLimit = config.getDuration("time-limit", TimeUnit.MILLISECONDS).milliseconds
   val submit = config.getStringList("submit").map(asSubPath _).toList
   val command = config.getString("command")
   val image = config.getString("image")
+
+  // TODO(arjun): files to submit and boilerplate should not overlap
+
   /** List of path, file contents, and MD5 hash */
   val boilerplate : List[(String, Array[Byte], String)] =
     config.getStringList("boilerplate").map(asSubPath _).map(loadBoilerplate)
