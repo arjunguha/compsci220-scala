@@ -14,7 +14,7 @@ case class AssignmentMetadata(
   step : String,
   submit : List[String],
   boilerplate : List[(String, String)], // filename and hash
-  command : String,
+  command : List[String],
   image : String,
   timeLimit : Duration,
   memoryLimit : Long)

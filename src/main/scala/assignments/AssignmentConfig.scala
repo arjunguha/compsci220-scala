@@ -17,7 +17,7 @@ class AssignmentConfig(base : Path, config : Config) {
   val memoryLimit = config.getBytes("memory-limit")
   val timeLimit = config.getDuration("time-limit", TimeUnit.MILLISECONDS).milliseconds
   val submit = config.getStringList("submit").map(asSubPath _).toList
-  val command = config.getString("command")
+  val command = config.getStringList("command").toList
   val image = config.getString("image")
 
   // TODO(arjun): files to submit and boilerplate should not overlap
