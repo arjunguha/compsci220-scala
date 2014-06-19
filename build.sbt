@@ -1,3 +1,7 @@
+import AssemblyKeys._
+
+assemblySettings
+
 name := "submission"
 
 organization := "edu.umass.cs"
