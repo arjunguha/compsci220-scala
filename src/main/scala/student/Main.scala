@@ -11,7 +11,6 @@ import akka.pattern.{pipe, ask}
 import cs220.submission.messages._
 import org.apache.commons.codec.digest.DigestUtils
 
-
 object Main extends App {
 
   implicit val system = ActorSystem("student")
@@ -62,16 +61,18 @@ object Main extends App {
     }
   }
 
-  args match {
-    case Array("submit", asgn, step, dir) => {
-      Await.result(submit(asgn, step, dir), Duration.Inf)
-      system.shutdown
+  try {
+    args match {
+      case Array("submit", asgn, step, dir) => {
+        Await.result(submit(asgn, step, dir), Duration.Inf)
+      }
+      case Array("submit", asgn, step) => {
+        Await.result(submit(asgn, step, "."), Duration.Inf)
+      }
     }
-    case Array("submit", asgn, step) => {
-      Await.result(submit(asgn, step, "."), Duration.Inf)
-      system.shutdown
-    }
-
+  }
+  finally {
+    system.shutdown
   }
 
 
