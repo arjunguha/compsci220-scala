@@ -1,5 +1,6 @@
 package cs220.submission.assignments
 
+import cs220.submission.messages._
 import org.scalatest.FunSuite
 import java.nio.file.{Paths, Files}
 

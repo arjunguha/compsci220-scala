@@ -3,33 +3,7 @@ package cs220.submission.assignments
 import akka.actor.{Actor, ActorLogging, ActorRef}
 import java.nio.file.{Paths, Files, DirectoryStream, Path}
 import scala.concurrent.duration._
-
-
-case class GetAssignmentMetadata(name : String, step : String)
-
-sealed trait MetadataResult
-
-case class InvalidAssignment(name : String, step : String)
-  extends MetadataResult
-
-case class AssignmentMetadata(
-  name : String,
-  step : String,
-  submit : List[String],
-  boilerplate : List[(String, String)], // filename and hash
-  command : String,
-  image : String,
-  timeLimit : Duration,
-  memoryLimit : Long)
-  extends MetadataResult
-
-case class GetAssignmentBoilerplate(name : String, step : String)
-
-case class AssignmentBoilerplate(
-  name : String,
-  step : String,
-  boilerplate : List[(String, Array[Byte])])
-
+import cs220.submission.messages._
 
 class AssignmentActor(config : AssignmentActorConfig)
   extends Actor with ActorLogging {

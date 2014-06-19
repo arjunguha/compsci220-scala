@@ -10,17 +10,7 @@ import scala.async.Async.{async, await}
 import scala.util.{Try, Success, Failure}
 import plasma.docker._
 import java.util.concurrent.TimeoutException
-
-case class Submit(files : Map[String, Array[Byte]],
-                  image : String,
-                  command : List[String],
-                  memoryLimit : Long,
-                  timeLimit : Duration)
-
-sealed trait SubmitResult
-
-case class DidNotFinish(stdout : String, stderr : String) extends SubmitResult
-case class Complete(code : Int, stdout : String, stderr : String) extends SubmitResult
+import cs220.submission.messages._
 
 class GraderActor(config : GraderConfig) extends Actor with ActorLogging {
 
@@ -31,7 +21,7 @@ class GraderActor(config : GraderConfig) extends Actor with ActorLogging {
                              image : String,
                              command : List[String],
                              memoryBytes : Long,
-                             timeout : Duration) : Future[Result] = async {
+                             timeout : Duration) : Future[SubmitResult] = async {
     val dir = Files.createTempDirectory(config.tmpDir, "GraderActor")
       .toAbsolutePath()
 
