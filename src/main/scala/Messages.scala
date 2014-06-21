@@ -37,3 +37,5 @@ sealed trait SubmitResult
 
 case class DidNotFinish(stdout : String, stderr : String) extends SubmitResult
 case class Complete(code : Int, stdout : String, stderr : String) extends SubmitResult
+
+case class SubmitLocal(asgn : String, step : String, dir : String)
