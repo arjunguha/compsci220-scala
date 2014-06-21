@@ -5,6 +5,7 @@ import java.nio.file.{Paths, Files, Path}
 import java.util.concurrent.TimeUnit
 import org.apache.commons.codec.digest.DigestUtils
 import scala.concurrent.duration._
+import cs220.submission._
 
 case class ConfigException(message : String) extends Throwable
 
@@ -16,24 +17,18 @@ class AssignmentConfig(base : Path, config : Config) {
   val step = config.getString("step")
   val memoryLimit = config.getBytes("memory-limit")
   val timeLimit = config.getDuration("time-limit", TimeUnit.MILLISECONDS).milliseconds
-  val submit = config.getStringList("submit").map(asSubPath _).toList
+  val submit = config.getStringList("submit").toList
   val command = config.getStringList("command").toList
   val image = config.getString("image")
 
   // TODO(arjun): files to submit and boilerplate should not overlap
 
+  assertAllSubPaths(base, submit)
+  assertAllSubPaths(base, config.getStringList("boilerplate"))
+
   /** List of path, file contents, and MD5 hash */
   val boilerplate : List[(String, Array[Byte], String)] =
-    config.getStringList("boilerplate").map(asSubPath _).map(loadBoilerplate)
-      .toList
-
-  private def asSubPath(str: String) : String = {
-    val resolvedPath = base.resolve(Paths.get(str))
-    if (!resolvedPath.startsWith(base)) {
-      throw new IllegalArgumentException(s"the path ${str} must be a sub-path")
-    }
-    str
-  }
+    config.getStringList("boilerplate").map(loadBoilerplate).toList
 
   private def loadBoilerplate(str : String) : (String, Array[Byte], String) = {
     val path = base.resolve(Paths.get(str))
