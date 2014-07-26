@@ -33,10 +33,9 @@ class GraderActorSuite extends FunSuite with ScalaFutures {
     val map = test.configMap
     val dockerUrl = map.getWithDefault("dockerUrl", "http://localhost:4243")
 
-    val config = new GraderConfig(ConfigFactory.empty
+    val config = new GraderSettings(ConfigFactory.empty
       .withValue("temp-dir", ConfigValueFactory.fromAnyRef("."))
-      .withValue("docker-url", ConfigValueFactory.fromAnyRef(dockerUrl))
-      .withValue("hard-timeout", ConfigValueFactory.fromAnyRef("10s")))
+      .withValue("docker-url", ConfigValueFactory.fromAnyRef(dockerUrl)))
 
     val testkit = new TestKit(ActorSystem())
     import testkit._

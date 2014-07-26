@@ -18,7 +18,7 @@ import cs220.submission.messages._
  * with /data as the working directory. Returns results or aborts with
  * memory/time limit error.
  */
-class GraderActor(config : GraderConfig) extends Actor with ActorLogging {
+class GraderActor(config : GraderSettings) extends Actor with ActorLogging {
 
   import context.dispatcher
 
