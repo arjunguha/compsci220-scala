@@ -12,9 +12,14 @@ import plasma.docker._
 import java.util.concurrent.TimeoutException
 import cs220.submission.messages._
 
+/** Requires local access to Docker.
+ *
+ * Copies provided files into the /data directory of a container. Runs a command
+ * with /data as the working directory. Returns results or aborts with
+ * memory/time limit error.
+ */
 class GraderActor(config : GraderConfig) extends Actor with ActorLogging {
 
-  // The execution context of futures within this actor
   import context.dispatcher
 
   private def runInContainer(files : Map[String, Array[Byte]],
@@ -25,12 +30,11 @@ class GraderActor(config : GraderConfig) extends Actor with ActorLogging {
     val dir = Files.createTempDirectory(config.tmpDir, "GraderActor")
       .toAbsolutePath()
 
-    await(Future({
-      for ((file, data) <- files) {
-        val path = dir.resolve(file)
-        FileUtils.forceMkdir(path.getParent.toFile)
-        Files.write(path, data)
-      }}))
+    for ((file, data) <- files) {
+      val path = dir.resolve(file)
+      FileUtils.forceMkdir(path.getParent.toFile)
+      Files.write(path, data)
+    }
 
     val docker = new Docker(config.dockerUrl)
 
@@ -38,10 +42,11 @@ class GraderActor(config : GraderConfig) extends Actor with ActorLogging {
       .withMountPoint("/data")
       .withWorkingDir("/data")
       .withCommand(command : _*)
+    val hostConf = HostConfig.empty.bindVolume(dir.toString, "/data")
 
+    // TODO(arjun): Failure?
     val ctr = await(docker.createContainer(conf))
     val id = ctr.Id
-    val hostConf = HostConfig.empty.bindVolume(dir.toString, "/data")
     await(docker.startContainer(id, hostConf))
     val waitCode = Try(Await.result(docker.waitContainer(id), timeout))
     val stdout = new String(await(docker.logs(id, false)))
