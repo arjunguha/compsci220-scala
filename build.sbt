@@ -33,5 +33,5 @@ libraryDependencies ++=
       "commons-io" % "commons-io" % "2.4",
       "org.scala-lang.modules" %% "scala-async" % "0.9.1",
       "ch.qos.logback" % "logback-classic" % logbackVersion,
-      "ch.qos.logback" % "logback-core" % logbackVersion)
-
+      "ch.qos.logback" % "logback-core" % logbackVersion,
+      "org.yaml" % "snakeyaml" % "1.13")
