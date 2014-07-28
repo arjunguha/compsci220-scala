@@ -9,17 +9,15 @@ import cs220.submission._
 
 case class ConfigException(message : String) extends Throwable
 
-class AssignmentConfig(base : Path, config : Config) {
+// Specifies the name and step of an assignment, the boilerplate code, and
+// the files that must be present in a valid submission.
+class AssignmentSettings(base : Path, config : Config) {
 
   import scala.collection.JavaConversions._
 
   val name = config.getString("name")
   val step = config.getString("step")
-  val memoryLimit = config.getBytes("memory-limit")
-  val timeLimit = config.getDuration("time-limit", TimeUnit.MILLISECONDS).milliseconds
   val submit = config.getStringList("submit").toList
-  val command = config.getStringList("command").toList
-  val image = config.getString("image")
 
   // TODO(arjun): files to submit and boilerplate should not overlap
 
@@ -41,7 +39,7 @@ class AssignmentConfig(base : Path, config : Config) {
   val boilerplateData = boilerplate.map { x => (x._1 -> x._2) }
 }
 
-object AssignmentConfig {
+object AssignmentSettings {
 
   def apply(path: java.nio.file.Path) = {
     assert(Files.isRegularFile(path))
@@ -51,7 +49,7 @@ object AssignmentConfig {
     val config = ConfigFactory.parseFile(path.toFile)
       .resolve().withFallback(defaults)
     // getParent should always succeed since isRegularFile(path) holds
-    new AssignmentConfig(path.getParent(), config)
+    new AssignmentSettings(path.getParent(), config)
   }
 
 }

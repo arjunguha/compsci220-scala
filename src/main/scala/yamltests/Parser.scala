@@ -5,7 +5,6 @@ import org.yaml.snakeyaml._
 import scala.concurrent.duration._
 import constructor.Constructor
 
-
 private[yamltests] object Parser {
 
   val ctor = new Constructor(classOf[TestSuiteBean])
