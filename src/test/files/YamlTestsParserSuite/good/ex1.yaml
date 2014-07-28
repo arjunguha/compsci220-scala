@@ -1,3 +1,6 @@
+memoryLimit: 100
+timeLimit: 20
+filename: test.scala
 tests:
   - test: "test1"
   - test: "test2"
