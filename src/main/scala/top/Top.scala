@@ -21,7 +21,8 @@ class Top(confFile : String) {
   }
 
   def getAssignment(asgn : String, step : String) : Assignment = {
-    YamlAssignment(assignmentDir(asgn, step))
+    val dir = assignmentDir(asgn, step)
+    YamlAssignment(asgn, step, dir, dir.resolve("assignment.yaml"))
   }
 
   def getTestSuite(asgn : String, step : String) : List[Test] = {

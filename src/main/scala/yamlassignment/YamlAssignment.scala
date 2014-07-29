@@ -2,7 +2,6 @@ package cs220.submission.yamlassignment
 
 import cs220.submission.{Assignment, InvalidSubmission}
 import java.nio.file.{Files, Path}
-import java.io.FileInputStream
 import scala.concurrent.duration.Duration
 
 private class YamlAssignment(
@@ -47,14 +46,15 @@ object YamlAssignment {
   private val yaml = new Yaml(ctor)
 
   // Path to assignment directory. Must have assignment.yaml inside
-  def apply(path : Path) : Assignment = {
-    val step = path.getFileName.toString
-    val asgn = path.getParent.getFileName.toString
-    val yamlData = new FileInputStream(path.resolve("assignment.yaml").toFile)
+  def apply(asgn : String,
+            step : String,
+            yamlFile : Path,
+            boilerplateDir : Path) : Assignment = {
 
+    val yamlData = new String(Files.readAllBytes(yamlFile))
     yaml.load(yamlData) match {
       case bean : AssignmentBean => {
-        new YamlAssignment(asgn, step, path, bean)
+        new YamlAssignment(asgn, step, boilerplateDir, bean)
       }
     }
   }

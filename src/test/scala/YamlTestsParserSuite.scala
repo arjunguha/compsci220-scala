@@ -1,5 +1,4 @@
 import org.scalatest.FunSuite
-
 import cs220.submission.yamltests.load
 import java.nio.file.Files
 import TestBoilerplate._
