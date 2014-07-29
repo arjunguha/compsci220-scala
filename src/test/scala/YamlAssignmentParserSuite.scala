@@ -6,9 +6,7 @@ import org.yaml.snakeyaml.error.YAMLException
 
 class YamlAssignmentParserSuite extends FunSuite {
 
-  val base = "/home/vagrant/Hacking/Classes/cmpsci220/submission"
-
-  forallFiles(s"${base}/src/test/files/YamlAssignmentParserSuite/good") { path =>
+  forallFiles(s"./src/test/files/YamlAssignmentParserSuite/good") { path =>
 
     test(s"$path parses") {
       YamlAssignment("fake-assignment-name", "fake-assignment-step",

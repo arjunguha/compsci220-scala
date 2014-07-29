@@ -22,11 +22,13 @@ class Top(confFile : String) {
 
   def getAssignment(asgn : String, step : String) : Assignment = {
     val dir = assignmentDir(asgn, step)
-    YamlAssignment(asgn, step, dir, dir.resolve("assignment.yaml"))
+    println(dir)
+    YamlAssignment(asgn, step, dir.resolve("assignment.yaml"), dir)
   }
 
   def getTestSuite(asgn : String, step : String) : List[Test] = {
-    yamltests.load(assignmentDir(asgn, step).toString)
+    val path = assignmentDir(asgn, step).resolve("tests.yaml")
+    yamltests.load(new String(Files.readAllBytes(path)))
   }
 
   def checkSubmission(asgn : String, step : String, dir : Path)
