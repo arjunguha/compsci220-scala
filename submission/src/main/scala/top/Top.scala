@@ -22,8 +22,13 @@ class Top(confFile : String) {
 
   def getAssignment(asgn : String, step : String) : Assignment = {
     val dir = assignmentDir(asgn, step)
-    println(dir)
-    YamlAssignment(asgn, step, dir.resolve("assignment.yaml"), dir)
+    val yamlFile = dir.resolve("assignment.yaml")
+    if (Files.isRegularFile(yamlFile)) {
+      YamlAssignment(asgn, step, dir.resolve("assignment.yaml"), dir)
+    }
+    else {
+      throw new InvalidAssignment(s"$asgn/$step is not a valid step")
+    }
   }
 
   def getTestSuite(asgn : String, step : String) : List[Test] = {
@@ -32,17 +37,10 @@ class Top(confFile : String) {
   }
 
   def checkSubmission(asgn : String, step : String, dir : Path)
-    (implicit ec : ExecutionContext) : Future[List[SandboxResult]] = {
-
+    (implicit ec : ExecutionContext) : Future[List[SandboxResult]] = async {
     val assignment = getAssignment(asgn, step)
     val tests = getTestSuite(asgn, step)
-
-    // TODO(arjun): separate validation step
-
-    Future.sequence(tests.map { test =>
-      testRunner.runTest(assignment, test, dir)
-    })
-
+    await(Future.sequence(tests.map { testRunner.runTest(assignment, _, dir) }))
   }
 
 }

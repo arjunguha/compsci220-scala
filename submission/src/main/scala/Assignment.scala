@@ -4,6 +4,7 @@ import java.nio.file.Path
 import scala.concurrent.duration.Duration
 
 class InvalidSubmission(message : String) extends RuntimeException(message)
+class InvalidAssignment(message : String) extends RuntimeException(message)
 
 trait Assignment {
 

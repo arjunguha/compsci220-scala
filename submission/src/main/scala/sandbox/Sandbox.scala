@@ -20,7 +20,7 @@ class Sandbox(dockerUrl : String) {
 
   /**
    * @param workingDir directory on the host to mount as R/W in the container
-   * @param mountPoint mount point on the container for workingDir
+   * @param mountPoint mount point on the container for absWorkDir
    * @param image the image to load
    */
   def apply(workingDir : Path,
@@ -31,6 +31,7 @@ class Sandbox(dockerUrl : String) {
             timeout : Duration)
     (implicit ec : ExecutionContext) : Future[SandboxResult] = async {
 
+    val absWorkDir = workingDir.toAbsolutePath()
     val docker = new Docker(dockerUrl)
 
     // TODO(arjun): memory limit?
@@ -40,7 +41,7 @@ class Sandbox(dockerUrl : String) {
       .withCommand(command : _*)
 
     val hostConf = HostConfig.empty
-      .bindVolume(workingDir.toString, mountPoint)
+      .bindVolume(absWorkDir.toString, mountPoint)
 
     // TODO(arjun): Failure?
     val ctr = await(docker.createContainer(conf))

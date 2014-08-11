@@ -1,6 +1,7 @@
 memoryLimit: 100
 timeLimit: 20
-filename: test.scala
+image: ubuntu:14.04
+command: [ /bin/ls, /data ]
 tests:
   - test: "test1"
   - test: "test2"

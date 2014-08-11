@@ -30,5 +30,13 @@ class SandboxSuite extends SandboxFixture {
     }
   }
 
+  test("/data should mount") { sandbox =>
+    val result = sandbox.test("/bin/ls", "/data")
+    whenReady(result) {
+      case Complete(0, stdout, "") => info(stdout)
+      case other => fail(other.toString)
+    }
+  }
+
 
 }

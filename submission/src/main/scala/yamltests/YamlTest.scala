@@ -9,17 +9,14 @@ private[yamltests] class YamlTest(
   val points : Int,
   val memoryLimitBytes : Int,
   val timeLimit : Duration,
-  code : String,
-  filename : String)
+  val image : String,
+  val command : List[String],
+  code : String)
   extends Test {
 
   def prepare(workingDir : Path) : Unit = {
-    Files.write(workingDir.resolve(filename), code.getBytes)
+    // Nothing to do
   }
-
-  val command = List("/usr/bin/scala", filename)
-
-  val image = "cs220/scala"
 
 }
 
@@ -42,10 +39,14 @@ object YamlTest {
       case suite : TestSuiteBean => {
         val memoryLimitBytes = suite.getMemoryLimit
         val timeLimit = suite.getTimeLimit.seconds
-        val filename = suite.getFilename
         suite.getTests.toList.map { test =>
-          new YamlTest("no description", 0, memoryLimitBytes, timeLimit,
-                       test.getTest, filename)
+          new YamlTest(description = "no description",
+                       points = 0,
+                       memoryLimitBytes = memoryLimitBytes,
+                       timeLimit = timeLimit,
+                       image = suite.getImage,
+                       code = test.getTest,
+                       command = suite.getCommand.toList)
         }
       }
     }
