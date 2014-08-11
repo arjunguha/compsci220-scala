@@ -18,6 +18,7 @@ mount -o loop VBoxGuestAdditions_${VIRTUALBOX_VERSION}.iso guest-additions
 (cd guest-additions; echo -e "yes\n" | ./VBoxLinuxAdditions.run)
 rm VBoxGuestAdditions_${VIRTUALBOX_VERSION}.iso
 apt-get purge -yq gcc
+rm -rf /home/vagrant/guest-additions
 
 apt-get install -yq \
   lubuntu-core \
@@ -54,7 +55,6 @@ greeter-session=lightdm-gtk-greeter
 EOF
 
 apt-get purge -yq xterm
-rm -rf /home/vagrant/Templates
 
 cat << EOF >> /home/vagrant/.profile
 PATH=/home/vagrant/src/bin:$PATH
