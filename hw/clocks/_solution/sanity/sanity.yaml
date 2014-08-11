@@ -1,0 +1,43 @@
+- | // Do not make any changes to the Time constructor
+    Time(05, 30, 15)
+- | // Do not make any changes to the Time constructor
+    Time(05, 30, 15) match {
+      case Time(5, 30, 15) => ()
+      case _ => assert(false)
+    }
+- | // The isValidTime function is missing or has the wrong type.
+    {
+      def check(t : Time) : Boolean = isValidTime(t)
+    }
+- | // The tick function is missing or has the wrong type.
+    {
+      def check(t : Time) : Time = tick(t)
+    }
+- | // The AlarmClock type is missing.
+    {
+      def doesAlarmClockExist(t : AlarmClock) : Unit = ()
+    }
+- | // The toAlarmClock function is missing or has the wrong type.
+    {
+      def check(t : Time) : AlarmClock = toAlarmClock(t)
+    }
+- | // The getTime function missing is has the wrong type.
+    {
+      def check(a : AlarmClock) : Time = getTime(a)
+    }
+- | // The isAlarmOn function is missing or has the wrong type.
+    {
+      def check(a : AlarmClock) : Boolean = isAlarmOn(a)
+    }
+- | // The setAlarm function is missing or has the wrong type.
+    {
+      def check(a : AlarmClock, t : Time) : AlarmClock = setAlarm(a, t)
+    }
+- | // The tickAlarmClock function is missing or has the wrong type.
+    {
+      def check(a : AlarmClock) : AlarmClock = tickAlarmClock(a)
+    }
+- | // The drawHands function is missing or has the wrong type.
+    {
+      def check(t : Time) : cmpsci220.graphics.Image = drawHands(t)
+    }
