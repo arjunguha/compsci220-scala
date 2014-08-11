@@ -2,7 +2,7 @@ package cs220.submission.top
 
 import cs220.submission._
 import cs220.submission.yamlassignment.YamlAssignment
-import cs220.submission.yamltests
+import cs220.submission.yamltests.YamlTest
 import com.typesafe.config.ConfigFactory
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -28,7 +28,7 @@ class Top(confFile : String) {
 
   def getTestSuite(asgn : String, step : String) : List[Test] = {
     val path = assignmentDir(asgn, step).resolve("tests.yaml")
-    yamltests.load(new String(Files.readAllBytes(path)))
+    YamlTest(new String(Files.readAllBytes(path)))
   }
 
   def checkSubmission(asgn : String, step : String, dir : Path)

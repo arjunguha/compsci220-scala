@@ -22,7 +22,7 @@ val logbackVersion = "1.0.9"
 lazy val logback = "ch.qos.logback" % "logback-classic" % logbackVersion % "runtime"
 
 libraryDependencies ++=
-  Seq("edu.umass.cs" %% "docker" % "0.2-SNAPSHOT",
+  Seq("edu.umass.cs" %% "docker" % "0.2",
       "org.scalatest" %% "scalatest" % "2.2.0" % "test",
       "com.typesafe.slick" %% "slick" % "2.0.2",
       "com.typesafe" % "config" % "1.2.1",
