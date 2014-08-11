@@ -11,15 +11,16 @@ import org.apache.commons.io.FileUtils
 class TestRunner(settings : cs220.submission.top.TopSettings) {
 
   def runTest(asgn : Assignment, test : Test, submitDir : Path)
-    (implicit ec : ExecutionContext) : Future[SandboxResult] = {
+    (implicit ec : ExecutionContext) : Future[TestResult] = {
     val workDir = Files.createTempDirectory(settings.tmpDir, "TestRunner")
 
     val result = async {
       asgn.prepareSubmission(submitDir, workDir)
       test.prepare(workDir)
       val sandbox = new Sandbox(settings.dockerUrl)
-      await(sandbox(workDir, "/data", test.image, test.command,
-                    test.memoryLimitBytes, test.timeLimit))
+      val result = await(sandbox(workDir, "/data", test.image, test.command,
+                                 test.memoryLimitBytes, test.timeLimit))
+      TestResult(test, result)
     }
     result andThen {
       case _ => FileUtils.deleteDirectory(workDir.toFile)

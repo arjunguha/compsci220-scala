@@ -9,7 +9,6 @@ import scala.concurrent.duration._
 import java.nio.file.{Paths, Files, Path}
 import java.io.File
 import scala.async.Async.{async, await}
-import cs220.submission.sandbox._
 
 class Top(confFile : String) {
 
@@ -37,7 +36,7 @@ class Top(confFile : String) {
   }
 
   def checkSubmission(asgn : String, step : String, dir : Path)
-    (implicit ec : ExecutionContext) : Future[List[SandboxResult]] = async {
+    (implicit ec : ExecutionContext) : Future[List[TestResult]] = async {
     val assignment = getAssignment(asgn, step)
     val tests = getTestSuite(asgn, step)
     await(Future.sequence(tests.map { testRunner.runTest(assignment, _, dir) }))

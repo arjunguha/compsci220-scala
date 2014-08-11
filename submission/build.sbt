@@ -8,7 +8,7 @@ organization := "edu.umass.cs"
 
 version := "0.1-SNAPSHOT"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.2"
 
 scalacOptions ++=
   Seq("-deprecation",
@@ -16,22 +16,34 @@ scalacOptions ++=
       "-feature",
       "-Xfatal-warnings")
 
-val akkaVersion = "2.3.3"
-
 val logbackVersion = "1.0.9"
+
 lazy val logback = "ch.qos.logback" % "logback-classic" % logbackVersion % "runtime"
+
+resolvers += "spray" at "http://repo.spray.io/"
 
 libraryDependencies ++=
   Seq("edu.umass.cs" %% "docker" % "0.2",
       "org.scalatest" %% "scalatest" % "2.2.0" % "test",
-      "com.typesafe.slick" %% "slick" % "2.0.2",
       "com.typesafe" % "config" % "1.2.1",
-      "com.typesafe.akka" %% "akka-actor" % akkaVersion,
-      "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test",
-      "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
       "commons-codec" % "commons-codec" % "1.9",
       "commons-io" % "commons-io" % "2.4",
       "org.scala-lang.modules" %% "scala-async" % "0.9.1",
       "ch.qos.logback" % "logback-classic" % logbackVersion,
       "ch.qos.logback" % "logback-core" % logbackVersion,
-      "org.yaml" % "snakeyaml" % "1.13")
+      "org.yaml" % "snakeyaml" % "1.13",
+      "org.fusesource.jansi" % "jansi" % "1.11")
+
+
+// A little hack to dump the CLASSPATH to ./classpath. This lets us run the
+// executable without running assembly, which makes testing much faster.
+
+lazy val dumpClasspath = taskKey[Unit]("Dumps the CLASSPATH for scripts")
+
+dumpClasspath <<= (managedClasspath in Compile) map { v =>
+  import java.nio.file.{Files, Paths}
+  val classpath = v.map(_.data).mkString(":")
+  Files.write(Paths.get("classpath"), s"CLASSPATH=$classpath".getBytes)
+}
+
+compile <<= (compile in Compile) dependsOn dumpClasspath

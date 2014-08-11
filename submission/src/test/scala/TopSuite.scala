@@ -1,7 +1,7 @@
 import TestBoilerplate._
 import scala.util.{Success, Failure}
 import cs220.submission.sandbox.{Complete, DidNotFinish}
-import cs220.submission.{InvalidSubmission, InvalidAssignment}
+import cs220.submission.{InvalidSubmission, InvalidAssignment, TestResult}
 
 class TopSuite extends TopFixture {
 
@@ -15,8 +15,8 @@ class TopSuite extends TopFixture {
 
   test("ok submission should submit correctly") { top =>
     whenReady(top.checkSubmission("asgn1", "step1", submits.resolve("ok"))) {
-      case List(Complete(0, "submission.txt\n", ""),
-                Complete(0, "submission.txt\n", "")) => ()
+      case List(TestResult(_, Complete(0, "submission.txt\n", "")),
+                TestResult(_, Complete(0, "submission.txt\n", ""))) => ()
       case other => fail(other.toString)
     }
   }
