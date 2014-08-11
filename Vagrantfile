@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :shell, path: "bootstrap.sh"
 
-  config.vm.synced_folder "../..", "/home/vagrant/src"
+  config.vm.synced_folder ".", "/home/vagrant/src"
 
   config.vm.hostname = "devvm"
 
