@@ -27,6 +27,9 @@ apt-get install -yq \
   docker.io \
   software-properties-common
 
+echo 'DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H tcp://127.0.0.1:4243 -H unix:///var/run/docker.sock"' > /etc/default/docker.io
+service docker.io restart
+
 add-apt-repository ppa:webupd8team/java
 apt-get update -q
 
@@ -56,3 +59,5 @@ rm -rf /home/vagrant/Templates
 cat << EOF >> /home/vagrant/.profile
 PATH=/home/vagrant/src/bin:$PATH
 EOF
+
+echo "Run vagrant reload to login to the GUI."
