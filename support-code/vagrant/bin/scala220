@@ -1,0 +1,6 @@
+#!/bin/bash
+
+VERSION=$(grep 'version' /home/vagrant/src/support-code/build.sbt | grep --color -o '\".*\"' | sed 's/\"//g')
+JAR=/home/vagrant/src/support-code/target/scala-2.11/cmpsci220-assembly-$VERSION.jar
+
+scala -classpath $JAR $@
