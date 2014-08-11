@@ -41,15 +41,17 @@ object Main extends App {
   args match {
     case Array(asgn, step) => {
       val fut = top.checkSubmission(asgn, step, Paths.get(".")) andThen report
-      Await.ready(fut recover { case _ => () } , Duration.Inf)
+      Await.result(fut recover { case _ => () } , Duration.Inf)
     }
     case Array(asgn, step, dir) => {
       val fut = top.checkSubmission(asgn, step, Paths.get(dir)) andThen report
-      Await.ready(fut recover { case _ => () } , Duration.Inf)
+      Await.result(fut recover { case _ => () } , Duration.Inf)
     }
     case _ => {
       print(ansi.fg(RED).a("Invalid command-line arguments.").newline().reset())
     }
   }
+
+  System.exit(0)
 
 }
