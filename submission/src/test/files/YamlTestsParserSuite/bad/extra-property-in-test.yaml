@@ -1,0 +1,4 @@
+tests:
+  - test: "test1"
+    extra: "hello"
+  - test: "test2"

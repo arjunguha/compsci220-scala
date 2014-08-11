@@ -1,0 +1,5 @@
+expected:
+  - "hello.scala"
+  - "goodbye.scala"
+boilerplate:
+  - "goodbye.scala"
