@@ -15,12 +15,14 @@ case class Complete(code : Int, stdout : String, stderr : String) extends Sandbo
 
 /** Requires local access to Docker.
  *
- * Copies provided files into the /data directory of a container. Runs a command
- * with /data as the working directory. Returns results or aborts with
- * memory/time limit error.
  */
 class Sandbox(dockerUrl : String) {
 
+  /**
+   * @param workingDir directory on the host to mount as R/W in the container
+   * @param mountPoint mount point on the container for workingDir
+   * @param image the image to load
+   */
   def apply(workingDir : Path,
             mountPoint : String,
             image : String,
@@ -36,6 +38,7 @@ class Sandbox(dockerUrl : String) {
       .withMountPoint(mountPoint)
       .withWorkingDir(mountPoint)
       .withCommand(command : _*)
+
     val hostConf = HostConfig.empty
       .bindVolume(workingDir.toString, mountPoint)
 
