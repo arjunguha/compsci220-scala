@@ -16,13 +16,12 @@ private[yamltests] class TestBean {
 
 private[yamltests] class TestSuiteBean {
 
-  private var filename : String = null
   private var tests : List[TestBean] = new LinkedList()
   private var command : List[String] = new LinkedList()
 
   // Per-test limits in seconds and megabytes
-  private var timeLimit : Int = -1
-  private var memoryLimit : Int = -1
+  private var timeLimit : Int = 0
+  private var memoryLimit : Int = 0
 
   private var image : String = null
 

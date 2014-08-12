@@ -16,6 +16,11 @@ class TopSettings(base : Path, config : Config) {
 object TopSettings {
 
   def apply(path : Path) = {
+    // The error message from ConfigFactory.parseFile is very misleading.
+    if (!Files.isRegularFile(path)) {
+      throw new IllegalArgumentException(s"file not found: $path")
+    }
+
     val parent = path.toAbsolutePath().getParent()
     new TopSettings(parent, ConfigFactory.parseFile(path.toFile).resolve())
   }

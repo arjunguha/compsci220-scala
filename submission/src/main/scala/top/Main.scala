@@ -39,13 +39,13 @@ object Main extends App {
   }
 
   args match {
-    case Array(asgn, step) => {
-      val fut = top.checkSubmission(asgn, step, Paths.get(".")) andThen report
-      Await.result(fut recover { case _ => () } , Duration.Inf)
-    }
-    case Array(asgn, step, dir) => {
+    case Array("check-submission", asgn, step, dir) => {
       val fut = top.checkSubmission(asgn, step, Paths.get(dir)) andThen report
       Await.result(fut recover { case _ => () } , Duration.Inf)
+    }
+    case Array("check-assignment", asgn, step) => {
+      Await.result(top.checkAssignment(asgn, step), Duration.Inf)
+      println(s"$asgn $step is OK.")
     }
     case _ => {
       print(ansi.fg(RED).a("Invalid command-line arguments.").newline().reset())

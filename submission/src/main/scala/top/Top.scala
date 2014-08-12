@@ -35,6 +35,13 @@ class Top(confFile : String) {
     YamlTest(new String(Files.readAllBytes(path)))
   }
 
+  def checkAssignment(asgn : String, step : String)
+    (implicit ec : ExecutionContext) : Future[Unit] = async {
+    val assignment = getAssignment(asgn, step)
+    val tests = getTestSuite(asgn, step)
+    ()
+  }
+
   def checkSubmission(asgn : String, step : String, dir : Path)
     (implicit ec : ExecutionContext) : Future[List[TestResult]] = async {
     val assignment = getAssignment(asgn, step)

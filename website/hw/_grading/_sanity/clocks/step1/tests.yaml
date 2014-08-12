@@ -1,0 +1,59 @@
+memoryLimit: 100
+timeLimit: 20
+image: cs220-fall2014
+command: [ /usr/local/bin/scala220, clocks.scala ]
+tests:
+  - test: |
+      // Do not make any changes to the Time constructor
+      Time(05, 30, 15)
+  - test: |
+      // Do not make any changes to the Time constructor
+      Time(05, 30, 15) match {
+        case Time(5, 30, 15) => ()
+        case _ => assert(false)
+      }
+  - test: |
+      // The isValidTime function is missing or has the wrong type.
+      {
+        def check(t : Time) : Boolean = isValidTime(t)
+      }
+  - test: |
+      // The tick function is missing or has the wrong type.
+      {
+        def check(t : Time) : Time = tick(t)
+      }
+  - test: |
+      // The AlarmClock type is missing.
+      {
+        def doesAlarmClockExist(t : AlarmClock) : Unit = ()
+      }
+  - test: |
+      // The toAlarmClock function is missing or has the wrong type.
+      {
+        def check(t : Time) : AlarmClock = toAlarmClock(t)
+      }
+  - test: |
+      // The getTime function missing is has the wrong type.
+      {
+        def check(a : AlarmClock) : Time = getTime(a)
+      }
+  - test: |
+      // The isAlarmOn function is missing or has the wrong type.
+      {
+        def check(a : AlarmClock) : Boolean = isAlarmOn(a)
+      }
+  - test: |
+      // The setAlarm function is missing or has the wrong type.
+      {
+        def check(a : AlarmClock, t : Time) : AlarmClock = setAlarm(a, t)
+      }
+  - test: |
+      // The tickAlarmClock function is missing or has the wrong type.
+      {
+        def check(a : AlarmClock) : AlarmClock = tickAlarmClock(a)
+      }
+  - test: |
+      // The drawHands function is missing or has the wrong type.
+      {
+        def check(t : Time) : cmpsci220.graphics.Image = drawHands(t)
+      }

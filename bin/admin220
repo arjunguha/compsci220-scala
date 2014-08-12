@@ -2,4 +2,4 @@
 BASE=`dirname $0`
 source $BASE/../submission/classpath
 CLASSPATH=$CLASSPATH:$BASE/../submission/target/scala-2.11/classes:$BASE/../submission/src/main/resources
-ASSIGNMENTS_PATH=/home/vagrant/website/hw/_sanity/settings.conf scala -classpath $CLASSPATH cs220.submission.top.Main check-submission $1 $2 .
+ASSIGNMENTS_PATH=/home/vagrant/src/website/hw/_sanity/settings.conf scala -classpath $CLASSPATH cs220.submission.top.Main $@
