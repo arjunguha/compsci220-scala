@@ -14,11 +14,12 @@ case class TestResult(test : Test, result : SandboxResult) {
     }
     case Complete(code, stdout, stderr) => {
       ansi().fg(RED).a(s"- ${test.description}\n").reset()
-      ansi().a(INTENSITY_FAINT).a(stdout).newline().reset()
+        .a(INTENSITY_FAINT).a(stdout).newline().reset()
+        .a(INTENSITY_FAINT).a(stderr).newline().reset()
     }
     case DidNotFinish(_, _) => {
       ansi().fg(RED).a(s"- ${test.description}\n").reset()
-      ansi().a("Did not finish (time limit: ${test.timeLimit.toSeconds} seconds)\n")
+        .a("Did not finish (time limit: ${test.timeLimit.toSeconds} seconds)\n")
     }
   }
 

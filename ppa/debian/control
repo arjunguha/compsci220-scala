@@ -12,6 +12,6 @@ Depends:
  docker.io,
  oracle-java8-installer,
  sbt (= 0.13.5),
- scala (= 2.11.1)
+ scala (= 2.11.2)
 Description: Support code for CS220.
  Support code for CS220.

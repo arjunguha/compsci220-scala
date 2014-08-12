@@ -1,3 +1,10 @@
+cs220 (0.19) trusty; urgency=low
+
+  * Updated to Scala 2.11.2 and latest support code
+
+ -- Arjun Guha <arjun@cs.umass.edu>  Sat, 12 Aug 2014 10:49:00 -0500
+
+
 cs220 (0.18) trusty; urgency=low
 
   * Corrections

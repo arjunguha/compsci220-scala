@@ -1,2 +1,2 @@
 #!/bin/bash
-java -jar /usr/lib/cs220/repl.jar $@
+scala -classpath /usr/lib/cs220/cmpsci220.jar $@

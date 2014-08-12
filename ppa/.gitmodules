@@ -1,6 +1,0 @@
-[submodule "support-code"]
-	path = support-code
-	url = git@github.com:cmpsci220/support-code.git
-[submodule "submission"]
-	path = submission
-	url = git@github.com:cmpsci220/submission.git

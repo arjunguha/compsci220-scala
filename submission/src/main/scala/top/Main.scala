@@ -11,6 +11,10 @@ import scala.util.{Try, Success, Failure}
 
 object Main extends App {
 
+  val logger = org.slf4j.LoggerFactory.getLogger("Main")
+
+  logger.info("Started application")
+
   import ExecutionContext.Implicits.global
 
   AnsiConsole.systemInstall()

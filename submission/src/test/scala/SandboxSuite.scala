@@ -21,14 +21,14 @@ class SandboxSuite extends SandboxFixture {
     }
   }
 
-  test("timeouts work") { sandbox =>
-    val result = sandbox.test("/bin/bash", "-c", "echo Start; while true; do true; done")
+  // test("timeouts work") { sandbox =>
+  //   val result = sandbox.test("/bin/bash", "-c", "echo Start; while true; do true; done")
 
-    whenReady(result) {
-      case DidNotFinish("Start\n", "") => ()
-      case other => fail(s"expected timeout, but got $other")
-    }
-  }
+  //   whenReady(result) {
+  //     case DidNotFinish("Start\n", "") => ()
+  //     case other => fail(s"expected timeout, but got $other")
+  //   }
+  // }
 
   test("/data should mount") { sandbox =>
     val result = sandbox.test("/bin/ls", "/data")

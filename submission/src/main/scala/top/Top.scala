@@ -10,6 +10,10 @@ import java.nio.file.{Paths, Files, Path}
 import java.io.File
 import scala.async.Async.{async, await}
 
+private object Top {
+  val log = org.slf4j.LoggerFactory.getLogger(classOf[Top])
+}
+
 class Top(confFile : String) {
 
   private val settings = TopSettings(Paths.get(confFile))
@@ -26,7 +30,7 @@ class Top(confFile : String) {
       YamlAssignment(asgn, step, dir.resolve("assignment.yaml"), dir)
     }
     else {
-      throw new InvalidAssignment(s"$asgn/$step is not a valid step")
+      throw new InvalidAssignment(s"$asgn $step is not a valid step")
     }
   }
 
@@ -42,11 +46,19 @@ class Top(confFile : String) {
     ()
   }
 
+
   def checkSubmission(asgn : String, step : String, dir : Path)
     (implicit ec : ExecutionContext) : Future[List[TestResult]] = async {
     val assignment = getAssignment(asgn, step)
     val tests = getTestSuite(asgn, step)
-    await(Future.sequence(tests.map { testRunner.runTest(assignment, _, dir) }))
+    await(tests.foldRight(Future{List[TestResult]()}) { (test, fut) => async {
+        val tl = await(fut)
+        val hd = await(testRunner.runTest(assignment, test, dir))
+        Top.log.info(hd.describe().toString)
+        hd :: tl
+
+      }
+    })
   }
 
 }

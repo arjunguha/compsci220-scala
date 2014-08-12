@@ -9,7 +9,7 @@ RUN apt-get install -yq wget software-properties-common
 RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
 RUN add-apt-repository -y ppa:webupd8team/java
 RUN apt-get update
-RUN apt-get install -yq qoracle-java8-installer
+RUN apt-get install -yq oracle-java8-installer
 
 # Install SBT
 RUN wget http://dl.bintray.com/sbt/debian/sbt-0.13.5.deb
@@ -23,7 +23,7 @@ RUN rm scala-2.11.2.deb
 
 # Install CS220 software
 RUN add-apt-repository -y ppa:arjun-guha/umass-cs220
-RUN apt-get update
-RUN apt-get install -y1 cs220
+RUN apt-get update && apt-get install -yq cs220=0.19
 
-
+ADD docker220 /usr/local/bin/docker220
+RUN chmod a+x /usr/local/bin/docker220

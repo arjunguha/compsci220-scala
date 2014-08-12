@@ -1,7 +1,7 @@
 memoryLimit: 100
 timeLimit: 20
-image: cs220-fall2014
-command: [ /usr/local/bin/scala220, clocks.scala ]
+image: "arjunguha:cs220"
+command: [ /usr/local/bin/docker220, clocks.scala ]
 tests:
   - test: |
       // Do not make any changes to the Time constructor

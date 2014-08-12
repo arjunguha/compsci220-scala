@@ -16,7 +16,7 @@ class TestRunner(settings : cs220.submission.top.TopSettings) {
 
     val result = async {
       asgn.prepareSubmission(submitDir, workDir)
-      test.prepare(workDir)
+      test.prepare(workDir, asgn)
       val sandbox = new Sandbox(settings.dockerUrl)
       val result = await(sandbox(workDir, "/data", test.image, test.command,
                                  test.memoryLimitBytes, test.timeLimit))

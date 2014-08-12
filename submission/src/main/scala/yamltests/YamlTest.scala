@@ -1,7 +1,7 @@
 package cs220.submission.yamltests
 
 import java.nio.file.{Path, Files}
-import cs220.submission.Test
+import cs220.submission.{Test, Assignment}
 import scala.concurrent.duration._
 
 private[yamltests] class YamlTest(
@@ -14,8 +14,8 @@ private[yamltests] class YamlTest(
   code : String)
   extends Test {
 
-  def prepare(workingDir : Path) : Unit = {
-    // Nothing to do
+  def prepare(workingDir : Path, asgn : Assignment) : Unit = {
+    Files.write(workingDir.resolve("yamltest"), code.getBytes)
   }
 
 }
