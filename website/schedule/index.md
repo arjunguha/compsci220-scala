@@ -49,11 +49,11 @@ title: Schedule
 | Thursday, Dec 4   | Everything else. **Last class.**                                                          |
 | Friday, Dec 5     | **No lab.** (We had the last class)                                                       |
 
-[HW1 (Clocks)]: hw/clocks
-[HW2 (Pong)]: hw/pong
-[HW3 (Recursion)]: hw/recursion
-[HW4 (Measurement)]: hw/measurement
-[HW5 (Join Lists)]: hw/joinlists
-[HW6 (Maze)]: hw/maze
-[HW8 (Social Network)]: hw/social
-[HW11 (Scripting)]: hw/scripting
+[HW1 (Clocks)]: ../hw/clocks
+[HW2 (Pong)]: ../hw/pong
+[HW3 (Recursion)]: ../hw/recursion
+[HW4 (Measurement)]: ../hw/measurement
+[HW5 (Join Lists)]: ../hw/joinlists
+[HW6 (Maze)]: ../hw/maze
+[HW8 (Social Network)]: ../hw/social
+[HW11 (Scripting)]: ../hw/scripting

@@ -1,8 +1,12 @@
 - title: Clocks
+  url: clocks
   due: Monday, Sep 9
 - title: Measurement
+  url: measurement
   due: Monday, Sep 29
 - title: Pong
+  url: pong
   due: Monday, Sep 16
 - title: Recursion
+  url: recursion
   due: Monday, Sep 23

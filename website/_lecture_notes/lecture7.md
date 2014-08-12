@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: lecture
 title: Lecture 7
 ---
 
