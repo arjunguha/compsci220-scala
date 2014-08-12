@@ -63,4 +63,4 @@ cat << EOF >> /home/vagrant/.profile
 PATH=/home/vagrant/src/bin:$PATH
 EOF
 
-echo "Run vagrant reload to login to the GUI."
+echo "Run vagrant reload to load the GUI and enable Docker memory limits."
