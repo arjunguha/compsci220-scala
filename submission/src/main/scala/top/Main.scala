@@ -11,13 +11,14 @@ import scala.util.{Try, Success, Failure}
 
 object Main extends App {
 
+  AnsiConsole.systemInstall()
+
   val logger = org.slf4j.LoggerFactory.getLogger("Main")
 
   logger.info("Started application")
 
   import ExecutionContext.Implicits.global
 
-  AnsiConsole.systemInstall()
 
   val topSettingsPath = System.getenv("ASSIGNMENTS_PATH")
   if (topSettingsPath == null) {

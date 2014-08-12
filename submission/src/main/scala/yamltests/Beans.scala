@@ -5,11 +5,24 @@ import java.util.{List, LinkedList}
 private[yamltests] class TestBean {
 
   private var test : String = null
+  private var desc : String = null
 
-  def getTest() : String = test
+  def getTest() : String = {
+    assert(test != null)
+    test
+  }
 
   def setTest(test : String) : Unit = {
     this.test = test
+  }
+
+  def getDesc() : String = {
+    assert(desc != null, test)
+    desc
+  }
+
+  def setDesc(desc : String) : Unit = {
+    this.desc = desc
   }
 
 }

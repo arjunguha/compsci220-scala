@@ -40,7 +40,7 @@ object YamlTest {
         val memoryLimitBytes = suite.getMemoryLimit
         val timeLimit = suite.getTimeLimit.seconds
         suite.getTests.toList.map { test =>
-          new YamlTest(description = "no description",
+          new YamlTest(description = test.getDesc,
                        points = 0,
                        memoryLimitBytes = memoryLimitBytes,
                        timeLimit = timeLimit,

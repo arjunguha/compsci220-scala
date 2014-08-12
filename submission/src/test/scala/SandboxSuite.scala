@@ -4,22 +4,22 @@ import scala.concurrent.duration._
 
 class SandboxSuite extends SandboxFixture {
 
-  test("no network in sandbox (ping test)") { sandbox =>
-    val result = sandbox.test("/bin/ping", "-c", "1", "google.com")
-    whenReady(result) {
-      case Complete(2, _, _) => ()
-      case other => fail(s"unexpected result: $other")
-    }
-  }
+  // test("no network in sandbox (ping test)") { sandbox =>
+  //   val result = sandbox.test("/bin/ping", "-c", "1", "google.com")
+  //   whenReady(result) {
+  //     case Complete(2, _, _) => ()
+  //     case other => fail(s"unexpected result: $other")
+  //   }
+  // }
 
-  test("no network in sandbox (ifconfig test)") { sandbox =>
-    val result = sandbox.test("/sbin/ifconfig")
-    whenReady(result) {
-      case Complete(0, stdout, _) =>
-        assert("Ethernet".r.findFirstIn(stdout).isEmpty)
-      case other => fail(s"unexpected result: $other")
-    }
-  }
+  // test("no network in sandbox (ifconfig test)") { sandbox =>
+  //   val result = sandbox.test("/sbin/ifconfig")
+  //   whenReady(result) {
+  //     case Complete(0, stdout, _) =>
+  //       assert("Ethernet".r.findFirstIn(stdout).isEmpty)
+  //     case other => fail(s"unexpected result: $other")
+  //   }
+  // }
 
   // test("timeouts work") { sandbox =>
   //   val result = sandbox.test("/bin/bash", "-c", "echo Start; while true; do true; done")
