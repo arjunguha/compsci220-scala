@@ -31,6 +31,9 @@ apt-get install -yq \
 echo 'DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H tcp://127.0.0.1:4243 -H unix:///var/run/docker.sock"' > /etc/default/docker.io
 service docker.io restart
 
+sed -i 's/GRUB_CMDLINE_LINUX=\"\"/GRUB_CMDLINE_LINUX=\"cgroup_enable=memory swapaccount=1\"/' /etc/default/grub
+update-grub
+
 add-apt-repository ppa:webupd8team/java
 apt-get update -q
 
