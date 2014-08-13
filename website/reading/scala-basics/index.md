@@ -3,6 +3,17 @@ layout: lecture
 title: Scala Basics
 ---
 
+## Background Reading
+
+For the first few weeks of the class, we will use the Linux command-line before
+graduating to more sophisticated tools. The course virtual machine has a program
+called "LXTerminal", which you should use.
+
+Unless you're familar with the Linux command-line, you must read  Zed Shaw's
+[Command Line Crash Course](http://learncodethehardway.org/cli/book/cli-crash-
+course.html) upto and including the chapter on *Removing a File (rm)*. Zed likes
+to swear at his own readers, so we'd like to apologize in advance on his behalf.
+
 ## The Scala REPL
 
 Like many modern languages, Scala has a *REPL*, which you can use to evaluate
