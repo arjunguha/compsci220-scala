@@ -94,10 +94,6 @@ the following broad ideas that are applicable in all software development:
 
 ## Recommended Reading
 
-There are many classic articles on programming that you should read.
-Many of thesea I encourage you to read
-at your leisure.
-
 - [Paul Graham's essays](http://paulgraham.com/articles.html). The earlier
   essays are particularly pertinent, E.g.,
   [Beating the Averages](http://paulgraham.com/avg.html) and
