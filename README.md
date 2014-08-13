@@ -59,6 +59,10 @@ But, you can build and preview changes within the VM.
 
 If you can publish the website, do `cd website; publish`
 
+## Releasing open-source software
+
+[FILL]
+
 ## Writing a new homework assignment
 
 [FILL]

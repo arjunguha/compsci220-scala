@@ -3,6 +3,10 @@ layout: hw
 title: Clocks
 ---
 
+<div>
+<a href="http://xkcd.com/1359/"><img src="http://imgs.xkcd.com/comics/phone_alarm.png"></a>
+</div>
+
 Introduction
 ------------
 
