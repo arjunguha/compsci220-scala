@@ -26,6 +26,9 @@ apt-get install -yq \
   lxterminal \
   xdg-utils \
   docker.io \
+  dephelper \
+  ruby-dev \
+  nodejs \
   software-properties-common
 
 echo 'DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H tcp://127.0.0.1:4243 -H unix:///var/run/docker.sock"' > /etc/default/docker.io
@@ -62,5 +65,7 @@ apt-get purge -yq xterm
 cat << EOF >> /home/vagrant/.profile
 PATH=/home/vagrant/src/bin:$PATH
 EOF
+
+gem install jekyll
 
 echo "Run vagrant reload to load the GUI and enable Docker memory limits."
