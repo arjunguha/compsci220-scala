@@ -1,4 +1,11 @@
+import org.fusesource.jansi.AnsiConsole
+import org.fusesource.jansi.Ansi._
+import org.fusesource.jansi.Ansi.Attribute._
+import org.fusesource.jansi.Ansi.Color._
+
 package object cmpsci220 {
+
+  AnsiConsole.systemInstall()
 
   /** This value enables all test cases */
   implicit val testsEnabled = TestsEnabled(true)
@@ -11,10 +18,13 @@ package object cmpsci220 {
     if (testsEnabled.isEnabled) {
       try {
         body
-        println(s"Succeeded $description")
+        print(ansi().fg(GREEN).a(s"Succeeded $description").reset().newline())
       }
       catch {
-        case (exn : Throwable) => println(s"Failed $description $exn")
+        case (exn : Throwable) => {
+          print(ansi().fg(RED).a(s"Failed $description").reset().newline()
+                      .a(INTENSITY_FAINT).a(exn.toString).reset().newline())
+        }
       }
     }
   }
@@ -24,11 +34,12 @@ package object cmpsci220 {
     if (testsEnabled.isEnabled) {
       try {
         body
-        println(s"Failed $description (expected error)")
+        print(ansi().fg(RED).a(s"Failed $description").reset().newline())
       }
       catch {
         case (exn : Throwable) => {
-          println(s"Succeeded $description (${exn.getMessage()})")
+          print(ansi().fg(GREEN).a(s"Succeeded $description").reset().newline()
+                      .a(INTENSITY_FAINT).a(exn.toString).reset().newline())
         }
       }
     }
