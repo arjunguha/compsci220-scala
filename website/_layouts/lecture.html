@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="utf-8">
-    <title>CS220 Lecture Notes- {{ page.title }}</title>
+    <title>CS220 Reading - {{ page.title }}</title>
     <link rel="stylesheet" href="../../style.css" type="text/css">
   </head>
 
@@ -11,9 +11,28 @@
 
 <div id="bar">
   <div><a href="../../home">Home</a></div>
-  <div><a href="https://github.com/cmpsci220">Github</a></div>
-  <div><a href="../../resources">Resources</a></div>
-  <div><a href="../../software">Software</a></div>
+
+  {% for item in site.data.reading %}
+
+        {% assign ix = forloop.index|minus:1 %}
+
+        {% if item.name == page.title and forloop.last == false %}
+          {% assign next = ix | plus:1 %}
+          <div>
+          <a href="../{{ site.data.reading[next].path }}">
+          Next Chapter: {{ site.data.reading[next].name }}</a>
+          </div>
+        {% endif %}
+
+        {% if item.name == page.title and forloop.first == false %}
+          {% assign prev = ix | minus:1 %}
+          <div>
+          <a href="../{{ site.data.reading[prev].path }}">
+          Previous Chapter: {{ site.data.reading[prev].name }}</a>
+          </div>
+        {% endif %}
+
+  {% endfor %}
 </div>
 
 

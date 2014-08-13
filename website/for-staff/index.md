@@ -10,6 +10,8 @@ confidential will give us more flexibility.
 Lecture Notes
 -------------
 
+This is for course staff and may not be intelligible to students:
+
 <ul>
   {% for post in site.lecture_notes %}
     <li>
@@ -17,6 +19,18 @@ Lecture Notes
     </li>
   {% endfor %}
 </ul>
+
+Reading
+-------
+
+<ul>
+{% for item in site.data.reading %}
+
+  <li><a href="../reading/{{ item.path }}">{{ item.name }}</a></li>
+
+{% endfor %}
+</ul>
+
 
 Schedule
 --------

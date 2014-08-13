@@ -1,0 +1,6 @@
+- name: Introduction
+  path: intro
+- name: Scala Basics
+  path: scala-basics
+- name: Simple Data Structures
+  path: simple-data
