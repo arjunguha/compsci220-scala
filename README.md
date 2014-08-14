@@ -61,7 +61,8 @@ If you can publish the website, do `cd website; publish`
 
 ## Releasing open-source software
 
-[FILL]
+We publish the `support-code` and `submission` directories as open source
+software. To do so, we use [Subtree merging].
 
 ## Writing a new homework assignment
 
@@ -69,3 +70,4 @@ If you can publish the website, do `cd website; publish`
 
 
 [Vagrant]: http://www.vagrantup.com
+[Subtree merging]: http://blogs.atlassian.com/2013/05/alternatives-to-git-submodule-git-subtree/
