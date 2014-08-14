@@ -64,6 +64,19 @@ If you can publish the website, do `cd website; publish`
 We publish the `support-code` and `submission` directories as open source
 software. To do so, we use [Subtree merging].
 
+To push code to the open source repositories:
+
+~~~
+$ git subtree push --prefix=submission submission master
+$ git subtree push --prefix=support-code support-code master
+~~~
+
+To pull code:
+
+~~~
+$ git subtree pull --prefix=submission submission master
+$ git subtree pull --prefix=support-code support-code master
+~~~
 ## Writing a new homework assignment
 
 [FILL]
