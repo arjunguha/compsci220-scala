@@ -10,6 +10,9 @@ import javafx.scene._
 import javafx.scene.canvas._
 import javafx.stage.{Stage, WindowEvent}
 import javafx.application.{Application, Platform}
+import javafx.embed.swing.SwingFXUtils
+import javax.imageio.ImageIO
+import java.io.File
 import scala.concurrent._
 import scala.concurrent.duration.{Duration => ScalaDuration}
 import ExecutionContext.Implicits.global
@@ -111,6 +114,19 @@ package object graphics {
     Await.result(exit.future, ScalaDuration.Inf)
   }
 
+  def saveImage(fileName : String, image : Image, width : Int = 400,
+           height : Int = 400) : Unit = {
+    def start(stage : Stage) {
+      val (gc, canvas) = setupCanvas(stage, "Image", width, height)
+      image.draw(gc)
+      ImageIO.write(SwingFXUtils.fromFXImage(canvas.snapshot(null, null), null),
+                    "png",
+                    new File(fileName))
+      stage.hide()
+    }
+    preStart(start)
+  }
+
   /** Draws a line
    *
    * Draws a line from {@code (0,0)} to {@code (x,y)}.
@@ -137,6 +153,17 @@ package object graphics {
        gc.strokeLine(0, 0, x, y)
     })
 
+  /** A blank image
+   *
+   * This image does not appear. But, it is often useful as a base-case when
+   * writing image-building functions.
+   */
+  val blank : Image = new SimpleImage("blank", gc => ())
+
+  def custom(gc : GraphicsContext => Unit) : Image = {
+    new SimpleImage("custom(...)", gc)
+  }
+
   /** Draws a rectangle
    *
    * Draws a rectangle with width {@code width} and height {@code height}.
@@ -156,6 +183,29 @@ package object graphics {
            height : Double,
            color : Color = black) : Image =
     new SimpleImage(s"rect($width, $height, $color)", gc => {
+      gc.setStroke(color.paint)
+      gc.strokeRect(0, 0, width, height)
+    })
+
+  /** Draws a filled rectangle
+   *
+   * Draws a filled rectangle with width {@code width} and height {@code height}.
+   *
+   * <b>Examples:</b>
+   *
+   * {@code fillRect(100, 30, red)} draws a short, red rectangle
+   * {@code fillRect(100, 100, blue)} draws a blue square
+   *
+   * @param width the width of the rectangle
+   * @param height the height of the rectangle
+   * @param color <i>(optional)</i> the color of the line; black by default
+   *
+   * @group Images
+   */
+  def fillRect(width : Double,
+               height : Double,
+               color : Color = black) : Image =
+    new SimpleImage(s"fillRect($width, $height, $color)", gc => {
       gc.setFill(color.paint)
       gc.fillRect(0, 0, width, height)
     })
