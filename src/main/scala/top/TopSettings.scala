@@ -5,18 +5,24 @@ import com.typesafe.config.{ConfigFactory, Config}
 import java.nio.file.{Paths, Files, Path}
 import java.util.concurrent.TimeUnit
 
-class TopSettings(config : Config) {
+class TopSettings(base : Path, config : Config) {
 
-  val assignmentDir = Paths.get(config.getString("assignments"))
+  val assignmentDir = base.resolve(Paths.get(config.getString("assignments")))
   val dockerUrl = config.getString("dockerUrl")
-  val tmpDir = Paths.get(config.getString("tmpDir"))
+  val tmpDir = base.resolve(Paths.get(config.getString("tmpDir")))
 
 }
 
 object TopSettings {
 
   def apply(path : Path) = {
-    new TopSettings(ConfigFactory.parseFile(path.toFile).resolve())
+    // The error message from ConfigFactory.parseFile is very misleading.
+    if (!Files.isRegularFile(path)) {
+      throw new IllegalArgumentException(s"file not found: $path")
+    }
+
+    val parent = path.toAbsolutePath().getParent()
+    new TopSettings(parent, ConfigFactory.parseFile(path.toFile).resolve())
   }
 
 }

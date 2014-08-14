@@ -1,11 +1,11 @@
 package cs220.submission.yamlassignment
 
-import java.util.List
+import java.util.{List, LinkedList}
 
 private[yamlassignment] class AssignmentBean {
 
-  private var expected : List[String] = null
-  private var boilerplate : List[String] = null
+  private var expected : List[String] = new LinkedList()
+  private var boilerplate : List[String] = new LinkedList()
 
   def getExpected() = expected
 

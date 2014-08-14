@@ -12,7 +12,7 @@ trait Test {
 
   // Create files in workingDir to run the test. Assume that the program to
   // be tested in already present.
-  def prepare(workingDir : Path) : Unit
+  def prepare(workingDir : Path, asgn : Assignment) : Unit
 
   // Command to run in the sandbox
   val command : List[String]

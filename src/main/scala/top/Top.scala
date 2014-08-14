@@ -2,14 +2,17 @@ package cs220.submission.top
 
 import cs220.submission._
 import cs220.submission.yamlassignment.YamlAssignment
-import cs220.submission.yamltests
+import cs220.submission.yamltests.YamlTest
 import com.typesafe.config.ConfigFactory
 import scala.concurrent._
 import scala.concurrent.duration._
 import java.nio.file.{Paths, Files, Path}
 import java.io.File
 import scala.async.Async.{async, await}
-import cs220.submission.sandbox._
+
+private object Top {
+  val log = org.slf4j.LoggerFactory.getLogger(classOf[Top])
+}
 
 class Top(confFile : String) {
 
@@ -22,27 +25,40 @@ class Top(confFile : String) {
 
   def getAssignment(asgn : String, step : String) : Assignment = {
     val dir = assignmentDir(asgn, step)
-    println(dir)
-    YamlAssignment(asgn, step, dir.resolve("assignment.yaml"), dir)
+    val yamlFile = dir.resolve("assignment.yaml")
+    if (Files.isRegularFile(yamlFile)) {
+      YamlAssignment(asgn, step, dir.resolve("assignment.yaml"), dir)
+    }
+    else {
+      throw new InvalidAssignment(s"$asgn $step is not a valid step")
+    }
   }
 
   def getTestSuite(asgn : String, step : String) : List[Test] = {
     val path = assignmentDir(asgn, step).resolve("tests.yaml")
-    yamltests.load(new String(Files.readAllBytes(path)))
+    YamlTest(new String(Files.readAllBytes(path)))
   }
 
-  def checkSubmission(asgn : String, step : String, dir : Path)
-    (implicit ec : ExecutionContext) : Future[List[SandboxResult]] = {
-
+  def checkAssignment(asgn : String, step : String)
+    (implicit ec : ExecutionContext) : Future[Unit] = async {
     val assignment = getAssignment(asgn, step)
     val tests = getTestSuite(asgn, step)
+    ()
+  }
 
-    // TODO(arjun): separate validation step
 
-    Future.sequence(tests.map { test =>
-      testRunner.runTest(assignment, test, dir)
+  def checkSubmission(asgn : String, step : String, dir : Path)
+    (implicit ec : ExecutionContext) : Future[List[TestResult]] = async {
+    val assignment = getAssignment(asgn, step)
+    val tests = getTestSuite(asgn, step)
+    await(tests.foldRight(Future{List[TestResult]()}) { (test, fut) => async {
+        val tl = await(fut)
+        val hd = await(testRunner.runTest(assignment, test, dir))
+        Top.log.info(hd.describe().toString)
+        hd :: tl
+
+      }
     })
-
   }
 
 }

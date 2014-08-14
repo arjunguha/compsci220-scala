@@ -1,15 +1,15 @@
 <configuration>
 
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <!-- encoders are assigned the type
-         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>submission.log</file>
+    <append>true</append>
     <encoder>
-      <pattern>%date{ISO8601} %-5level %logger{36} %X{akkaSource} - %msg%n</pattern>
+      <pattern>%date{ISO8601} %-5level %logger{35} - %msg%n</pattern>
     </encoder>
   </appender>
 
   <root level="info">
-    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
   </root>
 
 </configuration>

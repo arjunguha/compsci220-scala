@@ -3,7 +3,20 @@ package cs220.submission
 import java.nio.file.Path
 import scala.concurrent.duration.Duration
 
-class InvalidSubmission(message : String) extends RuntimeException(message)
+abstract trait ExpectedException
+
+class InvalidSubmission(message : String) extends Throwable(message) with ExpectedException {
+
+  override def getMessage() = message
+
+}
+
+class InvalidAssignment(message : String) extends Throwable(message) with ExpectedException {
+
+  override def getMessage() = message
+
+}
+
 
 trait Assignment {
 

@@ -1,39 +1,62 @@
 package cs220.submission.yamltests
 
+import java.util.{List, LinkedList}
+
 private[yamltests] class TestBean {
 
   private var test : String = null
+  private var desc : String = null
 
-  def getTest() : String = test
+  def getTest() : String = {
+    assert(test != null)
+    test
+  }
 
   def setTest(test : String) : Unit = {
     this.test = test
+  }
+
+  def getDesc() : String = {
+    assert(desc != null, test)
+    desc
+  }
+
+  def setDesc(desc : String) : Unit = {
+    this.desc = desc
   }
 
 }
 
 private[yamltests] class TestSuiteBean {
 
-  private var filename : String = null
-  private var tests : java.util.List[TestBean] = null
+  private var tests : List[TestBean] = new LinkedList()
+  private var command : List[String] = new LinkedList()
 
   // Per-test limits in seconds and megabytes
-  private var timeLimit : Int = -1
-  private var memoryLimit : Int = -1
+  private var timeLimit : Int = 0
+  private var memoryLimit : Int = 0
+
+  private var image : String = null
+
+  def getImage() = {
+    assert(image != null)
+    image
+  }
+
+  def setImage(image : String) : Unit = {
+    this.image = image
+  }
 
   def getTests() = tests
 
-  def setTests(tests : java.util.List[TestBean]) : Unit = {
+  def setTests(tests : List[TestBean]) : Unit = {
     this.tests = tests
   }
 
-  def getFilename() = {
-    assert(filename != null)
-    filename
-  }
+  def getCommand() = command
 
-  def setFilename(filename : String) : Unit = {
-    this.filename = filename
+  def setCommand(command : List[String]) : Unit = {
+    this.command = command
   }
 
   def getTimeLimit() = {
