@@ -1,6 +1,0 @@
-#!/bin/bash
-
-VERSION=$(grep 'version' /vagrant/build.sbt | grep --color -o '\".*\"' | sed 's/\"//g')
-JAR=/home/vagrant/support-code/submit/target/scala-2.11/submit-assembly-$(VERSION).jar
-
-java -jar ($JAR) $@
