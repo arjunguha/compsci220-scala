@@ -2,3 +2,5 @@ collections:
   lecture_notes:
     output: true
     permalink: /lecture_notes/:path/
+markdown:    kramdown
+

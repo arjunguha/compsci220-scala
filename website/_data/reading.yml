@@ -2,5 +2,7 @@
   path: intro
 - name: Scala Basics
   path: scala-basics
+- name: Images
+  path: images
 - name: Simple Data Structures
   path: simple-data

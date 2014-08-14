@@ -62,7 +62,7 @@ Scala prints three things:
 2. The *type* of the expression (`Boolean`), and
 3. The *value* of the expression (`false`).
 
-On the Scala REPL, you can use the generated name as variable. But, you're
+On the Scala REPL, you can use the generated name as a variable. But, you're
 better off picking meaningful names yourself using `val`:
 
 ~~~
@@ -74,10 +74,11 @@ courseName : String = Programming Methodology
 
 ### Type Inference
 
-In this class, you'll find that Scala programs are significantly shorter than
-their Java counterparts. For exmaple, in the variable definitions above, you did
-not have to write any types. Instead, Scala *inferred* them for you. This
-feature is very helpful in larger programs, where types can become complex.
+You'll find that Scala programs are significantly shorter than their Java
+counterparts. A key feature of Scala that lets you write less code is *type
+inference*. Notice in the variable definitions above, you did not have to write
+any types. Instead, Scala *inferred* them for you. This feature is very helpful
+in larger programs, where types can become complex.
 
 Type inference is not magic; later in the course, you'll learn more about how it
 works and when it doesn't. For now, here's a rule of thumb: Scala can infer the
@@ -122,10 +123,10 @@ functions span several lines and need local variables.
 
 ## Blocks and Local Variables
 
-You can define local variables with a *block*. A block is code delimted by
+You can define local variables within a *block*. A block is code delimited by
 curly-braces. For example:
 
-~~~
+~~~ scala
 def dist2(x: Double, y: Double): Double = {
   val xSq = x * x
   val ySq = y * y
@@ -133,10 +134,9 @@ def dist2(x: Double, y: Double): Double = {
 }
 
 dist2(3.0, 4.0)
-
 ~~~
 
-### Saving Code in Files
+## Saving Code in Files
 
 You can type this code into the Scala REPL, but it cumbersome. Moreover, if you
 make a mistake on one line, you have to abort and type in the entire function
@@ -151,100 +151,4 @@ dist2: (x: Double, y: Double)Double
 res5: Double = 22.360679774997898
 ~~~
 
-### Java Comparison
-
-In Java, all code must be organized into classes, Scala imposes no such
-restriction (Scala does have classes and objects and we will introduce them
-shortly). For example, the Java analogue of `intro.scala` is the following
-class:
-
-~~~
-public class Intro {
-
-  static double dist2(double x, double y) {
-    int xSq = x * x;
-    int ySq = y * y;
-    return Math.sqrt(xSq + ySq);
-  }
-
-  static double res0 = dist2(3.0, 4.0);
-}
-~~~
-
-## Classes (Preview)
-
-Scala has classes, just like Java, and it supports some advanced features
-that are beyond the scope of Java classes. Like what we've seen so far,
-Scala classes tend to be shorter than their Java counterparts. For example,
-here is a simple Java class that represents a point:
-
-~~~
-public class Point {
-
-  double x;
-  double y;
-
-  public Point(double x, double y) {
-    this.x = x;
-    this.y = y;
-  }
-
-}
-~~~
-
-Here is an equivalent class in Scala:
-
-~~~
-scala> class Point(x : Double, y : Double)
-defined class Point
-~~~
-
-We can create an instance of a class using `new`, just as in Java:
-
-~~~
-scala> new Point(1, 2)
-res1: Point = Point@6d8a00e3
-~~~
-
-Instead of using classes, we are going to use *case classes*, which
-are a unique feature of Scala that do not exist in Java.
-
-## Case Classes
-
-Instead of writing `class`, we are going to write `case class`:
-
-~~~
-scala> case class Point(x: Double, y: Double)
-defined class Point
-~~~
-
-Although the "case" makes the definition a word longer, it makes Points slightly
-easier to use: (1) we can now omit `new` when we define new values and (2)
-these values display on screen in a natural way:
-
-~~~
-> Point(1, 2)
-res2: Point = Point(1.0,2.0)
-~~~
-
-Compare this output to the output `new Point(1, 2)` above.
-
-Under the hood, Scala is automatically overriding the `toString` method for
-`Point` with a convenient definition.
-
-In fact, if a case-class field refers to another case-class, the generated
-`toString` function still behaves naturally:
-
-~~~
-scala> case class TwoPoints(p1 : Point, p2: Point)
-defined class TwoPoints
-
-scala> TwoPoints(Point(1, 2), Point(3, 4))
-res4: TwoPoints = TwoPoints(Point(1.0,2.0),Point(3.0,4.0))
-~~~
-
-Of course, you can override `toString` yourself if you desire. But, for the
-first few weeks of the class, we will use case classes as-is. Not only
-are case-classes convenient for the reasons discussed above, but they support
-another powerful feature called *pattern matching*, which has no analog in
-Java.
+{% include links.md %}
