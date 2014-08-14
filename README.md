@@ -64,6 +64,13 @@ If you can publish the website, do `cd website; publish`
 We publish the `support-code` and `submission` directories as open source
 software. To do so, we use [Subtree merging].
 
+First time setup:
+
+~~~
+git remote add -f submission git@github.com:cmpsci220/submission.git
+git remote add -f support-code git@github.com:cmpsci220/support-code.git
+~~~
+
 To push code to the open source repositories:
 
 ~~~
@@ -74,6 +81,7 @@ $ git subtree push --prefix=support-code support-code master
 To pull code:
 
 ~~~
+git fetch --all
 $ git subtree pull --prefix=submission submission master
 $ git subtree pull --prefix=support-code support-code master
 ~~~
