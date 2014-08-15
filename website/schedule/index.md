@@ -3,12 +3,12 @@ layout: default
 title: Schedule
 ---
 
-| Date              | Notes                                                                                     |
-|------------------:|-------------------------------------------------------------------------------------------|
-| Tuesday, Sep 2    | Introduction and Scala basics (Part 1). [HW1 (Clocks)] out.                               |
-| Thursday, Sep 4   | Scala basics (Part 2) and unit testing.                                                   |
-| Friday, Sep 5     | *Lab:* HW1 help session.                                                                  |
-| Tuesday, Sep 9    | Recursion and generics (lists). [HW1 (Clocks)] due. [HW2 (Pong)] out.                     |
+| Date              | Notes                                                                                                               |
+|------------------:|---------------------------------------------------------------------------------------------------------------------|
+| Tuesday, Sep 2    | Out: [Clocks]. Reading: [Introduction], [Scala Basics], [Images], [Simple Data Structures], and [Pattern Matching]. |
+| Thursday, Sep 4   |                                                                                                                     |
+| Friday, Sep 5     | *Lab:* Homework help session.                                                                                       |
+| Tuesday, Sep 9    | Recursion and generics (lists). Due: [Clocks]. Out: [HW2 (Pong)]. Reading: Odersky Chapter 15.                      |
 | Thursday, Sep 11  | Recursion and higher-order functions (Part 1).                                            |
 | Friday, Sep 12    | *Lab:* Generics, recursion, and higher-order functions.                                   |
 | Tuesday, Sep 16   | Recursion and higher-order functions (Part 2). [HW2 (Pong)] due. [HW3 (Recursion)] out.   |
@@ -49,7 +49,7 @@ title: Schedule
 | Thursday, Dec 4   | Everything else. **Last class.**                                                          |
 | Friday, Dec 5     | **No lab.** (We had the last class)                                                       |
 
-[HW1 (Clocks)]: ../hw/clocks
+[Clocks]: ../hw/clocks
 [HW2 (Pong)]: ../hw/pong
 [HW3 (Recursion)]: ../hw/recursion
 [HW4 (Measurement)]: ../hw/measurement
@@ -57,3 +57,9 @@ title: Schedule
 [HW6 (Maze)]: ../hw/maze
 [HW8 (Social Network)]: ../hw/social
 [HW11 (Scripting)]: ../hw/scripting
+
+[Introduction]: ../reading/intro
+[Scala Basics]: ../reading/scala-basics
+[Images]: ../reading/images
+[Simple Data Structures]: ../reading/simple-data
+[Pattern Matching]: ../reading/pattern-matching

@@ -6,3 +6,5 @@
   path: images
 - name: Simple Data Structures
   path: simple-data
+- name: Pattern Matching
+  path: pattern-matching

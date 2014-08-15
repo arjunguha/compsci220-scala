@@ -92,6 +92,10 @@ the following broad ideas that are applicable in all software development:
   the course. By the end of the course, you'll know how to discover and use
   software libraries on the Web.
 
+## Additional Reading
+
+Read Chapter 1, "A Scalable Language" from *Programming in Scala*.
+
 ## Recommended Reading
 
 - [Paul Graham's essays](http://paulgraham.com/articles.html). The earlier

@@ -151,4 +151,9 @@ dist2: (x: Double, y: Double)Double
 res5: Double = 22.360679774997898
 ~~~
 
+## Additional Reading
+
+Read Chapter 2, "First Steps in Scala" from *Programming in Scala*.
+Some of this material is a preview of things to come (Steps 5 and 6).
+
 {% include links.md %}
