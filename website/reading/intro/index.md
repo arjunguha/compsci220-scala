@@ -15,11 +15,13 @@ language: [Scala]. Scala lets you write exactly the same kind of object-oriented
 code that you've seen in Java. In fact, Scala code and Java code can seamlessly
 co-exist and interoperate in the same program; we'll leverage this feature later
 in the course. So, design strategies and patterns that you will learn in this
-course will be applicable to Java and Scala. However, you will find that Scala
+course will be applicable to Java and Scala. However, you will find that
 programs in Scala are typically much shorter than their Java counterparts.
-With a little experience, we think you'll find Scala easier to read and write.
+With a little experience, we think you'll find Scala enjoyable to read and write.
+In addition, by learning a new programming language you will increase your 
+understanding of Java and programming languages in general.
 
-The main reason we're using Scala, is to expose you to programming techniques
+An important reason we're using Scala, is to expose you to programming techniques
 and language features that are beyond the scope of Java. The truth is that
 modern software systems are written in a plethora of languages. Moreover, large
 systems tend to use several programming languages. Therefore, to succeed in your
@@ -50,8 +52,8 @@ cover in this course that go beyond Java:
 - **[Type inference]** is available in many modern typed programming languages
   (and in a limited form in [Java 7](http://docs.oracle.com/javase/tutorial/java/generics/genTypeInference.html)).
   As the name suggests, in a language with type inference, the compiler can
-  often "infer" elided types. So, your programs become shorter, but retain all
-  the advantages of type checking.
+  often "infer" elided or omitted types. So, your programs become shorter, but 
+  retain all the advantages of type checking.
 
 The main themes of the course are not language-specific. We will emphasize
 the following broad ideas that are applicable in all software development:
