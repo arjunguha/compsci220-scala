@@ -3,19 +3,19 @@ layout: default
 title: Schedule
 ---
 
-| Date              | Notes                                                                                                               |
-|------------------:|---------------------------------------------------------------------------------------------------------------------|
-| Tuesday, Sep 2    | Out: [Clocks]. Reading: [Introduction], [Scala Basics], [Images], [Simple Data Structures], and [Pattern Matching]. |
-| Thursday, Sep 4   |                                                                                                                     |
-| Friday, Sep 5     | *Lab:* Homework help session.                                                                                       |
-| Tuesday, Sep 9    | Recursion and generics (lists). Due: [Clocks]. Out: [HW2 (Pong)]. Reading: Odersky Chapter 15.                      |
-| Thursday, Sep 11  | Recursion and higher-order functions (Part 1).                                            |
-| Friday, Sep 12    | *Lab:* Generics, recursion, and higher-order functions.                                   |
-| Tuesday, Sep 16   | Recursion and higher-order functions (Part 2). [HW2 (Pong)] due. [HW3 (Recursion)] out.   |
+| Date              | Notes                                                                                           |
+|------------------:|-------------------------------------------------------------------------------------------------|
+| Tuesday, Sep 2    | Out: [Clocks]. Reading: [Introduction], [Scala Basics], [Images], and [Simple Data Structures]. |
+| Thursday, Sep 4   | Reading: [Pattern Matching].                                                                    |
+| Friday, Sep 5     | *Lab:* Homework help session.                                                                   |
+| Tuesday, Sep 9    | Recursion and generics (lists). Due: [Clocks]. Out: [Pong].                                     |
+| Thursday, Sep 11  | Recursion and higher-order functions (Part 1).                                                  |
+| Friday, Sep 12    | *Lab:* Generics, recursion, and higher-order functions.                                         |
+| Tuesday, Sep 16   | Recursion and higher-order functions (Part 2). [Pong] due. [HW3 (Recursion)] out.               |
 | Thursday, Sep 18  | Simple types and recursive type-checking.                                                 |
 | Friday, Sep 19    | *Lab:* Generics, recursion, and higher-order functions, again.                            |
 | Tuesday, Sep 23   | Balanced Binary Search Trees. [HW3 (Recursion)] due. [HW4 (Measurement)] out.             |
-| Thursday, Sep 25  | Abstract data types, packages, and SBT (Scala Build Tool).                                |
+| Thursday, Sep 25  | Reading: [Abstract Data Types].                                                           |
 | Friday, Sep 26    | *Lab:* Help with SBT and ScalaTest.                                                       |
 | Tuesday, Sep 30   | Subtyping (Part 1). [HW4 (Measurement)] due. [HW5 (Join Lists)] out.                      |
 | Thursday, Oct 2   | Subtyping (Part 2).                                                                       |
@@ -50,7 +50,7 @@ title: Schedule
 | Friday, Dec 5     | **No lab.** (We had the last class)                                                       |
 
 [Clocks]: ../hw/clocks
-[HW2 (Pong)]: ../hw/pong
+[Pong]: ../hw/pong
 [HW3 (Recursion)]: ../hw/recursion
 [HW4 (Measurement)]: ../hw/measurement
 [HW5 (Join Lists)]: ../hw/joinlists
@@ -63,3 +63,4 @@ title: Schedule
 [Images]: ../reading/images
 [Simple Data Structures]: ../reading/simple-data
 [Pattern Matching]: ../reading/pattern-matching
+[Abstract Data Types]: ../reading/adt
