@@ -20,11 +20,15 @@
         {% assign ix = forloop.index|minus:1 %}
 
         {% if item.name == page.title and forloop.last == false %}
+
           {% assign next = ix | plus:1 %}
+          {% if site.data.reading[next].draft == true %}
+          {% else %}
           <div>
           <a href="../{{ site.data.reading[next].path }}">
           Next Chapter: {{ site.data.reading[next].name }}</a>
           </div>
+          {% endif %}
         {% endif %}
 
         {% if item.name == page.title and forloop.first == false %}
