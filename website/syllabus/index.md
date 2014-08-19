@@ -22,7 +22,7 @@ online.
 
 ## Course Objectives
 
-**TODO: A list of objectives to be filled in.**
+Read the [Course Introduction](../reading/intro).
 
 ## Course Assessment
 
@@ -32,16 +32,16 @@ including:
 * Programming Assignments
 * Quizzes
 * Participation
-* Final Exam
+* Exams
 
 ### Programming Assignments
 
-Programming assignments are intensive programming assignments (in Scala) that
+Programming assignments are intensive assignments (in Scala) that
 exercise your understanding of the material through the application of
 programming concepts and techniques. There will be weekly programming
 assignments throughout the semester. Programming assignments are an
-important component of this course and will take the most time to complete as
-compared to other assessment parts. You should give yourself plenty of time to
+important component of this course and will take more time to complete than
+other assessment parts. You should give yourself plenty of time to
 complete a project assignment. Programming assignments must be completed
 independently.
 
@@ -52,7 +52,7 @@ lecture and readings. They will typically consist of 5-10 multiple choice and
 true/false style questions that will help keep you on track with the course
 throughout the semester. Quizzes will be given and submitted electronically
 through [Moodle][moodle]. The exact number of quizzes will be determined as
-the course progresses. Your participation will be evaluated through in class
+the course progresses. Your participation will be evaluated through in-class
 exercises, discussion attendance, and interaction in the online Piazza
 discussion forum. [Piazza] records statistics about your activity such as the
 number of times you logged into the system, how many posts you read, how many
@@ -61,7 +61,7 @@ the participation on Piazza at the end of the semester.
 
 ## Exams
 
-There will be midterm and final exam. They will consist of multiple choice,
+There will be midterm and final exams. They will consist of multiple choice,
 true/false, short answer style questions as well as some open response
 questions that will typically require writing or analyzing Scala code. The
 exams will be given online using the Moodle quiz component. The exams will be
@@ -73,13 +73,13 @@ and notes and will be timed. You will be required to work individually.
 The final grade for this course will be based on the following assessment
 components:
 
- Component             | Percentage
------------------------|------------------------:
-Project Assignments    | 60%
-Quizzes                | 15%
-Participation          | 5%
-Final exam             | 20%
-**Total**              | **100%**
+ Component              | Percentage
+------------------------|------------------------:
+Programming Assignments | 70%
+Quizzes                 | 15%
+Participation           | 5%
+Exams                   | 10%
+**Total**               | **100%**
 
 ## Final Grades
 
@@ -106,7 +106,7 @@ Your grades for each assessment component will be available in the
 and progress in the course by visiting the [Moodle site][moodle]. If you are
 having problems in the course you should post questions to the online
 discussion forum, visit office hours, or contact the instructors or one of the
-TA's immediately for extra help. Do not wait until the last minute to
+TAs immediately for extra help. Do not wait until the last minute to
 request help. It is important for you to pay attention to your progress to
 be successful in this course.
 
