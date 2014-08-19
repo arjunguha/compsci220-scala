@@ -13,32 +13,33 @@ version control.
 
 ## Textbooks
 
-The required texts for this course are:
+The following textbook is required:
 
-* [Programming in Scala: A Comprehensive Step-by-Step Guide (2nd Edition), Odersky, Spoon, Venners][textbook]
+[Programming in Scala: A Comprehensive Step-by-Step Guide (2nd Edition), Odersky, Spoon, Venners][textbook]
 
-Most of the readings will be from this book, however,  other readings may be
-assigned from external resources (internet)
+We will supplement this textbook with other reading material that is available
+online.
 
 ## Course Objectives
 
 **TODO: A list of objectives to be filled in.**
 
 ## Course Assessment
-Student knowledge of the course will be assessed from a variety of angles including:
+
+Student knowledge of the course will be assessed from a variety of angles
+including:
 
 * Programming Assignments
 * Quizzes
 * Participation
-* Midterm
 * Final Exam
 
 ### Programming Assignments
 
 Programming assignments are intensive programming assignments (in Scala) that
 exercise your understanding of the material through the application of
-programming concepts and techniques. There will be several programming
-assignments assigned throughout the semester. Programming assignments are an
+programming concepts and techniques. There will be weekly programming
+assignments throughout the semester. Programming assignments are an
 important component of this course and will take the most time to complete as
 compared to other assessment parts. You should give yourself plenty of time to
 complete a project assignment. Programming assignments must be completed
@@ -53,7 +54,7 @@ throughout the semester. Quizzes will be given and submitted electronically
 through [Moodle][moodle]. The exact number of quizzes will be determined as
 the course progresses. Your participation will be evaluated through in class
 exercises, discussion attendance, and interaction in the online Piazza
-discussion forum. Piazza records statistics about your activity such as the
+discussion forum. [Piazza] records statistics about your activity such as the
 number of times you logged into the system, how many posts you read, how many
 posts you responded to, and how many new posts you created. We will evaluate
 the participation on Piazza at the end of the semester.
@@ -74,10 +75,9 @@ components:
 
  Component             | Percentage
 -----------------------|------------------------:
-Project Assignments    | 45%
+Project Assignments    | 60%
 Quizzes                | 15%
-Participation          | 5% 
-Midterm exam           | 15%
+Participation          | 5%
 Final exam             | 20%
 **Total**              | **100%**
 
@@ -214,3 +214,4 @@ instructor of this course will be vigorous in enforcing them. Please see the
 [textbook]: http://www.amazon.com/Programming-Scala-Comprehensive-Step-Step/dp/0981531644
 [moodle]: http://moodle.umass.edu
 [conduct]: http://www.umass.edu/dean_students/uploads/listWidget/25145/Code%20of%20Student%20Conduct%202013-2014.pdf
+[Piazza]: https://piazza.com/umass/fall2014/cmpsci220/home
