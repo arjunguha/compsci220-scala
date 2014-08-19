@@ -7,9 +7,7 @@ title: CMPSCI220 Programming Methodology (Fall 2014)
 
 Welcome to the Fall 2014 offering of CMPSCI220 Programming Methodology!
 
-{% comment %}
 You must read the [course syllabus](./syllabus).
-{% endcomment %}
 
 # Course Locations
 
@@ -24,7 +22,7 @@ Discussion B      | Friday, 12:20PM--1:10PM  | Lederle Graduate Research Center 
 # How to Ask Questions
 
 Use [Piazza] for **all questions**. You can use Piazza to message the entire
-course, just the course staff, or even individual staff members.
+class, just the course staff, or even individual staff members.
 
 - We encourage you to post *technical questions* about the reading and homework
   publicly. This will allow both instructors and other students to respond and
@@ -33,7 +31,7 @@ course, just the course staff, or even individual staff members.
   You can post anonymously if you wish, though instructors will be able to see
   who you are. If you don't want the class to see your question at all, send it
   to *Instructors*. This is to encourage you to ask "dumb questions". (But,
-  trust us--there are no dumb questions and many of your peers will have the
+  trust us: there are no dumb questions and many of your peers will have the
   same question and be grateful that you asked.)
 
 - Send administrative questions to *Instructors* on Piazza, which includes the
