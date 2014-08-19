@@ -7,7 +7,7 @@ title: CMPSCI220 Programming Methodology (Fall 2014)
 
 Welcome to the Fall 2014 offering of CMPSCI220 Programming Methodology!
 
-You must read the [course syllabus](./syllabus).
+You must read the [course syllabus](../syllabus).
 
 # Course Locations
 
