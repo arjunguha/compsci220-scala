@@ -10,16 +10,17 @@ case class TestResult(test : Test, result : SandboxResult) {
 
   def describe() : Ansi = result match {
     case Complete(0, _, _) => {
-      ansi().fg(GREEN).a(s"- ${test.description}\n").reset()
+      ansi().fg(GREEN).a(s"- ${test.description}").reset().newline()
     }
     case Complete(code, stdout, stderr) => {
-      ansi().fg(RED).a(s"- ${test.description}\n").reset()
-        .a(INTENSITY_FAINT).a(stdout).newline().reset()
-        .a(INTENSITY_FAINT).a(stderr).newline().reset()
+      ansi().fg(RED).a(s"- ${test.description}").reset().newline()
+        .a(INTENSITY_FAINT).a(stdout).reset().newline()
+        .a(INTENSITY_FAINT).a(stderr).reset().newline()
     }
     case DidNotFinish(_, _) => {
-      ansi().fg(RED).a(s"- ${test.description}\n").reset()
-        .a("Did not finish (time limit: ${test.timeLimit.toSeconds} seconds)\n")
+      val t = test.timeLimit.toSeconds
+      ansi().fg(RED).a(s"- ${test.description}").reset().newline()
+        .a("Did not finish (time limit: $t seconds)").reset().newline()
     }
   }
 
