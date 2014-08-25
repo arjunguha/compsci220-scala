@@ -26,36 +26,21 @@ Setup
 
 Before you start programming, you need to complete a few preliminary steps.
 
-<ol>
+- Download and start the course virtual machine (click the Software link at the
+  top of this page). You will need it for all the assignments in this class.
 
-<li>First, you need to <a href="software">download and start</a> the course
-    virtual machine. You will need it for all the assignments in this
-    class.</li>
+- Create a directory that will store your solution to this assignment
+  (e.g., the `hw1` directory).
 
-<li>Next, you need to prepare a directory that will store your assignment
-   files. To do so, enter the following commands into a terminal window:
+- Using a text editor, create a file called `Clock.scala` in the assignment
+  directory.
 
-{% highlight console %}
-mkdir clock
-cd clock
-{% endhighlight %}
-
-   The first command creates the <code>clock</code> directory and changes the
-   current directory to <code>clock</code>.</li>
-
-<li>Using a text editor, create a file called <b>Clock.scala</b> in the
-   <code>clock</code> directory. At the top of the file, add the following two
-   lines:
+At the top of `Clock.scala`, add these two lines of code:
 
 {% highlight scala %}
-import cmpsci220.testing._
+import cmpsci220._
 import cmpsci220.graphics._
 {% endhighlight %}
-
-   These lines will let you use several testing and graphics functions that
-   you need for this assignment.</li>
-
-</ol>
 
 Time
 ----

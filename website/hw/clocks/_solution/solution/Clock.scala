@@ -2,7 +2,7 @@
 // All this code is provided
 //
 
-import cmpsci220.testing._
+import cmpsci220._
 import cmpsci220.graphics._
 
 case class Time(hours : Int, minutes : Int, seconds : Int)
