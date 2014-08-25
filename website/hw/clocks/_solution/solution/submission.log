@@ -1,0 +1,203 @@
+2014-08-25 18:27:59,611 INFO  Main - Started application
+2014-08-25 18:29:07,367 INFO  Main - Started application
+2014-08-25 18:29:08,555 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:29:10,977 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: f1debbd70c20db82a5b6594bc48250e5d005464b2bcee32a22ecc711a79995e5)
+2014-08-25 18:29:11,151 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: f1debbd70c20db82a5b6594bc48250e5d005464b2bcee32a22ecc711a79995e5)
+2014-08-25 18:29:28,958 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:29:29,031 INFO  cs220.submission.top.Top - [31m- The drawHands function is missing or has the wrong type.
+[0;2m/data/clocks.scala:40: error: not found: value test
+test("8:30:01 is after 8:30:00") {
+^
+/data/clocks.scala:44: error: not found: value test
+test("8:30:00 is after 8:29:59") {
+^
+/data/clocks.scala:105: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
+{
+^
+one warning found
+two errors found
+
+[0;2m
+[m
+2014-08-25 18:29:29,046 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:29:29,589 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 1c79b97dd13eb69cd8a315f5743f10f90684ead7100b879546235830c07dadc9)
+2014-08-25 18:29:29,714 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: 1c79b97dd13eb69cd8a315f5743f10f90684ead7100b879546235830c07dadc9)
+2014-08-25 18:29:46,215 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:29:46,217 INFO  cs220.submission.top.Top - [31m- The tickAlarmClock function is missing or has the wrong type.
+[0;2m/data/clocks.scala:40: error: not found: value test
+test("8:30:01 is after 8:30:00") {
+^
+/data/clocks.scala:44: error: not found: value test
+test("8:30:00 is after 8:29:59") {
+^
+/data/clocks.scala:105: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
+{
+^
+one warning found
+two errors found
+
+[0;2m
+[m
+2014-08-25 18:29:46,243 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:29:46,685 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 8cb32c707eec722f1b56a068daee38f25045c467e23df440189c9096ef9e8a56)
+2014-08-25 18:29:46,816 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: 8cb32c707eec722f1b56a068daee38f25045c467e23df440189c9096ef9e8a56)
+2014-08-25 18:30:03,116 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:30:03,119 INFO  cs220.submission.top.Top - [31m- The setAlarm function is missing or has the wrong type.
+[0;2m/data/clocks.scala:40: error: not found: value test
+test("8:30:01 is after 8:30:00") {
+^
+/data/clocks.scala:44: error: not found: value test
+test("8:30:00 is after 8:29:59") {
+^
+/data/clocks.scala:105: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
+{
+^
+one warning found
+two errors found
+
+[0;2m
+[m
+2014-08-25 18:30:03,138 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:30:03,658 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 4cf5053f5d652a9b526f5d50753b34edd0a2a367aa7665b0a442284cd01f54b8)
+2014-08-25 18:30:03,762 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: 4cf5053f5d652a9b526f5d50753b34edd0a2a367aa7665b0a442284cd01f54b8)
+2014-08-25 18:30:19,687 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:30:19,689 INFO  cs220.submission.top.Top - [31m- The isAlarmOn function is missing or has the wrong type.
+[0;2m/data/clocks.scala:40: error: not found: value test
+test("8:30:01 is after 8:30:00") {
+^
+/data/clocks.scala:44: error: not found: value test
+test("8:30:00 is after 8:29:59") {
+^
+/data/clocks.scala:106: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
+{
+^
+one warning found
+two errors found
+
+[0;2m
+[m
+2014-08-25 18:30:19,741 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:30:20,220 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: f18a6377c5cd4f90a3f684872d08343eee49623f1913f6fda6c80ffd4ac95bae)
+2014-08-25 18:30:20,386 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: f18a6377c5cd4f90a3f684872d08343eee49623f1913f6fda6c80ffd4ac95bae)
+2014-08-25 18:30:36,290 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:30:36,291 INFO  cs220.submission.top.Top - [31m- The getTime function missing is has the wrong type.
+[0;2m/data/clocks.scala:40: error: not found: value test
+test("8:30:01 is after 8:30:00") {
+^
+/data/clocks.scala:44: error: not found: value test
+test("8:30:00 is after 8:29:59") {
+^
+/data/clocks.scala:105: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
+{
+^
+one warning found
+two errors found
+
+[0;2m
+[m
+2014-08-25 18:30:36,320 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:30:36,818 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 644d165b041206258d6af8a30f5d35d546a47aec01f6a863867d4679bb0764a0)
+2014-08-25 18:30:36,906 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: 644d165b041206258d6af8a30f5d35d546a47aec01f6a863867d4679bb0764a0)
+2014-08-25 18:30:52,163 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:30:52,165 INFO  cs220.submission.top.Top - [31m- The toAlarmClock function is missing or has the wrong type.
+[0;2m/data/clocks.scala:40: error: not found: value test
+test("8:30:01 is after 8:30:00") {
+^
+/data/clocks.scala:44: error: not found: value test
+test("8:30:00 is after 8:29:59") {
+^
+/data/clocks.scala:105: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
+{
+^
+one warning found
+two errors found
+
+[0;2m
+[m
+2014-08-25 18:30:52,186 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:30:52,687 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 77a0ba32730608a941a9c9d173e9dbdb6548d9819cc32fa3944882e9b4db0d5c)
+2014-08-25 18:30:52,809 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: 77a0ba32730608a941a9c9d173e9dbdb6548d9819cc32fa3944882e9b4db0d5c)
+2014-08-25 18:31:07,930 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:31:07,931 INFO  cs220.submission.top.Top - [31m- The AlarmClock type is missing.
+[0;2m/data/clocks.scala:40: error: not found: value test
+test("8:30:01 is after 8:30:00") {
+^
+/data/clocks.scala:44: error: not found: value test
+test("8:30:00 is after 8:29:59") {
+^
+/data/clocks.scala:105: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
+{
+^
+one warning found
+two errors found
+
+[0;2m
+[m
+2014-08-25 18:31:07,957 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:31:08,534 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 61a1f9b9f906956cc74c41ad9560778c61c9afce4ae1d373af8fa737ddba3817)
+2014-08-25 18:31:08,638 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: 61a1f9b9f906956cc74c41ad9560778c61c9afce4ae1d373af8fa737ddba3817)
+2014-08-25 18:31:24,684 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:31:24,685 INFO  cs220.submission.top.Top - [31m- The tick function is missing or has the wrong type.
+[0;2m/data/clocks.scala:40: error: not found: value test
+test("8:30:01 is after 8:30:00") {
+^
+/data/clocks.scala:44: error: not found: value test
+test("8:30:00 is after 8:29:59") {
+^
+/data/clocks.scala:105: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
+{
+^
+one warning found
+two errors found
+
+[0;2m
+[m
+2014-08-25 18:31:24,711 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:31:25,269 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: e73e73a889a26aebb6d3397307bf02cea5248c2e0ce8ba9936f9a42574ff6b7b)
+2014-08-25 18:31:25,431 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: e73e73a889a26aebb6d3397307bf02cea5248c2e0ce8ba9936f9a42574ff6b7b)
+2014-08-25 18:31:41,084 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:31:41,085 INFO  cs220.submission.top.Top - [31m- The isValidTime function is missing or has the wrong type.
+[0;2m/data/clocks.scala:40: error: not found: value test
+test("8:30:01 is after 8:30:00") {
+^
+/data/clocks.scala:44: error: not found: value test
+test("8:30:00 is after 8:29:59") {
+^
+/data/clocks.scala:105: warning: a pure expression does nothing in statement position; you may be omitting necessary parentheses
+{
+^
+one warning found
+two errors found
+
+[0;2m
+[m
+2014-08-25 18:31:41,105 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:31:41,654 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 8adf09079d30dce6ae3ed9f7ccdfa10b644f1a520608fe7f260d6106f0ea4d1a)
+2014-08-25 18:31:41,820 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: 8adf09079d30dce6ae3ed9f7ccdfa10b644f1a520608fe7f260d6106f0ea4d1a)
+2014-08-25 18:31:53,623 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:31:53,624 INFO  cs220.submission.top.Top - [31m- Do not make any changes to the Time constructor
+[0;2m/data/clocks.scala:105: error: Non-zero integral values may not have a leading zero.
+Time(05, 30, 15) match {
+     ^
+/data/clocks.scala:108: error: ')' expected but eof found.
+}
+ ^
+two errors found
+
+[0;2m
+[m
+2014-08-25 18:31:53,651 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-08-25 18:31:54,154 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 95da40c2bad31e0ea993306a5ecf550e419a3c628834f9ee9ebcb9e6fe0404d9)
+2014-08-25 18:31:54,360 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 20 seconds, id: 95da40c2bad31e0ea993306a5ecf550e419a3c628834f9ee9ebcb9e6fe0404d9)
+2014-08-25 18:32:05,888 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-08-25 18:32:05,890 INFO  cs220.submission.top.Top - [31m- Do not make any changes to the Time constructor
+[0;2m/data/clocks.scala:105: error: Non-zero integral values may not have a leading zero.
+Time(05, 30, 15)
+     ^
+/data/clocks.scala:105: error: ')' expected but eof found.
+Time(05, 30, 15)
+                ^
+two errors found
+
+[0;2m
+[m

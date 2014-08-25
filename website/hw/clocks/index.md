@@ -16,11 +16,6 @@ for you. You will then use this type to define the `AlarmClock` type yourself
 and several functions over `AlarmClock`. Finally, you will develop functions to
 draw `AlarmClock`s using a simple [graphics] graphics library.
 
-We've broken the assignment into several parts. You may submit each part to the
-grading system to be tested independently. Since this is the first assignment,
-you can re-submit up to *twenty times* before the due date. We will not be this
-lenient for future assignments.
-
 Setup
 -----
 
@@ -32,10 +27,10 @@ Before you start programming, you need to complete a few preliminary steps.
 - Create a directory that will store your solution to this assignment
   (e.g., the `hw1` directory).
 
-- Using a text editor, create a file called `Clock.scala` in the assignment
-  directory.
+- Using a text editor, create a file called `clocks.scala` in the assignment
+  directory. *(Note: all lowercase letters.)*
 
-At the top of `Clock.scala`, add these two lines of code:
+At the top of `clocks.scala`, add these two lines of code:
 
 {% highlight scala %}
 import cmpsci220._
