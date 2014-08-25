@@ -28,6 +28,23 @@ libraryDependencies ++=
 // running twice in the same SBT instance will fail.
 fork := true
 
+// A little hack to dump the CLASSPATH to ./classpath. This lets us run the
+// run a standalone executable without building a fat JAR, which is nice
+// and fast.
+
+lazy val dumpClasspath = taskKey[Unit]("Dumps the CLASSPATH for scripts")
+
+dumpClasspath <<= (managedClasspath in Compile, baseDirectory) map { (v, base) =>
+  import java.nio.file.{Files, Paths}
+  val classpath = v.map(_.data).mkString(":")
+  Files.write(base.toPath.resolve("classpath"),
+              s"CLASSPATH=$classpath".getBytes)
+}
+
+compile <<= (compile in Compile) dependsOn dumpClasspath
+
+// All this boilerplate is to publish to Maven Central or Sonatype Snapshots.
+
 resolvers += "Sonatype OSS Snapshots" at
   "https://oss.sonatype.org/content/repositories/snapshots"
 

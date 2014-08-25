@@ -1,7 +1,3 @@
-import AssemblyKeys._
-
-assemblySettings
-
 name := "submission"
 
 organization := "edu.umass.cs"
@@ -35,14 +31,16 @@ libraryDependencies ++=
       "org.fusesource.jansi" % "jansi" % "1.11")
 
 // A little hack to dump the CLASSPATH to ./classpath. This lets us run the
-// executable without running assembly, which makes testing much faster.
+// run a standalone executable without building a fat JAR, which is nice
+// and fast.
 
 lazy val dumpClasspath = taskKey[Unit]("Dumps the CLASSPATH for scripts")
 
-dumpClasspath <<= (managedClasspath in Compile) map { v =>
+dumpClasspath <<= (managedClasspath in Compile, baseDirectory) map { (v, base) =>
   import java.nio.file.{Files, Paths}
   val classpath = v.map(_.data).mkString(":")
-  Files.write(Paths.get("classpath"), s"CLASSPATH=$classpath".getBytes)
+  Files.write(base.toPath.resolve("classpath"),
+              s"CLASSPATH=$classpath".getBytes)
 }
 
 compile <<= (compile in Compile) dependsOn dumpClasspath
