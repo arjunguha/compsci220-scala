@@ -8,6 +8,7 @@ import org.fusesource.jansi.Ansi.Color._
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.util.{Try, Success, Failure}
+import rx.lang.scala._
 
 object Main extends App {
 
@@ -29,24 +30,18 @@ object Main extends App {
   }
   val top = new Top(topSettingsPath)
 
-  def report : PartialFunction[Try[List[TestResult]], Unit] = {
-    case Success(results) => {
-      for (result <- results) {
-        print(result.describe)
-      }
-    }
-    case Failure(exn : ExpectedException) => {
-      print(ansi.fg(RED).a(exn.getMessage).newline().reset())
-    }
-    case Failure(exn) => {
-      print(ansi.fg(RED).a("An unexpected error occurred. Please report.").reset())
-    }
-  }
+
+  val done = Promise[Unit]()
+
+  def report  = Observer[TestResult](
+    (result : TestResult) => print(result.describe),
+    (exn : Throwable) => print(ansi.fg(RED).a(exn).newline().reset()),
+    () => { done.success(()); () })
 
   args match {
     case Array("check-submission", asgn, step, dir) => {
-      val fut = top.checkSubmission(asgn, step, Paths.get(dir)) andThen report
-      Await.result(fut recover { case _ => () } , Duration.Inf)
+      top.checkSubmissionO(asgn, step, Paths.get(dir)).subscribe(report)
+      Await.result(done.future, Duration.Inf)
     }
     case Array("check-assignment", asgn, step) => {
       Await.result(top.checkAssignment(asgn, step), Duration.Inf)
@@ -58,5 +53,7 @@ object Main extends App {
   }
 
   System.exit(0)
+
+
 
 }

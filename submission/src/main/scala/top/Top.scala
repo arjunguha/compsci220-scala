@@ -9,6 +9,7 @@ import scala.concurrent.duration._
 import java.nio.file.{Paths, Files, Path}
 import java.io.File
 import scala.async.Async.{async, await}
+import rx.lang.scala._
 
 private object Top {
   val log = org.slf4j.LoggerFactory.getLogger(classOf[Top])
@@ -59,6 +60,17 @@ class Top(confFile : String) {
 
       }
     })
+  }
+
+
+  def checkSubmissionO(asgn : String, step : String, dir : Path)
+    (implicit ec : ExecutionContext) : Observable[TestResult] = {
+    val assignment = getAssignment(asgn, step)
+
+    val tests = Observable.from(getTestSuite(asgn, step))
+
+    tests.concatMap({ test =>
+      Observable.defer(Observable.from(testRunner.runTest(assignment, test, dir))) })
   }
 
 }

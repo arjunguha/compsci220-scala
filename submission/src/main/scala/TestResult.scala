@@ -20,7 +20,7 @@ case class TestResult(test : Test, result : SandboxResult) {
     case DidNotFinish(_, _) => {
       val t = test.timeLimit.toSeconds
       ansi().fg(RED).a(s"- ${test.description}").reset().newline()
-        .a("Did not finish (time limit: $t seconds)").reset().newline()
+        .a(s"Did not finish (time limit: $t seconds)").reset().newline()
     }
   }
 
