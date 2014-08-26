@@ -16,6 +16,15 @@ import ExecutionContext.Implicits.global
 
 private[cmpsci220] object Main {
 
+  private lazy val javafxEnabled = System.getenv("DISABLE_JAVAFX") match {
+    case "TRUE" => false
+    case "FALSE" => true
+    case null => true
+    case str =>
+      sys.error(s"unexpected value for the DISABLE_JAVAFX envvar $str")
+  }
+
+
   // Stops JavaFX from shutting down when all windows are closed. You cannot
   // restart JavaFX.
   Platform.setImplicitExit(false)
@@ -32,7 +41,12 @@ private[cmpsci220] object Main {
     }
   }
 
-  def preStart(start : Stage => Unit) = {
+  def preStart(start : Stage => Unit, exit : Promise[Unit]) : Unit = {
+    if (!javafxEnabled) {
+      exit.success(())
+      return
+    }
+
     if (!launched) {
       launched = true
       Main.realStart = start
@@ -64,13 +78,15 @@ private[cmpsci220] object Main {
     else {
       Platform.runLater(new Runnable {
         def run() : Unit = {
-          start(new Stage())
+          val stage = new Stage()
+          setupExitHandler(stage, exit)
+          start(stage)
         }
       })
     }
   }
 
-  def setupExitHandler(stage : Stage, exit : Promise[Unit]) : Unit = {
+  private def setupExitHandler(stage : Stage, exit : Promise[Unit]) : Unit = {
     def onCloseRequest = new EventHandler[WindowEvent] {
       override def handle(evt : WindowEvent) {
         exit.success(())

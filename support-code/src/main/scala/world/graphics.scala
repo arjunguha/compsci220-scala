@@ -20,7 +20,7 @@ import ExecutionContext.Implicits.global
 package object graphics {
 
   import cmpsci220.graphics.Image.SimpleImage
-  import main.Main.{preStart, setupCanvas, setupExitHandler}
+  import main.Main.{preStart, setupCanvas}
 
   /** Ignores pressed keys */
   def ignoreKey[T](key : String, state : T) : T = state
@@ -83,13 +83,12 @@ package object graphics {
       val frame = new KeyFrame(Duration.seconds(1 / refreshRate), onFinished)
       val timeline = new Timeline(frame)
       timeline.setCycleCount(Animation.INDEFINITE)
-      setupExitHandler(stage, exit)
       timeline.play()
       stage.showAndWait()
       timeline.stop()
     }
 
-    preStart(start)
+    preStart(start, exit)
     Await.result(exit.future, ScalaDuration.Inf)
   }
 
@@ -107,10 +106,9 @@ package object graphics {
     def start(stage : Stage) {
       val (gc, canvas) = setupCanvas(stage, "Image", width, height)
       image.draw(gc)
-      setupExitHandler(stage, exit)
       stage.showAndWait()
     }
-    preStart(start)
+    preStart(start, exit)
     Await.result(exit.future, ScalaDuration.Inf)
   }
 
@@ -124,7 +122,7 @@ package object graphics {
                     new File(fileName))
       stage.hide()
     }
-    preStart(start)
+    preStart(start, Promise[Unit]())
   }
 
   /** Draws a line

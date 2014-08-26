@@ -3,6 +3,7 @@ package cmpsci220
 import graphics.main.Main
 import javafx.scene.media.{MediaPlayer, Media}
 import java.nio.file.{Paths, Files}
+import scala.concurrent._
 
 package object sounds {
 
@@ -14,7 +15,8 @@ package object sounds {
     Main.preStart(stage => {
       val player = new MediaPlayer(new Media(path.toUri().toString()))
       player.play()
-    })
+    },
+    Promise[Unit]())
   }
 
 }

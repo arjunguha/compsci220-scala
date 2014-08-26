@@ -17,7 +17,6 @@ package object cmpsci220 {
       sys.error(s"unexpected value for the DISABLE_TESTS envvar $str")
   }
 
-
   val error = sys.error _
 
   /** A test case */

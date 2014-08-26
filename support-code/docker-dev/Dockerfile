@@ -30,3 +30,4 @@ ADD docker220 /usr/local/bin/docker220
 RUN chmod a+x /usr/local/bin/docker220
 
 ENV DISABLE_TESTS TRUE
+ENV DISABLE_JAVAFX TRUE
