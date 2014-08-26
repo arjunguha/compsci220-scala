@@ -13,7 +13,7 @@ all:
 	mkdir -p $(LIB)
 	cp ../support-code/target/scala-2.11/cmpsci220-assembly-$(SUPPORT_VER).jar $(LIB)/cmpsci220.jar
 	cp ../submission/target/scala-2.11/submission-assembly-$(SUBMISSION_VER).jar $(LIB)/submit.jar
-	cp scala220 $(BIN)/scala220
+	cp ../support-code/bin/scala220 $(BIN)/scala220
 	cp submit220 $(BIN)/submit220
 	cp -r debian $(TARGET)
 	cd $(TARGET) && debuild -S

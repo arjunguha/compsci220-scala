@@ -1,2 +1,0 @@
-#!/bin/bash
-scala -classpath /usr/lib/cs220/cmpsci220.jar $@
