@@ -1,14 +1,14 @@
 memoryLimit: 100
 timeLimit: 20
-image: "arjunguha:cs220"
+image: "arjunguha/cs220"
 command: [ /usr/local/bin/docker220, clocks.scala ]
 tests:
   - desc: Do not make any changes to the Time constructor
     test: |
-      Time(05, 30, 15)
+      Time(5, 30, 15)
   - desc: Do not make any changes to the Time constructor
     test: |
-      Time(05, 30, 15) match {
+      Time(5, 30, 15) match {
         case Time(5, 30, 15) => ()
         case _ => assert(false)
       }
