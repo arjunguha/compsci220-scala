@@ -2,7 +2,6 @@
 
 SOLUTION=$1
 
-sed -i 's/import cmpsci220._/import cmpsci220._\nimplicit val testsEnabled = cmpsci220.TestsEnabled(false)\n/g' $SOLUTION
-echo -e "\nimplicit val testsEnabled = cmpsci220.TestsEnabled(true)" >> $SOLUTION
+echo "" >> $SOLUTION
 cat yamltest >> $SOLUTION
 /usr/bin/scala220 $SOLUTION

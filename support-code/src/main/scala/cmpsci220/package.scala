@@ -8,14 +8,21 @@ package object cmpsci220 {
   AnsiConsole.systemInstall()
 
   /** This value enables all test cases */
-  implicit val testsEnabled = TestsEnabled(true)
+
+  private lazy val testsEnabled = System.getenv("DISABLE_TESTS") match {
+    case "TRUE" => false
+    case "FALSE" => true
+    case null => true
+    case str =>
+      sys.error(s"unexpected value for the DISABLE_TESTS envvar $str")
+  }
+
 
   val error = sys.error _
 
   /** A test case */
-  def test(description : String)(body : => Unit)
-    (implicit testsEnabled : TestsEnabled) : Unit = {
-    if (testsEnabled.isEnabled) {
+  def test(description : String)(body : => Unit) : Unit = {
+    if (testsEnabled) {
       try {
         body
         print(ansi().fg(GREEN).a(s"Succeeded $description").reset().newline())
@@ -29,9 +36,8 @@ package object cmpsci220 {
     }
   }
 
-  def fails(description : String)(body : => Unit)
-    (implicit testsEnabled : TestsEnabled) : Unit = {
-    if (testsEnabled.isEnabled) {
+  def fails(description : String)(body : => Unit) : Unit = {
+    if (testsEnabled) {
       try {
         body
         print(ansi().fg(RED).a(s"Failed $description").reset().newline())

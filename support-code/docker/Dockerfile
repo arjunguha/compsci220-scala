@@ -27,3 +27,5 @@ RUN apt-get update && apt-get install -yq cs220=0.19
 
 ADD docker220 /usr/local/bin/docker220
 RUN chmod a+x /usr/local/bin/docker220
+
+ENV DISABLE_TESTS TRUE
