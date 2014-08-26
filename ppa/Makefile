@@ -14,7 +14,7 @@ all:
 	cp ../support-code/target/scala-2.11/cmpsci220-assembly-$(SUPPORT_VER).jar $(LIB)/cmpsci220.jar
 	cp ../submission/target/scala-2.11/submission-assembly-$(SUBMISSION_VER).jar $(LIB)/submit.jar
 	cp ../support-code/bin/scala220 $(BIN)/scala220
-	cp submit220 $(BIN)/submit220
+	cp ../submission/bin/check220 $(BIN)/check220
 	cp -r debian $(TARGET)
 	cd $(TARGET) && debuild -S
 	cd $(TARGET_BASE) && dput ppa:arjun-guha/umass-cs220 cs220_$(VERSION)_source.changes

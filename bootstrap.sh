@@ -63,7 +63,7 @@ EOF
 apt-get purge -yq xterm
 
 cat << EOF >> /home/vagrant/.profile
-PATH=/home/vagrant/src/bin:/home/vagrant/src/support-code/bin:$PATH
+PATH=/home/vagrant/src/submission/bin:/home/vagrant/src/support-code/bin:$PATH
 EOF
 
 gem install jekyll

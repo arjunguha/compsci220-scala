@@ -1,0 +1,16 @@
+#!/bin/bash
+
+DIR=`dirname $0`
+
+if [ $DIR == '/usr/bin' ]; then
+  CLASSPATH=/usr/lib/cs220/submit.jar
+elif [ -f $DIR/../classpath ]; then
+  source $DIR/../classpath
+  CLASSPATH=$CLASSPATH:$DIR/../target/scala-2.11/classes
+else
+  echo "check220 script failed."
+  exit 1
+fi
+
+
+/usr/bin/java -classpath $CLASSPATH cs220.submission.top.Main $@
