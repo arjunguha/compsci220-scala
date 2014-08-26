@@ -5,7 +5,8 @@ DIR=`dirname $0`
 if [ $DIR == '/usr/bin' ]; then
   CLASSPATH=/usr/lib/cs220/cmpsci220.jar
 elif [ -f $DIR/../classpath ]; then
-  CLASSPATH=$DIR/../target/scala-2.11/classes
+  source $DIR/../classpath
+  CLASSPATH=$CLASSPATH:$DIR/../target/scala-2.11/classes
 else
   echo "scala220 script failed."
   exit 1
