@@ -41,7 +41,7 @@ object Main extends App {
   args match {
     case Array("check-submission", asgn, step, dir) => {
       println("Checking ...")
-      top.checkSubmissionO(asgn, step, Paths.get(dir)).subscribe(report)
+      top.checkSubmission(asgn, step, Paths.get(dir)).subscribe(report)
       Await.result(done.future, Duration.Inf)
     }
     case Array("check-assignment", asgn, step) => {

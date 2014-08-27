@@ -47,23 +47,7 @@ class Top(confFile : String) {
     ()
   }
 
-
   def checkSubmission(asgn : String, step : String, dir : Path)
-    (implicit ec : ExecutionContext) : Future[List[TestResult]] = async {
-    val assignment = getAssignment(asgn, step)
-    val tests = getTestSuite(asgn, step)
-    await(tests.foldRight(Future{List[TestResult]()}) { (test, fut) => async {
-        val tl = await(fut)
-        val hd = await(testRunner.runTest(assignment, test, dir))
-        Top.log.info(hd.describe().toString)
-        hd :: tl
-
-      }
-    })
-  }
-
-
-  def checkSubmissionO(asgn : String, step : String, dir : Path)
     (implicit ec : ExecutionContext) : Observable[TestResult] = {
     val assignment = getAssignment(asgn, step)
 
