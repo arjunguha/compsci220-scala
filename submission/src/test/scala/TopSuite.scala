@@ -2,6 +2,7 @@ import TestBoilerplate._
 import scala.util.{Success, Failure}
 import cs220.submission.sandbox.{Complete, DidNotFinish}
 import cs220.submission.{InvalidSubmission, InvalidAssignment, TestResult}
+import Rich._
 
 class TopSuite extends TopFixture {
 
@@ -14,32 +15,29 @@ class TopSuite extends TopFixture {
   }
 
   test("ok submission should submit correctly") { top =>
-    whenReady(top.checkSubmission("asgn1", "step1", submits.resolve("ok"))) {
-      case List(TestResult(_, Complete(0, "submission.txt\nyamltest\n", "")),
+    whenReady(top.checkSubmission("asgn1", "step1", submits.resolve("ok")).futureSeq) {
+      case Seq(TestResult(_, Complete(0, "submission.txt\nyamltest\n", "")),
                 TestResult(_, Complete(0, "submission.txt\nyamltest\n", ""))) => ()
       case other => fail(other.toString)
     }
   }
 
   test("submision has a missing file") { top =>
-    val r = toTry(top.checkSubmission("asgn1", "step1", submits.resolve("missing")))
-    whenReady(r) {
+    whenReady(toTry(top.checkSubmission("asgn1", "step1", submits.resolve("missing")).futureSeq)) {
       case Failure(exn : InvalidSubmission) => ()
       case other => fail(other.toString)
     }
   }
 
   test("submit to invalid step") { top =>
-    val r = toTry(top.checkSubmission("asgn1", "step-999", submits.resolve("ok")))
-    whenReady(r) {
+    whenReady(toTry(top.checkSubmission("asgn1", "step-999", submits.resolve("ok")).futureSeq)) {
       case Failure(_ : InvalidAssignment) => ()
       case other => fail(other.toString)
     }
   }
 
   test("submit to invalid assignment") { top =>
-    val r = toTry(top.checkSubmission("asgn-999", "step1", submits.resolve("ok")))
-    whenReady(r) {
+    whenReady(toTry(top.checkSubmission("asgn-999", "step1", submits.resolve("ok")).futureSeq)) {
       case Failure(_ : InvalidAssignment) => ()
       case other => fail(other.toString)
     }

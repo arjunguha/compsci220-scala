@@ -10,7 +10,7 @@ class TestSandbox(url : String) extends Sandbox(url) {
 
   def test(cmd : String*)
     (implicit ec : ExecutionContext) = {
-    this(workingDir = Paths.get("./src/test/files/sandbox"),
+    this(workingDir = Paths.get("./submission/src/test/files/sandbox"),
          mountPoint = "/data",
          image = "ubuntu:14.04",
          command = cmd.toList,

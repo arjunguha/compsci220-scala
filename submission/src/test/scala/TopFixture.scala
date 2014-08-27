@@ -8,9 +8,9 @@ import cs220.submission.top.Top
 
 trait TopFixture extends FunSuite with ScalaFutures {
 
-  private val confFile = "./src/test/files/TopSuite/assignments/settings.conf"
+  private val confFile = "./submission/src/test/files/TopSuite/assignments/settings.conf"
 
-  val submits = Paths.get("./src/test/files/TopSuite/submissions")
+  val submits = Paths.get("./submission/src/test/files/TopSuite/submissions")
 
   implicit val ec : ExecutionContext = ExecutionContext.Implicits.global
 
