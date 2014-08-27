@@ -19,4 +19,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.network "forwarded_port", guest: 4000, host: 4000
 
+  config.ssh.forward_x11 = true
+
 end
