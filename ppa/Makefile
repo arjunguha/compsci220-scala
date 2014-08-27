@@ -1,6 +1,4 @@
 VERSION=$(shell head -n 1 debian/changelog | grep --o '(.*)' | sed 's/(//' | sed 's/)//')
-SUBMISSION_VER=$(shell grep 'version' ../submission/build.sbt | grep --o '\".*\"' | sed 's/\"//g')
-SUPPORT_VER=$(shell grep 'version' ../support-code/build.sbt | grep --o '\".*\"' | sed 's/\"//g')
 TARGET_BASE=targets
 TARGET=$(TARGET_BASE)/cs220-$(VERSION)
 LIB=$(TARGET)/usr/lib/cs220
@@ -11,8 +9,8 @@ all:
 	#cd support-code && sbt assembly
 	mkdir -p $(BIN)
 	mkdir -p $(LIB)
-	cp ../support-code/target/scala-2.11/cmpsci220-assembly-$(SUPPORT_VER).jar $(LIB)/cmpsci220.jar
-	cp ../submission/target/scala-2.11/submission-assembly-$(SUBMISSION_VER).jar $(LIB)/submit.jar
+	cp ../support-code/target/scala-2.11/cmpsci220.jar $(LIB)/cmpsci220.jar
+	cp ../submission/target/scala-2.11/submission.jar $(LIB)/submit.jar
 	cp ../support-code/bin/scala220 $(BIN)/scala220
 	cp ../submission/bin/check220 $(BIN)/check220
 	cp -r debian $(TARGET)
