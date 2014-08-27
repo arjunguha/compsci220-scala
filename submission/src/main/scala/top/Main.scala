@@ -44,12 +44,17 @@ object Main extends App {
       top.checkSubmission(asgn, step, Paths.get(dir)).subscribe(report)
       Await.result(done.future, Duration.Inf)
     }
+    case Array("tar", asgn, step) => {
+      val filename = s"solution-${asgn}-${step}.tgz"
+      top.zipSubmission(asgn, step, Paths.get("."), Paths.get(filename))
+      println(s"Submit the file $filename to Moodle")
+    }
     case Array("check-assignment", asgn, step) => {
       Await.result(top.checkAssignment(asgn, step), Duration.Inf)
       println(s"$asgn $step is OK.")
     }
     case _ => {
-      print(ansi.fg(RED).a("Invalid command-line arguments.").newline().reset())
+      print(ansi.fg(RED).a("Invalid command-line arguments.").reset().newline())
     }
   }
 

@@ -10,6 +10,8 @@ import java.nio.file.{Paths, Files, Path}
 import java.io.File
 import scala.async.Async.{async, await}
 import rx.lang.scala._
+import org.apache.commons.io.FileUtils
+import spray.json._
 
 private object Top {
   val log = org.slf4j.LoggerFactory.getLogger(classOf[Top])
@@ -45,6 +47,29 @@ class Top(confFile : String) {
     val assignment = getAssignment(asgn, step)
     val tests = getTestSuite(asgn, step)
     ()
+  }
+
+  def zipSubmission(asgn : String, step : String, submitDir : Path,
+                    zipPath : Path) : Unit = {
+    import scala.sys.process._
+    val tmpDir = Files.createTempDirectory(settings.tmpDir, "Submission")
+    try {
+      getAssignment(asgn, step).prepareSubmission(submitDir, tmpDir)
+
+      Files.write(tmpDir.resolve(".metadata"),
+                  JsObject("assignment" -> JsString(asgn),
+                           "step" -> JsString(step)).compactPrint.getBytes)
+
+      if (Seq("/bin/tar",
+              "-czf", zipPath.toString,
+              "-C", tmpDir.toString,
+              ".").! != 0) {
+        sys.error("Could not tar")
+      }
+    }
+    finally {
+      FileUtils.deleteDirectory(tmpDir.toFile)
+    }
   }
 
   def checkSubmission(asgn : String, step : String, dir : Path)

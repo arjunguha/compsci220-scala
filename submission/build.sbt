@@ -29,7 +29,9 @@ libraryDependencies ++=
       "ch.qos.logback" % "logback-core" % logbackVersion,
       "org.yaml" % "snakeyaml" % "1.13",
       "org.fusesource.jansi" % "jansi" % "1.11",
-      "com.netflix.rxjava" % "rxjava-scala" % "0.20.0")
+      "com.netflix.rxjava" % "rxjava-scala" % "0.20.0",
+      "io.spray" %%  "spray-json" % "1.2.6")
+
 
 // A little hack to dump the CLASSPATH to ./classpath. This lets us run the
 // run a standalone executable without building a fat JAR, which is nice
