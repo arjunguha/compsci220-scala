@@ -24,12 +24,12 @@ private[cmpsci220] object Main {
       sys.error(s"unexpected value for the DISABLE_JAVAFX envvar $str")
   }
 
-
   // Stops JavaFX from shutting down when all windows are closed. You cannot
   // restart JavaFX.
   Platform.setImplicitExit(false)
 
   private var realStart : Stage => Unit = null
+  private var exit : Promise[Unit] = null
   private var launched = false
 
   // Why a nested class? Scaladoc documents all top-level classes, regardless
@@ -37,7 +37,13 @@ private[cmpsci220] object Main {
   private class MyApplication extends Application {
 
     def start(mainStage : Stage) {
-      Main.realStart(new Stage())
+      val exit = Main.exit
+      val realStart = Main.realStart
+      Main.exit = null // free reference
+      Main.realStart = null // free reference
+      val stage = new Stage()
+      setupExitHandler(stage, exit)
+      realStart(stage)
     }
   }
 
@@ -50,8 +56,7 @@ private[cmpsci220] object Main {
     if (!launched) {
       launched = true
       Main.realStart = start
-
-      val mainThread = Thread.currentThread()
+      Main.exit = exit
 
       // The thread in which we call Application.launch becomes the
       // distinguished JavaFX thread. We create a new thread for JavaFX to avoid
@@ -60,20 +65,9 @@ private[cmpsci220] object Main {
         def run() : Unit = {
           Application.launch(classOf[MyApplication])
         }
-      })
+      }, "appThread")
+      appThread.setDaemon(true)
       appThread.start()
-
-     // When running in a console (either standalone or sbt console), a graceful
-     // exit kills mainThread, but does not kill appThread. Without this thread
-     // to kill appThread, a console hangs during shutdown. Ctrl+C does work,
-     // but quits SBT.
-     val shutdownThread = new Thread(new Runnable {
-        def run() : Unit = {
-          mainThread.join()
-          Platform.exit()
-        }
-      })
-      shutdownThread.start()
     }
     else {
       Platform.runLater(new Runnable {
