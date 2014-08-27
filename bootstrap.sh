@@ -64,6 +64,7 @@ apt-get purge -yq xterm
 
 cat << EOF >> /home/vagrant/.profile
 PATH=/home/vagrant/src/submission/bin:/home/vagrant/src/support-code/bin:$PATH
+export ASSIGNMENTS_PATH=/home/vagrant/src/website/hw/_grading/sanity/settings.conf
 EOF
 
 gem install jekyll
