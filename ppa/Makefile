@@ -13,6 +13,7 @@ all:
 	cp ../submission/target/scala-2.11/submission.jar $(LIB)/submit.jar
 	cp ../support-code/bin/scala220 $(BIN)/scala220
 	cp ../submission/bin/check220 $(BIN)/check220
+	cp -r ../website/hw/_grading/sanity $(LIB)/sanity
 	cp -r debian $(TARGET)
 	cd $(TARGET) && debuild -S
 	cd $(TARGET_BASE) && dput ppa:arjun-guha/umass-cs220 cs220_$(VERSION)_source.changes

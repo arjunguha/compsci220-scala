@@ -101,7 +101,7 @@ def animateClock(startTime : Time) = {
           refreshRate = 1)
 }
 
-animateClock(ex5)
+//animateClock(ex5)
 
-animateClock(ex6)
+//animateClock(ex6)
 
