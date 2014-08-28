@@ -2,7 +2,7 @@
 
 # This script configures the student virtual machine for CS220.
 # It is meant to be run as root on a clean installation of AMD64 Ubuntu 14.04
-# **Minimal** with no extra packages installed and a user called "student".
+# **Minimal** with no extra packages installed.
 apt-get install -y \
   lubuntu-core \
   curl \
