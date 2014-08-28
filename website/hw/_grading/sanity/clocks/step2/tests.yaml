@@ -1,0 +1,10 @@
+memoryLimit: 100
+timeLimit: 20
+image: "arjunguha/cs220"
+command: [ /usr/local/bin/docker220, clocks.scala ]
+tests:
+  - desc: The drawHands function is missing or has the wrong type.
+    test: |
+      {
+        def check(t : Time) : cmpsci220.graphics.Image = drawHands(t)
+      }

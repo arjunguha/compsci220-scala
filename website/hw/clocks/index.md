@@ -25,7 +25,7 @@ Before you start programming, you need to complete a few preliminary steps.
   top of this page). You will need it for all the assignments in this class.
 
 - Create a directory that will store your solution to this assignment
-  (e.g., the `hw1` directory).
+  (e.g., call it the `hw1` directory).
 
 - Using a text editor, create a file called `clocks.scala` in the assignment
   directory. *(Note: all lowercase letters.)*
@@ -64,26 +64,24 @@ val ex5 = Time(0, -1, 0)
 val ex6 = Time(7, 0, 200)
 {% endhighlight %}
 
-<ol start="4">
-
-<li>Write a function called <code>isValidTime</code> that returns
-  <code>true</code> if the time is valid and <code>false</code> otherwise. The
-  <code>isValidTime</code> function must have the following type:
+Write a function called <code>isValidTime</code> that returns <code>true</code>
+if the time is valid and <code>false</code> otherwise. The
+<code>isValidTime</code> function must have the following type:
 
 {% highlight scala %}
 def isValidTime(time : Time) : Boolean
 {% endhighlight %}</li>
 
-<li>Write a function called <code>tick</code> that takes a time-value as an
-  argument and evaluates to a new time that is one second in the future. The
-  <code>tick</code> function must have the following type:
+Write a function called <code>tick</code> that takes a time-value as an argument
+and evaluates to a new time that is one second in the future. The
+<code>tick</code> function must have the following type:
 
 {% highlight scala %}
 def tick(time : Time) : Time
 {% endhighlight %}
 
-  Here are two test cases that the function should pass. You <i>must</i> write
-  more tests yourself:
+Here are two test cases that the function should pass. You <i>must</i> write
+more tests yourself:
 
 {% highlight scala %}
 test("8:30:01 is after 8:30:00") {
@@ -95,28 +93,21 @@ test("8:30:00 is after 8:29:59") {
 }
 {% endhighlight %}
 
-  You should assume that the argument to <code>tick</code> is a valid time and
-  ensure that the result of <code>tick</code> is also a valid time. (Write test
-  cases!)
-  </li>
-
-</ol>
+You should assume that the argument to <code>tick</code> is a valid time and
+ensure that the result of <code>tick</code> is also a valid time.
 
 Alarms
 ------
 
-<ol start="6">
-
-<li>An alarm clock must keep track of (1) the current time, (2) the alarm time,
-  and (3) if the alarm is on. Design a case class called
-  <code>AlarmClock</code> to do so:
+An alarm clock must keep track of (1) the current time, (2) the alarm time, and
+(3) if the alarm is on. Design a case class called <code>AlarmClock</code> to do
+so:
 
 {% highlight scala %}
 case class AlarmClock(/*... add members here ... */)
 {% endhighlight %}
-</li>
 
-<li>Write and <i>test</i> the following functions that manipuate <code>AlarmClock</code> values.</li>
+Write and test the following functions that manipuate <code>AlarmClock</code> values.
 
 {% highlight scala %}
 // Maps a time to an AlarmClock with the alarm turned off
@@ -136,10 +127,10 @@ def setAlarm(clock : AlarmClock, alarmTime : Time) : AlarmClock
 def tickAlarmClock(clock : AlarmClock) : AlarmClock
 {% endhighlight %}
 
-  You should use the <code>tick</code> function you wrote earlier as a helper
-  function.</li>
+**Check Your Work**: From the command-line, run the command:
 
-</ol>
+    check220 check clocks step1
+
 
 Drawing Clock Hands
 -------------------
@@ -195,41 +186,29 @@ Animate the Clock
 
 Now that you have a function to draw a clock, you can write a function to tick
 the clock every second. You can use the `animate` function in the graphics
-library. Here is a function that animates `Time` values.
+library to do so. Write a function with the following type.
 
 {% highlight scala %}
-def animateClock(startTime : Time) : Time = {
-  animate(startTime,
-          width = 400,
-          height = 400,
-          draw = drawHands,
-          tick = tick,
-          refreshRate = 1)
-}
+def animateAlarmClock(start: AlarmClock): AlarmClock
 {% endhighlight %}
 
+The body should call the `animate` function from the graphics library. Call
+`tick` to update the clock every second and use the `drawHands` function display
+the clock.
 
+**Check Your Work**: From the command-line, run the command:
 
-**TODO(arjun):** Essentially give students the code to do this. Rendering
-the image is hard enough to start. Let students write the function to turn
-off the alarm, since it depends on their type definitions.
+    check220 check clocks step2
 
-- Use `animate` to start the clock
+Hand In
+-------
 
-- Play 'beep-beep-beep-beep' if isAlarm is true
+From the command-line, run the command:
 
-- Snooze on key-press
+    check220 tar clocks final
 
-Extra Credit: Draw the Clock Face
----------------------------------
+This command will create the file `submission-clocks-final.tgz`. Submit this
+file using Moodle.
 
-**TODO(arjun):** Guide students toward writing a `drawTickMark` function.
-  They will have to use `math.sin` and `math.cos` to position the tick.
-  The `angle` library function can be used to draw the tick, but will not
-   help position it. Turn `overlay` into a variable-arity function and
-   have them just overlay 12 invocations of `drawTickMark` instead of
-   trying to fold over overlay.
-
-
-[graphics]: lib/api/#cmpsci220.graphics.package
+[graphics]: ../../lib/api/#cmpsci220.graphics.package
 

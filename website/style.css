@@ -112,3 +112,7 @@ td {
   border-bottom: 1px solid black;
   padding: 5px;
 }
+
+pre {
+  background-color: #F8F8F8
+}

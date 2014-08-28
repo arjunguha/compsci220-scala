@@ -53,3 +53,8 @@ tests:
       {
         def check(a : AlarmClock) : AlarmClock = tickAlarmClock(a)
       }
+  - desc: The drawHands function is missing or has the wrong type.
+    test: |
+      {
+        def check(t : Time) : cmpsci220.graphics.Image = drawHands(t)
+      }
