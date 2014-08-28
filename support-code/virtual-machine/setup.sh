@@ -10,6 +10,8 @@ apt-get install -y \
   lxterminal \
   xdg-utils \
   docker.io \
+  vim-gtk \
+  emacs24 \
   software-properties-common
 
 # Configure Docker
@@ -72,6 +74,7 @@ Unattended-Upgrade::Allowed-Origins {
        "${distro_id}:${distro_codename}-security";
        "LP-PPA-arjun-guha-umass-cs220 trusty";
 };
+EOF
 
 # Remove junk
 apt-get remove -y xterm
