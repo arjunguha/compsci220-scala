@@ -35,7 +35,11 @@ object Main extends App {
 
   def report  = Observer[TestResult](
     (result : TestResult) => print(result.describe),
-    (exn : Throwable) => print(ansi.fg(RED).a(exn).newline().reset()),
+    (exn : Throwable) => {
+      print(ansi.fg(RED).a(exn).reset().newline())
+      done.success(())
+      ()
+    },
     () => { done.success(()); () })
 
   args match {

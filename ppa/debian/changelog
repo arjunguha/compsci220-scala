@@ -1,3 +1,17 @@
+cs220 (0.22) trusty; urgency=low
+
+  * Several bugs fixed.
+
+ -- Arjun Guha <arjun@cs.umass.edu>  Thu, 28 Aug 2014 16:32:00 -0500
+
+
+cs220 (0.21) trusty; urgency=low
+
+  * Changed DOCKER_URL
+
+ -- Arjun Guha <arjun@cs.umass.edu>  Thu, 28 Aug 2014 16:32:00 -0500
+
+
 cs220 (0.20) trusty; urgency=low
 
   * Added sanity test suite

@@ -4,7 +4,7 @@ DIR=`dirname $0`
 
 if [ $DIR == '/usr/bin' ]; then
   CLASSPATH=/usr/lib/cs220/submit.jar
-  P=/usr/lib/cs220/sanity
+  P=/usr/lib/cs220/sanity/settings.conf
 elif [ -f $DIR/../classpath ]; then
   source $DIR/../classpath
   CLASSPATH=$CLASSPATH:$DIR/../target/scala-2.11/classes

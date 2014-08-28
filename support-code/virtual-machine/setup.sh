@@ -23,6 +23,18 @@ update-grub
 
 adduser --disabled-password --gecos "" student
 
+# Allow sudo with password
+usermod -a -G sudo student
+cat << EOF > /etc/sudoers
+Defaults  env_reset
+Defaults  mail_badpass
+Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+root  ALL=(ALL:ALL) ALL
+%admin ALL=(ALL) ALL
+%sudo ALL= NOPASSWD:ALL
+EOF
+
 # Auto-Login
 cat << EOF > /etc/lightdm/lightdm.conf
 [SeatDefaults]
@@ -37,6 +49,7 @@ wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 dpkg -i google-chrome-stable_current_amd64.deb
 rm google-chrome-stable_current_amd64.deb
+apt-get -f install
 
 # Install Sublime Text
 wget http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb
@@ -60,6 +73,9 @@ wget http://downloads.typesafe.com/scala/2.11.2/scala-2.11.2.deb
 dpkg -i scala-2.11.2.deb
 rm scala-2.11.2.deb
 
+# Fix broken deps
+apt-get -f install
+
 # Install CS220 software
 add-apt-repository -y ppa:arjun-guha/umass-cs220
 apt-get update
@@ -67,8 +83,9 @@ apt-get install -y cs220
 
 # Setup unattended upgrades
 cat << EOF > /etc/apt/apt.conf.d/10periodic
-APT::Periodic::Unattended-Upgrade "1"
+APT::Periodic::Unattended-Upgrade "1";
 EOF
+
 cat << EOF /etc/apt/apt.conf.d/50-unattended-upgrades
 Unattended-Upgrade::Allowed-Origins {
        "${distro_id}:${distro_codename}-security";

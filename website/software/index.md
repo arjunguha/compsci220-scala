@@ -8,11 +8,7 @@ software tools installed. You must use this virtual machine to do the homework
 and projects for the class. Follow the steps below to install the virtual
 machine:
 
-1. Download and install [VirtualBox]:
-
-   - [VirtualBox for Mac]
-   - [VirtualBox for Windows]
-   - [VirtualBox for Linux]
+1. Download and install [VirtualBox]
 
 2. Download [CS220.ova] (1.37 GB)
 
@@ -42,10 +38,7 @@ More specifically, it is a [minimal] installation of Ubuntu configured
 with [this script].
 
 [virtual machine]: http://en.wikipedia.org/wiki/Virtual_machine
-[VirtualBox]: https://www.virtualbox.org
-[VirtualBox for Mac]: http://download.virtualbox.org/virtualbox/4.3.12/VirtualBox-4.3.12-93733-OSX.dmg
-[VirtualBox for Windows]: http://download.virtualbox.org/virtualbox/4.3.12/VirtualBox-4.3.12-93733-Win.exe
-[VirtualBox for Linux]: https://www.virtualbox.org/wiki/Linux_Downloads
+[VirtualBox]: https://www.virtualbox.org/wiki/Downloads
 [CS220.ova]: http://storage.googleapis.com/arjun-umass-disks/cs220.ova
 [Lubuntu]: http://lubuntu.net
 [minimal]: https://help.ubuntu.com/community/Installation/MinimalCD
