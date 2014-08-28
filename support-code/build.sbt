@@ -1,7 +1,3 @@
-import AssemblyKeys._
-
-assemblySettings
-
 name := "cmpsci220"
 
 organization := "edu.umass.cs"
