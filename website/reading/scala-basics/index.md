@@ -16,9 +16,9 @@ to swear at his own readers, so we'd like to apologize in advance on his behalf.
 
 ## The Scala REPL
 
-Like many modern languages, Scala has a *REPL*, which you can use to evaluate
-expressions immediately. To launch the Scala REPL, start a terminal,
-type in `scala220` and press enter. Your screen should look like this:
+Like many modern languages, Scala has a *REPL* (read-eval-print loop), which you
+can use to evaluate expressions immediately. To launch the Scala REPL, start a
+terminal, type in `scala220` and press enter. Your screen should look like this:
 
 ~~~
 student@vm:~$ scala220
@@ -138,9 +138,9 @@ dist2(3.0, 4.0)
 
 ## Saving Code in Files
 
-You can type this code into the Scala REPL, but it cumbersome. Moreover, if you
+You can type this code into the Scala REPL, but it is cumbersome. Moreover, if you
 make a mistake on one line, you have to abort and type in the entire function
-again. You'll find it easier to write this code using a text editor and saving
+again. You'll find it easier to write this code using a text editor and save
 it as a file. Try to save the code above in a file called `intro.scala`. You can
 load the code as follows:
 

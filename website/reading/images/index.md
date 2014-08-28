@@ -5,7 +5,7 @@ title: Images
 
 For the first few assignments, you will use a simply library that we've
 developed for this course. The library has some basic data structures, some
-testing code, and functions to draw and animates images. In a few weeks, we'll
+testing code, and functions to draw and animate images. In a few weeks, we'll
 start using professional libraries.
 
 Import these libraries by adding import statements at the top
