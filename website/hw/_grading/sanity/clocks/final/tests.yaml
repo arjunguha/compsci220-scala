@@ -1,4 +1,4 @@
-memoryLimit: 100
+memoryLimit: 700
 timeLimit: 20
 image: "arjunguha/cs220"
 command: [ /usr/local/bin/docker220, clocks.scala ]
