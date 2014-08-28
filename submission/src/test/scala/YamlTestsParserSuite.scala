@@ -6,7 +6,7 @@ import org.yaml.snakeyaml.error.YAMLException
 
 class YamlTestsParserSuite extends FunSuite {
 
-  forallFiles("./src/test/files/YamlTestsParserSuite/good") { path =>
+  forallFiles("./submission/src/test/files/YamlTestsParserSuite/good") { path =>
 
     test(s"$path parses") {
       YamlTest(new String(Files.readAllBytes(path)))
@@ -14,7 +14,7 @@ class YamlTestsParserSuite extends FunSuite {
 
   }
 
-  forallFiles("./src/test/files/YamlTestsParserSuite/bad") { path =>
+  forallFiles("./submission/src/test/files/YamlTestsParserSuite/bad") { path =>
 
     test(s"$path should not parse") {
       intercept[YAMLException] {

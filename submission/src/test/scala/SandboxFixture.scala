@@ -1,6 +1,4 @@
 import org.scalatest.fixture.FunSuite
-import org.scalatest.concurrent.{ScalaFutures, PatienceConfiguration}
-import org.scalatest.time.{Span, Seconds}
 import scala.concurrent._
 import scala.concurrent.duration._
 import cs220.submission.sandbox.Sandbox
@@ -20,13 +18,9 @@ class TestSandbox(url : String) extends Sandbox(url) {
 
 }
 
-trait SandboxFixture extends FunSuite with ScalaFutures {
+trait SandboxFixture extends FunSuite {
 
   implicit val ec : ExecutionContext = ExecutionContext.Implicits.global
-
-  // Controls timeout of whenReady and other features from ScalaFutures.
-  implicit override val patienceConfig =
-    PatienceConfig(timeout = Span(10, Seconds), interval = Span(1, Seconds))
 
   type FixtureParam = TestSandbox
 

@@ -6,7 +6,7 @@ import org.yaml.snakeyaml.error.YAMLException
 
 class YamlAssignmentParserSuite extends FunSuite {
 
-  forallFiles(s"./src/test/files/YamlAssignmentParserSuite/good") { path =>
+  forallFiles(s"./submission/src/test/files/YamlAssignmentParserSuite/good") { path =>
 
     test(s"$path parses") {
       YamlAssignment("fake-assignment-name", "fake-assignment-step",
@@ -15,7 +15,7 @@ class YamlAssignmentParserSuite extends FunSuite {
 
   }
 
-  forallFiles("./src/test/files/YamlAssignmentParserSuite/bad") { path =>
+  forallFiles("./submission/src/test/files/YamlAssignmentParserSuite/bad") { path =>
 
     test(s"$path should not parse") {
       intercept[YAMLException] {
