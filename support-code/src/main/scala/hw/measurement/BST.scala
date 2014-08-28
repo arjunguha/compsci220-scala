@@ -1,14 +1,10 @@
-package hw.measurement
+package cmpsci220.hw.measurement
 
-sealed trait Tree[A]
-case class Leaf[A]() extends Tree[A]
-case class Node[A](left : Tree[A], elt : A, right : Tree[A]) extends Tree[A]
+import cmpsci220._
 
-object Tree {
+object BST {
 
-  def empty[A] : Leaf[A] = Leaf()
-
-  def insert[A](compare : (A, A) => Order, n : A, tree : Tree[A]) : Tree[A] = tree match {
+  def insert[A](compare : (A, A) => Order, n : A, tree : BinTree[A]) : BinTree[A] = tree match {
     case Leaf() => Node(Leaf(), n, Leaf())
     case Node(left, m, right) => compare(n, m) match {
       case LT() => Node(insert(compare, n, left), m, right)
@@ -17,7 +13,7 @@ object Tree {
     }
   }
 
-  def isMember[A](compare : (A, A) => Order, n : A, tree : Tree[A]) : Boolean = tree match {
+  def isMember[A](compare : (A, A) => Order, n : A, tree : BinTree[A]) : Boolean = tree match {
     case Leaf() => false
     case Node(left, m, right) => compare(n, m) match {
       case LT() => isMember(compare, n, left)
