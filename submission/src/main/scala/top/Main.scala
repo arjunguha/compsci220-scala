@@ -39,9 +39,9 @@ object Main extends App {
     () => { done.success(()); () })
 
   args match {
-    case Array("check-submission", asgn, step, dir) => {
+    case Array("check", asgn, step) => {
       println("Checking ...")
-      top.checkSubmission(asgn, step, Paths.get(dir)).subscribe(report)
+      top.checkSubmission(asgn, step, Paths.get(".")).subscribe(report)
       Await.result(done.future, Duration.Inf)
     }
     case Array("tar", asgn, step) => {
@@ -53,8 +53,15 @@ object Main extends App {
       Await.result(top.checkAssignment(asgn, step), Duration.Inf)
       println(s"$asgn $step is OK.")
     }
+    case Array("help") => {
+      println("Usage:")
+      println("")
+      println("  check220 check ASSIGNMENT STEP     runs some trivial tests.")
+      println("  check220 submit ASSIGNMENT STEP    bundles the assignment to upload to Moodle.")
+    }
     case _ => {
-      print(ansi.fg(RED).a("Invalid command-line arguments.").reset().newline())
+      println("Invalid command-line arguments. Run \'check220 help\' for help.")
+      System.exit(1)
     }
   }
 
