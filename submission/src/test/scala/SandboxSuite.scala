@@ -32,7 +32,24 @@ class SandboxSuite extends SandboxFixture {
 
   test("/data should mount") { sandbox =>
     Await.result(sandbox.test("/bin/ls", "/data"), 30.second) match {
-      case Complete(0, stdout, "") => ()
+      case Complete(0, stdout, "") => {
+        assert(stdout.indexOfSlice("expected.txt") != -1)
+      }
+      case other => fail(other.toString)
+    }
+  }
+
+  // Depends on /data mounting
+  test("exceeding memory limit") { sandbox =>
+    Await.result(sandbox.test("/data/memoryFail"), 30.second) match {
+      case Complete(-1, _, _) => ()
+      case other => fail(other.toString)
+    }
+  }
+
+  test("staying in memory limit") { sandbox =>
+    Await.result(sandbox.test("/data/memorySuccess"), 30.second) match {
+      case Complete(0, _, _) => ()
       case other => fail(other.toString)
     }
   }

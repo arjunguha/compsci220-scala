@@ -40,13 +40,13 @@ class Sandbox(dockerUrl : String) {
     val absWorkDir = workingDir.toAbsolutePath()
     val docker = new Docker(dockerUrl)
 
-    // TODO(arjun): memory limit?
     val conf = container(image)
       .withNetwork(true)
       .withMountPoint(mountPoint)
       .withWorkingDir(mountPoint)
       .withCommand(command : _*)
       .copy(Hostname = "vm")
+      .copy(Memory = memoryBytes)
 
     val hostConf = HostConfig.empty
       .bindVolume(absWorkDir.toString, mountPoint)
