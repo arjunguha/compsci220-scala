@@ -37,7 +37,7 @@ object YamlTest {
   def apply(string : String) : List[Test] = {
     yaml.load(string) match {
       case suite : TestSuiteBean => {
-        val memoryLimitBytes = suite.getMemoryLimit
+        val memoryLimitBytes = suite.getMemoryLimit * 1048576
         val timeLimit = suite.getTimeLimit.seconds
         suite.getTests.toList.map { test =>
           new YamlTest(description = test.getDesc,

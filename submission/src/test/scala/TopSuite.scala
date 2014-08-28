@@ -15,9 +15,9 @@ class TopSuite extends TopFixture {
   }
 
   test("ok submission should submit correctly") { top =>
-    whenReady(top.checkSubmission("asgn1", "step1", submits.resolve("ok")).futureSeq) {
-      case Seq(TestResult(_, Complete(0, "submission.txt\nyamltest\n", "")),
-                TestResult(_, Complete(0, "submission.txt\nyamltest\n", ""))) => ()
+    whenReady(toTry(top.checkSubmission("asgn1", "step1", submits.resolve("ok")).futureSeq)) {
+      case Success(Seq(TestResult(_, Complete(0, "submission.txt\nyamltest\n", "")),
+                TestResult(_, Complete(0, "submission.txt\nyamltest\n", "")))) => ()
       case other => fail(other.toString)
     }
   }
