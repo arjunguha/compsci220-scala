@@ -78,7 +78,7 @@ the following broad ideas that are applicable in all software development:
   bugs. You will learn to effectively use the debugger that is built into to the
   IDE.
 
-- **Command-line tools** such as compilers and build tools lie under-the-hood of
+- **Command-line tools** such as compilers and build tools lie under the hood of
   sophisticated IDEs such as Eclipse. Learning to use the command-line will
   make you a better IDE user. Moreover, many advanced systems (e.g, operating
   systems and Web browsers) are typically built using the command-line directly.
