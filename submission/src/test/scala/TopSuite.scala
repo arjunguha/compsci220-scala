@@ -24,7 +24,7 @@ class TopSuite extends TopFixture {
 
   test("submision has a missing file") { top =>
     whenReady(toTry(top.checkSubmission("asgn1", "step1", submits.resolve("missing")).futureSeq)) {
-      case Failure(exn : InvalidSubmission) => ()
+      case Failure(_ : InvalidSubmission) => ()
       case other => fail(other.toString)
     }
   }

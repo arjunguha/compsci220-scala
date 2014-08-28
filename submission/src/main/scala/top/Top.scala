@@ -12,6 +12,7 @@ import scala.async.Async.{async, await}
 import rx.lang.scala._
 import org.apache.commons.io.FileUtils
 import spray.json._
+import scala.util.{Try, Success, Failure}
 
 private object Top {
   val log = org.slf4j.LoggerFactory.getLogger(classOf[Top])
@@ -74,12 +75,16 @@ class Top(confFile : String) {
 
   def checkSubmission(asgn : String, step : String, dir : Path)
     (implicit ec : ExecutionContext) : Observable[TestResult] = {
-    val assignment = getAssignment(asgn, step)
 
-    val tests = Observable.from(getTestSuite(asgn, step))
-
-    tests.concatMap({ test =>
-      Observable.defer(Observable.from(testRunner.runTest(assignment, test, dir))) })
+    Try {
+      val assignment = getAssignment(asgn, step)
+      val tests = Observable.from(getTestSuite(asgn, step))
+      tests.concatMap({ test =>
+        Observable.defer(Observable.from(testRunner.runTest(assignment, test, dir))) })
+    } match {
+      case Success(obs) => obs
+      case Failure(exn) => Observable.error(exn)
+    }
   }
 
 }
