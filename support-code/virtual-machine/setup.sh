@@ -54,9 +54,9 @@ dpkg -i sbt-0.13.5.deb
 rm sbt-0.13.5.deb
 
 # Install Scala
-wget http://downloads.typesafe.com/scala/2.11.1/scala-2.11.1.deb
-dpkg -i scala-2.11.1.deb
-rm scala-2.11.1.deb
+wget http://downloads.typesafe.com/scala/2.11.2/scala-2.11.2.deb
+dpkg -i scala-2.11.2.deb
+rm scala-2.11.2.deb
 
 # Install CS220 software
 add-apt-repository -y ppa:arjun-guha/umass-cs220
