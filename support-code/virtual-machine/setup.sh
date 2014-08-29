@@ -1,5 +1,8 @@
 #!/bin/bash
 
+apt-get update
+apt-get upgrade -y
+
 # This script configures the student virtual machine for CS220.
 # It is meant to be run as root on a clean installation of AMD64 Ubuntu 14.04
 # **Minimal** with no extra packages installed.
@@ -49,7 +52,7 @@ wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 dpkg -i google-chrome-stable_current_amd64.deb
 rm google-chrome-stable_current_amd64.deb
-apt-get -f install
+apt-get -f -y install
 
 # Install Sublime Text
 wget http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb
@@ -74,7 +77,7 @@ dpkg -i scala-2.11.2.deb
 rm scala-2.11.2.deb
 
 # Fix broken deps
-apt-get -f install
+apt-get -f -y install
 
 # Install CS220 software
 add-apt-repository -y ppa:arjun-guha/umass-cs220
