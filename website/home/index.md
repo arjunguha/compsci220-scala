@@ -1,58 +1,53 @@
 ---
 layout: default
-title: CMPSCI220 Programming Methodology (Fall 2014)
+title: Home
 ---
-
-# Introduction
 
 Welcome to the Fall 2014 offering of CMPSCI220 Programming Methodology!
 
-You must read the [course syllabus](../syllabus).
+You must read the entire [Course Policy] document.
 
 # Course Locations
 
-What              | When                     |Where
-------------------|--------------------------|-----------------------------------------------------
-Lecture           | Tuesday, 8:30AM--9:45AM  | Herter Hall, Room 227
-Lecture           | Thursday, 8:30AM--9:45AM | Herter Hall, Room 227
-Discussion C      | Friday, 9:05AM--9:55AM   | Engineering Lab, Room 323
-Discussion A      | Friday, 11:15AM--12:05PM | Engineering Lab, Room 323
-Discussion B      | Friday, 12:20PM--1:10PM  | Lederle Graduate Research Center (LGRC), Room A201
 
-# How to Ask Questions
-
-Use [Piazza] for **all questions**. You can use Piazza to message the entire
-class, just the course staff, or even individual staff members.
-
-- We encourage you to post *technical questions* about the reading and homework
-  publicly. This will allow both instructors and other students to respond and
-  everyone will get to see the answer.
-
-  You can post anonymously if you wish, though instructors will be able to see
-  who you are. If you don't want the class to see your question at all, send it
-  to *Instructors*. This is to encourage you to ask "dumb questions". (But,
-  trust us: there are no dumb questions and many of your peers will have the
-  same question and be grateful that you asked.)
-
-- Send administrative questions to *Instructors* on Piazza, which includes the
-  instructors, graders, and TAs. You'll get a faster response if all course
-  staff can read your question.
-
-- If you want to discuss a sensitive matter, use Piazza to contact just *Arjun
-  Guha* and *Tim Richards*.
-
-Please do not send email. We will respond with "resend to Piazza".
+<table class="table table-striped">
+<thead>
+  <tr><th>What</th><th>When</th><th>Where</th></tr>
+</thead>
+<tbody>
+<tr><td>Lecture</td><td>Tuesday, 8:30AM--9:45AM</td><td>Herter Hall, Room 227</td></tr>
+<tr><td>Lecture</td><td>Thursday, 8:30AM--9:45AM</td><td>Herter Hall, Room 227</td></tr>
+<tr><td>Discussion C</td><td>Friday, 9:05AM--9:55AM</td><td>Engineering Lab, Room 323</td></tr>
+<tr><td>Discussion A</td><td>Friday, 11:15AM--12:05PM</td><td>Engineering Lab, Room 323</td></tr>
+<tr><td>Discussion B</td><td>Friday, 12:20PM--1:10PM</td><td>Lederle Graduate Research Center (LGRC), Room A201</td></tr>
+</tbody>
+</table>
 
 # Office Hours
 
 *Office hours are still in flux.*
 
-When                      | Where | Who
-----------------------------------|--------------------------
-Thursday, 12:30PM--2:30PM | TBD   | Arjun
-                          |       | Tim
-                          |       | Teddy
-                          |       | Amee
-                          |       | Stephen
+<table class="table table-striped">
+<thead>
+  <tr><th>When</th><th>Where</th><th>Who</th></tr>
+</thead>
+<tbody>
+<tr><td>Wednesday, 5PM&mdash;7PM</td><td>TBD</td><td>Stephen</td></tr>
+<tr><td>Thursday, 1PM&mdash;3PM</td><td>TBD</td><td>Teddy</td></tr>
+<tr><td></td><td>TBD</td><td>Arjun</td></tr>
+<tr><td></td><td>TBD</td><td>Amee</td></tr>
+<tr><td></td><td>TBD</td><td>Tim</td></tr>
+</tbody>
+</table>
 
-[Piazza]: https://piazza.com/umass/fall2014/cmpsci220/home
+# Textbook
+
+The following textbook is required:
+
+[Programming in Scala: A Comprehensive Step-by-Step Guide (2nd Edition), Odersky, Spoon, Venners][textbook]
+
+We will supplement this book with other reading that will be freely available on
+the Web.
+
+[Course Policy]: ../policies
+[textbook]: http://www.amazon.com/Programming-Scala-Comprehensive-Step-Step/dp/0981531644

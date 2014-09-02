@@ -8,46 +8,47 @@ title: Schedule
 | Tuesday, Sep 2    | Out: [Clocks]. Reading: [Introduction], [Scala Basics], [Images], and [Simple Data Structures]. |
 | Thursday, Sep 4   | Reading: [Pattern Matching].                                                                    |
 | Friday, Sep 5     | *Lab:* Homework help session.                                                                   |
-| Tuesday, Sep 9    | Recursion and generics (lists). Due: [Clocks]. Out: [Pong].                                     |
-| Thursday, Sep 11  | Recursion and higher-order functions (Part 1).                                                  |
-| Friday, Sep 12    | *Lab:* Generics, recursion, and higher-order functions.                                         |
-| Tuesday, Sep 16   | Recursion and higher-order functions (Part 2). [Pong] due. [HW3 (Recursion)] out.               |
-| Thursday, Sep 18  | Simple types and recursive type-checking.                                                 |
-| Friday, Sep 19    | *Lab:* Generics, recursion, and higher-order functions, again.                            |
-| Tuesday, Sep 23   | Balanced Binary Search Trees. [HW3 (Recursion)] due. [HW4 (Measurement)] out.             |
-| Thursday, Sep 25  | Reading: [Abstract Data Types].                                                           |
-| Friday, Sep 26    | *Lab:* Help with SBT and ScalaTest.                                                       |
-| Tuesday, Sep 30   | Subtyping (Part 1). [HW4 (Measurement)] due. [HW5 (Join Lists)] out.                      |
-| Thursday, Oct 2   | Subtyping (Part 2).                                                                       |
-| Friday, Oct 3     | *Lab:* FILL (perhaps type-checking puzzles?)                                              |
-| Tuesday, Oct 7    | Inheritance, graphs (Part 1). [HW5 (Join Lists)] due. [HW6 (Maze)] out.                   |
-| Thursday, Oct 9   | Graphs (Part 2).                                                                          |
-| Friday, Oct 10    | *Lab:* FILL                                                                               |
+| Tuesday, Sep 9    | Due: [Clocks]. Out: HW2.                                   |
+| Thursday, Sep 11  | |
+| Friday, Sep 12    | *Lab:*|
+| Tuesday, Sep 16   | Due: HW2. Out: HW3. |
+| Thursday, Sep 18  | |
+| Friday, Sep 19    | *Lab:*  |
+| Tuesday, Sep 23   | Due: HW3. Out: HW4. |
+| Thursday, Sep 25  | |
+| Friday, Sep 26    | *Lab:*|
+| Tuesday, Sep 30   | Due: HW4. Out: HW5. |
+| Thursday, Oct 2   | |
+| Friday, Oct 3     | *Lab:* |
+| Tuesday, Oct 7    | Due: HW5. Out: HW6. |
+| Thursday, Oct 9   | |
+| Friday, Oct 10    | *Lab:* |
 | Tuesday, Oct 14   | **No class.** (Monday schedule)                                                           |
-| Thursday, Oct 16  | Graphs (Part 3). [HW6 (Maze)] due. HW7 (FILL) out.                                        |
-| Friday, Oct 17    | *Lab:* FILL                                                                               |
-| Tuesday, Oct 21   | Memoization.                                                                              |
-| Thursday, Oct 23  | Fundamentally imperative data structures.                                                 |
-| Friday, Oct 24    | *Lab:* FILL                                                                               |
-| Tuesday, Oct 28   | Graphs (Part 4). HW7 (FILL) due. [HW8 (Social Network)] out.                              |
-| Thursday, Oct 30  | Type-checking, revisited.                                                                 |
-| Friday, Oct 31    | *Lab:* FILL                                                                               |
-| Tuesday, Nov 4    | FILL. [HW8 (Social Network)] due. HW9 (FILL) out.                                         |
-| Thursday, Nov 6   | FILL.                                                                                     |
-| Friday, Nov 7     | *Lab:* FILL                                                                               |
+| Thursday, Oct 16  | Due: HW6. Out: HW7.               |
+| Friday, Oct 17    | *Lab:*|
+| Tuesday, Oct 21   | |
+| Thursday, Oct 23  | |
+| Friday, Oct 24    | *Lab:* |
+| Tuesday, Oct 28   | Due: HW7. Out: HW8.  |
+| Thursday, Oct 30  |  |
+| Friday, Oct 31    | *Lab:* |
+| Tuesday, Nov 4    | Due: HW8. Out: HW9. |
+| Thursday, Nov 6   | |
+| Friday, Nov 7     | *Lab:*|
 | Tuesday, Nov 11   | **No class.** (Veteran's Day)                                                             |
-| Wednesday, Nov 12 | **Tuesday schedule:** HW9 (FILL) due. HW10 (FILL) out.                                    |
-| Thursday, Nov 13  | FILL                                                                                      |
-| Friday, Nov 14    | *Lab:* FILL                                                                               |
-| Tuesday, Nov 18   | Parsing. HW10 (FILL) due. [HW11 (Scripting)] out.                                         |
-| Thursday, Nov 20  | Regular expressions.                                                                      |
-| Friday, Nov 21    | *Lab:* FILL                                                                               |
-| Tuesday, Nov 25   | Cloud computing. [HW11 (Scripting)] due.                                                  |
+| Wednesday, Nov 12 | **Tuesday schedule:** Due: HW9. Out: HW10. |
+| Thursday, Nov 13  |                                                                                       |
+| Friday, Nov 14    | *Lab:*                                                                                |
+| Tuesday, Nov 18   | Parsing. Due: HW10. Out: HW11.                                         |
+| Thursday, Nov 20  |   |
+| Friday, Nov 21    | *Lab:*                                                                                |
+| Tuesday, Nov 25   | Due: HW11. |
 | Thursday, Nov 27  | **No class.** (Thanksgiving Break)                                                        |
 | Friday, Nov 28    | **No lab.** (Thanksgiving Break)                                                          |
-| Tuesday, Dec 2    | Recap.                                                                                    |
-| Thursday, Dec 4   | Everything else. **Last class.**                                                          |
+| Tuesday, Dec 2    |  |
+| Thursday, Dec 4   | **Last class.**                                                          |
 | Friday, Dec 5     | **No lab.** (We had the last class)                                                       |
+{: .table .table-striped :}
 
 [Clocks]: ../hw/clocks
 [Pong]: ../hw/pong

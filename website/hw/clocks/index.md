@@ -37,6 +37,13 @@ import cmpsci220._
 import cmpsci220.graphics._
 {% endhighlight %}
 
+These two lines load some simple libraries you will use for this assignment.
+To ensure that they work correctly, run the following at the command line:
+
+    scala220 clocks.scala
+
+There shoud be no error messages.
+
 Time
 ----
 
@@ -195,6 +202,22 @@ def animateAlarmClock(start: AlarmClock): AlarmClock
 The body should call the `animate` function from the graphics library. Call
 `tick` to update the clock every second and use the `drawHands` function display
 the clock.
+
+The `animate` function has many optional arguments that you don't need to
+specify. For example, here how to use `animate` to animate `Time` values:
+
+{% highlight scala %}
+def animateClock(startTime : Time) : Time = {
+  animate(startTime,
+          width = 400,
+          height = 400,
+          draw = drawHands,
+          tick = tick,
+          refreshRate = 1)
+}
+{% endhighlight %}
+
+You can adapt this code to animate `AlarmClock`s instead.
 
 **Check Your Work**: From the command-line, run the command:
 

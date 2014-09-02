@@ -35,7 +35,7 @@ Reading
 Schedule
 --------
 
-<a href="../schedule/">Course Schedule</a>
+<a href="../schedule/full-schedule.html">Course Schedule (Full)</a>
 
 Homework
 --------
