@@ -17,9 +17,15 @@ package object cmpsci220 {
       sys.error(s"unexpected value for the DISABLE_TESTS envvar $str")
   }
 
+  /** Signals an error
+   *
+   * @group Miscellaneous
+   */
   val error = sys.error _
 
-  /** A test case */
+  /**
+   * @group Testing
+   */
   def test(description : String)(body : => Unit) : Unit = {
     if (testsEnabled) {
       try {
@@ -35,6 +41,9 @@ package object cmpsci220 {
     }
   }
 
+  /**
+   * @group Testing
+   */
   def fails(description : String)(body : => Unit) : Unit = {
     if (testsEnabled) {
       try {

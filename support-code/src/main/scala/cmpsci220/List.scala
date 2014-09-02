@@ -1,5 +1,8 @@
 package cmpsci220
 
+/**
+ * @group Lists
+ */
 sealed abstract trait List[A] {
 
   override def toString() : String = {
@@ -28,9 +31,19 @@ sealed abstract trait List[A] {
 
 }
 
+/**
+ * @group Lists
+ */
 case class Empty[A]() extends List[A]
+
+/**
+ * @group Lists
+ */
 case class Cons[A](head : A, tail : List[A]) extends List[A]
 
+/**
+ * @group Lists
+ */
 object List {
 
   def apply[A](items : A*) : List[A] = {

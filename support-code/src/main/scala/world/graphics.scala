@@ -17,12 +17,18 @@ import scala.concurrent._
 import scala.concurrent.duration.{Duration => ScalaDuration}
 import ExecutionContext.Implicits.global
 
+/** An API for drawing 2D images and animations.
+ *
+ */
 package object graphics {
 
   import cmpsci220.graphics.Image.SimpleImage
   import main.Main.{preStart, setupCanvas}
 
-  /** Ignores pressed keys */
+  /** Ignores pressed keys
+   *
+   * @group Miscellaneous
+   */
   def ignoreKey[T](key : String, state : T) : T = state
 
   /** Starts the program
@@ -99,6 +105,8 @@ package object graphics {
    * @param image the image to draw
    * @param width <i>(optional)</i> the width of the window; 400 by default
    * @param height <i>(optional)</i> the height of the window; 400 by default
+   *
+   * @group Starting the program
    */
   def show(image : Image, width : Int = 400, height : Int = 400) : Unit = {
     val exit = Promise[Unit]()
@@ -112,6 +120,10 @@ package object graphics {
     Await.result(exit.future, ScalaDuration.Inf)
   }
 
+  /** Save an image to a file
+   *
+   * @group Miscellaneous
+   */
   def saveImage(fileName : String, image : Image, width : Int = 400,
            height : Int = 400) : Unit = {
     def start(stage : Stage) {
@@ -155,12 +167,10 @@ package object graphics {
    *
    * This image does not appear. But, it is often useful as a base-case when
    * writing image-building functions.
+   *
+   * @group Images
    */
   val blank : Image = new SimpleImage("blank", gc => ())
-
-  def custom(gc : GraphicsContext => Unit) : Image = {
-    new SimpleImage("custom(...)", gc)
-  }
 
   /** Draws a rectangle
    *
@@ -289,8 +299,6 @@ package object graphics {
   /** Overlays one image on top of another.
    *
    * Draws the {@code top} image on top of {@code bot}.
-   *
-   * TODO(arjun): http://www.jguru.com/faq/view.jsp?EID=22060
    *
    * <b>Examples:</b>
    *

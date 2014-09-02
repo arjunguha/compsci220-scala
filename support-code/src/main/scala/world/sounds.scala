@@ -5,6 +5,9 @@ import javafx.scene.media.{MediaPlayer, Media}
 import java.nio.file.{Paths, Files}
 import scala.concurrent._
 
+/** An API for playing sounds.
+ *
+ */
 package object sounds {
 
   def play(filename : String) : Unit = {
