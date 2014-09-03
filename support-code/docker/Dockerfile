@@ -22,8 +22,9 @@ RUN dpkg -i scala-2.11.2.deb
 RUN rm scala-2.11.2.deb
 
 # Install CS220 software
-RUN add-apt-repository -y ppa:arjun-guha/umass-cs220
-RUN apt-get update && apt-get install -yq cs220=0.19
+ADD cmpsci220.jar /usr/lib/cs220/cmpsci220.jar
+ADD scala220 /usr/bin/scala220
+RUN chmod a+x /usr/bin/scala220
 
 ADD docker220 /usr/local/bin/docker220
 RUN chmod a+x /usr/local/bin/docker220

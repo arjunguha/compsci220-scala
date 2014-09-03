@@ -1,7 +1,0 @@
-#!/bin/bash
-
-SOLUTION=$1
-
-echo "" >> $SOLUTION
-cat yamltest >> $SOLUTION
-/usr/bin/scala220 $SOLUTION
