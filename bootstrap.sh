@@ -26,7 +26,7 @@ apt-get install -yq \
   lxterminal \
   xdg-utils \
   docker.io \
-  dephelper \
+  debhelper \
   ruby-dev \
   nodejs \
   software-properties-common
