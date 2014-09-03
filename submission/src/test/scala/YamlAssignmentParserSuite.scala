@@ -15,15 +15,4 @@ class YamlAssignmentParserSuite extends FunSuite {
 
   }
 
-  forallFiles("./submission/src/test/files/YamlAssignmentParserSuite/bad") { path =>
-
-    test(s"$path should not parse") {
-      intercept[YAMLException] {
-      YamlAssignment("fake-assignment-name", "fake-assignment-step",
-                     path, Paths.get("."))
-      }
-    }
-
-  }
-
 }
