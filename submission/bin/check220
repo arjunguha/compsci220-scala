@@ -8,6 +8,7 @@ if [ $DIR == '/usr/bin' ]; then
 elif [ -f $DIR/../classpath ]; then
   source $DIR/../classpath
   CLASSPATH=$CLASSPATH:$DIR/../target/scala-2.11/classes
+  P=/home/vagrant/src/website/hw/_grading/sanity/settings.conf
 else
   echo "check220 script failed."
   exit 1
