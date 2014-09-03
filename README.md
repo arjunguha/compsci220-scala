@@ -7,10 +7,10 @@ from updating the website to hacking on code.
 
 The Vagrant environment has the same GUI (Lubuntu), JVM, and Scala that students
 use in the course, but excludes utilities such as text editors. The Vagrant
-environment is mounts this repository at `/home/vagrant/src`. So, you can use a
+environment mounts this repository at `/home/vagrant/src`. So, you can use a
 text editor on the host to edit files.
 
-# Preliminaries
+## Setup
 
 
     host$ vagrant up --provider virtualbox
@@ -22,50 +22,53 @@ manually apply the update or run
 
 and start again.
 
-## Building the course software
+## Building
 
-    host$ vagrant ssh
-    vm$ cd src
-    vm$ sbt compile
+There are two ways to build the system:
 
-If the build succeeds, you'll be able to run the `scala220` and `check220`
-scripts that students use in the course VM, in addition to an `admin220`
-script that you can use to create auto-graded assignments.
+- `sbt compileLib` builds the library and `scala220`executable so that they
+  can be used locally. But, Docker-based testing does not work.
 
-## Preparing to release a software update
+- `sbt compileDocker` builds the library and testing system. This creates
+  fat JARs and the Docker sandbox, which can take some time. This mode is
+  almost identical to the setup that students have.
 
-1. Build the "fat JARs" for the course:
 
-       cd ~/src
-       sbt assembly
+## Releasing
 
-2. Create the Docker image for students to sanity-check:
+### Preliminaries
 
-       cd ~/src/support-code/docker
-       make
+1. Have a public/secret keypair in the `gnupg` directory that is recognized
+   by the Launchpad CS220 PPA:
 
-## Releasing a software update to students
+       https://launchpad.net/~arjun-guha/+archive/ubuntu/umass-cs220
 
-We use an Ubuntu Personal Package Archive (PPA) to release software updates:
 
-https://launchpad.net/~arjun-guha/+archive/ubuntu/umass-cs220
+2. Login to the Docker registry (`vm$ docker login`) and have permission to
+   update to this image:
 
-The Docker image is hosted on Docker Hub:
+       https://registry.hub.docker.com/u/arjunguha/cs220/
 
-https://registry.hub.docker.com/u/arjunguha/cs220/
+### Release Procedure
 
-You'll need ask Arjun to grant you the ability to send updates. Once that's
-setup, do the following:
+1. Add a new entry at the top of `ppa/debian/changelog`. You *have* to:
 
-1. Add the GPG key you use on Launchpad to `./gnupg`.
+   a.  Increment the version number,
 
-2. Add a new entry at the top of `ppa/debian/changelog`. You *have* to
-   increment the version number, set a well-formatted date, and have two
-   blank lines between each entry. See that file for several examples.
+   b. set a well-formatted date, and
 
-3. Run `cd ~/src; make ppa`.
+   c. have two blank lines between each entry.
 
-4. Run `cd ~/support-code/docker; sudo docker.io push arjunguha/cs220`
+
+   See that file for several examples.
+
+2. Run `sbt release`. This command will first push the Docker image to Docker
+   and then pushes the package to LaunchPad PPA. It takes forever for Launchpad
+   to build. You receive errors over email.
+
+
+TODO: If the Docker image is updated, you need to write a post-install script that
+
 
 ## Creating a new course VM for students
 
@@ -76,6 +79,10 @@ above.
 [FILL]
 
 ## Updating the website
+
+TODO: broken
+
+`sbt compileWeb`
 
 Since the website is in Arjun's personal folder, you can't publish changes.
 But, you can build and preview changes within the VM.
