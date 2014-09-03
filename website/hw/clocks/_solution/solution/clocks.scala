@@ -92,7 +92,7 @@ def drawHands(time : Time) : Image = {
           oval(200, 200, blue))
 }
 
-def animateClock(startTime : Time) = {
+def animateClock(startTime : Time): Time = {
   animate(startTime,
           width = 400,
           height = 400,
@@ -101,7 +101,7 @@ def animateClock(startTime : Time) = {
           refreshRate = 1)
 }
 
-//animateClock(ex5)
+println(animateClock(ex5))
 
 //animateClock(ex6)
 

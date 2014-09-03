@@ -44,10 +44,11 @@ package object graphics {
    * @param width <i>(optional)</i> the width of the window; 400 by default
    * @param height <i>(optional)</i> the height of the window; 400 by default
    * @param tick <i>(optional)</i> a function to update the state; the default
-                 value is the identity function
+   *             value is the identity function
    * @param refreshRate <i>(optional)</i> the number of times per second that
-                        {@code draw} and {@code tick} will be applied; the
-                        default value is 35 tickes per second
+   *                    {@code draw} and {@code tick} will be applied; the
+   *                    default value is 35 tickes per second
+   * @return the last value of the state before the window is closed
    *
    * @group Starting the program
    */
@@ -58,11 +59,13 @@ package object graphics {
                  tick : T => T = identity[T] _,
                  keyPressed : (String, T) => T = ignoreKey[T] _,
                  keyReleased : (String, T) => T = ignoreKey[T] _,
-                 refreshRate : Double = 35) : Unit = {
+                 refreshRate : Double = 35) : T = {
     val exit = Promise[Unit]()
 
+    var state = init
+
     def start(stage : Stage) {
-      var state = init
+
       val (gc, canvas) = setupCanvas(stage, "Animation", width, height)
 
       canvas.setOnKeyPressed(new EventHandler[KeyEvent] {
@@ -92,10 +95,12 @@ package object graphics {
       timeline.play()
       stage.showAndWait()
       timeline.stop()
+      state
     }
 
     preStart(start, exit)
     Await.result(exit.future, ScalaDuration.Inf)
+    state
   }
 
   /** Shows an image
