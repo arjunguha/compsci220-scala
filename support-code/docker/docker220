@@ -1,7 +1,6 @@
 #!/bin/bash
 
 SOLUTION=$1
-ls /host
 
 echo "" >> $SOLUTION
 cat yamltest >> $SOLUTION
