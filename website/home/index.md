@@ -32,10 +32,10 @@ You must read the entire [Course Policy] document.
   <tr><th>When</th><th>Where</th><th>Who</th></tr>
 </thead>
 <tbody>
-<tr><td>Wednesday, 5PM&mdash;7PM</td><td>TBD</td><td>Stephen</td></tr>
-<tr><td>Thursday, 1PM&mdash;3PM</td><td>TBD</td><td>Teddy</td></tr>
-<tr><td></td><td>TBD</td><td>Arjun</td></tr>
-<tr><td></td><td>TBD</td><td>Amee</td></tr>
+<tr><td>Monday, 11AM&mdash;12PM</td><td>CS 230</td><td>Arjun</td></tr>
+<tr><td>Wednesday, 5PM&mdash;7PM</td><td>LGRT 220</td><td>Stephen</td></tr>
+<tr><td>Thursday, 1PM&mdash;3PM</td><td>LGRT 220</td><td>Teddy</td></tr>
+<tr><td>Thursday, 4PM&mdash;6PM</td><td>LGRT 220</td><td>Amee</td></tr>
 <tr><td></td><td>TBD</td><td>Tim</td></tr>
 </tbody>
 </table>
