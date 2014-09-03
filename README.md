@@ -23,11 +23,27 @@ If the build succeeds, you'll be able to run the `scala220` and `check220`
 scripts that students use in the course VM, in addition to an `admin220`
 script that you can use to create auto-graded assignments.
 
+## Preparing to release a software update
+
+1. Build the "fat JARs" for the course:
+
+       cd ~/src
+       sbt assembly
+
+2. Create the Docker image for students to sanity-check:
+
+       cd ~/src/support-code/docker-dev
+       make
+
 ## Releasing a software update to students
 
 We use an Ubuntu Personal Package Archive (PPA) to release software updates:
 
 https://launchpad.net/~arjun-guha/+archive/ubuntu/umass-cs220
+
+The Docker image is hosted on Docker Hub:
+
+https://registry.hub.docker.com/u/arjunguha/cs220/
 
 You'll need ask Arjun to grant you the ability to send updates. Once that's
 setup, do the following:
@@ -39,6 +55,8 @@ setup, do the following:
    blank lines between each entry. See that file for several examples.
 
 3. Run `cd ~/src; make ppa`.
+
+4. Run `cd ~/support-code/docker-dev; sudo docker.io push arjunguha/cs220`
 
 ## Creating a new course VM for students
 
