@@ -84,6 +84,9 @@ add-apt-repository -y ppa:arjun-guha/umass-cs220
 apt-get update
 apt-get install -y cs220
 
+# Install CS220 docker image
+docker.io pull arjunguha/cs220
+
 # Setup unattended upgrades
 cat << EOF > /etc/apt/apt.conf.d/10periodic
 APT::Periodic::Unattended-Upgrade "1";

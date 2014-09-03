@@ -1,3 +1,11 @@
+cs220 (0.24) trusty; urgency=low
+
+  * Container now runs the scala220 program and JAR from the host. This
+    makes software updates a lot faster, since there is no need to
+    run "docker pull" on each update.
+
+-- Arjun Guha <arjun.guha@gmail.com>  Wed, 3 Sep 2014 7:20:00 -0500
+
 cs220 (0.23) trusty; urgency=low
 
   * Changed type of cmpsci220.graphics.animate to return the last

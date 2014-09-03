@@ -39,6 +39,7 @@ dumpClasspath <<= (managedClasspath in Compile, baseDirectory) map { (v, base) =
 
 compile <<= (compile in Compile) dependsOn dumpClasspath
 
+
 // All this boilerplate is to publish to Maven Central or Sonatype Snapshots.
 
 resolvers += "Sonatype OSS Snapshots" at

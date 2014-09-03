@@ -1,7 +1,8 @@
 #!/bin/bash
 
 SOLUTION=$1
+ls /host
 
 echo "" >> $SOLUTION
 cat yamltest >> $SOLUTION
-/usr/bin/scala220 $SOLUTION
+/host/bin/scala220 $SOLUTION

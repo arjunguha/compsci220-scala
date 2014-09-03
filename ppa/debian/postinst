@@ -1,5 +1,0 @@
-#!/bin/sh
-
-#DEBHELPER#
-
-/usr/bin/docker.io pull arjunguha/cs220

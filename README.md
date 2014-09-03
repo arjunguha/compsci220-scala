@@ -10,14 +10,23 @@ use in the course, but excludes utilities such as text editors. The Vagrant
 environment is mounts this repository at `/home/vagrant/src`. So, you can use a
 text editor on the host to edit files.
 
+# Preliminaries
+
+
+    host$ vagrant up --provider virtualbox
+
+This will take several minutes. If the `Vagrantfile` changes, you can either
+manually apply the update or run
+
+    host$ vagrant destroy
+
+and start again.
+
 ## Building the course software
 
-1. Run `vagrant up --provider virtualbox`. This will take several minutes
-   the first time you do this.
-
-2. Run `vagrant ssh`.
-
-3. Within the SSH session, run `make`
+    host$ vagrant ssh
+    vm$ cd src
+    vm$ sbt compile
 
 If the build succeeds, you'll be able to run the `scala220` and `check220`
 scripts that students use in the course VM, in addition to an `admin220`
@@ -32,7 +41,7 @@ script that you can use to create auto-graded assignments.
 
 2. Create the Docker image for students to sanity-check:
 
-       cd ~/src/support-code/docker-dev
+       cd ~/src/support-code/docker
        make
 
 ## Releasing a software update to students
@@ -56,7 +65,7 @@ setup, do the following:
 
 3. Run `cd ~/src; make ppa`.
 
-4. Run `cd ~/support-code/docker-dev; sudo docker.io push arjunguha/cs220`
+4. Run `cd ~/support-code/docker; sudo docker.io push arjunguha/cs220`
 
 ## Creating a new course VM for students
 
