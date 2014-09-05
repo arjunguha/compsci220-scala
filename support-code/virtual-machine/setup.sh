@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 apt-get update
 apt-get upgrade -y
 
@@ -49,15 +51,25 @@ EOF
 
 # Install Chrome
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-dpkg -i google-chrome-stable_current_amd64.deb
-rm google-chrome-stable_current_amd64.deb
+if [ `arch` == "x86_64"]; then
+  CHROME_DEB_FILE=google-chrome-stable_current_amd64.deb
+else
+  CHROME_DEB_FILE=google-chrome-stable_current_i386.deb
+fi
+ wget https://dl.google.com/linux/direct/$CHROME_DEB_FILE
+dpkg -i $CHROME_DEB_FILE
+rm $CHROME_DEB_FILE
 apt-get -f -y install
 
 # Install Sublime Text
-wget http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb
-dpkg -i sublime-text_build-3059_amd64.deb
-rm sublime-text_build-3059_amd64.deb
+if [ `arch` == "x86_64" ]; then
+  SUBL_DEB_FILE=sublime-text_build-3059_amd64.deb
+else
+  SUBL_DEB_FILE=sublime-text_build-3059_i386.deb
+fi
+wget http://c758482.r82.cf2.rackcdn.com/$SUBL_DEB_FILE
+dpkg -i $SUBL_DEB_FILE
+rm $SUBL_DEB_FILE
 
 # Install JDK
 echo debconf shared/accepted-oracle-license-v1-1 select true | \
@@ -85,7 +97,9 @@ apt-get update
 apt-get install -y cs220
 
 # Install CS220 docker image
-docker.io pull arjunguha/cs220
+if [ `arch` == "x86_64" ]; then
+  docker.io pull arjunguha/cs220
+fi
 
 # Setup unattended upgrades
 cat << EOF > /etc/apt/apt.conf.d/10periodic
@@ -106,4 +120,4 @@ rm /var/cache/apt/archives/*.deb
 
 # Zero free space
 cat /dev/zero > zero.fill; sync; sleep 1; sync; rm -f zero.fill
-shutdown -h now
+echo "DONE"
