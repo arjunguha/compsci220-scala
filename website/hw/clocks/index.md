@@ -77,7 +77,7 @@ if the time is valid and <code>false</code> otherwise. The
 
 {% highlight scala %}
 def isValidTime(time : Time) : Boolean
-{% endhighlight %}</li>
+{% endhighlight %}
 
 Write a function called <code>tick</code> that takes a time-value as an argument
 and evaluates to a new time that is one second in the future. The
