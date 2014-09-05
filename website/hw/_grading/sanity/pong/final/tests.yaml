@@ -1,0 +1,78 @@
+memoryLimit: 700
+timeLimit: 60
+image: "arjunguha/cs220"
+command: [ /usr/local/bin/docker220, pong.scala ]
+tests:
+  - desc: Do not make any changes to Ball
+    test: |
+      {
+        val v = Vector2D(0, 0)
+        Ball(0, v, v)
+      }
+  - desc: Do not make any changes to Table
+    test: |
+      Table(200, 100)
+  - desc: Do not make any changes to Paddle
+    test: |
+      Paddle(cmpsci220.hw.pong.Vector2D(200, 200), 500)
+  - desc: Did you update the Game type to have a ball?
+    test: |
+      {
+        import cmpsci220.hw.pong._
+        val t = Table(200, 100)
+        val v = Vector2D(0, 0)
+        val p = Paddle(v, 10)
+        Game(t, p, p, v, v, Ball(0, v, v))
+      }
+  - desc: initGame is missing or has the wrong type
+    test: |
+      {
+        val check : Game = initGame
+      }
+  - desc: isValidPaddle is missing or has the wrong type
+    test: |
+      {
+        def check(p: Paddle, t: Table): Boolean = isValidPaddle(p, t)
+      }
+  - desc: movePaddle is missing or has the wrong type
+    test: |
+      {
+        def check(p: Paddle, t: Table, v: Vector2D): Option[Paddle] = {
+          movePaddle(p, t, v)
+        }
+      }
+  - desc: keyPressed is missing or has the wrong type
+    test: |
+      {
+        def check(k: String, g: Game): Game = keyPressed(k, g)
+      }
+  - desc: keyReleased is missing or has the wrong type
+    test: |
+      {
+        def check(k: String, g: Game): Game = keyReleased(k, g)
+      }
+  - desc: moveBothPaddles is missing or has the wrong type
+    test: |
+      {
+        def check(g: Game): Game = moveBothPaddles(g)
+      }
+  - desc: drawGame is missing or has the wrong type
+    test: |
+      {
+        def check(g: Game): cmpsci220.graphics.Image = drawGame(g)
+      }
+  - desc: hasHitTable is missing or has the wrong type
+    test: |
+      {
+        def check(b: Ball, t: Table): Boolean = hasHitTable(b, t)
+      }
+  - desc: hasHitPaddle is missing or has the wrong type
+    test: |
+      {
+        def check(b: Ball, p: Paddle): Boolean = hasHitPaddle(b, p)
+      }
+  - desc: moveBall is missing or has the wrong type
+    test: |
+      {
+        def check(g: Game): Game = moveBall(g)
+      }

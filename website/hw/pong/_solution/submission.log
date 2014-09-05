@@ -1,0 +1,89 @@
+2014-09-05 20:16:25,175 INFO  Main - Started application
+2014-09-05 20:17:07,325 INFO  Main - Started application
+2014-09-05 20:17:33,410 INFO  Main - Started application
+2014-09-05 20:17:36,860 INFO  Main - Started application
+2014-09-05 20:19:05,483 INFO  Main - Started application
+2014-09-05 20:19:11,818 INFO  Main - Started application
+2014-09-05 20:19:14,581 INFO  Main - Started application
+2014-09-05 20:19:57,333 INFO  Main - Started application
+2014-09-05 20:21:24,699 INFO  Main - Started application
+2014-09-05 20:21:25,278 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:21:26,276 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 7e90634d1d867438e874f1867166bdb60ff3cbc4d904964d4ee5570e212456f7)
+2014-09-05 20:21:26,345 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 7e90634d1d867438e874f1867166bdb60ff3cbc4d904964d4ee5570e212456f7)
+2014-09-05 20:21:39,160 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:21:39,203 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:21:39,505 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 0875722bb3d85a4a51bf9b89345b2c5ff52c1b343c023825d1a2c50e7f264822)
+2014-09-05 20:21:39,576 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 0875722bb3d85a4a51bf9b89345b2c5ff52c1b343c023825d1a2c50e7f264822)
+2014-09-05 20:21:50,207 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:21:50,220 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:21:50,513 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 0c52eb0fd15298219f425bb2dd8d5fc6b6017d387e216be0398fbebb5d95c450)
+2014-09-05 20:21:50,595 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 0c52eb0fd15298219f425bb2dd8d5fc6b6017d387e216be0398fbebb5d95c450)
+2014-09-05 20:22:02,658 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:22:02,673 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:22:03,034 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: c6152e6060308916701df8a9ecc1deeff8f3dd6a71c6bc58d435b754e66e9b5d)
+2014-09-05 20:22:03,121 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: c6152e6060308916701df8a9ecc1deeff8f3dd6a71c6bc58d435b754e66e9b5d)
+2014-09-05 20:22:14,981 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:22:14,995 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:22:15,301 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 946e811ac8d20030285c4ab3b6d456d9886e9939d4b73770070b0dd2b433d093)
+2014-09-05 20:22:15,363 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 946e811ac8d20030285c4ab3b6d456d9886e9939d4b73770070b0dd2b433d093)
+2014-09-05 20:22:30,945 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:22:30,954 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:22:31,253 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 5584df404fdf3555206a123da7282bbfc211743b2a5339672927fcbb89b0497d)
+2014-09-05 20:22:31,310 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 5584df404fdf3555206a123da7282bbfc211743b2a5339672927fcbb89b0497d)
+2014-09-05 20:22:42,737 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:22:42,743 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:22:43,046 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 93f9a34349ce8e85b9cb86c7746cecad48bc04cd49f044912b7ccc22d0881739)
+2014-09-05 20:22:43,112 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 93f9a34349ce8e85b9cb86c7746cecad48bc04cd49f044912b7ccc22d0881739)
+2014-09-05 20:22:54,075 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:22:54,080 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:22:54,401 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: f7e6cbac16a260abcb4030776acdc584c6fcd46256d8c71af0897248c40c0c70)
+2014-09-05 20:22:54,497 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: f7e6cbac16a260abcb4030776acdc584c6fcd46256d8c71af0897248c40c0c70)
+2014-09-05 20:23:06,219 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:23:06,226 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:23:06,520 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 113122c2d75fb161c2d9148c792c314432e702a818098526cac3a162bb6f5c74)
+2014-09-05 20:23:06,589 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 113122c2d75fb161c2d9148c792c314432e702a818098526cac3a162bb6f5c74)
+2014-09-05 20:23:17,358 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:23:17,366 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:23:17,654 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 2ababf78345e2b21c70a07efdd4583a60cf46dd2bfd46ba5edb614aad051bdbe)
+2014-09-05 20:23:17,736 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 2ababf78345e2b21c70a07efdd4583a60cf46dd2bfd46ba5edb614aad051bdbe)
+2014-09-05 20:23:28,616 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:23:28,619 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:23:28,908 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: fd83d96119ea13c299199868beb1fb8aea618122ff566bf9553453328bc8c015)
+2014-09-05 20:23:28,974 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: fd83d96119ea13c299199868beb1fb8aea618122ff566bf9553453328bc8c015)
+2014-09-05 20:23:40,257 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:23:40,262 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:23:40,569 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 709e4150271850fbc1d30e89c4503156b21f2a92ee171f42ce635b663e747432)
+2014-09-05 20:23:40,627 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 709e4150271850fbc1d30e89c4503156b21f2a92ee171f42ce635b663e747432)
+2014-09-05 20:23:51,328 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:23:51,338 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:23:51,637 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: e442e0ee3fb886f62b168b08d8d26cc1a8a070e1995a58a9efe0618ac53c40e9)
+2014-09-05 20:23:51,710 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: e442e0ee3fb886f62b168b08d8d26cc1a8a070e1995a58a9efe0618ac53c40e9)
+2014-09-05 20:23:59,708 INFO  cs220.submission.sandbox.Sandbox - Result: Success(1)
+2014-09-05 20:23:59,715 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:24:00,002 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: f246f1831b248e257c6738ae2e4ec0bddbb6f132cb10669c9cdd100aed00ffd9)
+2014-09-05 20:24:00,067 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: f246f1831b248e257c6738ae2e4ec0bddbb6f132cb10669c9cdd100aed00ffd9)
+2014-09-05 20:24:11,314 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:25:35,606 INFO  Main - Started application
+2014-09-05 20:25:36,186 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:25:37,085 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 2c686b95abd618d36d5da54b785d98cd0a8983faccb9b199e76f851c5165462b)
+2014-09-05 20:25:37,134 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 2c686b95abd618d36d5da54b785d98cd0a8983faccb9b199e76f851c5165462b)
+2014-09-05 20:25:48,293 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:25:48,332 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:25:48,633 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: bf28c5f9787c3e413d65fadd1027f30c394430e867977077a1e54f75357cdd35)
+2014-09-05 20:25:48,701 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: bf28c5f9787c3e413d65fadd1027f30c394430e867977077a1e54f75357cdd35)
+2014-09-05 20:25:59,322 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:25:59,327 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:25:59,636 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 3976360abdf91080c69cb52bdd75ee08ca04caf94f190b0cb7215e08ed470458)
+2014-09-05 20:25:59,718 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 3976360abdf91080c69cb52bdd75ee08ca04caf94f190b0cb7215e08ed470458)
+2014-09-05 20:26:10,708 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:26:10,712 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:26:11,023 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 5457ed8ea3ad2fb84f4b9f7340cddad59017b4527b1edbe0059656a09b2b0f0a)
+2014-09-05 20:26:11,129 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 5457ed8ea3ad2fb84f4b9f7340cddad59017b4527b1edbe0059656a09b2b0f0a)
+2014-09-05 20:26:21,958 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:26:21,969 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:26:22,251 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: 3b58df4520f483b7d538921ba1a3e89ff7a82f80bac6a9acf521246d036c24fa)
+2014-09-05 20:26:22,307 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: 3b58df4520f483b7d538921ba1a3e89ff7a82f80bac6a9acf521246d036c24fa)
+2014-09-05 20:26:33,232 INFO  cs220.submission.sandbox.Sandbox - Result: Success(0)
+2014-09-05 20:26:33,245 INFO  cs220.submission.sandbox.Sandbox - Creating container
+2014-09-05 20:26:33,551 INFO  cs220.submission.sandbox.Sandbox - Starting container (id: ca2048d875d2c37cbc4a71ca1b3428b7c199c69e83b4faae8cf24b53970ddb7a)
+2014-09-05 20:26:33,618 INFO  cs220.submission.sandbox.Sandbox - Waiting for container (timeout: 60 seconds, id: ca2048d875d2c37cbc4a71ca1b3428b7c199c69e83b4faae8cf24b53970ddb7a)
