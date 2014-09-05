@@ -93,6 +93,7 @@ package object graphics {
       val timeline = new Timeline(frame)
       timeline.setCycleCount(Animation.INDEFINITE)
       timeline.play()
+      canvas.requestFocus()
       stage.showAndWait()
       timeline.stop()
       state
