@@ -68,7 +68,7 @@ compileWeb := {
 }
 
 
-compileWeb <<= compileWeb.dependsOn(doc)
+compileWeb <<= compileWeb.dependsOn(doc in Compile)
 
 
 lazy val release = taskKey[Unit]("Releases an update to Docker Registry / Ubuntu PPA")
