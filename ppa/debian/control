@@ -6,13 +6,13 @@ Standards-Version: 3.9.5
 Build-Depends: debhelper
 
 Package: cs220
-Architecture: amd64
+Architecture: amd64 i386
 Depends:
  ${misc:Depends},
  docker.io,
  oracle-java8-installer,
  sbt (= 0.13.5),
  scala (= 2.11.2),
- docker.io (= 0.9.1~dfsg1-2)
+ docker.io
 Description: Support code for CS220.
  Support code for CS220.

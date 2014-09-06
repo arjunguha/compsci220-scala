@@ -1,3 +1,17 @@
+cs220 (0.26) trusty; urgency=low
+
+  * Bump Docker version for For 32-bitk
+
+ -- Arjun Guha <arjun.guha@gmail.com>  Thu, 4 Sep 2014 21:20:00 -0500
+
+
+cs220 (0.25) trusty; urgency=low
+
+  * For 32-bit and 64-bit architectures
+
+ -- Arjun Guha <arjun.guha@gmail.com>  Thu, 4 Sep 2014 20:47:00 -0500
+
+
 cs220 (0.24) trusty; urgency=low
 
   * Container now runs the scala220 program and JAR from the host. This
