@@ -1,3 +1,10 @@
+cs220 (0.28) trusty; urgency=low
+
+  * Bugfix: check220 would fail if the solution did not end with a newline
+
+ -- Arjun Guha <arjun.guha@gmail.com>  Sat, 6 Sep 2014 06:11:00 -0500
+
+
 cs220 (0.27) trusty; urgency=low
 
   * Support code for pong assignment

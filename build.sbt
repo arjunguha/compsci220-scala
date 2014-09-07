@@ -75,7 +75,8 @@ lazy val release = taskKey[Unit]("Releases an update to Docker Registry / Ubuntu
 
 release := ()
 
-release <<= release.dependsOn(assembly in support)
-                   .dependsOn(assembly in submission)
+release <<= release.dependsOn(ppa)
                    .dependsOn(dockerPush)
-                   .dependsOn(ppa)
+                   .dependsOn(assembly in support)
+                   .dependsOn(assembly in submission)
+

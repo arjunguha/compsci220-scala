@@ -15,7 +15,8 @@ private[yamltests] class YamlTest(
   extends Test {
 
   def prepare(workingDir : Path, asgn : Assignment) : Unit = {
-    Files.write(workingDir.resolve("yamltest"), code.getBytes)
+    val txt = "\n" + code
+    Files.write(workingDir.resolve("yamltest"), txt.getBytes)
   }
 
 }
