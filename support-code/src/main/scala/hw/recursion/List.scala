@@ -1,7 +1,7 @@
-package cmpsci220
+package cmpsci220.hw.recursion
 
 /**
- * @group Lists
+ * @group List
  */
 sealed abstract trait List[A] {
 
@@ -32,17 +32,17 @@ sealed abstract trait List[A] {
 }
 
 /**
- * @group Lists
+ * @group List
  */
 case class Empty[A]() extends List[A]
 
 /**
- * @group Lists
+ * @group List
  */
 case class Cons[A](head : A, tail : List[A]) extends List[A]
 
 /**
- * @group Lists
+ * @group List
  */
 object List {
 
@@ -51,4 +51,3 @@ object List {
   }
 
 }
-
