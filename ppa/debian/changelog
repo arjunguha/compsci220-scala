@@ -1,3 +1,10 @@
+cs220 (0.29) trusty; urgency=low
+
+  * HW3 support code
+
+ -- Arjun Guha <arjun.guha@gmail.com>  Sun, 7 Sep 2014 22:06:00 -0500
+
+
 cs220 (0.28) trusty; urgency=low
 
   * Bugfix: check220 would fail if the solution did not end with a newline
