@@ -52,17 +52,16 @@ def buildHelper[A](ix: Int, length: Int, f: Int => A): List[A] =
     Empty()
   }
 
-def build[A](length: Int, f: Int => A): List[A] = buildHelper(0, length, f)
+def buildList[A](length: Int, f: Int => A): List[A] = buildHelper(0, length, f)
 
-test("build test") {
+test("buildList test") {
   def f(x: Int) = x
-  assert(build(10, f) == List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+  assert(buildList(10, f) == List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
 }
-def mapList[A, B](lst: List[A], f: A => List[B]): List[B] = flatten(map(f, lst))
+def mapList[A, B](lst: List[A], f: A => List[B]): List[B] = flatten(List.map(f, lst))
 
 test("mapList test") {
-  def id(x: Int): Int = x
-  def f(n: Int): List[Int] = buildList(n, id)
+  def f(n: Int): List[Int] = buildList(n, (_: Int) => n)
   assert(mapList(List(1, 2, 3), f) == List(1, 2, 2, 3, 3, 3))
 }
 
@@ -80,7 +79,7 @@ def enqueueSlow[A](elt: A, q: SlowQueue[A]): SlowQueue[A] = q match {
 
 def dequeueSlow[A](q: SlowQueue[A]): Option[(A, SlowQueue[A])] = q match {
   case Empty() => None()
-  case Cons(head, _) => Some((head, tail))
+  case Cons(head, tail) => Some((head, tail))
 }
 
 //
@@ -91,7 +90,7 @@ def enqueue[A](elt: A, q: Queue[A]): Queue[A] = Queue(q.front, Cons(elt, q.back)
 
 def dequeue[A](q: Queue[A]): Option[(A, Queue[A])] = q match {
   case Queue(Cons(head, tail), back) => Some((head, Queue(tail, back)))
-  case Queue(Empty(), back) => reverse(back) match {
+  case Queue(Empty(), back) => List.reverse(back) match {
     case Empty() => None()
     case Cons(head, tail) => Some((head, Queue(tail, Empty())))
   }

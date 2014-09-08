@@ -82,7 +82,7 @@ def buildList[A](length: Int, f: Int => A): List[A]
 
 test("buildList test") {
   val f(x: Int) = x
-  assert(build(10, f) == List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+  assert(buildList(10, f) == List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
 }
 {% endhighlight %}
 
