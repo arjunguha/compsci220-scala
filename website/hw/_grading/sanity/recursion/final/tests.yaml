@@ -1,0 +1,53 @@
+memoryLimit: 700
+timeLimit: 60
+image: "arjunguha/cs220"
+command: [ /usr/local/bin/docker220, recursion.scala ]
+tests:
+  - desc: map2 is missing or has the wrong type
+    test: |
+      {
+        import cmpsci220.hw.recursion._
+        def check[A,B,C](f: (A, B) => C, lst1: List[A], lst2: List[B]): List[C] = map2(f, lst1, lst2)
+      }
+  - desc: zip is missing or has the wrong type
+    test: |
+      {
+        import cmpsci220.hw.recursion._
+        def check[A,B](lst1: List[A], lst2: List[B]): List[(A, B)] = zip(lst1, lst2)
+      }
+  - desc: flatten is missing or has the wrong type
+    test: |
+      {
+        import cmpsci220.hw.recursion._
+        def check[A](lst: List[List[A]]): List[A] = flatten(lst)
+      }
+  - desc: flatten3 is missing or has the wrong type
+    test: |
+      {
+        import cmpsci220.hw.recursion._
+        def check[A](lst: List[List[List[A]]]): List[A] = flatten3(lst)
+      }
+  - desc: buildList is missing or has the wrong type
+    test: |
+      {
+        import cmpsci220.hw.recursion._
+        def check[A](length: Int, f: Int => A): List[A] = buildList(length, f)
+      }
+  - desc: mapList is missing or has the wrong type
+    test: |
+      {
+        import cmpsci220.hw.recursion._
+        def check[A, B](lst: List[A], f: A => List[B]): List[B] = mapList(lst, f)
+      }
+  - desc: enqueue is missing or has the wrong type
+    test: |
+      {
+        import cmpsci220.hw.recursion._
+        def check[A](elt: A, q: Queue[A]): Queue[A] = enqueue(elt, q)
+      }
+  - desc: dequeue is missing or has the wrong type
+    test: |
+      {
+        import cmpsci220.hw.recursion._
+        def check[A](q: Queue[A]): Option[(A, Queue[A])] = dequeue(q)
+      }

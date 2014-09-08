@@ -1,5 +1,6 @@
 import org.scalatest.FunSuite
-import cmpsci220._
+import cmpsci220.hw.recursion._
+
 class ListSuite extends FunSuite {
 
   test("lists should pretty-print") {
