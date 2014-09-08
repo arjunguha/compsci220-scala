@@ -35,7 +35,10 @@ Reading
 Schedule
 --------
 
-<a href="../schedule/full-schedule.html">Course Schedule (Full)</a>
+The planned schedule is on Google Drive:
+
+<a href="https://docs.google.com/a/umass.edu/document/d/1eCwNaZcRREHr0PTV4af4TS5PNYE-c8WcVfogeEiIlx0/edit">Topic Schedule</a>
+
 
 Homework
 --------
