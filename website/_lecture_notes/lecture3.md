@@ -149,7 +149,7 @@ title: Lecture 3
            }
        }
 
-1. Quickly, hat's wrong with this simpler code? Blows the stack. We'll
+1. Quickly, what's wrong with this simpler code? Blows the stack. We'll
    understand this in detail later. Don't worry about it for now.
 
 ## List Processing (map function)
