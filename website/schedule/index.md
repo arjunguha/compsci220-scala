@@ -8,9 +8,9 @@ title: Schedule
 | Tuesday, Sep 2    | Out: [Clocks]. Reading: [Introduction], [Scala Basics], [Images], and [Simple Data Structures]. |
 | Thursday, Sep 4   | Reading: [Pattern Matching].                                                                    |
 | Friday, Sep 5     | *Lab:* Homework help session.                                                                   |
-| Tuesday, Sep 9    | Due: [Clocks]. Out: HW2.                                   |
-| Thursday, Sep 11  | |
-| Friday, Sep 12    | *Lab:*|
+| Tuesday, Sep 9    | Due: [Clocks]. Out: HW2.                                                                        |
+| Thursday, Sep 11  |                                                                                                 |
+| Friday, Sep 12    | *Lab:*                                                                                          |
 | Tuesday, Sep 16   | Due: HW2. Out: HW3. |
 | Thursday, Sep 18  | |
 | Friday, Sep 19    | *Lab:*  |
@@ -22,8 +22,8 @@ title: Schedule
 | Friday, Oct 3     | *Lab:* |
 | Tuesday, Oct 7    | Due: HW5. Out: HW6. |
 | Thursday, Oct 9   | |
-| Friday, Oct 10    | *Lab:* |
-| Tuesday, Oct 14   | **No class.** (Monday schedule)                                                           |
+| Friday, Oct 10    | *No Lab.* (Enjoy Columbus Day weekend)                                                           |
+| Tuesday, Oct 14   | **No class.** (Monday schedule)                                                                |
 | Thursday, Oct 16  | Due: HW6. Out: HW7.               |
 | Friday, Oct 17    | *Lab:*|
 | Tuesday, Oct 21   | |
@@ -36,7 +36,7 @@ title: Schedule
 | Thursday, Nov 6   | |
 | Friday, Nov 7     | *Lab:*|
 | Tuesday, Nov 11   | **No class.** (Veteran's Day)                                                             |
-| Wednesday, Nov 12 | **Tuesday schedule:** Due: HW9. Out: HW10. |
+| Wednesday, Nov 12 | **Tuesday schedule.** Due: HW9. Out: HW10. |
 | Thursday, Nov 13  |                                                                                       |
 | Friday, Nov 14    | *Lab:*                                                                                |
 | Tuesday, Nov 18   | Parsing. Due: HW10. Out: HW11.                                         |
