@@ -8,7 +8,7 @@ title: Schedule
 | Tuesday, Sep 2    | Out: [Clocks]. Reading: [Introduction], [Scala Basics], [Images], and [Simple Data Structures]. |
 | Thursday, Sep 4   | Reading: [Pattern Matching].                                                                    |
 | Friday, Sep 5     | *Lab:* Homework help session.                                                                   |
-| Tuesday, Sep 9    | Due: [Clocks]. Out: HW2.                                                                        |
+| Tuesday, Sep 9    | Due: [Clocks]. Out: HW2. Reading: [The Option Type].                                            |
 | Thursday, Sep 11  |                                                                                                 |
 | Friday, Sep 12    | *Lab:*                                                                                          |
 | Tuesday, Sep 16   | Due: HW2. Out: HW3. |
@@ -65,3 +65,4 @@ title: Schedule
 [Simple Data Structures]: ../reading/simple-data
 [Pattern Matching]: ../reading/pattern-matching
 [Abstract Data Types]: ../reading/adt
+[The Option Type]: ../reading/option

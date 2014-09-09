@@ -20,9 +20,9 @@ title: Lecture 3
 
     In code:
 
-       case class PoInt(x: Double, y: Double)
+       case class Point(x: Double, y: Double)
 
-       def Inter(m1: Double, b1: Double, m2: Double, b2: Double): PoInt = {
+       def Inter(m1: Double, b1: Double, m2: Double, b2: Double): Point = {
          val x = (b2 - b1) / (m1 - m2)
          PoInt(x, m1 * x + b1)
        }

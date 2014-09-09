@@ -39,6 +39,19 @@ import cmpsci220.hw.pong._
 
 ## Part 1: Paddle Motion
 
+In this part, you'll ignore the ball and focus on the paddles. We'll guide
+you through implementing the following behavior:
+
+- You'll use types that we have provided to represent the board, the height
+  and position of each paddle, and the velocity of each paddle.
+- You will write functions to respond to keys being pressed and released. When
+  players press the right keys, you will update their paddle velocity, but
+  *you will not move their paddles.*
+- Instead, you'll write a function that is applied on each clock tick to move
+  both paddles based on their velocity.
+- Finally, you'll write a function to draw the board and paddles. This will
+  be quite straightforward, since the paddles are simple straight lines.
+
 Use these types to represent the game state. For now, we are ignoring the ball:
 
 {% highlight scala %}
@@ -99,6 +112,9 @@ to keys being pressed and released as follows:
   paddle down
 - When Player 2 releases either **a** or **z** set their paddle velocity to zero
 
+**Note:** when players press keys, you need to update their paddle velocity, but
+*do not change the paddle position*. You will write that separately.
+
 First, write a function that responds to key-presses:
 
 {% highlight scala %}
@@ -121,6 +137,7 @@ Now that you have functions to update paddle velocity, you need to write
 a function to update paddle positions, based on their velocity:
 
 {% highlight scala %}
+// Do not update velocities
 def moveBothPaddles(game: Game): Game
 {% endhighlight %}
 
@@ -154,6 +171,10 @@ which you'll implement next.
     check220 check pong step1
 
 ## Part 2: Refactoring to add a Ball
+
+In this part, you'll add the ball to the game-state. You'll focus on
+editing the code your wrote in Part 1 and drawing the ball. But, you won't
+implement ball motion or collision detection yet.
 
 Use the following datatype to represent the size, position and velocity of the
 ball:
@@ -193,23 +214,24 @@ def hasHitTable(ball: Ball, table: Table): Boolean
 def hasHitPaddle(ball: Ball, paddle: Paddle): Boolean
 {% endhighlight %}
 
-*Hint*: Don't forget to acccount for the radius of the ball. For both functions,
-you need to calculate *the distance between a point and a line segment.*
-You can do this using the [law of cosines], or using one of the methods
-of `Vector2D`.
+In principle, both functions need to calculate the distance between
+a point (the center of the ball) and a line segment (a paddle or an edge of
+the table). You have to account for the radius of the ball too. `Vector2D`
+has some methods that will help you. If you want to do the math yourself,
+you can use the [law of cosines].
 
 Write the following function:
 
 {% highlight scala %}
-// Assumes that ball has not collided with anything
+// Assumes that ball is not currently in a collision
 def moveBall(game: Game): Game
 {% endhighlight %}
 
 This function should move the ball along its current trajectory if no collision
 will occur. If a collision would occur, it should leave the position of the
-ball unchanged, but update the velocity to simulate a "bounce".
+ball unchanged, but update the velocity to simulate a bounce.
 
-Finally, you can update the call to `animate` to move both the ball and the paddles:
+Finally, update the call to `animate` to move both the ball and the paddles:
 
 {% highlight scala %}
 animate(init = initGame,
@@ -220,6 +242,8 @@ animate(init = initGame,
         keyPressed = keyPressed,
         keyReleased = keyReleased)
 {% endhighlight %}
+
+At this point, the game should be playable.
 
 **Check Your Work**: From the command-line, run the command:
 

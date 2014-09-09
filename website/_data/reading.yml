@@ -9,3 +9,5 @@
   path: simple-data
 - name: Pattern Matching
   path: pattern-matching
+- name: The Option Type
+  path: option
