@@ -24,6 +24,7 @@ libraryDependencies ++=
       "com.typesafe" % "config" % "1.2.1",
       "commons-io" % "commons-io" % "2.4",
       "commons-codec" % "commons-codec" % "1.9",
+      "org.apache.commons" % "commons-compress" % "1.8.1",
       "org.scala-lang.modules" %% "scala-async" % "0.9.1",
       "ch.qos.logback" % "logback-classic" % logbackVersion,
       "ch.qos.logback" % "logback-core" % logbackVersion,
