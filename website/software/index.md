@@ -10,7 +10,7 @@ machine:
 
 1. Download and install [VirtualBox]
 
-2. Download [CS220.ova] (1.37 GB)
+2. Download [cs220.ova] (2.37 GB)
 
 3. Double-click on the `cs220.ova` file you downloaded above (or, select
    *Import Appliance* from the File menu and select the file). When you do,
@@ -39,7 +39,7 @@ with [this script].
 
 [virtual machine]: http://en.wikipedia.org/wiki/Virtual_machine
 [VirtualBox]: https://www.virtualbox.org/wiki/Downloads
-[CS220.ova]: http://storage.googleapis.com/arjun-umass-disks/cs220.ova
+[CS220.ova]: http://www.cs.umass.edu/~arjun/download/cs220.ova
 [Lubuntu]: http://lubuntu.net
 [minimal]: https://help.ubuntu.com/community/Installation/MinimalCD
 [this script]: https://github.com/cmpsci220/support-code/blob/master/virtual-machine/setup.sh
