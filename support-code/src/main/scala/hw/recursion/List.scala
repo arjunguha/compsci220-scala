@@ -52,7 +52,7 @@ object List {
 
   private def reverseHelper[A](lst: List[A], out: List[A]): List[A] = lst match {
     case Empty() => out
-    case Cons(head, tail) => reverseHelper(lst, Cons(head, out))
+    case Cons(head, tail) => reverseHelper(tail, Cons(head, out))
   }
 
   def reverse[A](lst: List[A]): List[A] = reverseHelper(lst, Empty())
