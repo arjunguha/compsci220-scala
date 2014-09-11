@@ -1,5 +1,5 @@
 import org.scalatest.FunSuite
-import cs220.submission.yamlassignment.YamlAssignment
+import plasma.grader.yamlassignment.YamlAssignment
 import java.nio.file.{Files, Paths}
 import TestBoilerplate._
 import org.yaml.snakeyaml.error.YAMLException

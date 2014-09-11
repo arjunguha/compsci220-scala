@@ -1,6 +1,6 @@
-package cs220.submission.top
+package plasma.grader.top
 
-import cs220.submission.{TestResult, ExpectedException}
+import plasma.grader.{TestResult, ExpectedException}
 import java.nio.file.{Paths, Files}
 import org.fusesource.jansi.AnsiConsole
 import org.fusesource.jansi.Ansi._

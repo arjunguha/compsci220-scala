@@ -1,8 +1,8 @@
-package cs220.submission.top
+package plasma.grader.top
 
-import cs220.submission._
-import cs220.submission.yamlassignment.YamlAssignment
-import cs220.submission.yamltests.YamlTest
+import plasma.grader._
+import plasma.grader.yamlassignment.YamlAssignment
+import plasma.grader.yamltests.YamlTest
 import com.typesafe.config.ConfigFactory
 import scala.concurrent._
 import scala.concurrent.duration._

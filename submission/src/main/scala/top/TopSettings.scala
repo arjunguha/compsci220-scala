@@ -1,4 +1,4 @@
-package cs220.submission.top
+package plasma.grader.top
 
 import scala.concurrent.duration._
 import com.typesafe.config.{ConfigFactory, Config}

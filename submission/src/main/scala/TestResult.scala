@@ -1,6 +1,6 @@
-package cs220.submission
+package plasma.grader
 
-import cs220.submission.sandbox.{SandboxResult, Complete, DidNotFinish}
+import plasma.grader.sandbox.{SandboxResult, Complete, DidNotFinish}
 import org.fusesource.jansi.Ansi
 import org.fusesource.jansi.Ansi._
 import org.fusesource.jansi.Ansi.Attribute._

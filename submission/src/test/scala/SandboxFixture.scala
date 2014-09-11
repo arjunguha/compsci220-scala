@@ -1,7 +1,7 @@
 import org.scalatest.fixture.FunSuite
 import scala.concurrent._
 import scala.concurrent.duration._
-import cs220.submission.sandbox.Sandbox
+import plasma.grader.sandbox.Sandbox
 import java.nio.file.Paths
 
 class TestSandbox(url : String) extends Sandbox(url) {

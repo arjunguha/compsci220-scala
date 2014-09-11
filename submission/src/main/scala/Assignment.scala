@@ -1,4 +1,4 @@
-package cs220.submission
+package plasma.grader
 
 import java.nio.file.Path
 import scala.concurrent.duration.Duration

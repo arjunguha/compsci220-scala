@@ -1,7 +1,7 @@
 import TestBoilerplate._
 import scala.util.{Success, Failure}
-import cs220.submission.sandbox.{Complete, DidNotFinish}
-import cs220.submission.{InvalidSubmission, InvalidAssignment, TestResult}
+import plasma.grader.sandbox.{Complete, DidNotFinish}
+import plasma.grader.{InvalidSubmission, InvalidAssignment, TestResult}
 import Rich._
 
 class TopSuite extends TopFixture {

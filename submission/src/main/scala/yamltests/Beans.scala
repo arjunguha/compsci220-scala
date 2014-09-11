@@ -1,4 +1,4 @@
-package cs220.submission.yamltests
+package plasma.grader.yamltests
 
 import java.util.{List, LinkedList}
 

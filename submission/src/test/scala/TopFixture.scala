@@ -4,7 +4,7 @@ import org.scalatest.time.{Span, Seconds}
 import org.scalatest.concurrent.{ScalaFutures, PatienceConfiguration}
 import scala.concurrent._
 import scala.concurrent.duration._
-import cs220.submission.top.Top
+import plasma.grader.top.Top
 
 trait TopFixture extends FunSuite with ScalaFutures {
 

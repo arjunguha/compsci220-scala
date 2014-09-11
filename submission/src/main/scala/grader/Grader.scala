@@ -1,8 +1,8 @@
 package cs220.grader
 
-import cs220.submission._
-import cs220.submission.yamlassignment.YamlAssignment
-import cs220.submission.yamltests.YamlTest
+import plasma.grader._
+import plasma.grader.yamlassignment.YamlAssignment
+import plasma.grader.yamltests.YamlTest
 import com.typesafe.config.ConfigFactory
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -18,9 +18,9 @@ import org.fusesource.jansi.Ansi.Color._
 
 class Grader(confFile : String) {
 
-  val top = new cs220.submission.top.Top(confFile)
+  val top = new plasma.grader.top.Top(confFile)
 
-  private val settings = cs220.submission.top.TopSettings(Paths.get(confFile))
+  private val settings = plasma.grader.top.TopSettings(Paths.get(confFile))
 
   val moodleSubmission = """^(?:[^_]*)_(\d+)_.*$""".r
 

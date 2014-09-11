@@ -1,7 +1,7 @@
-package cs220.submission.yamltests
+package plasma.grader.yamltests
 
 import java.nio.file.{Path, Files}
-import cs220.submission.{Test, Assignment}
+import plasma.grader.{Test, Assignment}
 import scala.concurrent.duration._
 
 private[yamltests] class YamlTest(

@@ -1,6 +1,6 @@
-package cs220.submission.yamlassignment
+package plasma.grader.yamlassignment
 
-import cs220.submission.{Assignment, InvalidSubmission}
+import plasma.grader.{Assignment, InvalidSubmission}
 import java.nio.file.{Files, Path}
 import scala.concurrent.duration.Duration
 

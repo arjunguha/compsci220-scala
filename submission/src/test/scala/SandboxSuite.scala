@@ -1,4 +1,4 @@
-import cs220.submission.sandbox.{Sandbox, Complete, DidNotFinish, SandboxResult}
+import plasma.grader.sandbox.{Sandbox, Complete, DidNotFinish, SandboxResult}
 import scala.concurrent._
 import scala.concurrent.duration._
 

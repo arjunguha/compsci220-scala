@@ -1,4 +1,4 @@
-package cs220.submission.yamlassignment
+package plasma.grader.yamlassignment
 
 import java.util.{List, LinkedList}
 
