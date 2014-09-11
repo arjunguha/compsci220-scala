@@ -11,3 +11,5 @@
   path: pattern-matching
 - name: The Option Type
   path: option
+- name: Programming with Lists
+  path: lists

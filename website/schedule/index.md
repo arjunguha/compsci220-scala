@@ -8,7 +8,7 @@ title: Schedule
 | Tuesday, Sep 2    | Out: [Clocks]. Reading: [Introduction], [Scala Basics], [Images], and [Simple Data Structures]. |
 | Thursday, Sep 4   | Reading: [Pattern Matching].                                                                    |
 | Friday, Sep 5     | *Lab:* Homework help session.                                                                   |
-| Tuesday, Sep 9    | Due: [Clocks]. Out: [Pong]. Reading: [The Option Type].                                         |
+| Tuesday, Sep 9    | Due: [Clocks]. Out: [Pong]. Reading: [The Option Type] and [Programming with Lists].            |
 | Thursday, Sep 11  |                                                                                                 |
 | Friday, Sep 12    | *Lab:* Generics and Recursion.                                                                  |
 | Tuesday, Sep 16   | Due: [Pong]. Out: HW3.                                                                          |
@@ -66,3 +66,4 @@ title: Schedule
 [Pattern Matching]: ../reading/pattern-matching
 [Abstract Data Types]: ../reading/adt
 [The Option Type]: ../reading/option
+[Programming with Lists]: ../reading/lists
