@@ -18,7 +18,7 @@ assert(forall(f, lst))
 }
 
 
-test("forall_test1") {
+test("forall_test2") {
 	def f(n: String) :Boolean = {
 		n.length % 2 == 0
 	}
@@ -46,7 +46,7 @@ val lst = List(200, 100)
 assert(findlast(f, lst) == Some(100))
 }
 
-test("findlast_test1") {
+test("findlast_test2") {
 	def f(n:String): Boolean = {
 	n.length % 2 == 0
 	}
@@ -54,13 +54,6 @@ val lst = List("Welcome","Hey!","Goodbye","Goodbye!")
 assert(findlast(f, lst) == Some("Goodbye!"))
 }
 
-test("forall_test1") {
-	def f(n: String) :Boolean = {
-		n.length % 2 == 0
-	}
-val lst = List("hello!","Good")
-assert(forall(f, lst))
-}
 
 def findlast2[A] (f: A => Boolean, lst : List[A]) : Option[A] = lst match {
 	case Empty() => None[A]()
@@ -78,7 +71,7 @@ val lst = List(200, 100)
 assert(findlast(f, lst) == Some(100))
 }
 
-test("findlast2_test1") {
+test("findlast2_test2") {
 	def f(n:String): Boolean = {
 	n.length % 2 == 0
 	}
