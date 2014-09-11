@@ -39,20 +39,4 @@ private[graphics] object Image  {
 
   }
 
-  case class Overlay (val top : Image, bot : Image,
-                      x : Double, y : Double) extends Image {
-
-    // Using SimpleImage would involve an unnecessary save and restore. This is
-    // premature optimization.
-    def draw(gc : GraphicsContext) : Unit = {
-      gc.save()
-      gc.translate(x, y)
-      bot.draw(gc)
-      gc.restore()
-      top.draw(gc)
-    }
-
-    override def toString() = s"overlay($top, $bot, $x, $y)"
-
-  }
 }
