@@ -54,7 +54,10 @@ val lst = List("Welcome","Hey!","Goodbye","Goodbye!")
 assert(findlast(f, lst) == Some("Goodbye!"))
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3e62c7cdeb7f22ecc7b895b04d50dd2510a02010
 def findlast2[A] (f: A => Boolean, lst : List[A]) : Option[A] = lst match {
 	case Empty() => None[A]()
 	case Cons(head, tail) => findlast2(f, tail) match {
