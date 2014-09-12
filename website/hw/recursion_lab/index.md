@@ -28,25 +28,25 @@ the type `Queue[A]`, which is used in the last set of exercises, is new.
 
 ## Question 1:
 
-Write the `forall` function, which returns true if all elements of list satisfy the function: 
+Write the `forall` function, which returns true if all elements of list satisfy the function:
 
 {% highlight scala %}
 def forall[A](f: A => Boolean, lst:List[A]): Boolean
 
-test("forall_test1") {
-        def f(n: Int) :Boolean = {
-                n % 2 == 0
-        }
-val lst = List(2,4,6,8,12)
-assert(forall(f, lst))
+test("forall test1") {
+  def f(n: Int) :Boolean = {
+    n % 2 == 0
+  }
+  val lst = List(2,4,6,8,12)
+  assert(forall(f, lst))
 }
 
-test("forall_test1") {
-        def f(n: String) :Boolean = {
-                n.length % 2 == 0
-        }
-val lst = List("hello!","Good")
-assert(forall(f, lst))
+test("forall test2") {
+  def f(n: String) :Boolean = {
+    n.length % 2 == 0
+  }
+  val lst = List("hello!","Good")
+  assert(forall(f, lst))
 }
 
 {% endhighlight %}
@@ -57,20 +57,20 @@ Write the `findlast` function, which returns the last element of a list that ret
 {% highlight scala %}
 def findlast[A] (f: A => Boolean, lst : List[A]) : Option[A]
 
-test("findlast_test1") {
-	def f(n:Int): Boolean = {
-	n % 2 == 0	
-	}
-val lst = List(200, 100)
-assert(findlast(f, lst) == Some(100))
+test("findlast test1") {
+  def f(n:Int): Boolean = {
+    n % 2 == 0
+  }
+  val lst = List(200, 100)
+  assert(findlast(f, lst) == Some(100))
 }
 
-test("findlast_test1") {
-	def f(n:String): Boolean = {
-	n.length % 2 == 0
-	}
-val lst = List("Welcome","Hey!","Goodbye","Goodbye!")
-assert(findlast(f, lst) == Some("Goodbye!"))
+test("findlast test2") {
+  def f(n:String): Boolean = {
+    n.length % 2 == 0
+  }
+  val lst = List("Welcome","Hey!","Goodbye","Goodbye!")
+  assert(findlast(f, lst) == Some("Goodbye!"))
 }
 
 {% endhighlight %}
