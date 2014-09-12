@@ -7,3 +7,6 @@ target
 *.class
 .DS_Store
 classpath
+docker/scala220
+docker/cmpsci220.jar
+

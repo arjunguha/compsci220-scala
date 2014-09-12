@@ -33,7 +33,6 @@ libraryDependencies ++=
       "com.netflix.rxjava" % "rxjava-scala" % "0.20.0",
       "io.spray" %%  "spray-json" % "1.2.6")
 
-
 // A little hack to dump the CLASSPATH to ./classpath. This lets us run the
 // run a standalone executable without building a fat JAR, which is nice
 // and fast.

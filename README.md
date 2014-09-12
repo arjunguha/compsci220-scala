@@ -12,7 +12,6 @@ text editor on the host to edit files.
 
 ## Setup
 
-
     host$ vagrant up --provider virtualbox
 
 This will take several minutes. If the `Vagrantfile` changes, you can either
@@ -26,13 +25,12 @@ and start again.
 
 There are two ways to build the system:
 
-- `sbt compileLib` builds the library and `scala220`executable so that they
+- `sbt compileLib` builds the library and `scala220` executable so that they
   can be used locally. But, Docker-based testing does not work.
 
 - `sbt compileDocker` builds the library and testing system. This creates
   fat JARs and the Docker sandbox, which can take some time. This mode is
   almost identical to the setup that students have.
-
 
 ## Releasing
 
@@ -67,7 +65,7 @@ There are two ways to build the system:
    to build. You receive errors over email.
 
 
-TODO: If the Docker image is updated, you need to write a post-install script that
+TODO: If the Docker image is updated, you need to write a post-install script.
 
 
 ## Creating a new course VM for students
@@ -80,18 +78,8 @@ above.
 
 ## Updating the website
 
-TODO: broken
-
-`sbt compileWeb`
-
-Since the website is in Arjun's personal folder, you can't publish changes.
-But, you can build and preview changes within the VM.
-
-1. Run `make website`
-
-2. Visit `http://localhost:4000` using a Web browser on your host machine.
-
-If you can publish the website, do `cd website; publish`
+Run  `sbt compileWeb` to build the website. This also rebuilds the
+API documentation. Run `sbt publishWeb` to update the website.
 
 ## Releasing open-source software
 

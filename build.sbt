@@ -13,37 +13,27 @@ lazy val submission = project.settings(assemblySettings: _*)
                              .settings(jarName in assembly := "submission.jar")
                              .settings(assemblyOption in assembly ~= { _.copy(includeScala = false) })
 
-lazy val install = taskKey[Unit]("Installs locally to run on development machine.")
+lazy val compileDocker = taskKey[Unit]("Compiles the library and testing system")
 
-install := {
+compileDocker := {
   import scala.sys.process._
-  Seq("/usr/bin/sudo", "mkdir", "-p", "/usr/lib/cs220").!
-  Seq("/usr/bin/sudo", "cp", "support-code/bin/scala220", "/usr/bin").!
-  Seq("/usr/bin/sudo",  "cp", "support-code/target/scala-2.11/cmpsci220.jar", "/usr/lib/cs220").!
-  println("Installed scala220 to /usr")
-}
-
-install <<= install.dependsOn(assembly in support, assembly in submission)
-
-lazy val buildDocker = taskKey[Unit]("Builds the Docker image used for testing/grading")
-
-buildDocker := {
-  import scala.sys.process._
+  Seq("cp", "support-code/target/scala-2.11/cmpsci220.jar",
+      "support-code/docker").!
+  Seq("cp", "support-code/bin/scala220",
+      "support-code/docker").!
   Seq("/bin/bash", "-c",
       "cd support-code/docker; sudo docker.io build -t arjunguha/cs220 .").!
 }
+
+compileDocker <<= compileDocker.dependsOn(assembly in support,
+                                          compile in submission)
+
 
 lazy val compileLib = taskKey[Unit]("Compiles only the library to run locally")
 
 compileLib := ()
 
-compileLib <<= compileLib.dependsOn(compile in Compile)
-
-lazy val compileDocker = taskKey[Unit]("Compiles the library and testing system")
-
-compileDocker := ()
-
-compileDocker <<= compileDocker.dependsOn(buildDocker, install)
+compileLib <<= compileLib.dependsOn(compile in Compile in support)
 
 lazy val ppa = taskKey[Unit]("Builds and submits the PPA")
 
@@ -62,7 +52,7 @@ dockerPush := {
   Seq("/usr/bin/docker.io", "push", "arjunguha/cs220").!
 }
 
-dockerPush <<= dockerPush.dependsOn(buildDocker)
+dockerPush <<= dockerPush.dependsOn(compileDocker)
 
 lazy val compileWeb = taskKey[Unit]("Build the website")
 
@@ -74,6 +64,16 @@ compileWeb := {
 }
 
 compileWeb <<= compileWeb.dependsOn(doc in Compile in support)
+
+lazy val publishWeb = taskKey[Unit]("Update the website")
+
+publishWeb := {
+  import scala.sys.process._
+  Seq("rsync", "-avzr", "--delete", "website/_site/",
+       "people.cs.umass.edu:/home/arjun/public_html/courses/cmpsci220-fall2014").!
+ }
+
+ publishWeb <<= publishWeb.dependsOn(compileWeb)
 
 lazy val release = taskKey[Unit]("Releases an update to Docker Registry / Ubuntu PPA")
 

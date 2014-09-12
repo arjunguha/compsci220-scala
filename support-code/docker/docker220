@@ -4,4 +4,4 @@ SOLUTION=$1
 
 echo "" >> $SOLUTION
 cat yamltest >> $SOLUTION
-/host/bin/scala220 $SOLUTION
+/usr/bin/scala220 $SOLUTION

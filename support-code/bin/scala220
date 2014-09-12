@@ -4,8 +4,6 @@ DIR=`dirname $0`
 
 if [ $DIR == '/usr/bin' ]; then
   CLASSPATH=/usr/lib/cs220/cmpsci220.jar
-elif [ $DIR == '/host/bin' ]; then
-  CLASSPATH=/host/lib/cs220/cmpsci220.jar
 elif [ -f $DIR/../classpath ]; then
   source $DIR/../classpath
   CLASSPATH=$CLASSPATH:$DIR/../target/scala-2.11/classes

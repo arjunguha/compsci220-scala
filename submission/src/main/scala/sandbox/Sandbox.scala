@@ -43,7 +43,6 @@ class Sandbox(dockerUrl : String) {
     val conf = container(image)
       .withNetwork(true)
       .withMountPoint(mountPoint)
-      .withMountPoint("/host")
       .withWorkingDir(mountPoint)
       .withCommand(command : _*)
       .copy(Hostname = "vm")
@@ -51,7 +50,6 @@ class Sandbox(dockerUrl : String) {
 
     val hostConf = HostConfig.empty
       .bindVolume(absWorkDir.toString, mountPoint)
-      .bindVolume("/usr", "/host", readOnly = true)
 
     // TODO(arjun): Failure?
     Sandbox.logger.info(s"Creating container")

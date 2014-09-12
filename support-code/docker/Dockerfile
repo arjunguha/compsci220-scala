@@ -21,8 +21,15 @@ RUN wget http://downloads.typesafe.com/scala/2.11.2/scala-2.11.2.deb
 RUN dpkg -i scala-2.11.2.deb
 RUN rm scala-2.11.2.deb
 
+ENV DISABLE_TESTS TRUE
+ENV DISABLE_JAVAFX TRUE
+
+# Install CS220 software
+ADD cmpsci220.jar /usr/lib/cs220/cmpsci220.jar
+ADD scala220 /usr/bin/scala220
+RUN chmod a+x /usr/bin/scala220
+
+
 ADD docker220 /usr/local/bin/docker220
 RUN chmod a+x /usr/local/bin/docker220
 
-ENV DISABLE_TESTS TRUE
-ENV DISABLE_JAVAFX TRUE
