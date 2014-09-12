@@ -13,7 +13,7 @@ title: Schedule
 | Friday, Sep 12    | *Lab:* Generics and Recursion.                                                                  |
 | Tuesday, Sep 16   | Due: [Pong]. Out: HW3.                                                                          |
 | Thursday, Sep 18  | |
-| Friday, Sep 19    | *Lab:*  |
+| Friday, Sep 19    | *Lab:* [Recursion Lab].                                                                         |
 | Tuesday, Sep 23   | Due: HW3. Out: HW4. |
 | Thursday, Sep 25  | |
 | Friday, Sep 26    | *Lab:*|
@@ -67,3 +67,4 @@ title: Schedule
 [Abstract Data Types]: ../reading/adt
 [The Option Type]: ../reading/option
 [Programming with Lists]: ../reading/lists
+[Recursion Lab]: ../hw/recursion_lab
