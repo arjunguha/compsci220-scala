@@ -13,6 +13,14 @@ grasp of recursion, generics, and higher-order functions.
 
 ## Preliminaries
 
+Get the software update:
+
+{% highlight scala %}
+sudo apt-get update
+sudo apt-get upgrade cs220
+sudo docker.io pull arjunguha/cs220
+{% endhighlight %}
+
 Save your work in a file called `recursion.scala`.
 
 Start your program with these lines:
@@ -81,7 +89,7 @@ element is determined by applying `f` to the index of the element:
 def buildList[A](length: Int, f: Int => A): List[A]
 
 test("buildList test") {
-  val f(x: Int) = x
+  def f(x: Int) = x
   assert(buildList(10, f) == List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
 }
 {% endhighlight %}
@@ -95,8 +103,7 @@ the list of all results:
 def mapList[A, B](lst: List[A], f: A => List[B]): List[B]
 
 test("mapList test") {
-  def id(x: Int): Int = x
-  val f(n: Int): List[Int] = buildList(n, id)
+  def f(n: Int): List[Int] = buildList(n, (_: Int) => n)
   assert(mapList(List(1, 2, 3), f) == List(1, 2, 2, 3, 3, 3))
 }
 {% endhighlight %}
