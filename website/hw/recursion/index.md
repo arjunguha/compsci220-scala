@@ -21,6 +21,8 @@ sudo apt-get upgrade cs220
 sudo docker.io pull arjunguha/cs220
 {% endhighlight %}
 
+You may neeed to restart the virtual machine.
+
 Save your work in a file called `recursion.scala`.
 
 Start your program with these lines:

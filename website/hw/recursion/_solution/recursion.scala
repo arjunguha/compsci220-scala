@@ -58,7 +58,7 @@ test("buildList test") {
   def f(x: Int) = x
   assert(buildList(10, f) == List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
 }
-def mapList[A, B](lst: List[A], f: A => List[B]): List[B] = flatten(List.map(f, lst))
+def mapList[A, B](lst: List[A], f: A => List[B]): List[B] = flatten(map(f, lst))
 
 test("mapList test") {
   def f(n: Int): List[Int] = buildList(n, (_: Int) => n)
@@ -90,7 +90,7 @@ def enqueue[A](elt: A, q: Queue[A]): Queue[A] = Queue(q.front, Cons(elt, q.back)
 
 def dequeue[A](q: Queue[A]): Option[(A, Queue[A])] = q match {
   case Queue(Cons(head, tail), back) => Some((head, Queue(tail, back)))
-  case Queue(Empty(), back) => List.reverse(back) match {
+  case Queue(Empty(), back) => reverse(back) match {
     case Empty() => None()
     case Cons(head, tail) => Some((head, Queue(tail, Empty())))
   }
