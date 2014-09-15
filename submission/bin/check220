@@ -15,4 +15,4 @@ else
 fi
 
 
-ASSIGNMENTS_PATH=$P /usr/bin/scala -classpath $CLASSPATH cs220.submission.top.Main $@
+ASSIGNMENTS_PATH=$P /usr/bin/scala -classpath $CLASSPATH plasma.grader.top.Main $@
