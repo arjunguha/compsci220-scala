@@ -12,4 +12,4 @@ else
   exit 1
 fi
 
-/usr/bin/scala -J-Xmx512m -classpath $CLASSPATH $@
+/usr/bin/scala -J-Xmx512m -J-Xss100m -classpath $CLASSPATH $@

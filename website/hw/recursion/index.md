@@ -32,9 +32,8 @@ import cmpsci220._
 import cmpsci220.hw.recursion._
 {% endhighlight %}
 
-The second line imports the types that you will use in this assignment. You've
-already seen the types `List[A]` and `Option[A]` in class. But,
-the type `Queue[A]`, which is used in the last set of exercises, is new.
+The latter line imports the types and some useful functions that you will use
+in this assignment.
 
 ## Part 1. Lists
 

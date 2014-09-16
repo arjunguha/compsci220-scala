@@ -18,7 +18,8 @@ scalacOptions ++=
 
 libraryDependencies ++=
   Seq("org.scalatest" %% "scalatest" % "2.2.1" % "test",
-      "org.fusesource.jansi" % "jansi" % "1.11")
+      "org.fusesource.jansi" % "jansi" % "1.11",
+      "org.apache.commons" % "commons-math3" % "3.3")
 
 // The JavaFX initialization must only run once per JVM instance. Without fork,
 // running twice in the same SBT instance will fail.

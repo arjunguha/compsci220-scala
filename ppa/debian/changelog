@@ -1,3 +1,10 @@
+cs220 (0.30) trusty; urgency=low
+
+  * HW3 tweak
+
+ -- Arjun Guha <arjun@cs.umass.edu>  Mon, 15 Sep 2014 15:02:00 -0500
+
+
 cs220 (0.29) trusty; urgency=low
 
   * HW3 support code

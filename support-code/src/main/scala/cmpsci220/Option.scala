@@ -1,4 +1,4 @@
-package cmpsci220.hw.recursion
+package cmpsci220
 
 /**
  * @group Option
