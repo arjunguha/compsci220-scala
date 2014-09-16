@@ -10,14 +10,14 @@ title: Schedule
 | Friday, Sep 5     | *Lab:* Homework help session.                                                                   |
 | Tuesday, Sep 9    | Due: [Clocks]. Out: [Pong]. Reading: [The Option Type] and [Programming with Lists].            |
 | Thursday, Sep 11  |                                                                                                 |
-| Friday, Sep 12    | *Lab:* Generics and Recursion.                                                                  |
-| Tuesday, Sep 16   | Due: [Pong]. Out: HW3.                                                                          |
-| Thursday, Sep 18  | |
-| Friday, Sep 19    | *Lab:* [Recursion Lab].                                                                         |
-| Tuesday, Sep 23   | Due: HW3. Out: HW4. |
-| Thursday, Sep 25  | |
-| Friday, Sep 26    | *Lab:*|
-| Tuesday, Sep 30   | Due: HW4. Out: HW5. |
+| Friday, Sep 12    | *Lab:* [Recursion Lab].                                                                         |
+| Tuesday, Sep 16   | Due: [Pong]. Out: [Recursion].                                                                  |
+| Thursday, Sep 18  |                                                                                                 |
+| Friday, Sep 19    | *Lab:*                                                                                          |
+| Tuesday, Sep 23   | Due: [Recursion]. Out: HW4.                                                                     |
+| Thursday, Sep 25  |                                                                                                 |
+| Friday, Sep 26    | *Lab:*                                                                                          |
+| Tuesday, Sep 30   | Due: HW4. Out: HW5.                                                                             |
 | Thursday, Oct 2   | |
 | Friday, Oct 3     | *Lab:* |
 | Tuesday, Oct 7    | Due: HW5. Out: HW6. |
@@ -52,7 +52,7 @@ title: Schedule
 
 [Clocks]: ../hw/clocks
 [Pong]: ../hw/pong
-[HW3 (Recursion)]: ../hw/recursion
+[Recursion]: ../hw/recursion
 [HW4 (Measurement)]: ../hw/measurement
 [HW5 (Join Lists)]: ../hw/joinlists
 [HW6 (Maze)]: ../hw/maze
