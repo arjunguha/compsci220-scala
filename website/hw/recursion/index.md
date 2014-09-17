@@ -179,7 +179,7 @@ def dequeue[A](q: Queue[A]): Option[(A, Queue[A])]
 {% endhighlight %}
 
 *Hint*: `dequeue` needs the `reverse` function, which is defined in
-[cmpsci220.hw.recursion].
+ the `cmpsci220` package.
 
 **Check Your Work:** From the command-line, run:
 

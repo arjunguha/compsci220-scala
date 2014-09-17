@@ -2,3 +2,6 @@
 target
 submission.log
 grading
+.DS_Store
+.idea
+

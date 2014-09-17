@@ -20,6 +20,8 @@ sealed trait AVL {
 
 }
 
+sealed case class LinearRegressionResult(slope: Double, intercept: Double, rSquared: Double)
+
 private case class AVLLeaf() extends AVL {
 
   val height: Int = 0
@@ -68,9 +70,10 @@ private object AVL {
   // Constructor that builds a non-empty tree from the lhs, key-value pair,
   // and rhs. It calculates the height and ensures that the balance factor
   // is {-1, 0, +1}.
-  def apply(lhs: AVL, value: Int, rhs: AVL): AVL = {
-    require(math.abs(lhs.height - rhs.height) <= 1)
+  def apply(lhs: AVL, value: Int, rhs: AVL, msg: String): AVL = {
+    require(math.abs(lhs.height - rhs.height) <= 1, msg)
     AVLNode(lhs, value, rhs)
   }
 
 }
+

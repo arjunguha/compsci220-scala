@@ -132,15 +132,20 @@ package object graphics {
    */
   def saveImage(fileName : String, image : Image, width : Int = 400,
            height : Int = 400) : Unit = {
+    val exit = Promise[Unit]()
+
     def start(stage : Stage) {
+      stage.show() // avoid toolkit not initialized errors
       val (gc, canvas) = setupCanvas(stage, "Image", width, height)
       image.draw(gc)
       ImageIO.write(SwingFXUtils.fromFXImage(canvas.snapshot(null, null), null),
                     "png",
                     new File(fileName))
       stage.hide()
+      exit.success(())
     }
     preStart(start, Promise[Unit]())
+    Await.result(exit.future, ScalaDuration.Inf)
   }
 
   /** Draws a line

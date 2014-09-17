@@ -89,19 +89,19 @@ package object measurement {
   private def balance(p: AVL): AVL = p match {
     case AVL(AVL(r, q, 1, b), p, 2, c) => {
       // left-left case
-      AVL(r, q, AVL(b, p, c))
+      AVL(r, q, AVL(b, p, c, "1"), "2")
     }
-    case AVL(AVL(AVL(a1, r, _, a2), q, -1, b), p, 2, c) => {
+    case AVL(AVL(a, q, -1, AVL(b1, r, _, b2)), p, 2, c) => {
       // left-right case
-      AVL(AVL(a1, r, a2), q, AVL(b, p, c))
+      AVL(AVL(a, q, b1, "3"), r, AVL(b2, p, c, "4"), "5")
     }
     case AVL(c, p, -2, AVL(b, q, -1, r)) => {
       // right-right case
-      AVL(AVL(c, p, b), q, r)
+      AVL(AVL(c, p, b, "6"), q, r, "7")
     }
     case AVL(c, p, -2, AVL(AVL(b1, r, _, b2), q, 1, a)) => {
       // right-left case
-      AVL(AVL(c, p, b1), r, AVL(b2, q, a))
+      AVL(AVL(c, p, b1, "8"), r, AVL(b2, q, a, "9"), "10")
     }
     case _ => p
   }
@@ -141,35 +141,14 @@ package object measurement {
   /**
    * Given a list of pairs that represent (x, y) coordinates, tries to fit
    * the points to a line.
-   *
-   * The function returns three values: (m, b, rRq)
-   * The line is defined by y = m * x + b and rRq measures the error.
-   * Intuitively, if rSq is 1, then the line perfectly fits the data. Lower
-   * values indicate worse fits.
    */
-  def linearRegression(points: List[(Int, Double)]): (Double, Double, Double) = {
+  def linearRegression(points: List[(Double, Double)]): LinearRegressionResult = {
     val reg = new SimpleRegression()
     for ((x, y) <- List.toScalaList(points)) {
       reg.addData(x, y)
     }
-    (reg.getSlope, reg.getIntercept, reg.getRSquare)
+    LinearRegressionResult(slope = reg.getSlope, intercept = reg.getIntercept, rSquared = reg.getRSquare)
   }
 
-  /**
-   * Given a list of pairs that represent (x, y) coordinates, tries to fit
-   * to a line, where the x coordinates are on a semilog axis.
-   *
-   * The function returns three values: (m, b, rRq)
-   * The line is defined by y = m * ln(x) + b and rRq measures the error.
-   * Intuitively, if rSq is 1, then the line perfectly fits the data. Lower
-   * values indicate worse fits.
-   */
-  def logRegression(points: List[(Int, Double)]): (Double, Double, Double) = {
-    val reg = new SimpleRegression()
-    for ((x, y) <- List.toScalaList(points)) {
-      reg.addData(math.log(x), y)
-    }
-    (reg.getSlope, reg.getIntercept, reg.getRSquare)
-  }
 
 }

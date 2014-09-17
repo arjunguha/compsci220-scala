@@ -3,6 +3,8 @@ layout: hw
 title: Measurement
 ---
 
+<img src="http://imgs.xkcd.com/comics/log_scale.png">
+
 For this assignment, you will measure the time it takes to execute typical
 operations on several represetations of integer-sets: ordered association lists, (unbalanced)
 binary search trees, and AVL trees. We provide the data structures, but you have
@@ -135,35 +137,67 @@ For example, here is some code to benchmark the time needed to insert consecutiv
 values into the three data structures:
 
 {% highlight scala %}
-test("timing insertAllOrdList on ordered input") {
+/**
+ * Calculates the average time needed to insert values into the set
+ *
+ * @param insertAll a function that inserts a list of values into an empty set
+ * @param trials the number of trials to run
+ * @param values the list of values to insert
+ * @returns A pair (n, t), where n is the number of values and t is the
+ *          average time needed to insert all values, divided by the
+ *          number of values
+ */
+def timeInsertAll[A](insertAll: List[Int] => A, trials: Int)(values: List[Int]): (Double, Double) = {
+  val n = length(values).toDouble
+  val t = averageTime(trials, insertAll, values)
+  (n, t / n)
+}
+
+test("timing insertAllAVL on random input") {
   // You may need to tweak this data to suit your computer
-  val data = List(revOrder(500), revOrder(1000), revOrder(2000), revOrder(4000))
-  val trials = 10
-  // A list of pairs: List((size1, time1), (size2, time2), ...)
-  val results = map((values: List[Int]) => (length(values), averageTime(trials, insertAllOrdList, values)), data)
-  println(results)
+  val data = map((x: Int) => randomInts(math.pow(2, x + 1).toInt), revOrder(16))
+
+  val timing = map(timeInsertAll(insertAllAVL, 5), data)
+  println(timing)
 }
 {% endhighlight %}
 
 ## 5. Proper Testing (Optional, Required for TAs)
 
-Notice that the test above doesn't actually check the results. The
-`cmpsci220.hw.measurement` package includes two functions to calculate
-[linear regression], which lets you fit a line to some data, e.g., the
-data from the benchmark above. The
+Notice that the test above doesn't actually check the results. You could enter
+the printed data into a spreadsheet, plot the graph, and examine the result.
+But, that would make you a loser.
 
-For example, here is a real test of `insertAllBST`, which ensures that
-the behavior is actually linear:
+Instead, the `cmpsci220.hw.measurement` package has a function to calculate
+[linear regression], which lets you fit a line to a set of points.
+
+For example, here is are two real tests that try to fit the output a
+a line and a log-curve:
 
 {% highlight scala %}
-test("timing insertAllOrdList on ordered input") {
+test("timing insertAllBST on ordered input") {
   // You may need to tweak this data to suit your computer
-  val data = List(revOrder(500), revOrder(1000), revOrder(2000), revOrder(4000))
-  val trials = 10
-  // A list of pairs: List((size1, time1), (size2, time2), ...)
-  val results = map((values: List[Int]) => (length(values), averageTime(trials, insertAllOrdList, values)), data)
-  val (slope, intercept, rSq) = linearRegression(results)
-  assert (math.abs(1.0 - rSq) <= 0.1)
+  val data = map((x: Int) => revOrder(math.pow(2, x + 1).toInt), revOrder(10))
+  val timing = map(timeInsertAll(insertAllBST, 5), data)
+
+  val line = linearRegression(timing)
+  assert(line.rSquared >= 0.85)
+}
+
+def isNonZeroTime(pt: (Double, Double)): Boolean = pt._2 != 0
+
+test("timing insertAllAVL on ordered input") {
+  // You may need to tweak this data to suit your computer
+  val data = map((x: Int) => revOrder(math.pow(2, x + 1).toInt), revOrder(14))
+
+  val timing = map(timeInsertAll(insertAllAVL, 5), data)
+  // Remove points with 0 as the y-coordinate, so that log is defined
+  val zeroesRemoved = filter(isNonZeroTime, timing)
+  // Put the X-axis on a log scale, so that we can fit a line
+  val logScaleX = map((xy: (Double, Double)) => (math.log(xy._1), xy._2), zeroesRemoved)
+
+  val line = linearRegression(logScaleX)
+  assert(line.rSquared >= 0.85)
 }
 {% endhighlight %}
 

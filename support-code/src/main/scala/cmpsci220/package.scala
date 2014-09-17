@@ -85,4 +85,16 @@ package object cmpsci220 {
     case Cons(_, tail) => 1 + length(tail)
   }
 
+  def filter[A](f: A => Boolean, lst: List[A]): List[A] = lst match {
+    case Empty() => Empty()
+    case Cons(head, tail) => {
+      if (f(head)) {
+        Cons(head, filter(f, tail))
+      }
+      else {
+        filter(f, tail)
+      }
+    }
+  }
+
 }
