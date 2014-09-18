@@ -13,7 +13,7 @@ title: Schedule
 | Friday, Sep 12    | *Lab:* [Recursion Lab].                                                                         |
 | Tuesday, Sep 16   | Due: [Pong]. Out: [Recursion].                                                                  |
 | Thursday, Sep 18  |                                                                                                 |
-| Friday, Sep 19    | *Lab:*                                                                                          |
+| Friday, Sep 19    | *Lab:* [Recursion Lab 2: Folding].                                                              |
 | Tuesday, Sep 23   | Due: [Recursion]. Out: HW4.                                                                     |
 | Thursday, Sep 25  |                                                                                                 |
 | Friday, Sep 26    | *Lab:*                                                                                          |
@@ -68,3 +68,4 @@ title: Schedule
 [The Option Type]: ../reading/option
 [Programming with Lists]: ../reading/lists
 [Recursion Lab]: ../hw/recursion_lab
+[Recursion Lab 2: Folding]: ../hw/folding_lab

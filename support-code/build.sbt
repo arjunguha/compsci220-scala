@@ -20,8 +20,8 @@ libraryDependencies ++=
   Seq("org.scalatest" %% "scalatest" % "2.2.1" % "test",
       "org.fusesource.jansi" % "jansi" % "1.11",
       "org.apache.commons" % "commons-math3" % "3.3",
-      "org.yaml" % "snakeyaml" % "1.13")
-
+      "org.yaml" % "snakeyaml" % "1.13",
+      "com.github.tototoshi" %% "scala-csv" % "1.0.0")
 
 // The JavaFX initialization must only run once per JVM instance. Without fork,
 // running twice in the same SBT instance will fail.
