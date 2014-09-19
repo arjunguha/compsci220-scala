@@ -49,7 +49,7 @@ test("Sum with base: Short list") {
 // Write a function that takes an integer operation, a value for empty lists,
 // and a list of integers and returns the result of cumulatively applying the
 // operation to all elements of the given list.
-def genOp(op: ((Int, Int) => Int), onEmpty: Int, lst: List[Int])
+def genOp(op: ((Int, Int) => Int), onEmpty: Int, lst: List[Int]): Int
 
 test("genOp: Same as sum") {
     val op = (a: Int, b: Int) => a + b
@@ -65,7 +65,7 @@ test("genOp: Same as product") {
 // Write the `fold' function which takes a function of two arguments, a value for
 // empty lists, and a list of the function's input type and returns the result
 // of cumulatively applying the function to each element of the list.
-def fold[A](op: ((A,A) => A), onEmpty: A, lst: List[A])
+def fold[A](op: ((A,A) => A), onEmpty: A, lst: List[A]): A
 
 test("fold: Same as sum") {
     val op = (a: Int, b: Int) => a + b
@@ -82,7 +82,7 @@ test("fold: String test") {
 // empty lists, and a list of the function's input type. It returns the result
 // (of type B) of cumulatively applying the function to the elements of the
 // list.
-def fold2[A,B](op: ((A,A) => B), onEmpty: B, lst: List[A])
+def fold2[A,B](op: ((A,B) => B), onEmpty: B, lst: List[A]): B
 
 test("fold2: String lengths") {
     val op = (s: String, x: Int) => x + s.length
