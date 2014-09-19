@@ -125,7 +125,7 @@ three operations:
 
 - *enqueue* adds a new element to the back of the queue
 
-- *dequeue* removes an element from the back of the queue, if the queue is
+- *dequeue* removes an element from the front of the queue, if the queue is
   not empty
 
 In the following exercises, you will build a *persistent queue*. A persistent
