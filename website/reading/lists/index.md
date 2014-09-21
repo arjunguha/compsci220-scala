@@ -207,3 +207,33 @@ def filter[A](f: A => Boolean, lst: List[Int]): List[A] = lst match {
 }
 {% endhighlight %}
 
+## The `find` function
+
+Another common operation on lists is to find an element. For example,
+the following function finds the first even number in a list:
+
+{% highlight scala %}
+def findEven(lst: List[Int]): Option[Int] = lst match {
+  case Empty() => None()
+  case Cons(head, tail) => (head % 2 == 0) match {
+    case true => Some(head)
+    case false => findEven(tail)
+  }
+}
+{% endhighlight %}
+
+If we change `(head % 2 == 0)` to `(head % 2 == 1)`, we'll have the
+`findOdd` function. Again, instead of defining two slightly different
+functions, we can write the general `find` function:
+
+{% highlight scala %}
+def find[A](f: A => Boolean, lst: List[A]): Option[A] = lst match {
+  case Empty() => None()
+  case Cons(head, tail) => f(head) match {
+    case true => Some(head)
+    case false => find(f, tail)
+  }
+}
+{% endhighlight %}
+
+

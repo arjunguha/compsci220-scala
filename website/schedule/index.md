@@ -14,7 +14,7 @@ title: Schedule
 | Tuesday, Sep 16   | Due: [Pong]. Out: [Recursion].                                                                  |
 | Thursday, Sep 18  |                                                                                                 |
 | Friday, Sep 19    | *Lab:* [Recursion Lab 2: Folding].                                                              |
-| Tuesday, Sep 23   | Due: [Recursion]. Out: HW4.                                                                     |
+| Tuesday, Sep 23   | Due: [Recursion]. Out: HW4. Reading: [Professional Scala Tools].                                |
 | Thursday, Sep 25  |                                                                                                 |
 | Friday, Sep 26    | *Lab:*                                                                                          |
 | Tuesday, Sep 30   | Due: HW4. Out: HW5.                                                                             |
@@ -69,3 +69,4 @@ title: Schedule
 [Programming with Lists]: ../reading/lists
 [Recursion Lab]: ../hw/recursion_lab
 [Recursion Lab 2: Folding]: ../hw/folding_lab
+[Professional Scala Tools]: ../reading/tools

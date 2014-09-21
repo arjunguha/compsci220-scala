@@ -13,3 +13,5 @@
   path: option
 - name: Programming with Lists
   path: lists
+- name: Professional Scala Tools
+  path: tools
