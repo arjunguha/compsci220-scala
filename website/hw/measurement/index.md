@@ -6,9 +6,18 @@ title: Measurement
 <img src="http://imgs.xkcd.com/comics/log_scale.png">
 
 For this assignment, you will measure the time it takes to execute typical
-operations on several represetations of integer-sets: ordered association lists, (unbalanced)
-binary search trees, and AVL trees. We provide the data structures, but you have
-to develop the benchmarking framework.
+operations on several represetations of integer-sets: ordered association lists,
+(unbalanced) binary search trees, and AVL trees. We provide the data structures,
+but you have to develop the benchmarking framework.
+
+## Optional Reading
+
+You already know how to implement sets using ordered lists and binary search
+trees. However, you probably are not familiar with AVL trees. We
+strongly recommend reading the [Sets Appeal] chapter from
+[Programming and Programming Languages]. It briefly describes he ordered-list
+and binary search tree representation of sets and spends most of its time
+discussing AVL trees.
 
 ## Preliminaries
 
@@ -203,4 +212,5 @@ test("timing insertAllAVL on ordered input") {
 
 [January 1, 1970]: http://en.wikipedia.org/wiki/Unix_time
 [linear regression]: http://en.wikipedia.org/wiki/Simple_linear_regression
-
+[Sets Appeal]: http://papl.cs.brown.edu/2013/sets.html
+[Programming and Programming Languages]: http://papl.cs.brown.edu/2013/index.html

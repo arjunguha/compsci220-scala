@@ -13,5 +13,9 @@
   path: option
 - name: Programming with Lists
   path: lists
+- name: Map In Depth
+  path: map
+- name: Functions
+  path: functions
 - name: Professional Scala Tools
   path: tools

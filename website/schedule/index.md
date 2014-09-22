@@ -11,7 +11,7 @@ title: Schedule
 | Tuesday, Sep 9    | Due: [Clocks]. Out: [Pong]. Reading: [The Option Type] and [Programming with Lists].            |
 | Thursday, Sep 11  |                                                                                                 |
 | Friday, Sep 12    | *Lab:* [Recursion Lab].                                                                         |
-| Tuesday, Sep 16   | Due: [Pong]. Out: [Recursion].                                                                  |
+| Tuesday, Sep 16   | Due: [Pong]. Out: [Recursion]. Reading: [Map In Depth] and [Functions].                         |
 | Thursday, Sep 18  |                                                                                                 |
 | Friday, Sep 19    | *Lab:* [Recursion Lab 2: Folding].                                                              |
 | Tuesday, Sep 23   | Due: [Recursion]. Out: HW4. Reading: [Professional Scala Tools].                                |
@@ -70,3 +70,5 @@ title: Schedule
 [Recursion Lab]: ../hw/recursion_lab
 [Recursion Lab 2: Folding]: ../hw/folding_lab
 [Professional Scala Tools]: ../reading/tools
+[Map In Depth]: ../reading/map
+[Functions]: ../reading/functions
