@@ -6,7 +6,7 @@ title: Map In Depth
 In the last chapter, we defined the `List[A]` type and several generic list-
 processing functions, including `map`. Here is the definition of `map`
 from the last chapter. The `map` function applies `f` to every element
-in a list and the list of results:
+in a list and produces the list of results:
 
 {% highlight scala %}
 def map(f: Int => Int, lst: List[Int]): List[Int] = lst match {
@@ -16,11 +16,11 @@ def map(f: Int => Int, lst: List[Int]): List[Int] = lst match {
 {% endhighlight %}
 
 In this chapter, we'll see how to define `map` for an arbitrary container
-data struture.
+data structure.
 
 ## Binary Trees
 
-Let's define a type of binary trees called `Tree[A]`. We are *not* trying to
+Let's define a type for binary trees called `Tree[A]`. We are *not* trying to
 define binary search trees, so we don't have to think about keys and values
 or orderings. We simply need a way to represent tree-shaped data.
 There are several ways to represent binary search trees. For this example,
@@ -56,7 +56,7 @@ val tree1 = Tree(Tree(Tree(Leaf(), 4, Leaf()), 7, Leaf()), 5, Leaf())
 What does it mean to define a `mapTree` function for binary tree?. Just like
 `map` over lists, `mapTree` will apply a function `f` to every value in
 the tree. `mapTree` will also preserve the structure of the tree, just
-like `map`. We can write `mapTree` by simply recurring into every sub-tree,
+like `map` did for lists. We can write `mapTree` by simply recurring into every sub-tree,
 just as we did for map:
 
 {% highlight scala %}
@@ -205,7 +205,7 @@ mapTree(g, mapTree(f, tree)) == mapTree(compose(f, g), tree)
 mapOption(g, mapOption(f, opt)) == mapOption(compose(f, g), opt)
 {% endhighlight %}
 
-It is quite easy to move up with other simple properties of `map`. For example,
+It is quite easy to think of other simple properties of `map`. For example,
 if we have a function to append two lists:
 
 {% highlight scala %}
@@ -232,7 +232,7 @@ map(id, container) == id
 Perhaps what means for a function to be `map`-like is that these two identities
 must hold.
 
-We won't answer this question in this class, since that would take take us into
+We won't answer this question in this class, since that would take us into
 the realm of [category theory]. But, you should realize that we can define
 `map` for any sort of container.
 
