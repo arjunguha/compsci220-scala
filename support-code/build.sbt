@@ -2,7 +2,7 @@ name := "cmpsci220"
 
 organization := "edu.umass.cs"
 
-version := "0.1-SNAPSHOT"
+version := "1.0"
 
 scalaVersion := "2.11.2"
 
@@ -42,11 +42,7 @@ dumpClasspath <<= (managedClasspath in Compile, baseDirectory) map { (v, base) =
 
 compile <<= (compile in Compile) dependsOn dumpClasspath
 
-
 // All this boilerplate is to publish to Maven Central or Sonatype Snapshots.
-
-resolvers += "Sonatype OSS Snapshots" at
-  "https://oss.sonatype.org/content/repositories/snapshots"
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"

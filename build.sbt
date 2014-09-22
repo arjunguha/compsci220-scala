@@ -13,6 +13,10 @@ lazy val submission = project.settings(assemblySettings: _*)
                              .settings(jarName in assembly := "submission.jar")
                              .settings(assemblyOption in assembly ~= { _.copy(includeScala = false) })
 
+lazy val joinlistsSolution =
+  project.in(file("./website/hw/joinlists/_solution"))
+         .dependsOn(support)
+
 lazy val compileDocker = taskKey[Unit]("Compiles the library and testing system")
 
 compileDocker := {
