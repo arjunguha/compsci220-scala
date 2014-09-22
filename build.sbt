@@ -17,6 +17,10 @@ lazy val joinlistsSolution =
   project.in(file("./website/hw/joinlists/_solution"))
          .dependsOn(support)
 
+lazy val measurementSolution =
+  project.in(file("./website/hw/measurement/_solution"))
+         .dependsOn(support)
+
 lazy val compileDocker = taskKey[Unit]("Compiles the library and testing system")
 
 compileDocker := {

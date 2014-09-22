@@ -3,6 +3,15 @@ layout: hw
 title: Measurement
 ---
 
+## Step -1
+
+Run this command from the terminal:
+
+    echo 'export SBT_OPTS="-Xmx512m -Xss100m"' >> ~/.profile
+
+This increases the stack size limit for SBT to 100MB and sets the memory limit
+to 512MB.
+
 <img src="http://imgs.xkcd.com/comics/log_scale.png">
 
 For this assignment, you will measure the time it takes to execute typical
@@ -15,31 +24,48 @@ but you have to develop the benchmarking framework.
 You already know how to implement sets using ordered lists and binary search
 trees. However, you probably are not familiar with AVL trees. We
 strongly recommend reading the [Sets Appeal] chapter from
-[Programming and Programming Languages]. It briefly describes he ordered-list
-and binary search tree representation of sets and spends most of its time
+[Programming and Programming Languages]. It briefly describes how to represent
+sets using ordered-lists and binary search trees, but spends most of its time
 discussing AVL trees.
 
 ## Preliminaries
 
-Get the software update:
+With this assignment, we will cease using the `scala220` program and start
+using professional build tools: sbt and ScalaTest. These are covered in the
+reading for the week.
+
+As discussed in the sbt tutorial, you should create a series of directories
+that look like this:
+
+<pre>
+ ./measurement
+ |-- build.sbt
+ `-- src
+     |-- main
+     |   `-- scala
+     |       `-- <i>implementation goes here</i>
+     `-- test
+        `|-- scala
+             `-- <i>test cases go here</i>
+</pre>
+
+Your `build.sbt` file must have exactly these lines:
 
 {% highlight scala %}
-sudo apt-get update
-sudo apt-get upgrade cs220
-sudo docker.io pull arjunguha/cs220
+name := "measurement"
+
+scalaVersion := "2.11.2"
+
+libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.1"
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 {% endhighlight %}
 
-You may neeed to restart the virtual machine.
+When we grade your work, we will delete your `build.sbt` file and use the
+one above. So, if you change it, you risk getting a zero.
 
-Save your work in a file called `measurement.scala`.
-
-Start your program with these lines:
-
-{% highlight scala %}
-import cmpsci220._
-import cmpsci220.hw.measurement._
-{% endhighlight %}
-
+You should use [this template](Solution.scala) for your solution. You have to
+fill in several functions. The rest of this page will walk you through them.
 
 ## 1. Timing Functions
 
@@ -80,7 +106,7 @@ from `n` down to `1`:
 def revOrder(n : Int) : List[Int]
 
 test("revOrder(5)") {
-  assert(revOrder(1) == List(5, 4, 3, 2, 1))
+  assert(revOrder(5) == List(5, 4, 3, 2, 1))
 }
 
 test("revOrder(0)") {
@@ -98,7 +124,6 @@ def randomInts(n : Int) : List[Int]
 You will need to use the builtin function `util.Random.nextInt()`.
 
 ## 3. Test Cases
-
 
 The `cmpsci220.hw.measurement` package defines several functions to insert
 and lookup elements into ordered lists, binary search trees, and AVL trees.
@@ -175,7 +200,6 @@ test("timing insertAllAVL on random input") {
 
 Notice that the test above doesn't actually check the results. You could enter
 the printed data into a spreadsheet, plot the graph, and examine the result.
-But, that would make you a loser.
 
 Instead, the `cmpsci220.hw.measurement` package has a function to calculate
 [linear regression], which lets you fit a line to a set of points.
@@ -209,6 +233,27 @@ test("timing insertAllAVL on ordered input") {
   assert(line.rSquared >= 0.85)
 }
 {% endhighlight %}
+
+## 6. Check Your Work
+
+Here is a trivial test suite that simply checks to see if you've defined
+the `Solution` object with the right type:
+
+{% highlight scala %}
+class TrivialTestSuite extends org.scalatest.FunSuite {
+
+  test("The solution object must be defined") {
+    val obj : cmpsci220.hw.measurement.MeasurementFunctions = Solution
+  }
+}
+{% endhighlight %}
+
+You should place this test suite in `src/test/scala/TrivialTestSuite.scala`.
+If this test suite does not run as-is, you risk getting a zero.
+
+## 7. Submit
+
+*Submission procedure TBD.*
 
 [January 1, 1970]: http://en.wikipedia.org/wiki/Unix_time
 [linear regression]: http://en.wikipedia.org/wiki/Simple_linear_regression

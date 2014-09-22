@@ -51,4 +51,5 @@ title: Lecture 7 (Real Tools)
 
 ## Introduce the HW assignment
 
-Wing it.
+1. Traits are interfaces
+

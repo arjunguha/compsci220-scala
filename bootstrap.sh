@@ -28,7 +28,6 @@ apt-get install -yq \
   docker.io \
   packaging-dev \
   ruby-dev \
-  debuild \
   gcc \
   nodejs \
   software-properties-common
