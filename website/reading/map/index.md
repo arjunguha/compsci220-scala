@@ -62,7 +62,7 @@ just as we did for map:
 {% highlight scala %}
 def mapTree[A, B](f: A => B, tr: Tree[A]): Tree[B] = tr match {
   case Leaf() => Leaf()
-  case Node(l, v, r) => Node(mapTree(f, l), v, mapTree(f, r))
+  case Node(l, v, r) => Node(mapTree(f, l), f(v), mapTree(f, r))
 }
 {% endhighlight %}
 
