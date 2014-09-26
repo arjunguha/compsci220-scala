@@ -14,11 +14,11 @@ title: Schedule
 | Tuesday, Sep 16   | Due: [Pong]. Out: [Recursion]. Reading: [Map In Depth] and [Functions].                         |
 | Thursday, Sep 18  |                                                                                                 |
 | Friday, Sep 19    | *Lab:* [Recursion Lab 2: Folding].                                                              |
-| Tuesday, Sep 23   | Due: [Recursion]. Out: HW4. Reading: [Professional Scala Tools].                                |
+| Tuesday, Sep 23   | Due: [Recursion]. Out: [Measurement]. Reading: [Professional Scala Tools].                      |
 | Thursday, Sep 25  |                                                                                                 |
 | Friday, Sep 26    | *Lab:*                                                                                          |
 | Tuesday, Sep 30   |                                                                                                 |
-| Thursday, Oct 2   | Due: HW4. Out: HW5.                                                                             |
+| Thursday, Oct 2   | Due: [Measurement]. Out: HW5.                                                                             |
 | Friday, Oct 3     | *Lab:*                                                                                          |
 | Tuesday, Oct 7    |                                                                                                 |
 | Thursday, Oct 9   | Due: HW5. Out: HW6.                                                                             |
@@ -72,3 +72,4 @@ title: Schedule
 [Professional Scala Tools]: ../reading/tools
 [Map In Depth]: ../reading/map
 [Functions]: ../reading/functions
+[Measurement]: ../hw/measurement

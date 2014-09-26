@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: Lecture 8
+title: Lecture 8 (Balancing
 ---
 
 
@@ -20,3 +20,15 @@ Objectives
                                | class TestSuite extends org.scalatest.FunSuite { test* }
 
        Test         test     ::= test(description) { e* }
+
+
+
+
+Objectives
+----------
+
+1. AVL trees, without data abstractions
+
+1. Show that without types, invariants can be broken
+
+1. Big-O
