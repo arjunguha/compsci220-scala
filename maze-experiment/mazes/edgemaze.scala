@@ -18,8 +18,7 @@ package object Graph {
     type Edge = (Node, Node, Int, Direction)
 }
 
-class MazeGraph(n: List[Graph.Node], e: List[Graph.Edge], s: Graph.Node, f:
-    Graph.Node) {
+class MazeGraph(n: List[Graph.Node], e: List[Graph.Edge], s: Graph.Node, f: Graph.Node) {
     val nodes = n
     val edges = e
 
@@ -44,14 +43,6 @@ class MazeGraph(n: List[Graph.Node], e: List[Graph.Edge], s: Graph.Node, f:
             case Some((_, _, _, dir)) => Some(dir)
         }
 
-    def pathLength(l: List[Graph.Node]): Int = l match {
-        case Nil => 0
-        case head :: Nil => 0
-        case h1 :: h2 :: rest => this.distanceBetween(h1, h2) match {
-            case None => sys.error(s"No edge between $h1 and $h2. Path incorrect.")
-            case Some(dist) => dist + pathLength(h2 :: rest)
-        }
-    }
 }
 
 package object util {
@@ -59,6 +50,15 @@ package object util {
     // array
     def minMember(values: Array[Int], set: Set[Int]): Int = {
         set.map(i => (i, values(i))).minBy(t => t._2)._1
+    }
+
+    def pathLength(l: List[Graph.Node]): Int = l match {
+        case Nil => 0
+        case head :: Nil => 0
+        case h1 :: h2 :: rest => this.distanceBetween(h1, h2) match {
+            case None => sys.error(s"No edge between $h1 and $h2. Path incorrect.")
+            case Some(dist) => dist + pathLength(h2 :: rest)
+        }
     }
 }
 
