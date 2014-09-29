@@ -253,7 +253,22 @@ If this test suite does not run as-is, you risk getting a zero.
 
 ## 7. Submit
 
-*Submission procedure TBD.*
+First, quit sbt if it running. In the `project` sub-directory of your
+homework, create a file called `plugins.sbt` with exactly
+this line:
+
+{% highlight scala %}
+addSbtPlugin("edu.umass.cs" % "cmpsci220" % "2.2")
+{% endhighlight %}
+
+This adds a "submit" task to sbt that first ensures that your tests pass and
+then creates a file called `submission.tar.gz`, which you can upload to
+Moodle. E.g., your interaction with sbt might look like this:
+
+    > submit
+    Created submission.tar.gz. Upload this file to Moodle.
+    [success] Total time: 0 s, completed Sep 29, 2014 1:17:45 PM
+
 
 [January 1, 1970]: http://en.wikipedia.org/wiki/Unix_time
 [linear regression]: http://en.wikipedia.org/wiki/Simple_linear_regression
