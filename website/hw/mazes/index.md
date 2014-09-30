@@ -23,6 +23,20 @@ algorithms: Depth-first Search and Dijkstra's Algorithm.
 research these algorithms on your own for additional information.** (Wikipedia
 is a great resource for this!)
 
+## Part 0: Importing
+
+We'll be using a library called "edgemaze" for this.
+
+{% highlight scala %}
+import edgemaze.\_
+{% endhighlight %}
+
+It consists of the Graph package (defines Node and Edge), MazeGraph (defines the
+actual maze representation) and util (contains the minMember function, discussed
+below). There's also the Driver class, which is used in Part 4.
+
+You should configure your sbt file accordingly.
+
 ## Part 1: Depth-first Search
 
 The basic depth-first search (DFS) algorithm takes some graph *G* and a starting
