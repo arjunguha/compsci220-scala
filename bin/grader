@@ -1,0 +1,4 @@
+#!/bin/bash
+DIR=`dirname $0`
+CLASSPATH=$DIR/../grader/target/scala-2.11/classes:`cat $DIR/../grader/classpath`
+/usr/bin/scala -classpath $CLASSPATH grader.Main $@
