@@ -41,7 +41,7 @@ private[grader] class CumulativeBean {
 
 private[grader] class FeedbackBean {
 
-  private var rubric = new LinkedList[TestResultBean]()
+  private var rubric: List[TestResultBean] = new LinkedList[TestResultBean]()
   private var time: String = "not yet graded"
   private var cumulative: CumulativeBean = new CumulativeBean()
 
@@ -50,7 +50,7 @@ private[grader] class FeedbackBean {
     rubric
   }
 
-  def setRubric(rubric: LinkedList[TestResultBean]): Unit = {
+  def setRubric(rubric: List[TestResultBean]): Unit = {
     this.rubric = rubric
   }
 

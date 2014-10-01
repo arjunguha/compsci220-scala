@@ -8,6 +8,7 @@ import org.fusesource.jansi.AnsiConsole
 import org.fusesource.jansi.Ansi._
 import org.fusesource.jansi.Ansi.Color._
 import scala.concurrent.ExecutionContext.Implicits.global
+import java.lang.ProcessBuilder
 import ProcessTimer._
 
 object Main extends App {
@@ -94,7 +95,6 @@ object Main extends App {
 
   // i.e. grades a simple .scala file
   def gradeScalaScript(solution: Path, appendTestSuite: Path): Unit = {
-    import scala.sys.process._
 
     val base = solution.getParent
 
@@ -112,37 +112,35 @@ object Main extends App {
     Files.write(target, Files.readAllBytes(appendTestSuite), APPEND)
 
     val cmpsci220Jar = "/home/vagrant/src/support-code/target/scala-2.11/cmpsci220.jar"
-    val graderJar = "/home/vagrant/src/grader/target/scala-2.11/grader.jar"
-
-    val cmd = Seq("/usr/bin/timeout", "-s", "9", "90s",
-                  "/usr/bin/scala",
-                  "-classpath", s"$cmpsci220Jar:$graderJar",
-                  "-J-Xmx512m", "-J-Xss100m",
-                  target.toString)
+    val graderDeps = new String(Files.readAllBytes(Paths.get("/home/vagrant/src/grader/classpath")))
+    val graderClasses = "/home/vagrant/src/grader/target/scala-2.11/classes"
 
     Files.deleteIfExists(base.resolve("stdout.txt"))
-    val process = cmd.run(new MyProcessLogger(base.resolve("stdout.txt")))
+    val pb = new ProcessBuilder(
+      "/usr/bin/timeout", "-s", "9", "5m",
+      "/usr/bin/scala",
+      "-classpath", s"$cmpsci220Jar:$graderDeps:$graderClasses",
+      "-J-Xmx512m", "-J-Xss100m",
+      "gradingHacks.scala")
+    pb.redirectOutput(base.resolve("stdout.txt").toFile)
+    pb.directory(base.toFile)
 
-    process.exitValue match {
-      case 124 => {
-        println(ansi().fg(YELLOW).a(s"Failed grading $base (timeout)").reset)
+    // Print stdout in red
+    print(ansi().fg(RED))
+    val code = pb.start.waitFor
+    print(ansi().reset())
+
+    code match {
+      case (137 | 124) => {
+        println(ansi().fg(YELLOW).a(s"Failed grading $base (hard timeout)").reset)
       }
       case 0 => {
         Files.write(base.resolve(".graded"), "graded".getBytes)
       }
-      case _ => {
-        println(ansi().fg(RED).a(s"Failed grading $base (non-zero exit code)").reset)
+      case n => {
+        println(ansi().fg(RED).a(s"Failed grading $base (exit code $n)").reset)
       }
     }
-
-    // Files.deleteIfExists(base.resolve("grading-stdout.txt"))
-    // val scriptFile = base.resolve("gradeMe.sh")
-    // Files.deleteIfExists(scriptFile)
-    // Files.write(scriptFile, "cd `dirname $0`; scala -classpath /home/vagrant/src/support-code/target/scala-2.11/cmpsci220.jar:/home/vagrant/src/grader/target/scala-2.11/grader.jar gradingHacks.scala > grading-stdout.txt\n".getBytes)
-    // val cmd = Seq("/bin/bash", scriptFile.toString)
-    // if (cmd.! == 0) {
-    //   Files.write(base.resolve(".graded"), "graded".getBytes)
-    // }
   }
 
   def gradeAllScripts(solution: String, appendTestSuite: Path): Unit = {
