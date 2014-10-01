@@ -1,6 +1,11 @@
 import AssemblyKeys._
 
-lazy val root = project.in(file(".")).aggregate(support, submission)
+lazy val root = project.in(file(".")).aggregate(support, submission, grader)
+
+lazy val grader = project
+                    .settings(assemblySettings: _*)
+                    .settings(jarName in assembly := "grader.jar")
+                    .settings(assemblyOption in assembly ~= { _.copy(includeScala = false) })
 
 lazy val support = project.in(file("support-code"))
                           .settings(assemblySettings: _*)
