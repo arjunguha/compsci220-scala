@@ -13,7 +13,8 @@ scalacOptions ++=
       "-Xfatal-warnings")
 
 libraryDependencies ++=
-  Seq("commons-io" % "commons-io" % "2.4",
+  Seq("org.scalatest" %% "scalatest" % "2.2.1" % "test",
+      "commons-io" % "commons-io" % "2.4",
       "commons-codec" % "commons-codec" % "1.9",
       "org.apache.commons" % "commons-compress" % "1.8.1",
       "org.yaml" % "snakeyaml" % "1.13",
