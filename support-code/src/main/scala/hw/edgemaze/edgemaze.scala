@@ -7,15 +7,9 @@ package edgemaze
 // ...#.F 546#9F
 // ##...# ##7.8#
 
-sealed trait Direction
-case class North() extends Direction
-case class South() extends Direction
-case class East() extends Direction
-case class West() extends Direction
-
 package object Graph {
     type Node = Int
-    type Edge = (Node, Node, Int, Direction)
+    type Edge = (Node, Node, Int)
 }
 
 class MazeGraph(n: List[Graph.Node], e: List[Graph.Edge], s: Graph.Node, f: Graph.Node) {
@@ -36,13 +30,6 @@ class MazeGraph(n: List[Graph.Node], e: List[Graph.Edge], s: Graph.Node, f: Grap
             case None => None
             case Some((_, _, distance, _)) => Some(distance)
         }
-
-    def directionBetween(v: Graph.Node, w: Graph.Node): Option[Direction] =
-        edgeBetween(v, w) match {
-            case None => None
-            case Some((_, _, _, dir)) => Some(dir)
-        }
-
 }
 
 package object util {
@@ -51,15 +38,6 @@ package object util {
     def minMember(values: Array[Int], set: Set[Int]): Int = {
         set.map(i => (i, values(i))).minBy(t => t._2)._1
     }
-
-    // def pathLength(l: List[Graph.Node]): Int = l match {
-    //     case Nil => 0
-    //     case head :: Nil => 0
-    //     case h1 :: h2 :: rest => this.distanceBetween(h1, h2) match {
-    //         case None => sys.error(s"No edge between $h1 and $h2. Path incorrect.")
-    //         case Some(dist) => dist + pathLength(h2 :: rest)
-    //     }
-    // }
 }
 
 
