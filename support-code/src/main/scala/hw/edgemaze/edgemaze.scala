@@ -52,14 +52,14 @@ package object util {
         set.map(i => (i, values(i))).minBy(t => t._2)._1
     }
 
-    def pathLength(l: List[Graph.Node]): Int = l match {
-        case Nil => 0
-        case head :: Nil => 0
-        case h1 :: h2 :: rest => this.distanceBetween(h1, h2) match {
-            case None => sys.error(s"No edge between $h1 and $h2. Path incorrect.")
-            case Some(dist) => dist + pathLength(h2 :: rest)
-        }
-    }
+    // def pathLength(l: List[Graph.Node]): Int = l match {
+    //     case Nil => 0
+    //     case head :: Nil => 0
+    //     case h1 :: h2 :: rest => this.distanceBetween(h1, h2) match {
+    //         case None => sys.error(s"No edge between $h1 and $h2. Path incorrect.")
+    //         case Some(dist) => dist + pathLength(h2 :: rest)
+    //     }
+    // }
 }
 
 

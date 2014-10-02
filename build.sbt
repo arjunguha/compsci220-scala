@@ -77,8 +77,8 @@ lazy val publishWeb = taskKey[Unit]("Update the website")
 
 publishWeb := {
   import scala.sys.process._
-  Seq("rsync", "-avzr", "--delete", "website/_site/",
-       "people.cs.umass.edu:/home/arjun/public_html/courses/cmpsci220-fall2014").!
+  Seq("rsync", "-gpavzr", "--delete", "website/_site/",
+       "people.cs.umass.edu:/nfs/balder/web4/arjun/public_html/courses/cmpsci220-fall2014").!
  }
 
  publishWeb <<= publishWeb.dependsOn(compileWeb)
