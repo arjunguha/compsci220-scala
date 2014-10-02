@@ -12,15 +12,12 @@ package object Graph {
     type Edge = (Node, Node, Int)
 }
 
-class MazeGraph(n: List[Graph.Node], e: List[Graph.Edge], s: Graph.Node, f: Graph.Node) {
+class EdgeGraph(n: List[Graph.Node], e: List[Graph.Edge]) {
     val nodes = n
     val edges = e
 
-    val start = s
-    val finish = f
-
     def adjacentTo(n: Graph.Node): List[Graph.Node] =
-        edges.collect{ case (v, w, _, _) if (n == v) => w }
+        edges.collect{ case (v, w, _) if (n == v) => w }
 
     def edgeBetween(v: Graph.Node, w: Graph.Node): Option[Graph.Edge] =
         edges.find(e => (e._1 == v && e._2 == w))
@@ -28,8 +25,16 @@ class MazeGraph(n: List[Graph.Node], e: List[Graph.Edge], s: Graph.Node, f: Grap
     def distanceBetween(v: Graph.Node, w: Graph.Node): Option[Int] =
         edgeBetween(v, w) match {
             case None => None
-            case Some((_, _, distance, _)) => Some(distance)
+            case Some((_, _, distance)) => Some(distance)
         }
+}
+object EdgeGraph {
+    def apply(n: List[Graph.Node], e: List[Graph.Edge]) = new EdgeGraph(n,e)
+    def apply(e: List[Graph.Edge]) =
+        new EdgeGraph(
+            e.foldLeft(List[Graph.Node]())((l, p) =>
+                    p._1 :: p._2 :: l).distinct,
+                e)
 }
 
 package object util {
