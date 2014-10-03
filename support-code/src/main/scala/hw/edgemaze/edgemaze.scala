@@ -81,4 +81,5 @@ package object TestGraphs {
                 (9, 8, 1),
                 // Node 10
                 (10, 9, 1)))
+    val smallGraphStart = 0
 }

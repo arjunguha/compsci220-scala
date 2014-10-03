@@ -33,11 +33,12 @@ import edgemaze.\_
 
 It consists of the Graph package (defines Node and Edge), MazeGraph (defines the
 actual maze representation) and util (contains the minMember function, discussed
-below). There's also the Driver class, which is used in Part 4.
+below). There's also the TestGraphs package, which contains sample graphs for
+you to test your functions on.
 
 You should configure your sbt file accordingly.
 
-## Part 1: Depth-first Search
+## Part 1: Depth-first Search: Reachability
 
 The basic depth-first search (DFS) algorithm takes some graph *G* and a starting
 node *v*, then does the following:
@@ -46,116 +47,93 @@ node *v*, then does the following:
 2. Find all nodes that are adjacent to *v*
 3. For all adjacent nodes *w* that are undiscovered, recusively call DFS(*G*, *w*)
 
-This requires some way to mark the nodes of the graph *G*, which is usually done
+There's also a way to do it iteratively instead of recursively:
+
+1. Push *v* to a stack *S*
+2. If *S* is empty, we're done iterating
+3. Otherwise, pop the top element off the stack. We'll call it *w*
+4. If *w* is not marked as visited, mark it and push all nodes adjacent to *w*
+   onto the stack.
+5. If *w* has already been visited, ignore it and iterate.
+
+DFS requires some way to mark the nodes of the graph *G*, which is usually done
 with some field in the node or a global list of discovered nodes. We can't use
-the first way because our nodes are just Ints. The second way would require
-a mutable list that is accessible to all of the calls to DFS, which would be
-impossible to do with Scala's recursion.
+the first way because our nodes are just Ints. The second way requires a list
+that is accessible to all of the calls to DFS, which is definitely doable. A
+normal Scala List can be used, but a Set makes more sense.
 
-Instead, we'll use a stack to keep track of the nodes we need to visit and a set
-to keep track of all the nodes we've already visited. Scala provides a Set class
-for us, and we can use Scala's List type as a stack.
+The DFS algorithm returns the list of visited nodes. This is called the set of
+*reachable nodes* from the starting node *v*.
 
-Again, we start with the graph *G* and the starting node *v*. We also have a set
-of discovered nodes *S*, which is initially empty, and a list of nodes to visit,
-L, which we will treat as a stack.
-
-0. Push the initial node onto the stack *L*
-1. If *L* is empty, return the set of visited nodes *S*
-2. Pop *w*, the first element of *L*
-3. If *w* has not been discovered, mark it as discovered, then push all nodes
-   adjacent to *w* onto the stack.
-4. If *w* has already been discovered, iterate.
-
-This can be implemented as a while loop or a recursive function with a helper. I
-suggest you do it recursively. Marking a node as discovered means adding it the
-the set *S* of discovered nodes.
-
-In both cases, DFS returns the set of nodes that were visited from the starting
-node.
-
-Write the function depthFirstSearch() that performs a depth-first search from
-the start node of the graph maze to the finish node:
+Write the function reachable() that performs a depth-first search from a given
+node:
 
 {% highlight scala %}
-def dfs(maze: MazeGraph): Set[Graph.Node]
+def reachable(graph: EdgeGraph, start: Graph.Node): Set[Graph.Node]
 {% endhighlight %}
 
-*If you choose to do this recursively, you'll need a helper function that takes
-the graph, the set of discovered nodes, and the list of nodes to visit.*
+You may do this recursively (by writing a helper function) or iteratively.
 
-## Part 2: Depth-first Search with Paths
+## Part 2: Depth-first Search: Paths
 
-Unfortunately, the vanilla DFS algorithm only tells us which nodes we can reach
-from the start node. It doesn't give us an actual path from the start to the
-finish. In order to do this, we'll need to keep track of when each node was
-added to the stack.
+You'll notice that reachable() doesn't actually tell us the path from one node
+to another. To do that, we need to modify our code and keep track of which nodes
+are reachable from each other.
 
-One way to do this is to keep track of pairs of nodes. Instead of just pushing
-the adjacent nodes to the stack, we'll push the adjacent node and the current
-node as a pair to the stack. When we pop a value from a stack, we'll be getting
-a pair that contains the top node and the node that pushed it (the "pusher").
-Instead of tracking the discovered nodes with a set, we'll use a map that uses
-the top node as the key and the pusher as the value.
+We need some way to keep track of which nodes are next to each other. If we have
+a graph where 0 (our starting node) is connected to 1 and 2, and 2 is connected
+to 3:
 
-In pseudocode:
 <pre>
-// Popping from the stack gives us the top node and the node that pushed it
-(top, pusher) = stack.pop
-// Our key map maps the top node and the node that pushed it
-map[top] = pusher
+0 --> 1
+|
+v
+2 --> 3
 </pre>
 
-You may discover other ways to do this. The important thing is that, when the
-depth-first search is finished, you have a way to connect the nodes together. To
-actually get the path from start to finish, you need to process the connections
-found by the DFS by starting from the maze's end node (maze.finish) and working
-your way backwards. For example:
+Then our path from 0 to 3 is (0 -> 2 -> 3). DFS will start at 0, then process 1
+and 2, then process 3. To keep track of the path, we can map the *destination*
+node to the *previous* node. For this graph:
+
+0 -> -1 (There's no node before 0, so we give it the "no node" index)
+1 -> 0
+2 -> 0
+3 -> 2
+
+Since our Nodes are just Ints, we can use a Scala Array or List, where the
+index is the destination and the value at that index is the "previous" node.
+This list should have an entry for every node in the graph, even if it isn't
+reached. Unreached nodes will have -1 as their previous node. A node should have
+its entry in the list filled only if it isn't already marked. That is, if we
+previously found that 3 is reachable through 2, and 3 is also reachable by 1,
+3's entry should *not* be updated.
+
+Modify the code of reachable() to create dfsPath(), which takes an EdgeGraph and
+a start node. It should return an Array[Graph.Node], which contains the list of
+nodes that are adjacent to each other, as described above.
 
 {% highlight scala %}
-// This isn't quite Scala syntax. Don't worry about it.
-map = {start => -1, 1 => start, 2 => 1, finish => 2}
-// Start at the finish node, work backward
-curr = finish
-while (map[curr] != -1)
-    println(curr)
-    curr = map[curr]
-// Prints:
-// finish
-// 2
-// 1
-// start
+def dfsPath(graph: EdgeGraph, start: Graph.Node): Array[Graph.Node]
 {% endhighlight %}
 
-Write the functions depthFirstSearchPath() that finds the path from the maze's
-start to its finish using the DFS algorithm. Also write a function called
-dfsWalk that produces (*does not* print) the path from start to finish.
-
-{% highlight scala %}
-def depthFirstSearchPath(maze: MazeGraph): List[Graph.Node]
-
-def dfsWalk(path: ??? ): List[Graph.Node]
-{% endhighlight %}
-
-*depthFirstSearchPath() should call dfsWalk after running the DFS algorithm in
-order to produce the correct path as a list. The argument type for dfsWalk is up
-to you, depending on your implementation of the DFS path algorithm.*
-
-*You **cannot** solve this by calling your previous DFS function. But you can easily
+*Hints:*
+- *You **cannot** solve this by calling your previous DFS function. But you can easily
 adapt it to solve this problem.*
+- *Scala Arrays are mutable. This means if you have an Array[Int] arr, arr(i) =
+  j will update the array. You still declare Arrays with **val**.*
 
 ### Optional: Breadth-First Search (Read it anyway)
 
 Unfortunately, the DFS algorithm is not guaranteed to find the shortest path in
 the maze. We could instead use the breadth-first search (BFS) algorithm, which
-is guaranteed. Because this section is optional, you should look up how BFS
-differs from DFS on your own.
+is guaranteed to do so. Because this section is optional, you should look up how
+BFS differs from DFS on your own.
 
 Your implementation of DFS can easily be converted to BFS by using a queue
 instead of a stack to track nodes to check. Scala's Queue type doesn't
 follow the same conventions as List, so you'll have to change a bit more code to
-get it to work. Try it out by implementing `breadthFirstSearch' and
-`breadthFirstSearchPath'.
+get it to work. Try it out by implementing `bfsPath()` using a queue. You'll
+have to import scala.collection.immutable.Queue to use queues.
 
 Do note that BFS finds the shortest path *in terms of nodes to traverse*.
 In the next section, we'll talk about another algorithm for finding a path in a
@@ -237,4 +215,4 @@ Some hints:
   the updated() function.
 - You can definitely do this recursively! It'll be neat.
 
-## Part 4: Driving Directions
+## Part 4: Evaluating the Paths
