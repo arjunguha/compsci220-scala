@@ -86,26 +86,26 @@ to 3:
 
 <pre>
 0 --> 1
-|
-v
-2 --> 3
+|     |
+v     v
+2     3
 </pre>
 
-Then our path from 0 to 3 is (0 -> 2 -> 3). DFS will start at 0, then process 1
-and 2, then process 3. To keep track of the path, we can map the *destination*
-node to the *previous* node. For this graph:
+Then our path from 0 to 3 is (0 -> 1 -> 3). DFS will start at 0, then process 1,
+then 3, then back up to 2. To keep track of the path, we can map the
+*destination* node to the *previous* node. For this graph:
 
 0 -> -1 (There's no node before 0, so we give it the "no node" index)
 1 -> 0
 2 -> 0
-3 -> 2
+3 -> 1
 
 Since our Nodes are just Ints, we can use a Scala Array or List, where the
 index is the destination and the value at that index is the "previous" node.
 This list should have an entry for every node in the graph, even if it isn't
 reached. Unreached nodes will have -1 as their previous node. A node should have
 its entry in the list filled only if it isn't already marked. That is, if we
-previously found that 3 is reachable through 2, and 3 is also reachable by 1,
+previously found that 3 is reachable through 1, and 3 is also reachable by 2,
 3's entry should *not* be updated.
 
 Modify the code of reachable() to create dfsPath(), which takes an EdgeGraph and
