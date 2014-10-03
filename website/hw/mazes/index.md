@@ -157,18 +157,21 @@ and the starting node and which nodes are closest together.
 The steps of the algorithm are fairly simple, but there's a bit of set up.
 As usual, we start with a graph *G* and a starting node *v*.
 
+*Setup:*
 1. Assign every node a tentative initial distance
     - For the initial node, the distance is 0
     - For every other node it is infinity (or some arbitrarily high value)
 2. Mark all nodes as unvisited
 3. Create a set of all unvisited nodes, which will be processed during the
    algorithm. This initially contains all of the nodes.
-4. For the current node *v*: For each neighbor *w*, calculate the tentative
+*Algorithm:*
+4. Select the unvisited node that has the smallest tentative distance and use it
+   as the next current node.
+5. For the current node *v*: For each neighbor *w*, calculate the tentative
    distance. If this is smaller than the current distance, store it.
     - Tentative distance = distance of *v* + length from *v* to *w*
-5. Mark the current node as visited and remove it from the unvisited set.
-6. Select the unvisited node that has the smallest tentative distance and use it
-   as the next current node.
+6. Mark the current node as visited and remove it from the unvisited set.
+   Iterate.
 
 Implement the function dijkstra(), which finds the shortest path through the
 graph using Dijkstra's Algorithm. Like dfsPath() above, it should return an array
@@ -184,16 +187,11 @@ Some hints:
 
 - As before, we can use a set to track the unvisited nodes.
 - The distance to each node can be stored in an array. The indices of the array
-  are the nodes, and the values are the distance, just like the "previous node"
-    array.
-- If you look up Dijkstra's Algorithm, you will see that this is a slightly
-  simplified version.
-    - In the original, only the unvisited neighbors have their distances
-      calculated. This is unnecessary and only slightly changes the runtime. You
-      may do this if you wish.
-    - Often, a priority queue is used instead of a set. This adds unnecessary
-      complexity, since Scala doesn't have the necessary features in its
-      PriorityQueue class.
+  are the nodes and the values are the distance, similar to the "previous node"
+  array.
+- Often, a priority queue is used instead of a set. This adds unnecessary
+  complexity, since Scala doesn't have the necessary features in its
+  PriorityQueue class.
 - For step 6, we provide a function called minMember() in the util package. This
   takes an array of values (e.g. the distances) and a set of integers (e.g. the
   set of unvisited nodes) and returns the member of the set that corresponds to
@@ -202,7 +200,65 @@ Some hints:
   to reduce the priority of an item in order to reflect the updated distance.
   Just use minMember().
 - You don't have to use infinity for the initial distance. Something like 10000
-  will be more than enough. (Our graph won't be THAT big!)
-- You can definitely do this recursively! It'll be neat.
+  will be more than enough. (The graphs won't be THAT big!)
+- You can definitely do this recursively!
 
 ## Part 4: Evaluating the Paths
+
+The DFS algorithm and Dijkstra's Algorithm return the same thing: a list of
+nodes that form a path through the graph. That means we can write functions to
+evaluate both algorithms.
+
+First, we need a function that will take the adjacency list produced by the
+algorithms and find the path from the start node to the end node. We can do this
+by walking backwards from the destination node up the adjacency list to the
+start node. Remember that the start node has the value "-1" in the adjacency
+list, so we can use that as signal that the path is complete.
+
+Write the function makePath() to perform this operation:
+
+{% highlight scala %}
+def makePath(adj: Array[Graph.Node], end: Graph.Node): List[Graph.Node]
+{% endhighlight %}
+
+Second, let's make a function that checks if a path is valid. A path is valid if
+there is an edge between each consecutive node:
+
+<pre>
+0 --> 1 --> 3
+|           |
+v           v
+2 --> 4     5
+</pre>
+
+makePath(dfs(graph, 0), 5) would return List(0,1,3,5). isValidPath should check
+the edges between the nodes to make sure this is a valid path. If, for example,
+we checked the path (0,2,3,5), isValidPath would return false because there is
+no path between 2 and 3. A path with only one node is still a valid path.
+
+Write the function isValidPath() that checks path correctness:
+
+{% highlight scala %}
+def isValidPath(graph: EdgeGraph, path: List[Graph.Node]): Boolean
+{% endhighlight %}
+
+*Note: A path of length one (e.g. path = List(0)) is a valid path.*
+
+Finally, we should make a function that finds the length of a path. The
+EdgeGraph has a function that finds the distance between two nodes, if there is
+an edge from the first to the second. If no edge exists, it returns *None*. You
+can assume that every path passed into this function is valid. A path with a
+single node has length 0.
+
+Write the function pathLength() that finds the length of a path:
+
+{% highlight scala %}
+def pathLength(graph: EdgeGraph, path: List[Graph.Node]): Int
+{% endhighlight %}
+
+## Check Your Work
+
+The TestGraph package contains a few sample graphs that will help you test your
+functions. These also include the lengths of certain paths for you to compare
+against your DFS and Dijkstra's Algorithm paths. Use these to write several
+tests for both path-finding algorithms and the path-checking functions.
