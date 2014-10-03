@@ -21,7 +21,7 @@ is a great resource for this!)
 We'll be using a library called "edgegraph" for this.
 
 {% highlight scala %}
-import edgegraph.\_
+import cmpsci220.hw.edgegraph.\_
 {% endhighlight %}
 
 It consists of the Graph package (defines Node and Edge), EdgeGraph (defines the
