@@ -1,23 +1,16 @@
 ---
 layout: hw
-title: Mazes
+title: Graph Algorithms
 ---
 
 <a href="http://xkcd.com/246/">
 <img src="http://imgs.xkcd.com/comics/labyrinth_puzzle.png">
 </a>
 
-For this homework, we're going to be working with mazes and algorithms for
-finding the path through them. We're representing the maze as a graph, which is
-a list of nodes and a list of edges. Nodes are a type alias of Ints. This is a
-tweak that lets us use Nodes as indexes into arrays. Edges are just tuples that
-store the two nodes, the distance between, and the direction from the first node
-to the other. This lets us represent the maze as a graph with each intersection
-as a node with edges connecting it to the other intersections.
-
-By representing the maze as a graph, we can use graph processing algorithms to
-find the path from the start of the maze to the exit. We'll focus on two
-algorithms: Depth-first Search and Dijkstra's Algorithm.
+For this homework, we're going to be working with graphs and algorithms for
+finding paths through them. Graphs are represented as lists of Nodes (the
+vertices of the graphs) and Edges (3-tuples that contain the source node, the
+destination node, and the distance between them).
 
 **We provide overviews of the graph algorithms below. We strongly suggest
 research these algorithms on your own for additional information.** (Wikipedia
@@ -25,14 +18,14 @@ is a great resource for this!)
 
 ## Part 0: Importing
 
-We'll be using a library called "edgemaze" for this.
+We'll be using a library called "edgegraph" for this.
 
 {% highlight scala %}
-import edgemaze.\_
+import edgegraph.\_
 {% endhighlight %}
 
-It consists of the Graph package (defines Node and Edge), MazeGraph (defines the
-actual maze representation) and util (contains the minMember function, discussed
+It consists of the Graph package (defines Node and Edge), EdgeGraph (defines the
+actual graph representation) and util (contains the minMember function, discussed
 below). There's also the TestGraphs package, which contains sample graphs for
 you to test your functions on.
 
@@ -125,7 +118,7 @@ adapt it to solve this problem.*
 ### Optional: Breadth-First Search (Read it anyway)
 
 Unfortunately, the DFS algorithm is not guaranteed to find the shortest path in
-the maze. We could instead use the breadth-first search (BFS) algorithm, which
+the graph. We could instead use the breadth-first search (BFS) algorithm, which
 is guaranteed to do so. Because this section is optional, you should look up how
 BFS differs from DFS on your own.
 
@@ -133,7 +126,11 @@ Your implementation of DFS can easily be converted to BFS by using a queue
 instead of a stack to track nodes to check. Scala's Queue type doesn't
 follow the same conventions as List, so you'll have to change a bit more code to
 get it to work. Try it out by implementing `bfsPath()` using a queue. You'll
-have to import scala.collection.immutable.Queue to use queues.
+have to import scala.collection.immutable.Queue.
+
+{% highlight scala %}
+def bfsPath(graph: EdgeGraph, start: Graph.Node): Array[Graph.Node]
+{% endhighlight %}
 
 Do note that BFS finds the shortest path *in terms of nodes to traverse*.
 In the next section, we'll talk about another algorithm for finding a path in a
@@ -143,19 +140,12 @@ about the *distance between nodes*.
 ## Part 3: Dijkstra's Algorithm
 
 Previously, I mentioned that the Edges in our graph contain the distance between
-the two nodes. Typical mazes are stored as grids with cell marked as "walls" or
-"open spaces". Each of these cells could be stored as a node in the graph, but
-that would greatly increase the number of nodes and edges we'd have to store,
-even if we ignored all the wall cells. Instead, the graph just encodes the
-intersections of the graph, requiring us to store the distance between nodes to
-remain faithful to the graph.
-
-The DFS algorithm will find us any path from start to finish. The optional BFS
-algorithm will find the path from start to finish with the fewest number of
-nodes. **GO READ THE OPTIONAL SECTION IF YOU HAVEN'T YET.**
+the two nodes. The DFS algorithm will find us any path from start to finish. The
+optional BFS algorithm will find the path from start to finish with the fewest
+number of nodes. **GO READ THE OPTIONAL SECTION IF YOU HAVEN'T YET.**
 
 With this next algorithm, we'll take the edge distance into account and find the
-shortest path from start to finish in terms of distance.
+shortest path to each node in terms of distance.
 
 Dijkstra's Algorithm was invented, perhaps unsurprisingly, by Edsger Dijkstra, a
 Dutch computer scientist. He's a fascinating figure and really quite important
@@ -181,38 +171,38 @@ As usual, we start with a graph *G* and a starting node *v*.
    as the next current node.
 
 Implement the function dijkstra(), which finds the shortest path through the
-maze using Dijkstra's Algorithm. Also implement dijkstraWalk(), which takes the
-list of previous nodes created by the algorithm and generates the path from the
-start to the finish. dijkstra() should return the correct path, i.e. call
-dijkstraWalk to get the final result from inside dijkstra().
+graph using Dijkstra's Algorithm. Like dfsPath() above, it should return an array
+of nodes with the "previous" node. Unlike dfsPath(), this actually tracks which
+node creates the shortest path to the current node. This means the value may be
+updated if a previous node has already been filled in.
 
 {% highlight scala %}
-def dijkstra(maze: MazeGraph): List[Graph.Node]
-
-def dijkstraWalk(prev: Array[Graph.Node], curr: Node): List[Graph.Node]
+def dijkstra(graph: EdgeGraph, start: Graph.Node): Array[Graph.Node]
 {% endhighlight %}
 
 Some hints:
 
 - As before, we can use a set to track the unvisited nodes.
 - The distance to each node can be stored in an array. The indices of the array
-  are the nodes, and the values are the distance.
+  are the nodes, and the values are the distance, just like the "previous node"
+    array.
 - If you look up Dijkstra's Algorithm, you will see that this is a slightly
   simplified version.
     - In the original, only the unvisited neighbors have their distances
-      calculated. This is unnecessary and only slightly changes the runtime.
+      calculated. This is unnecessary and only slightly changes the runtime. You
+      may do this if you wish.
     - Often, a priority queue is used instead of a set. This adds unnecessary
       complexity, since Scala doesn't have the necessary features in its
       PriorityQueue class.
-- For step 6, we provide a function called minMember(). This takes an array of
-  values (e.g. the distances) and a set of integers (e.g. the set of unvisited
-  nodes) and returns the member of the set that corresponds to the lowest value.
+- For step 6, we provide a function called minMember() in the util package. This
+  takes an array of values (e.g. the distances) and a set of integers (e.g. the
+  set of unvisited nodes) and returns the member of the set that corresponds to
+  the lowest value.
+- If you wish to use a Priority Queue instead, you will have to implement a way
+  to reduce the priority of an item in order to reflect the updated distance.
+  Just use minMember().
 - You don't have to use infinity for the initial distance. Something like 10000
-  will be more than enough. (Our mazes won't be THAT big!)
-- Arrays in Scala are mutable. This means if you write `array(0) = 100`, the
-  array will update in place. *You still declare them using val.*
-- If you'd rather use immutable data structures like Lists, you should check out
-  the updated() function.
+  will be more than enough. (Our graph won't be THAT big!)
 - You can definitely do this recursively! It'll be neat.
 
 ## Part 4: Evaluating the Paths
