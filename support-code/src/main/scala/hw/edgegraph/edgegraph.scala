@@ -1,11 +1,4 @@
 package edgemaze
-// 6 x 6:
-// S##### S##### 11 nodes
-// .....# 12..3#
-// #.#### #.####
-// #.#### #.####
-// ...#.F 546#9F
-// ##...# ##7.8#
 
 package object Graph {
     type Node = Int
@@ -46,7 +39,23 @@ package object util {
 }
 
 package object TestGraphs {
-    val smallGraph: EdgeGraph =
+    val small: EdgeGraph =
+        EdgeGraph(
+            List(
+                (0, 1, 12),
+                (0, 2, 2),
+                (1, 0, 12),
+                (1, 3, 3),
+                (2, 0, 2),
+                (2, 4, 3),
+                (3, 1, 3),
+                (3, 5, 1),
+                (4, 2, 3),
+                (4, 5, 2),
+                (5, 3, 1),
+                (5, 4, 2)))
+
+    val medium: EdgeGraph =
         EdgeGraph(
             List(0,1,2,3,4,5,6,7,8,9,10),
             List(
