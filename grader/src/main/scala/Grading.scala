@@ -40,6 +40,7 @@ object Grading {
   }
 
   private def fillRow(row: List[String]): List[String] = {
+    // TODO(arjun): port to use MoodleSheet
     val id = row(0).substring(12)
     val dir = Paths.get(id)
     if (!Files.isDirectory(dir)) {

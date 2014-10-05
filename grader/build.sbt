@@ -19,6 +19,8 @@ libraryDependencies ++=
       "org.apache.commons" % "commons-compress" % "1.8.1",
       "org.yaml" % "snakeyaml" % "1.13",
       "org.fusesource.jansi" % "jansi" % "1.11",
+      "io.github.arjunguha" %% "mail" % "1.1",
+      "com.typesafe" % "config" % "1.0.2",
       "com.github.tototoshi" %% "scala-csv" % "1.0.0")
 
 // A little hack to dump the CLASSPATH to ./classpath. This lets us run the

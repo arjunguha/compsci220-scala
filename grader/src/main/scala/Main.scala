@@ -165,7 +165,12 @@ object Main extends App {
       gradeAllScripts(solution, Paths.get(tests))
     case Array("grade-single-script", solution, tests) =>
       gradeScalaScript(Paths.get(solution), Paths.get(tests))
-    case _ => println("Invalid arguments. Read source code for help.")
+    case Array("handback", smtp, subject) =>
+      Handback(smtp, "sheet.csv", subject, "message.txt")
+    case _ => {
+      println("Invalid arguments. Read source code for help.")
+      println(args.toList)
+    }
   }
   System.exit(0)
 }
