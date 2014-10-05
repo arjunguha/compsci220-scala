@@ -159,6 +159,8 @@ object Main extends App {
 
   args match {
     case Array("extract", srcZip, dstDir) => extractSubmissions(srcZip, dstDir)
+    case Array("check-graded") => Grading.checkGraded("")
+    case Array("fill-gradesheet", src, dst) => Grading.fillWorksheet(src, dst)
     case Array("grade-all-scripts", solution, tests) =>
       gradeAllScripts(solution, Paths.get(tests))
     case Array("grade-single-script", solution, tests) =>
