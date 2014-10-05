@@ -16,12 +16,12 @@ title: Schedule
 | Friday, Sep 19    | *Lab:* [Recursion Lab 2: Folding].                                                              |
 | Tuesday, Sep 23   | Due: [Recursion]. Out: [Measurement]. Reading: [Professional Scala Tools].                      |
 | Thursday, Sep 25  |                                                                                                 |
-| Friday, Sep 26    | *Lab:*                                                                                          |
+| Friday, Sep 26    | *Lab:* [Folding Lab](../hw/folding_lab).                                                        |
 | Tuesday, Sep 30   |                                                                                                 |
-| Thursday, Oct 2   | Due: [Measurement]. Out: HW5.                                                                             |
-| Friday, Oct 3     | *Lab:*                                                                                          |
+| Thursday, Oct 2   | Due: [Measurement]. Out: [Join Lists].                                                          |
+| Friday, Oct 3     | *Lab:* Debugging Lab (not available online).                                                    |
 | Tuesday, Oct 7    |                                                                                                 |
-| Thursday, Oct 9   | Due: HW5. Out: HW6.                                                                             |
+| Thursday, Oct 9   | Due: [Join Lists]. Out: HW6.                                                                    |
 | Friday, Oct 10    | *No Lab.* (Enjoy Columbus Day weekend)                                                          |
 | Tuesday, Oct 14   | **No class.** (Monday schedule)                                                                 |
 | Thursday, Oct 16  |                                                                                                 |
@@ -53,8 +53,8 @@ title: Schedule
 [Clocks]: ../hw/clocks
 [Pong]: ../hw/pong
 [Recursion]: ../hw/recursion
-[HW4 (Measurement)]: ../hw/measurement
-[HW5 (Join Lists)]: ../hw/joinlists
+[Measurement]: ../hw/measurement
+[Join Lists]: ../hw/joinlists
 [HW6 (Maze)]: ../hw/maze
 [HW8 (Social Network)]: ../hw/social
 [HW11 (Scripting)]: ../hw/scripting
@@ -72,4 +72,3 @@ title: Schedule
 [Professional Scala Tools]: ../reading/tools
 [Map In Depth]: ../reading/map
 [Functions]: ../reading/functions
-[Measurement]: ../hw/measurement

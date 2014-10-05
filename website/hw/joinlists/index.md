@@ -13,18 +13,13 @@ new data structure, will support the same operations as a list.
 
 ## Preliminaries
 
-<img src="http://imgs.xkcd.com/comics/manuals.png">
-
-You're going to start using Scala's standard library and build tools.
-We've discusses these in class and they're part of the reading assigned
-for this week.
-
-As discussed in the sbt tutorial, you should create a series of directories
-that look like this:
+You should create a series of directories that look like this:
 
 <pre>
  ./joinlists
  |-- build.sbt
+ `-- project
+     `-- plugins.sbt
  `-- src
      |-- main
      |   `-- scala
@@ -44,6 +39,12 @@ scalaVersion := "2.11.2"
 libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.1"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
+{% endhighlight %}
+
+The `plugins.sbt` file must have exactly this line:
+
+{% highlight scala %}
+addSbtPlugin("edu.umass.cs" % "cmpsci220" % "2.2")
 {% endhighlight %}
 
 When we grade your work, we will delete your `build.sbt` file and use the
@@ -163,4 +164,5 @@ If this test suite does not run as-is, you risk getting a zero.
 
 ## Submit Your Work
 
-TODO(arjun): Figure this out
+Use the `submit` command within `sbt` to create `submission.tar.gz`. Upload
+this file to Moodle.
