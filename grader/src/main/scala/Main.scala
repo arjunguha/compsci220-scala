@@ -2,6 +2,7 @@ package grader
 
 import java.nio.file.{Paths, Files, Path}
 import java.nio.file.StandardOpenOption.APPEND
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 import java.io.File
 import org.apache.commons.io.FileUtils
 import org.fusesource.jansi.AnsiConsole
@@ -10,6 +11,11 @@ import org.fusesource.jansi.Ansi.Color._
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.lang.ProcessBuilder
 import ProcessTimer._
+
+sealed trait GraderResult
+case object Graded extends GraderResult
+case object Ignored extends GraderResult
+case class GradingError(msg: String) extends GraderResult
 
 object Main extends App {
 
@@ -94,14 +100,9 @@ object Main extends App {
   }
 
   // i.e. grades a simple .scala file
-  def gradeScalaScript(solution: Path, appendTestSuite: Path): Unit = {
+  def gradeScalaScript(solution: Path, appendTestSuite: Path): GraderResult = {
 
     val base = solution.getParent
-
-    if (Files.isRegularFile(base.resolve(".graded"))) {
-      println(ansi().fg(YELLOW).a(s"Skipping $base (found .graded)").reset)
-      return
-    }
 
     println(s"Grading $base ...")
 
@@ -131,28 +132,69 @@ object Main extends App {
     print(ansi().reset())
 
     code match {
-      case (137 | 124) => {
-        println(ansi().fg(YELLOW).a(s"Failed grading $base (hard timeout)").reset)
-      }
-      case 0 => {
-        Files.write(base.resolve(".graded"), "graded".getBytes)
-      }
-      case n => {
-        println(ansi().fg(RED).a(s"Failed grading $base (exit code $n)").reset)
-      }
+      case (137 | 124) => GradingError(s"Failed grading $base (hard timeout)")
+      case 0 => Graded
+      case n => GradingError(s"Failed grading $base (exit code $n)")
     }
   }
 
   def gradeAllScripts(solution: String, appendTestSuite: Path): Unit = {
+    def grader(p: Path): GraderResult = {
+      gradeScalaScript(p.resolve(solution), appendTestSuite)
+    }
+
+    gradeAll(grader)
+  }
+
+  def sbtGrader(p: Path): GraderResult = {
+    println(s"Grading $p ...")
+    Files.copy(Paths.get("build.sbt"), p.resolve("build.sbt"),
+               REPLACE_EXISTING)
+    Files.copy(Paths.get("GradingMain.scala"), p.resolve("GradingMain.scala"),
+               REPLACE_EXISTING)
+    val stdout = p.resolve("stdout.txt")
+    Files.deleteIfExists(stdout)
+    val pb = new ProcessBuilder("/usr/bin/sbt", "runMain GradingMain")
+    pb.redirectOutput(stdout.toFile)
+    pb.directory(p.toFile)
+    // Print stdout in red
+    print(ansi().fg(RED))
+    val code = pb.start.waitFor
+    print(ansi().reset())
+
+    code match {
+      case (137 | 124) => GradingError(s"Failed grading $p (hard timeout)")
+      case 0 => Graded
+      case n => GradingError(s"Failed grading $p (exit code $n)")
+    }
+  }
+
+  def gradeAllSbt(): Unit = {
+    gradeAll(sbtGrader)
+  }
+
+  // Color output, .graded file management, etc.
+  def gradeAll(grader: Path => GraderResult): Unit = {
     import scala.collection.JavaConversions._
 
     for (path <- Files.newDirectoryStream(Paths.get(""))) {
-      val sol = path.resolve(solution)
-      if (Files.isDirectory(path) && Files.isRegularFile(sol)) {
-        gradeScalaScript(sol, appendTestSuite)
-      }
-      else {
-        println(ansi().fg(YELLOW).a(s"Skipping $path").reset)
+      if (Files.isDirectory(path)) {
+        if (Files.isRegularFile(path.resolve(".graded"))) {
+          println(ansi().fg(YELLOW).a(s"Already graded $path").reset)
+        }
+        else {
+          grader(path) match {
+            case Ignored => {
+              println(ansi().fg(YELLOW).a(s"Ignoring $path").reset)
+            }
+            case Graded => {
+              Files.write(path.resolve(".graded"), Array[Byte]())
+            }
+            case GradingError(msg) => {
+              println(ansi().fg(RED).a(s"Error grading $path ($msg)").reset)
+            }
+          }
+        }
       }
     }
   }
@@ -161,6 +203,7 @@ object Main extends App {
     case Array("extract", srcZip, dstDir) => extractSubmissions(srcZip, dstDir)
     case Array("check-graded") => Grading.checkGraded("")
     case Array("fill-gradesheet", src, dst) => Grading.fillWorksheet(src, dst)
+    case Array("grade-all-sbt") => gradeAllSbt()
     case Array("grade-all-scripts", solution, tests) =>
       gradeAllScripts(solution, Paths.get(tests))
     case Array("grade-single-script", solution, tests) =>

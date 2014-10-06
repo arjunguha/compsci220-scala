@@ -1,6 +1,8 @@
 import AssemblyKeys._
 
-lazy val root = project.in(file(".")).aggregate(support, submission, grader)
+lazy val root = project.in(file(".")).aggregate(support, submission, grader, gradingSuites)
+
+lazy val gradingSuites = project.in(file("grading-suites")).dependsOn(grader, support)
 
 lazy val grader = project
                     .settings(assemblySettings: _*)
