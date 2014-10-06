@@ -20,7 +20,7 @@ title: Schedule
 | Tuesday, Sep 30   |                                                                                                 |
 | Thursday, Oct 2   | Due: [Measurement]. Out: [Join Lists].                                                          |
 | Friday, Oct 3     | *Lab:* Debugging Lab (not available online).                                                    |
-| Tuesday, Oct 7    |                                                                                                 |
+| Tuesday, Oct 7    | Reading: Odersky Chapters 7, 8, 10, 11, and 12                                                  |
 | Thursday, Oct 9   | Due: [Join Lists]. Out: HW6.                                                                    |
 | Friday, Oct 10    | *No Lab.* (Enjoy Columbus Day weekend)                                                          |
 | Tuesday, Oct 14   | **No class.** (Monday schedule)                                                                 |

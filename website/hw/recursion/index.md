@@ -147,7 +147,7 @@ def enqueueSlow[A](elt: A, q: SlowQueue[A]): SlowQueue[A] = q match {
 
 def dequeueSlow[A](q: SlowQueue[A]): Option[(A, SlowQueue[A])] = q match {
   case Empty() => None()
-  case Cons(head, _) => Some((head, tail))
+  case Cons(head, tail) => Some((head, tail))
 }
 {% endhighlight %}
 
