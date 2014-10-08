@@ -1,4 +1,4 @@
-import cmpsci220.hw.edgemaze._
+import cmpsci220.hw.edgegraph._
 
 object Solution {
     def reachable(g: EdgeGraph, start: Graph.Node): Set[Graph.Node] = {
