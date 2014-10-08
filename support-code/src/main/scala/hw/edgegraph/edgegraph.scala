@@ -6,8 +6,10 @@ package object Graph {
 }
 
 class EdgeGraph(n: List[Graph.Node], e: List[Graph.Edge]) {
-    val nodes = n
-    val edges = e
+    private val nodes = n
+    private val edges = e
+
+    def getNodes(): List[Graph.Node] = nodes
 
     def adjacentTo(n: Graph.Node): List[Graph.Node] =
         edges.collect{ case (v, w, _) if (n == v) => w }
