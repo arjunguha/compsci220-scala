@@ -57,6 +57,9 @@ class PriorityQueue[A](private val pairs: List[(A, Int)]) {
             case -1 => insert(key, newP)
             case i => new PriorityQueue(pairs.updated(i, (key, newP)))
         }
+
+    override def toString(): String =
+        s"PriorityQueue(${pairs.sortBy(_._2).mkString(", ")})"
 }
 
 object PriorityQueue {
