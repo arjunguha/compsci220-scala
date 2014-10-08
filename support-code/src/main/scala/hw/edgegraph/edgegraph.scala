@@ -10,6 +10,7 @@ class EdgeGraph(n: List[Graph.Node], e: List[Graph.Edge]) {
     private val edges = e
 
     def getNodes(): List[Graph.Node] = nodes
+    def getEdges(): List[Graph.Edge] = edges
 
     def adjacentTo(n: Graph.Node): List[Graph.Node] =
         edges.collect{ case (v, w, _) if (n == v) => w }
