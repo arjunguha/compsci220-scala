@@ -1,4 +1,4 @@
-package edgemaze
+package edgegraph
 
 package object Graph {
     type Node = Int
@@ -6,8 +6,11 @@ package object Graph {
 }
 
 class EdgeGraph(n: List[Graph.Node], e: List[Graph.Edge]) {
-    val nodes = n
-    val edges = e
+    private val nodes = n
+    private val edges = e
+
+    def getNodes(): List[Graph.Node] = nodes
+    def getEdges(): List[Graph.Edge] = edges
 
     def adjacentTo(n: Graph.Node): List[Graph.Node] =
         edges.collect{ case (v, w, _) if (n == v) => w }
@@ -28,6 +31,39 @@ object EdgeGraph {
             e.foldLeft(List[Graph.Node]())((l, p) =>
                     p._1 :: p._2 :: l).distinct,
                 e)
+}
+
+class PriorityQueue[A](private val pairs: List[(A, Int)]) {
+
+    def insert(key: A, priority: Int): PriorityQueue[A] =
+        new PriorityQueue(pairs :+ (key, priority))
+
+
+    private def findMin(): (A, Int) = pairs.minBy(_._2)
+
+    def peek(): (A, Int) = findMin()
+
+    def pop(): ((A, Int), PriorityQueue[A]) = {
+        val min = findMin()
+        // This is an interesting idiom.
+        (min, new PriorityQueue(pairs diff List(min)))
+    }
+
+    // If given (key, oldP) isn't in the queue, return a new queue with that
+    // key => priority pair added. Otherwise, update (key, oldP) to (key, newP)
+    def updatePriority(key: A, oldP: Int, newP: Int): PriorityQueue[A] =
+        // Why doesn't indexOf use Option? WTF, Scala.
+        pairs.indexOf((key, oldP)) match {
+            case -1 => insert(key, newP)
+            case i => new PriorityQueue(pairs.updated(i, (key, newP)))
+        }
+
+    override def toString(): String =
+        s"PriorityQueue(${pairs.sortBy(_._2).mkString(", ")})"
+}
+
+object PriorityQueue {
+    def apply[A](p: List[(A, Int)]) = new PriorityQueue(p)
 }
 
 package object util {

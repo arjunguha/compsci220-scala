@@ -1,6 +1,6 @@
-import cmpsci220.hw.edgemaze._
+import cmpsci220.hw.edgegraph._
 
-object Solution extends EdgeGraphFunctions {
+object Solution {
     def reachable(g: EdgeGraph, start: Graph.Node): Set[Graph.Node] = {
         val visited = Set[Graph.Node]()
         val stack = List(start)
@@ -22,7 +22,7 @@ object Solution extends EdgeGraphFunctions {
     def dfsPath(g: EdgeGraph, start: Graph.Node): Array[Graph.Node] = {
         val visited = Set[Graph.Node]()
         val stack = List(start)
-        val prev = g.nodes.map(e => -1).toArray
+        val prev = g.getNodes.map(e => -1).toArray
 
         def _dfs(g: EdgeGraph, v: Set[Graph.Node], s: List[Graph.Node],
                  p: Array[Graph.Node]): Array[Graph.Node] = s match {
@@ -42,9 +42,9 @@ object Solution extends EdgeGraphFunctions {
     def dijkstra(g: EdgeGraph, start: Graph.Node): Array[Graph.Node] = {
         val maxdist: Int = 10000
         val dist: Array[Int] =
-            g.nodes.map((n) => if (n == start) 0 else maxdist).toArray
-        val previous: Array[Graph.Node] = g.nodes.map(_ => -1).toArray
-        val toVisit: Set[Graph.Node] = g.nodes.toSet
+            g.getNodes.map((n) => if (n == start) 0 else maxdist).toArray
+        val previous: Array[Graph.Node] = g.getNodes.map(_ => -1).toArray
+        val toVisit: Set[Graph.Node] = g.getNodes.toSet
 
         def _dijk(g: EdgeGraph, v: Set[Graph.Node], d: Array[Int],
                   p: Array[Graph.Node]): Array[Graph.Node] = {
