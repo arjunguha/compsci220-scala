@@ -21,13 +21,15 @@ title: Schedule
 | Thursday, Oct 2   | Due: [Measurement]. Out: [Join Lists].                                                          |
 | Friday, Oct 3     | *Lab:* Debugging Lab (not available online).                                                    |
 | Tuesday, Oct 7    | Reading: Odersky Chapters 7, 8, 10, 11, and 12                                                  |
-| Thursday, Oct 9   | Due: [Join Lists]. Out: HW6.                                                                    |
+| Thursday, Oct 9   |                                                                                                 |
 | Friday, Oct 10    | *No Lab.* (Enjoy Columbus Day weekend)                                                          |
+| Sunday, Oct 12    | Due: [Join Lists].                                                                              |
+| Monday, Oct 13    | Out: [Graphs]                                                                                   |
 | Tuesday, Oct 14   | **No class.** (Monday schedule)                                                                 |
 | Thursday, Oct 16  |                                                                                                 |
 | Friday, Oct 17    | *Lab:*                                                                                          |
-| Tuesday, Oct 21   | Due: HW6. Out: HW7.                                                                             |
-| Thursday, Oct 23  |                                                                                                 |
+| Tuesday, Oct 21   |                                                                                                 |
+| Thursday, Oct 23  | Due: [Graphs]. Out: HW7.                                                                        |
 | Friday, Oct 24    | *Lab:*                                                                                          |
 | Tuesday, Oct 28   |                                                                                                 |
 | Thursday, Oct 30  | Due: HW7. Out: HW8.                                                                             |
@@ -55,6 +57,7 @@ title: Schedule
 [Recursion]: ../hw/recursion
 [Measurement]: ../hw/measurement
 [Join Lists]: ../hw/joinlists
+[Graphs]: ../hw/graphs
 [HW6 (Maze)]: ../hw/maze
 [HW8 (Social Network)]: ../hw/social
 [HW11 (Scripting)]: ../hw/scripting
