@@ -19,13 +19,23 @@ title: Graphs I
 
 - Object graph
 
-## Operations
+## Primitive Operations
 
 - Insert: node or edge
 - Remove: node or edge
 - Query: neighbors of a vertex or node
 
+Talk about the complexity in each representation and the functional/imperative
+tradeoff
 
+## Derived Operations
 
+- isNeighbor
 
+## Definitions
 
+- Path
+
+- Reachability
+
+- Traversal strategies (DFS, BFS)

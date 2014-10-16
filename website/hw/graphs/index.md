@@ -64,7 +64,7 @@ Finally, here is `TrivialTestSuite.scala`:
 class TrivialTestSuite extends org.scalatest.FunSuite {
 
   test("The solution object must be defined") {
-    val obj : cmpsci220.hw.graphs.GraphAlgorithms = Solution
+    val obj : cmpsci220.hw.graph.GraphAlgorithms = Solution
   }
 }
 {% endhighlight %}
@@ -77,7 +77,7 @@ In this assignment, you're working with an abstract data type for graphs,
 The constructor for `Graph` creates an empty graph:
 
 {% highlight scala %}
-import cmpsci220.hw.graphs._
+import cmpsci220.hw.graph._
 
 val g = new Graph[String, Double]()
 {% endhighlight %}
@@ -173,7 +173,7 @@ import cmpsci220.hw.graph._
 
 object Solution extends GraphAlgorithms {
 
-  def reachable[Node, Edge](graph: Graph[Node, Edge], start: Node) = {
+  def reachable[Node, Edge](graph: Graph[Node, Edge], start: Node): Set[Node] = {
     throw new UnsupportedOperationException("not implemented")
   }
 
