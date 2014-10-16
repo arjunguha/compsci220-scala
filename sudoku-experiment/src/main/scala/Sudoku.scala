@@ -1,8 +1,5 @@
 object SudokuBoard {
-
-  var counter = 0
-
-   val oneToTen = 1.to(9).toSet
+  val oneToTen = 1.to(9).toSet
 
   def peers(row: Int, col: Int): Seq[(Int, Int)] = {
     val rowPeers = 0.to(8).map { r => (r,col) }
@@ -23,49 +20,37 @@ object SudokuBoard {
                 positions: Seq[(Int, Int)],
                 value: Int): Map[(Int, Int), Set[Int]] = positions match {
     case Seq() => available
-    case Seq(p, rest @ _ *) => {
-      val availableAt = available.getOrElse(p, oneToTen) - value
-      eliminate(available + (p -> availableAt), rest, value)
-    }
+    case Seq(p, rest @ _ *) =>
+      eliminate(available + (p -> (available.getOrElse(p, oneToTen) - value)),
+                rest, value)
   }
-
 
   val emptyBoard = new SudokuBoard(available = Map())
 
-
   def init(places: List[((Int, Int), Int)]): Option[SudokuBoard] = places match {
     case Nil => Some(emptyBoard)
-    case ((row, col), value) :: rest =>
-      init(rest).flatMap(board => board.place(row, col, value))
+    case ((row, col), value) :: rest => init(rest).flatMap(_.place(row, col, value))
   }
-
 }
 // // Top-left corner is (0,0). Bottom-right corner is (8,8).
 class SudokuBoard(available: Map[(Int, Int), Set[Int]]) {
-
   import SudokuBoard._
 
-  def score(): Int = {
-    available.values.map(_.size).sum
-  }
+  val score: Int = available.values.map(_.size).sum
 
   val isUnsolvable = available.exists { case (_, set) => set.isEmpty }
 
-  val isSolved = {
-    available.size == 81 && available.forall { case (_, set) => set.size == 1 }
-  }
+  val isSolved = available.size == 81 && available.forall { case (_, set) => set.size == 1 }
 
   def nextStates(): Seq[SudokuBoard] = {
-    val nexts = 0.to(8).flatMap { row =>
+    0.to(8).flatMap { row =>
       0.to(8).flatMap { col =>
         available.getOrElse((row, col), oneToTen).flatMap { value =>
           place(row, col, value).toList
         }
       }
-    }
-    nexts.sortWith((x, y) => x.score < y.score)
+    }.sortWith((x, y) => x.score < y.score)
   }
-
 
   override def toString(): String = {
     if (!isSolved) {
@@ -90,17 +75,8 @@ class SudokuBoard(available: Map[(Int, Int), Set[Int]]) {
     }
   }
 
-
   def place(row: Int, col: Int, value: Int): Option[SudokuBoard] = {
-    assert(row >= 0 && row <= 8)
-    assert(col >= 0 && col <= 8)
-    assert(value >= 1 && value <= 9)
-
     if (!available.getOrElse((row, col), oneToTen).contains(value)) {
-      // println(s"Cannot place ($row, $col) -> $value")
-      // println(this)
-      // println(available.getOrElse((row, col), oneToTen))
-      // println(peers(row, col))
       None
     }
     else {
@@ -110,11 +86,6 @@ class SudokuBoard(available: Map[(Int, Int), Set[Int]]) {
   }
 
   def solve(): Option[SudokuBoard] = {
-    if (counter % 100000 == 0) {
-      println(this)
-    }
-
-    counter = counter + 1
     if (isSolved) {
       Some(this)
     }
@@ -131,7 +102,6 @@ class SudokuBoard(available: Map[(Int, Int), Set[Int]]) {
       return None
     }
   }
-
 }
 
 object Main extends App {
@@ -173,6 +143,4 @@ object Main extends App {
     case None => println("No solution")
     case Some(x) => println(x)
   }
-  println(counter)
-
 }
