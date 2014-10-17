@@ -1,3 +1,5 @@
+package cmpsci220.hw.tictactoe
+
 class Matrix[A] private(dim: Int, default: A, values: Map[(Int, Int), A]) {
 
   def set(x: Int, y: Int, value: A): Matrix[A] = {

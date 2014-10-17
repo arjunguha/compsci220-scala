@@ -1,6 +1,6 @@
 import AssemblyKeys._
 
-lazy val root = project.in(file(".")).aggregate(support, submission, grader, gradingSuites)
+lazy val root = project.in(file(".")).aggregate(support, submission, grader, gradingSuites, tictactoeSolution, measurementSolution, joinlistsSolution)
 
 lazy val gradingSuites = project.in(file("grading-suites")).dependsOn(grader, support)
 
@@ -22,6 +22,10 @@ lazy val submission = project.settings(assemblySettings: _*)
 
 lazy val joinlistsSolution =
   project.in(file("./website/hw/joinlists/_solution"))
+         .dependsOn(support)
+
+lazy val tictactoeSolution =
+  project.in(file("./website/hw/tictactoe/_solution"))
          .dependsOn(support)
 
 lazy val measurementSolution =

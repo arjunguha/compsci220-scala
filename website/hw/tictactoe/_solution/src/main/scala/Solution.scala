@@ -1,10 +1,8 @@
-sealed trait Player
-case object X extends Player
-case object O extends Player
+import cmpsci220.hw.tictactoe._
 
 // Assumes matrix is consistent: at most 1 player has one, difference
 // between  Xs and Os is 0, -1, +1
-class Board(turn: Player, matrix: Matrix[Option[Player]]) {
+class Board(val turn: Player, matrix: Matrix[Option[Player]]) extends GameLike[Board] {
 
   def hasPlayerWon(player: Player): Boolean = {
     matrix.rows.exists { row => row.forall { cell => cell == Some(player) } } ||
@@ -19,7 +17,7 @@ class Board(turn: Player, matrix: Matrix[Option[Player]]) {
     }
   }
 
-  def isFinalState(): Boolean = {
+  def isFinished(): Boolean = {
     hasPlayerWon(X) || hasPlayerWon(O) || isDraw()
   }
 
@@ -54,7 +52,25 @@ class Board(turn: Player, matrix: Matrix[Option[Player]]) {
     nextStates.filter(board => !board.isEmpty).map(board => board.get)
   }
 
-  def minimax(): Option[Player] = {
+}
+
+object Solution extends MinimaxLike {
+
+  type T = Board
+
+  def createGame(board: Matrix[Option[Player]]): Board = {
+    val numX = board.rows.flatten.filter(c => c == Some(X)).length
+    val numO = board.rows.flatten.filter(c => c == Some(O)).length
+    if (numO > numX) {
+      new Board(X, board)
+    }
+    else {
+      new Board(O, board)
+    }
+  }
+
+  def minimax(board: Board): Option[Player] = {
+    import board._
     if (hasPlayerWon(otherPlayer(turn))) {
       Some(otherPlayer(turn))
     }
@@ -62,7 +78,7 @@ class Board(turn: Player, matrix: Matrix[Option[Player]]) {
       None
     }
     else {
-      val children = nextBoards.map(board => board.minimax())
+      val children = nextBoards.map(minimax)
       if (children.contains(Some(turn))) {
         Some(turn)
       }
@@ -76,10 +92,3 @@ class Board(turn: Player, matrix: Matrix[Option[Player]]) {
   }
 
 }
-
-object Minimax {
-
-
-
-}
-
