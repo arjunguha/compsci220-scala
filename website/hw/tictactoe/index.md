@@ -108,9 +108,27 @@ val ex1 = emptyBoard.set(0, 0, Some(X)).set(2, 2, Some(Y))
 val ex2 = ex1.set(0, 2, Some(X))
 {% endhighlight %}
 
-## Minimax
+## The Minimax Algorithm
 
-TODO(arjun): FILL
+*Minimax is an algorithm to to determine who will win (or draw)
+a two-player game, if both players are playing perfectly. To do so, Minimax
+searches all possible game-states that are reachable from a given inital
+state. Here is an outline of a recursive implementation of Minimax:
+
+    def minimax(game: Game): Some(Game) = {
+
+      If it is Xs turn:
+
+        1. If game is a winning state for X, return Some(X)
+        2. If game is a draw state, return None
+        3. Recursively apply minimax to all the successor states of game
+           - If any recursive call produces X, return Some(X)
+           - Or, if any recursive call produces None, return None
+           - Or, return Some(O)
+
+      The case for Os turn is similar.
+
+    }
 
 ## Programming Task
 
