@@ -1,6 +1,6 @@
 ---
 layout: hw
-title: MST : Kruskal's Algorithm
+title: "MST : Kruskal's Algorithm"
 ---
 
 <a href="http://xkcd.com/246/">
@@ -192,7 +192,7 @@ object MST {
 // Implement mst using Kruskal's algorithm
   def mst[V](graph: Graph[V,Int]): Graph[V,Int]= {
 
-  } 
+  }
 }
 {% endhighlight %}
 

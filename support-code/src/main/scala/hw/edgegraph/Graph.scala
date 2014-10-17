@@ -12,6 +12,19 @@ class Graph[Node, Edge]() {
 
   private val vertices = collection.mutable.Map[Node, Vx]()
 
+  override def toString(): String = {
+    val builder = new StringBuilder()
+    for (ns <- this.nodes.tails.filter(_.length >= 2)) {
+      val n1 = ns.head
+      for (n2 <- ns.tail) {
+        if (this.neighbors(n1).contains(n2)) {
+          builder ++= s"$n1 -- ${this.getEdge(n1, n2)} -- $n2\n"
+        }
+      }
+    }
+    builder.toString
+  }
+
   /**
    * Creates a new node in the graph. Returns {@code false} if the node
    * already exists. Returns {@code true} if the node did not exist and
@@ -40,7 +53,7 @@ class Graph[Node, Edge]() {
     (vertices.get(node1), vertices.get(node2)) match {
       case (Some (vx1), Some(vx2)) => vx1.mkEdge(edge, vx2)
       case _ => false
-    }    
+    }
   }
 
   def rmEdge(node1: Node, node2: Node): Boolean = {

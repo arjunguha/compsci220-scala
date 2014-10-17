@@ -27,7 +27,7 @@ title: Schedule
 | Monday, Oct 13    | Out: [Graphs]                                                                                   |
 | Tuesday, Oct 14   | **No class.** (Monday schedule)                                                                 |
 | Thursday, Oct 16  | Reading: Odersky Chapters 16 and 17.                                                            |
-| Friday, Oct 17    | *Lab:*                                                                                          |
+| Friday, Oct 17    | *Lab:* [MST Lab]                                                                                |
 | Tuesday, Oct 21   |                                                                                                 |
 | Thursday, Oct 23  | Due: [Graphs]. Out: HW7.                                                                        |
 | Friday, Oct 24    | *Lab:*                                                                                          |
@@ -75,3 +75,4 @@ title: Schedule
 [Professional Scala Tools]: ../reading/tools
 [Map In Depth]: ../reading/map
 [Functions]: ../reading/functions
+[MST Lab]: ../hw/mst_lab
