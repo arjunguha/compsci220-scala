@@ -71,6 +71,13 @@ Represents the following board:
     72 | 4 | 6
       4| 1 |  3
 
+Here are some more examples:
+
+    ".43.8.25.6.............1.949....4.7....6.8....1.2....382.5.............5.34.9.71."
+    "2...8.3...6..7..84.3.5..2.9...1.54.8.........4.27.6...3.1..7.4.72..4..6...4.1...3"
+    "..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3.."
+    "1..92....524.1...........7..5...81.2.........4.27...9..6...........3.945....71..6"
+
 Your first task is to parse strings that represent Sudoku boards. You may
 assume that all strings represent solvable boards that the string has
 exactly 81, characters, etc. This should be very easy for you to do.
@@ -219,7 +226,7 @@ We recomend proceeding in this order and testing as you go along:
 
 5. Implement `Board.place`. `place(row, col, value)` produces a new board with
    `value` placed at `(row, col)` of `this` board.  You may assume that
-   `availableValuesAt(row, col).contains(value) is true.
+   `availableValuesAt(row, col).contains(value)` is true.
 
    For the new board to be valid, you'll have to:
 
