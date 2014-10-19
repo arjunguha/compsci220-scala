@@ -15,7 +15,7 @@ the *Minimax algorithm*, which is a form of *backtracking search*.
 You should create a series of directories that look like this:
 
 <pre>
- ./joinlists
+ ./tictactoe
  |-- build.sbt
  `-- project
      `-- plugins.sbt
