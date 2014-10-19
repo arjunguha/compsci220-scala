@@ -1,34 +1,8 @@
+import cmpsci220.hw.parsing._
 import org.scalatest._
 
 import ArithParser._
 import ArithPrinter._
-
-object ExprGenerator {
-
-  import org.scalacheck._
-  import Gen._
-  import Arbitrary.arbitrary
-
-  def genNum: Gen[Expr] = for {
-    n <- choose(-10, 10)
-  } yield Num(n)
-
-  def genSizedExpr(size: Int): Gen[Expr] = {
-    if (size == 0) {
-      genNum
-    }
-    else {
-      for {
-        e1 <- genSizedExpr(size / 2)
-        e2 <- genSizedExpr(size / 2)
-        op <- oneOf(Add, Sub, Mul, Div)
-      } yield op(e1, e2)
-    }
-  }
-
-  def genExpr = sized(genSizedExpr)
-
-}
 
 class TestSuite extends FunSuite with prop.GeneratorDrivenPropertyChecks {
 
@@ -55,7 +29,7 @@ class TestSuite extends FunSuite with prop.GeneratorDrivenPropertyChecks {
   }
 
   test("parse and pretty are related") {
-    forAll(ExprGenerator.genExpr) { (e: Expr) =>
+    forAll(genExpr) { (e: Expr) =>
       val e1 = parseArith(print(e))
       assert(e == e1) // because parens are inserted naively
       assert(parseArith(print(e1)) == e1)

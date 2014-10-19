@@ -1,25 +1,7 @@
+import cmpsci220.hw.parsing._
 import scala.util.parsing.combinator._
 
-sealed trait Expr
-case class Num(n: Double) extends Expr
-case class Add(e1: Expr, e2: Expr) extends Expr
-case class Sub(e1: Expr, e2: Expr) extends Expr
-case class Mul(e1: Expr, e2: Expr) extends Expr
-case class Div(e1: Expr, e2: Expr) extends Expr
-
-trait SolutionLike {
-
-  def parse(s: String): Expr
-
-  def eval(e: Expr): Double
-
-  def print(e: Expr): String
-
-}
-
-object ArithParser extends RegexParsers with PackratParsers {
-
-  lazy val number: PackratParser[Double] = """-?\d+(\.\d*)?""".r ^^ { _.toDouble }
+object ArithParser extends ArithParserLike {
 
   lazy val atom: PackratParser[Expr] = {
     number ^^ { n => Num(n) } |
@@ -40,12 +22,9 @@ object ArithParser extends RegexParsers with PackratParsers {
 
   lazy val expr: PackratParser[Expr] = mul
 
-  def parseArith(s: String) = parseAll(expr, s).get
-
 }
 
-
-object ArithPrinter {
+object ArithPrinter extends ArithPrinterLike {
 
   def print(e: Expr): String = e match {
     case Num(n) => n.toString
@@ -57,7 +36,7 @@ object ArithPrinter {
 
 }
 
-object Eval {
+object ArithEval extends ArithEvalLike {
 
   def eval(e: Expr): Double = e match {
     case Num(n) => n
@@ -66,15 +45,5 @@ object Eval {
     case Mul(e1, e2) => eval(e1) * eval(e2)
     case Div(e1, e2) => eval(e1) / eval(e2)
   }
-
-}
-
-object Solution extends SolutionLike {
-
-  def parse(s: String) = ArithParser.parseArith(s)
-
-  def print(e: Expr) = ArithPrinter.print(e)
-
-  def eval(e: Expr) = Eval.eval(e)
 
 }

@@ -18,6 +18,7 @@ scalacOptions ++=
 
 libraryDependencies ++=
   Seq("org.scalatest" %% "scalatest" % "2.2.1" % "test",
+      "org.scalacheck" %% "scalacheck" % "1.11.6",
       "org.fusesource.jansi" % "jansi" % "1.11",
       "org.apache.commons" % "commons-math3" % "3.3",
       "org.yaml" % "snakeyaml" % "1.13",
