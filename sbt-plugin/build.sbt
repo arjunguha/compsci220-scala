@@ -2,7 +2,7 @@ import bintray.Keys._
 
 sbtPlugin := true
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.10.4" // necessary for SBT 0.13.5
 
 name := "cmpsci220"
 

@@ -1,6 +1,18 @@
 import AssemblyKeys._
 
-lazy val root = project.in(file(".")).aggregate(support, submission, grader, gradingSuites, tictactoeSolution, measurementSolution, joinlistsSolution, sudokuSolution, parsingSolution)
+lazy val root = project.in(file(".")).aggregate(
+  sbtPlugin,
+  support,
+  submission,
+  grader,
+  gradingSuites,
+  tictactoeSolution,
+  measurementSolution,
+  joinlistsSolution,
+  sudokuSolution,
+  parsingSolution)
+
+lazy val sbtPlugin = project.in(file("sbt-plugin"))
 
 lazy val gradingSuites = project.in(file("grading-suites")).dependsOn(grader, support)
 
