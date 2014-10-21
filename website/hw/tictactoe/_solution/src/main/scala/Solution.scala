@@ -58,15 +58,8 @@ object Solution extends MinimaxLike {
 
   type T = Board
 
-  def createGame(board: Matrix[Option[Player]]): Board = {
-    val numX = board.rows.flatten.filter(c => c == Some(X)).length
-    val numO = board.rows.flatten.filter(c => c == Some(O)).length
-    if (numO > numX) {
-      new Board(X, board)
-    }
-    else {
-      new Board(O, board)
-    }
+  def createGame(turn: Player, board: Matrix[Option[Player]]): Board = {
+      new Board(turn, board)
   }
 
   def minimax(board: Board): Option[Player] = {

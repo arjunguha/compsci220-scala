@@ -35,7 +35,7 @@ name := "tictactoe"
 
 scalaVersion := "2.11.2"
 
-libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.4"
+libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.5"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 {% endhighlight %}
@@ -95,7 +95,7 @@ val emptyBoard = Matrix[Option[Player]](3, None)
      | |O
 
 {% highlight scala %}
-val ex1 = emptyBoard.set(0, 0, Some(X)).set(2, 2, Some(Y))
+val ex1 = emptyBoard.set(0, 0, Some(X)).set(2, 2, Some(O))
 {% endhighlight %}
 
     X| |
@@ -115,7 +115,7 @@ a two-player game, if both players are playing perfectly. To do so, Minimax
 searches all possible game-states that are reachable from a given inital
 state. Here is an outline of a recursive implementation of Minimax:
 
-    def minimax(game: Game): Some(Game) = {
+    def minimax(game: Game): Some[Player] = {
 
       If it is Xs turn:
 
@@ -151,7 +151,7 @@ class Game(/* add fields here */) extends GameLike[Game] {
     throw new UnsupportedOperationException("not implemented")
   }
 
-  def nextBoards(): List[T] = {
+  def nextBoards(): List[Game] = {
     throw new UnsupportedOperationException("not implemented")
   }
 }
@@ -160,7 +160,7 @@ object Solution extends MinimaxLike {
 
   type T = Game // T is an "abstract type member" of MinimaxLike
 
-  def createGame(board: Matrix[Option[Player]]): Game = {
+  def createGame(turn: Player, board: Matrix[Option[Player]]): Game = {
     require(board.dim == 3)
     throw new UnsupportedOperationException("not implemented")
   }

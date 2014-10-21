@@ -18,7 +18,7 @@ trait MinimaxLike {
 
   type T <: GameLike[T]
 
-  def createGame(board: Matrix[Option[Player]]): T
+  def createGame(turn: Player, board: Matrix[Option[Player]]): T
 
   def minimax(board: T): Option[Player]
 
