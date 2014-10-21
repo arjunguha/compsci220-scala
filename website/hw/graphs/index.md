@@ -47,7 +47,7 @@ name := "graphs"
 
 scalaVersion := "2.11.2"
 
-libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.2"
+libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.4"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 {% endhighlight %}
@@ -194,6 +194,62 @@ object Solution extends GraphAlgorithms {
   }
 
 }
+{% endhighlight %}
+
+## Testing BFS and DFS
+
+The key distinction between BFS and DFS is the order in which you visit nodes.
+For this assignment, that is the order in which you apply `neighbors`.  You
+cannot observe this order from the output of these functions. But,
+`Graph.getVisitOrder` can help you do so.
+
+Consider the following graph:
+
+{% highlight scala %}
+val g2 = Graph(("A", 1, "B"),
+               ("A", 1, "C"),
+               ("C", 1, "D"))
+{% endhighlight %}
+
+If you search for a path from "A" to "D", both DFS and BFS
+will find exactly the same path (there is only one path). But, BFS will
+always visit B and C before it visits D:
+
+ - A, B, C, D
+ - A, C, B, D
+
+ In contrast, DFS will always visit "D" immediately after "C":
+
+ - A, B, C, D
+ - A, C, D (no need to visit B)
+
+You can use the `getVisitOrder` method to return the sequence in
+which `neighbors` is invoked. If you make several queries over the same graph
+object, use the `resetVisitOrder` method in between each query.
+
+For example, suppose `depthFirstSearch("A", "B")` invokes `neighbors` in the
+following sequence:
+
+{% highlight scala %}
+g2.neighbors("A")
+g2.neighbors("B")
+g2.neighbors("C")
+g2.neighbors("D")
+g2.getVisitOrder() // produces List("A", "B", "C", "D")
+{% endhighlight %}
+
+If you invoke `depthFirstSearch("A", "B")` again, you may get the other
+sequence:
+
+{% highlight scala %}
+// Important! This clears the earlier nodes from the list
+g2.resetVisitOrder()
+
+g2.neighbors("A")
+g2.neighbors("C")
+g2.neighbors("B")
+g2.neighbors("D")
+g2.getVisitOrder() // produces List("A", "C", "B", "D")
 {% endhighlight %}
 
 ## Submit Your Work

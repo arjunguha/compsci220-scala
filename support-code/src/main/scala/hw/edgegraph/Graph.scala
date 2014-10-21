@@ -6,6 +6,8 @@ package cmpsci220.hw.graph
  */
 class Graph[Node, Edge]() {
 
+  private var visitOrder: List[Node] = Nil
+
   private class Vx(theNode : Node) extends Vertex[Vx, Edge] {
     val node = theNode
   }
@@ -84,9 +86,12 @@ class Graph[Node, Edge]() {
    * Returns the set of neighboring vertices of {@code node}. Returns
    * the empty set if {@code node} is not a vertex in the graph.
    */
-  def neighbors(node: Node): Set[Node] = vertices.get(node) match {
-    case None => Set()
-    case Some(vx) => vx.edges.keys.map(_.node).toSet
+  def neighbors(node: Node): Set[Node] = {
+    visitOrder = node :: visitOrder
+    vertices.get(node) match {
+      case None => Set()
+      case Some(vx) => vx.edges.keys.map(_.node).toSet
+    }
   }
 
 
@@ -102,6 +107,14 @@ class Graph[Node, Edge]() {
       edge <- vx1.edges.get(vx2)
     } yield (edge)
     r.getOrElse(throw new IllegalArgumentException("not neighbors"))
+  }
+
+  def getVisitOrder(): List[Node] = {
+    visitOrder.reverse
+  }
+
+  def resetVisitOrder(): Unit = {
+    visitOrder = null
   }
 
 }
