@@ -1,16 +1,30 @@
 import AssemblyKeys._
 
+libraryDependencies in ThisBuild ++= Seq(
+  "org.scalatest" %% "scalatest" % "2.2.1" % "test")
+
+scalaVersion in ThisBuild := "2.11.2"
+
+scalacOptions in ThisBuild ++=
+  Seq("-deprecation",
+      "-unchecked",
+      "-feature",
+      "-Xfatal-warnings")
+
 lazy val root = project.in(file(".")).aggregate(
   sbtPlugin,
   support,
   submission,
   grader,
   gradingSuites,
+  lectureCode,
   tictactoeSolution,
   measurementSolution,
   joinlistsSolution,
   sudokuSolution,
   parsingSolution)
+
+lazy val lectureCode = project.in(file("lecture-code"))
 
 lazy val sbtPlugin = project.in(file("sbt-plugin"))
 
