@@ -35,7 +35,7 @@ name := "parsing"
 
 scalaVersion := "2.11.2"
 
-libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.4"
+libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.6"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 {% endhighlight %}
@@ -57,15 +57,21 @@ examples of the *concrete syntax* of the language:
     - `2 * 3 + 5 * -10`
     - `2 * (3 + 5) * -10`
 
+    - `2 * (3 + 5) ^ 2 * -10`
+
 This grammar specifies the syntax of the language:
 
-   number ::= -? [0-9]+ (. [0-9]+)?
-   atom ::= number
-          | ( expr )
+    number ::= -? [0-9]+ (. [0-9]+)?
 
-    add ::= atom
-          | atom + add
-          | atom - add
+    atom ::= number
+           | ( expr )
+
+    exp ::= atom
+          | exp ^ atom
+
+    add ::= exp
+          | exp + add
+          | exp - add
 
     mul ::= add
           | add * mul
@@ -109,6 +115,10 @@ object ArithParser extends ArithParserLike {
     throw new UnsupportedOperationException("not implemented")
   }
 
+  lazy val exp: PackratParser[Expr] = {
+    throw new UnsupportedOperationException("not implemented")
+  }
+
   lazy val add: PackratParser[Expr] = {
     throw new UnsupportedOperationException("not implemented")
   }
@@ -137,7 +147,8 @@ We suggest proceeding in the following order:
    parser combinators, as discussed in the Odersky book.
 3. Implement `ArithPrinter`.
 
-TODO(arjun): fill
+You can and should write individual test cases. But, you can use this ScalaCheck
+property to test parsing and printing in tandem:
 
 {% highlight scala %}
 test("parse and pretty are related") {
