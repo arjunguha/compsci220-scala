@@ -130,6 +130,11 @@ state. Here is an outline of a recursive implementation of Minimax:
 
     }
 
+You can find several other descriptions of Minimax on the Web. But, this is
+the last step of the assignment. Follow the programming directions below
+and implement (and test) everything leading up to Minimax. Implementing
+Minimax itself will be staightforward.
+
 ## Programming Task
 
 Your task is to implement the `MinimaxLike` trait, which
@@ -174,7 +179,11 @@ object Solution extends MinimaxLike {
 I recommend proceeding in the following way:
 
 1. Add fields to the `Game` class to represent the state of the game and
-   fill in the body of the `createGame` function.
+   fill in the body of the `createGame` function. `createGame` takes
+   two arguments: `turn` indicates the current player's turn and
+   `board` describes the state of the board. **The board may be in an
+   arbitrary, even illegal state.** For example, the board may have seven Xs.
+   Similarly, the `turn` could be either X or O.
 
 2. Implement the `isFinished` method.
 
