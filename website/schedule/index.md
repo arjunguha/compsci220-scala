@@ -29,22 +29,22 @@ title: Schedule
 | Thursday, Oct 16  | Reading: Odersky Chapters 16 and 17.                                                            |
 | Friday, Oct 17    | *Lab:* [MST Lab]                                                                                |
 | Tuesday, Oct 21   |                                                                                                 |
-| Thursday, Oct 23  | Due: [Graphs]. Out: HW7.                                                                        |
-| Friday, Oct 24    | *Lab:*                                                                                          |
+| Thursday, Oct 23  | Due: [Graphs]. Out: [Tic Tac Toe].                                                              |
+| Friday, Oct 24    | *Lab:* [MST Lab] Again                                                                          |
 | Tuesday, Oct 28   |                                                                                                 |
-| Thursday, Oct 30  | Due: HW7. Out: HW8.                                                                             |
-| Friday, Oct 31    | *Lab:*                                                                                          |
-| Tuesday, Nov 4    |                                                                                                 |
-| Thursday, Nov 6   | Due: HW8. Out: HW9.                                                                             |
-| Friday, Nov 7     | *Lab:*                                                                                          |
+| Thursday, Oct 30  |                                                                                                 |
+| Friday, Oct 31    | *Lab:* Regular Expressions Lab                                                                  |
+| Tuesday, Nov 4    | Due: [Tic Tac Toe]. Out: Sudoku. Reading: Odersky Chapters 19 and 20.                           |
+| Thursday, Nov 6   |                                                                                                 |
+| Friday, Nov 7     | *No Lab.* (Enjoy Veteran's Day weekend)                                                         |
 | Tuesday, Nov 11   | **No class.** (Veteran's Day)                                                                   |
 | Wednesday, Nov 12 | **Tuesday schedule.**                                                                           |
 | Thursday, Nov 13  |                                                                                                 |
-| Friday, Nov 14    | *Lab:*                                                                                          |
-| Tuesday, Nov 18   | Due: HW9. Out: HW10.                                                                            |
+| Friday, Nov 14    | *Lab:* Parsing Lab                                                                              |
+| Tuesday, Nov 18   | Due: Sudoku. Out: Parsing. Reading: Odersky Chapter 33.                                         |
 | Thursday, Nov 20  |                                                                                                 |
 | Friday, Nov 21    | *Lab:*                                                                                          |
-| Tuesday, Nov 25   | Due: HW10.                                                                                      |
+| Tuesday, Nov 25   | Due: Parsing.                                                                                   |
 | Thursday, Nov 27  | **No class.** (Thanksgiving Break)                                                              |
 | Friday, Nov 28    | **No lab.** (Thanksgiving Break)                                                                |
 | Tuesday, Dec 2    |                                                                                                 |
@@ -76,3 +76,4 @@ title: Schedule
 [Map In Depth]: ../reading/map
 [Functions]: ../reading/functions
 [MST Lab]: ../hw/mst_lab
+[Tic Tac Toe]: ../hw/tictactoe
