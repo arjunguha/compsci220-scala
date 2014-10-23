@@ -199,17 +199,19 @@ object Main extends App {
     }
   }
 
-  args match {
-    case Array("extract", srcZip, dstDir) => extractSubmissions(srcZip, dstDir)
-    case Array("check-graded") => Grading.checkGraded("")
-    case Array("fill-gradesheet", src, dst) => Grading.fillWorksheet(src, dst)
-    case Array("grade-all-sbt") => gradeAllSbt()
-    case Array("grade-all-scripts", solution, tests) =>
+  args.toSeq match {
+    case Seq("extract", srcZip, dstDir) => extractSubmissions(srcZip, dstDir)
+    case Seq("check-graded") => Grading.checkGraded("")
+    case Seq("fill-gradesheet", src, dst) => Grading.fillWorksheet(src, dst)
+    case Seq("grade-all-sbt") => gradeAllSbt()
+    case Seq("grade-all-scripts", solution, tests) =>
       gradeAllScripts(solution, Paths.get(tests))
-    case Array("grade-single-script", solution, tests) =>
+    case Seq("grade-single-script", solution, tests) =>
       gradeScalaScript(Paths.get(solution), Paths.get(tests))
-    case Array("handback", smtp, subject) =>
+    case Seq("handback", smtp, subject) =>
       Handback(smtp, "sheet.csv", subject, "message.txt")
+    case Seq("prepare-for-feedback", groups, perGroup, src, dst, dirs@_*) =>
+      Feedback.prepareForFeedback(groups.toInt, perGroup.toInt, src, dst, dirs)
     case _ => {
       println("Invalid arguments. Read source code for help.")
       println(args.toList)
