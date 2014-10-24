@@ -185,7 +185,12 @@ I recommend proceeding in the following way:
    arbitrary, even illegal state.** For example, the board may have seven Xs.
    Similarly, the `turn` could be either X or O.
 
-2. Implement the `isFinished` method.
+2. Implement the `isFinished` method. Human players often end a game early,
+   when the outcome is inevitable. However, you may find it easier to write a
+   program that plays until every single square is filled. Remember that
+   if you determine that the game `isFinished`, you need to be able to
+   determine the winner too (using `getWinner`).
+
 
 3. Implement the `getWinner` method. The `Matrix` class has several methods
    that will help. There is no need for you to use direct recursion.
@@ -235,3 +240,8 @@ If this test suite does not run as-is, you risk getting a zero.
 
 Use the `submit` command within `sbt` to create `submission.tar.gz`. Upload
 this file to Moodle.
+
+## Comic
+
+<a href="http://imgs.xkcd.com/comics/tic_tac_toe.png"><img src="http://imgs.xkcd.com/comics/tic_tac_toe.png"></a>
+
