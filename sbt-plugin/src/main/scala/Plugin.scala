@@ -11,6 +11,7 @@ object Plugin extends sbt.AutoPlugin {
 
   object autoImport {
     lazy val submit = TaskKey[Unit]("submit")
+    lazy val submitTests = TaskKey[Unit]("submit-tests")
   }
 
   import autoImport._
@@ -31,10 +32,26 @@ object Plugin extends sbt.AutoPlugin {
     println("Created submission.tar.gz. Upload this file to Moodle.")
   }
 
+  def submitTestsTask(): Unit = {
+
+    val files = findFiles("src/test/scala")(fileNameHasSuffix(_, ".scala"))
+    val tgz = TgzBuilder("test-suite.tar.gz")
+    for (file <- files) {
+      tgz.add(file)
+    }
+
+    tgz.close()
+
+    println("Created test-suite.tar.gz. Upload this file to Captain Teach.")
+  }
+
   override def projectSettings = super.projectSettings ++ Seq(
     submit := {
       (test in Test).value
       submitTask
+    },
+    submitTests := {
+      submitTestsTask
     }
   )
 }

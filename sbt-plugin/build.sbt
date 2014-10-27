@@ -8,7 +8,7 @@ name := "cmpsci220"
 
 organization := "edu.umass.cs"
 
-version := "2.2"
+version := "2.4"
 
 scalacOptions += "-feature"
 
