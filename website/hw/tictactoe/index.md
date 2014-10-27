@@ -3,6 +3,8 @@ layout: hw
 title: Tic Tac Toe
 ---
 
+**Test cases due: Friday, Oct 31, 23:59**
+
 For this assignment, you will write a program that given a tic-tac-toe board,
 determines which player will win, or if the game will be a draw.
 
@@ -236,50 +238,49 @@ class TrivialTestSuite extends org.scalatest.FunSuite {
 You should place this test suite in `src/test/scala/TrivialTestSuite.scala`.
 If this test suite does not run as-is, you risk getting a zero.
 
-## Testing and Review
+## <a name="review"></a>Testing and Review
 
-This assignment has an extra initial submission step. This step is due by ??.
-You should submit a small set of test cases for the `isFinished` method.
+Starting with this assignment, we are going to grade your test cases
+and your comprehension of others' test cases. **This is worth 5% of your
+grade and is due on Friday, Oct 31 23:59**.
 
-For example, here is a test that checks that an empty board is not Finished.
+Create a separate test suite called `GradedTestSuite.scala`. In it, place 5--10
+interesting test cases for the `isFinished` and/or the `getWinner` methods. For
+example, here is a test that checks that an empty board is not finished.
 
 {% highlight scala %}
+class GradedTestSuite extends org.scalatest.FunSuite {
+
   val emptyBoard = Matrix[Option[Player]](3, None)
 
   test("Empty board should not be isFinished()") {
     assert(!Solution.createGame(emptyBoard).isFinished())
   }
-{% highlight scala %}
 
-You will submit 5 to 10 interesting test cases for `isFinished` by the deadline.
-Once you have submitted, you will be given three other students' tests to review,
-which you must complete by ???. This ensures that everyone gets feedback in time
-for the final assignment submission.
+}
+{% endhighlight %}
 
-*Note:* You will only be reviewing test cases. This means you should *not*
-submit any implementation details for review.
+Write 5--10 tests that try to cover the space of interesting inputs to these
+functions. Once you submit, you will be given upto three other students'
+tests to review, which you must complete by **Monday, Nov 3, 5PM**. This ensures
+that everyone gets feedback in time for the final assignment submission.
 
-To ensure you only submit test cases to Captain Teach, a `submit-tests` command has been
-added to the `sbt` build tool. After running it, all files within your
-`src/test/scala/` directory will be packaged into a tar archive named
-`test-suite.tar.gz` at the root of your project directory. This means you must
-*not* have any implementation details within your test directory.
+### How to submit `GradedTestSuite.scala`
 
-To facilitate the review process, we will be using Captain Teach. Your
-`@umass.edu` e-mail address will be used to authenticate you when you
-visit Captain Teach. To ensure you are logged into this account, first
-visit:
+We will use *Captain Teach* to manage the submission and review process for
+tests. You can login to Captain Teach using your `@umass.edu` e-mail address. To
+ensure you are logged into this account, first visit:
 
-https://webauth.oit.umass.edu/idp/Authn/UserPassword
+[https://webauth.oit.umass.edu/idp/Authn/UserPassword](https://webauth.oit.umass.edu/idp/Authn/UserPassword)
 
 Once you have authenticated your account visit:
 
-https://www.captain-teach.org/umass-cmpsci220/assignments/
+[https://www.captain-teach.org/umass-cmpsci220/assignments/](https://www.captain-teach.org/umass-cmpsci220/assignments/)
 
 If asked, select your `@umass.edu` account as the one you would like to use
 while accessing Captain Teach. From the assignments screen, select the
 `Next Step` link near the `tic-tac-toe` assignment. This will bring you to
-a screen where you can upload `test-suite.tar.gz`. Upload that file,
+a screen where you can upload `GradedTestSuite.scala`. Upload that file,
 review your submission, and click `Submit` when you are ready to proceed.
 
 Right after submitting, the page should say that the submission was successful,
@@ -293,6 +294,9 @@ staff and has no effect on your grade. We're interested in hearing if the
 review was particularly helpful or unhelpful, or if you think it was wrong.
 Also, if you feel the review you received is in any way inappropriate, you can
 flag it to bring the problem to our attention.
+
+*Note:* You will only be reviewing test cases. This means you should *not*
+submit any implementation details for review.
 
 ## Submit Your Work
 
