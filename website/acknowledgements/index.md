@@ -4,8 +4,9 @@ title: Acknowledgements
 ---
 
 This course could not have come together without materials
-and inspiration from many, many sources.  Many lectures, reading materials,
-and homework assignments are based on these texts:
+and inspiration from several sources.
+
+Many lectures and reading materials are based on these texts:
 
 - [How to Design Programs](http://www.htdp.org) by Felleisen, Findler, Flatt,
   and Krishnamurthi
@@ -24,7 +25,7 @@ Krishnamurthi.
 
 Some of our assignments are adapted from other sources:
 
-- The Jin Lists assignment from
+- The Join Lists assignment from
   [CS19 at Brown University](http://cs.brown.edu/courses/cs019/) by Krishnamurthi, et al
 
 - The Tic Tac Toe assignment is adapted from
