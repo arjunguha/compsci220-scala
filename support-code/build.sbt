@@ -2,7 +2,7 @@ name := "cmpsci220"
 
 organization := "edu.umass.cs"
 
-version := "1.6"
+version := "1.7"
 
 scalaVersion := "2.11.2"
 

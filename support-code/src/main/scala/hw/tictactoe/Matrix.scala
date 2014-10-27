@@ -61,6 +61,17 @@ class Matrix[A] private(val dim: Int, default: A, values: Map[(Int, Int), A]) {
     builder.toString
   }
 
+  override def equals(other: Any): Boolean = other match {
+    case other: Matrix[_] => {
+      other.isInstanceOf[Matrix[_]] &&
+      this.dim == other.dim &&
+      (for (i <- 0.until(dim); j <- 0.until(dim)) yield {
+        this.get(i, j) == other.get(i, j)
+       }).forall(identity)
+    }
+    case _ => false
+  }
+
 }
 
 object Matrix {
