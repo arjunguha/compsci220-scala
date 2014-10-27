@@ -236,6 +236,64 @@ class TrivialTestSuite extends org.scalatest.FunSuite {
 You should place this test suite in `src/test/scala/TrivialTestSuite.scala`.
 If this test suite does not run as-is, you risk getting a zero.
 
+## Testing and Review
+
+This assignment has an extra initial submission step. This step is due by ??.
+You should submit a small set of test cases for the `isFinished` method.
+
+For example, here is a test that checks that an empty board is not Finished.
+
+{% highlight scala %}
+  val emptyBoard = Matrix[Option[Player]](3, None)
+
+  test("Empty board should not be isFinished()") {
+    assert(!Solution.createGame(emptyBoard).isFinished())
+  }
+{% highlight scala %}
+
+You will submit 5 to 10 interesting test cases for `isFinished` by the deadline.
+Once you have submitted, you will be given three other students' tests to review,
+which you must complete by ???. This ensures that everyone gets feedback in time
+for the final assignment submission.
+
+*Note:* You will only be reviewing test cases. This means you should *not*
+submit any implementation details for review.
+
+To ensure you only submit test cases to Captain Teach, a `submit-tests` command has been
+added to the `sbt` build tool. After running it, all files within your
+`src/test/scala/` directory will be packaged into a tar archive named
+`test-suite.tar.gz` at the root of your project directory. This means you must
+*not* have any implementation details within your test directory.
+
+To facilitate the review process, we will be using Captain Teach. Your
+`@umass.edu` e-mail address will be used to authenticate you when you
+visit Captain Teach. To ensure you are logged into this account, first
+visit:
+
+https://webauth.oit.umass.edu/idp/Authn/UserPassword
+
+Once you have authenticated your account visit:
+
+https://www.captain-teach.org/umass-cmpsci220/assignments/
+
+If asked, select your `@umass.edu` account as the one you would like to use
+while accessing Captain Teach. From the assignments screen, select the
+`Next Step` link near the `tic-tac-toe` assignment. This will bring you to
+a screen where you can upload `test-suite.tar.gz`. Upload that file,
+review your submission, and click `Submit` when you are ready to proceed.
+
+Right after submitting, the page should say that the submission was successful,
+and give you a "Continue" link. Click "Continue" and complete the three reviews
+of other students code. You can complete the reviews in any order (and view
+them all at the same time), but you must complete all three reviews.
+
+When you receive reviews from your classmates, you will also be given the
+ability to submit feedback on the review. This feedback is only for the course
+staff and has no effect on your grade. We're interested in hearing if the
+review was particularly helpful or unhelpful, or if you think it was wrong.
+Also, if you feel the review you received is in any way inappropriate, you can
+flag it to bring the problem to our attention.
+
 ## Submit Your Work
 
 Use the `submit` command within `sbt` to create `submission.tar.gz`. Upload
