@@ -33,7 +33,7 @@ title: Schedule
 | Friday, Oct 24    | *Lab:* [MST Lab] Again                                                                          |
 | Tuesday, Oct 28   |                                                                                                 |
 | Thursday, Oct 30  | [Java Regular Expressions] and [Scala Regular Expressions]                                      |
-| Friday, Oct 31    | *Lab:* Regular Expressions Lab                                                                  |
+| Friday, Oct 31    | *Lab:* [Regular Expressions Lab]                                                                 |
 | Tuesday, Nov 4    | Due: [Tic Tac Toe]. Out: Sudoku. Reading: Odersky Chapters 19 and 20.                           |
 | Thursday, Nov 6   |                                                                                                 |
 | Friday, Nov 7     | *No Lab.* (Enjoy Veteran's Day weekend)                                                         |
@@ -63,6 +63,7 @@ title: Schedule
 [HW11 (Scripting)]: ../hw/scripting
 [Java Regular Expressions]: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
 [Scala Regular Expressions]: http://www.scala-lang.org/api/current/index.html#scala.util.matching.Regex
+[Regular Expressions Lab]: ../hw/regex_lab
 
 [Introduction]: ../reading/intro
 [Scala Basics]: ../reading/scala-basics
