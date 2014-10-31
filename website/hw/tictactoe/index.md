@@ -279,14 +279,24 @@ Once you have authenticated your account visit:
 
 If asked, select your `@umass.edu` account as the one you would like to use
 while accessing Captain Teach. From the assignments screen, select the
-`Next Step` link near the `tic-tac-toe` assignment. This will bring you to
-a screen where you can upload `GradedTestSuite.scala`. Upload that file,
-review your submission, and click `Submit` when you are ready to proceed.
+the `tic-tac-toe` assignment. This will bring you to a screen that shows
+what you need to do next, the work you've submitted, reviews you have pending,
+reviews you've completed, and feedback that others have provided for you.
+
+Select the `publish a submission` under the `Next Required Action` header. This
+will bring you to a screen where you can upload `GradedTestSuite.scala`. Upload that file.
+
+After uploading, you will be brought to a page that lets you preview your submission
+before publishing it for review. Review your submission and when you are ready to
+proceed click `Publish Submission` at the bottom of the page.
 
 Right after submitting, the page should say that the submission was successful,
-and give you a "Continue" link. Click "Continue" and complete the three reviews
-of other students code. You can complete the reviews in any order (and view
-them all at the same time), but you must complete all three reviews.
+and give you a `Continue` link. This will bring you back to the dashboard where
+you will now have up to three pending reviews you must complete. You can complete the 
+reviews in any order (and view them all at the same time), but you must complete 
+all three reviews. Changes to the reviews are automatically saved so you may
+leave them at any point without submitting and come back to complete your work
+later. Once you click submit, you may no longer make changes to your review.
 
 When you receive reviews from your classmates, you will also be given the
 ability to submit feedback on the review. This feedback is only for the course
