@@ -17,15 +17,15 @@ As a pattern:
 
    - Constants: a b c d
    - Sequences of constants (obvious)
-   - Alternation: a | b
-   - zero or more: a*
-   - One or zero: a?
-   - one or more: a+
-   - Metacharater "." (a | b | c | ...)
-   - Ranges: [a-z] == a | b | ... | z
-   - Character classes: \d == [0-9]
+   - Alternation: `a | b`
+   - Sequencing: `a*`, `a?`, `a+`, `a{m,n}`
+   - Metacharaters `.`, `^`, `$`
+   - Ranges: `[a-z]`, range-complement, `[^ a-z]`
+   - Escaping meta characters, e.g., `\.`, `\$`, etc.
+   - Character classes: `\d`
 
-In Java/Scala:
+
+Basic version:
 
     import java.util.regex._
     Pattern.matches("a*b","aaaab")
@@ -34,12 +34,18 @@ Finding multiple matches:
 
     "a*b".findAllIn(str).toList
 
+I'll use `$` and `^` to match the whole string.
+
 Grouping (e.g., dates):
 
     val date = """(\d\d\d\d)-(\d\d)-(\d\d)""".r
     "2004-01-20" match {
       case date(year, month, day) => s"$year was a good year for PLs."
     }
+
+Replacement:
+
+    "Jan|January".r.replaceAllIn(str, "01")
 
 Show grep (on sheet.csv)
 

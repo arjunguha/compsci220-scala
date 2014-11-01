@@ -1,7 +1,8 @@
 import AssemblyKeys._
 
 libraryDependencies in ThisBuild ++= Seq(
-  "org.scalatest" %% "scalatest" % "2.2.1" % "test")
+  "org.scalatest" %% "scalatest" % "2.2.1" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.11.6" % "test")
 
 scalaVersion in ThisBuild := "2.11.2"
 

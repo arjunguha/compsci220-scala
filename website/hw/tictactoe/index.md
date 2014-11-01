@@ -254,7 +254,7 @@ class GradedTestSuite extends org.scalatest.FunSuite {
   val emptyBoard = Matrix[Option[Player]](3, None)
 
   test("Empty board should not be isFinished()") {
-    assert(!Solution.createGame(emptyBoard).isFinished())
+    assert(!Solution.createGame(X, emptyBoard).isFinished())
   }
 
 }
