@@ -271,7 +271,7 @@ We will use *Captain Teach* to manage the submission and review process for
 tests. You can login to Captain Teach using your `@umass.edu` e-mail address. To
 ensure you are logged into this account, first visit:
 
-[https://webauth.oit.umass.edu/idp/Authn/UserPassword](https://webauth.oit.umass.edu/idp/Authn/UserPassword)
+[https://apps.umass.edu/](https://apps.umass.edu/)
 
 Once you have authenticated your account visit:
 
