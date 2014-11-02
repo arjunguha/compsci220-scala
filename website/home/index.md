@@ -25,8 +25,6 @@ You must read the entire [Course Policy] document.
 
 # Office Hours
 
-*Office hours are still in flux.*
-
 <table class="table table-striped">
 <thead>
   <tr><th>When</th><th>Where</th><th>Who</th></tr>
