@@ -3,6 +3,8 @@ layout: hw
 title: Parsing
 ---
 
+<img src="http://imgs.xkcd.com/comics/perl_problems.png">
+
 **This assignment has not been officially released. It may change completely.
 If you start it early, you do so at your own risk.**
 
