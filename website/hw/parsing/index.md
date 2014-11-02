@@ -3,6 +3,9 @@ layout: hw
 title: Parsing
 ---
 
+**This assignment has not been officially released. It may change completely.
+If you start it early, you do so at your own risk.**
+
 For this assignment, you will write a parser, printer, and evaluator for arithmetic
 expressions.  To do so, you will (1) learn how to read a *BNF grammar*, (2)
 learn how to use Scala's parser-combinator library, and (3) use property-based

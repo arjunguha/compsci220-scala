@@ -34,17 +34,17 @@ title: Schedule
 | Tuesday, Oct 28   |                                                                                                 |
 | Thursday, Oct 30  | [Java Regular Expressions] and [Scala Regular Expressions]                                      |
 | Friday, Oct 31    | *Lab:* [Regular Expressions Lab]                                                                |
-| Tuesday, Nov 4    | Due: [Tic Tac Toe]. Out: Sudoku. Reading: Odersky Chapters 19 and 20.                           |
+| Tuesday, Nov 4    | Due: [Tic Tac Toe]. Out: [Sudoku]. Reading: Odersky Chapters 19 and 20.                           |
 | Thursday, Nov 6   | Reading: Odersky Chapter 21.                                                                    |
 | Friday, Nov 7     | *No Lab.* (Enjoy Veteran's Day weekend)                                                         |
 | Tuesday, Nov 11   | **No class.** (Veteran's Day)                                                                   |
 | Wednesday, Nov 12 | **Tuesday schedule.** Reading: Odersky Chapter 9.                                               |
 | Thursday, Nov 13  | Reading: [ScalaCheck].                                                                          |
 | Friday, Nov 14    | *Lab:* Parsing Lab                                                                              |
-| Tuesday, Nov 18   | Due: Sudoku. Out: Parsing. Reading: Odersky Chapter 33.                                         |
+| Tuesday, Nov 18   | Due: [Sudoku]. Out: [Parsing]. Reading: Odersky Chapter 33.                                         |
 | Thursday, Nov 20  |                                                                                                 |
 | Friday, Nov 21    | *Lab:*                                                                                          |
-| Tuesday, Nov 25   | Due: Parsing.                                                                                   |
+| Tuesday, Nov 25   | Due: [Parsing].                                                                                   |
 | Thursday, Nov 27  | **No class.** (Thanksgiving Break)                                                              |
 | Friday, Nov 28    | **No lab.** (Thanksgiving Break)                                                                |
 | Tuesday, Dec 2    |                                                                                                 |
@@ -64,6 +64,8 @@ title: Schedule
 [Java Regular Expressions]: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
 [Scala Regular Expressions]: http://www.scala-lang.org/api/current/index.html#scala.util.matching.Regex
 [Regular Expressions Lab]: ../hw/regex_lab
+[Sudoku]: ../hw/sudoku
+[Parsing]: ../hw/parsing
 
 [Introduction]: ../reading/intro
 [Scala Basics]: ../reading/scala-basics

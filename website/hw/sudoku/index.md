@@ -3,6 +3,9 @@ layout: hw
 title: Sudoku
 ---
 
+**This assignment has not been officially released. It may change completely.
+If you start it early, you do so at your own risk.**
+
 For this assignment, you will write a Sudoku solver. To do so, you will
 (1) use Scala collections extensively, (2) implement a *backtracking search*
 algorithm, and (3) implement *constraint propagation*.
@@ -240,8 +243,8 @@ We recomend proceeding in this order and testing as you go along:
    2. While doing (1), if a peer is constrained to exactly 1 value, remove
       that value from its peers.
 
-6. Implement `nextStates`, which returns the list of states that have one
-   available value placed at every cell on this board.
+6. Implement `nextStates`, which returns the list of all boards that have
+   exactly one additional value placed on the board.
 
 7. Implement `solve`. If `this.isSolution` is true, then return `Some(this)`.
    If not, iterate through the list of `nextStates`, applying `solve` to
@@ -263,11 +266,13 @@ val puz2 = "2...8.3...6..7..84.3.5..2.9...1.54.8.........4.27.6...3.1..7.4.72..4
 There are several sources of Sudoku puzzles on the Web. Here are 50
 purportedly easy puzzles:
 
-http://norvig.com/easy50.txt
+[http://norvig.com/easy50.txt](http://norvig.com/easy50.txt)
 
 You can use this terminal command to translate them into the format for this assignment:
 
     curl -s http://norvig.com/easy50.txt | tr '\n' ' ' | tr '0' '.' | sed 's/ //' | sed 's/ ======== /\'$'\n/g'
+
+**In addition, I encourage you to share solvable puzzles with each other on Piazza.**
 
 ## Check Your Work
 
@@ -291,5 +296,4 @@ If this test suite does not run as-is, you risk getting a zero.
 Use the `submit` command within `sbt` to create `submission.tar.gz`. Upload
 this file to Moodle.
 
-[number of atoms in the observable universe]: http://en.wikipedia.org/wiki/Observable_univer
-se#Matter_content_.E2.80.94_number_of_atoms
+[number of atoms in the observable universe]: http://en.wikipedia.org/wiki/Observable_universe#Matter_content_.E2.80.94_number_of_atoms
