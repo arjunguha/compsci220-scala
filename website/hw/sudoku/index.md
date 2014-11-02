@@ -37,7 +37,7 @@ name := "sudoku"
 
 scalaVersion := "2.11.2"
 
-libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.4"
+libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.8"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 {% endhighlight %}
@@ -79,36 +79,38 @@ Here are some more examples:
     "1..92....524.1...........7..5...81.2.........4.27...9..6...........3.945....71..6"
 
 Your first task is to parse strings that represent Sudoku boards. You may
-assume that all strings represent solvable boards that the string has
-exactly 81, characters, etc. This should be very easy for you to do.
+assume that all strings represent solvable boards and that the string has
+exactly 81 characters. This part of the assignment should be trivial.
 
-Solving Sudoku puzzles is much harder, but we'll walk you through the
-approach. *Backtracking search* is a recursive algorithm that operates
-as follows. Given a a Sudoku board, *B*:
+Solving Sudoku puzzles is much harder, but we'll walk you through it.
+
+*Backtracking search* is a recursive algorithm that operates as follows. Given a
+a Sudoku board, *B*:
 
 - If *B* is already filled completely and a solution, return the solution.
 - If *B* is an invalid board (e.g., two 2s in a row), abort.
 - Otherwise, generate a list of all boards that fill in one more square of
   *B*. For each generated board, recursively apply the search function:
-  - If any board produces a solution, return that solution
-  - If no board produces a solution, abort.
+  - If any board produces a valid solution, return that board
+  - If no board produces a solution, abort and return
 
-While this approach will work in principle, in practice there are too
-many boards to search: there are 81 squares, and each square can hold 10
-values (a digit or blank). Therefore, there are 10^81 possible boards, which
-exceeds the [number of atoms in the observable universe](http://en.wikipedia.org/wiki/Observable_universe#Matter_content_.E2.80.94_number_of_atoms).
+This approach will work in principle. But, in practice there are too many boards
+to search: there are 81 squares, and each square can hold 10 values (a digit or
+blank). Therefore, there are 10^81 possible boards, which exceeds the
+[number of atoms in the observable universe].
 
-When you play Sudoku yourself, every time you fill a digit
-into a cell, you can eliminate that digit from several other cells.
-For example, if you fill 2 into the top-left corner of the board above,
-you can eliminate 2 from the first row, first column, and first box.
-i.e., there is no point even trying to place 2 in those spots, since
-the 2 in the corner *constrains* those cells.
+To actually solve Sudoku problems, we need to combine backtracking search with
+*constraint propogation*. When you play Sudoku yourself, every time you fill a
+digit into a cell, you can eliminate that digit from several other cells. For
+example, if you fill 2 into the top-left corner of the board above, you can
+eliminate 2 from the first row, first column, and first box. i.e., there is no
+point even trying to place 2 in those spots, since the 2 in the corner
+*constrains* those cells.
 
-We'll augment backtracking search with *constraint propagation*, which
+We'll augment backtracking search with constraint propagation, which
 implements this intuition. The key idea is to store not the value at a cell, but
-the *set of values* that may be placed in a cell. For example, the empty board
-has the set 1--9 at every cell:
+the *set of values* that may be placed in a cell. For example, on
+the empty board the values 1---9 may be placed at any cell:
 
     123456789 123456789 123456789 | 123456789 123456789 123456789 | 123456789 123456789 123456789
     123456789 123456789 123456789 | 123456789 123456789 123456789 | 123456789 123456789 123456789
@@ -123,9 +125,9 @@ has the set 1--9 at every cell:
     123456789 123456789 123456789 | 123456789 123456789 123456789 | 123456789 123456789 123456789
 
 With this representation, when we place a value at a cell, we eliminate it from
-the other cells in the same row, column, and box (known as the *peers*).
-For example, if we place 5 at the top-left corner of the empty board and elimiate
-5 from the peers of the top-left corner, we get the following board:
+the other cells in the same row, column, and box (collectively known as the
+*peers* of a cell). For example, if we place 5 at the top-left corner of the
+empty board, we can elimiate 5 from the peers of the top-left corner:
 
         5     1234 6789 1234 6789 | 1234 6789 1234 6789 1234 6789 | 1234 6789 1234 6789 1234 6789
     1234 6789 1234 6789 1234 6789 | 123456789 123456789 123456789 | 123456789 123456789 123456789
@@ -156,15 +158,17 @@ object Solution extends SudokuLike {
     throw new UnsupportedOperationException("not implemented")
   }
 
-  def peers(row: Int, col: Int): Set[(Int, Int)] = {
+  // You can use a Set instead of a List (or, any Iterable)
+  def peers(row: Int, col: Int): List[(Int, Int)] = {
     throw new UnsupportedOperationException("not implemented")
   }
 }
 
-// // Top-left corner is (0,0). Bottom-right corner is (8,8).
-class Board(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Board] {
+// Top-left corner is (0,0). Bottom-right corner is (8,8).
+// You don't have to have a field called available. Feel free to change it.
+class Board(val available: Map[(Int, Int), List[Int]]) extends BoardLike[Board] {
 
-  def availableValuesAt(row: Int, col: Int): Set[Int] = {
+  def availableValuesAt(row: Int, col: Int): List[Int] = {
     // Assumes that a missing value means all values are available. Feel
     // free to change this.
     available.getOrElse((row, col), 1.to(9).toSet)
@@ -187,9 +191,10 @@ class Board(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Board] {
     throw new UnsupportedOperationException("not implemented")
   }
 
-  def nextStates(): Seq[T] = {
+  // You can return any Iterable (e.g., Stream)
+  def nextStates(): List[T] = {
     if (isUnsolvable()) {
-      return Seq()
+      return List()
     }
 
     throw new UnsupportedOperationException("not implemented")
@@ -203,15 +208,15 @@ class Board(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Board] {
 
 We recomend proceeding in this order and testing as you go along:
 
-1. Implement `Solution.peers`.  `peers(r, c)` produces the coordinates of all
+1. Implement `Solution.peers`. `peers(r, c)` produces the coordinates of all
    cells in the same row as `r`, same column as `c`, and same block as `(r,c)`.
 
 2. Implement `Solution.parse` You  should assume that the input string is
-   exactly 81 characters long, uses "." (period) to represent blank cells, and
-   that each block of nine characters represents a row (i.e., row-major order).
+   matches the regular expression `"""(\.|[1-9]){81}""".r` and that
+   each block of nine characters represents a row (i.e., row-major order).
 
    As the template suggests, you need to store the set of available values at
-   each cell instead of the value at the cell. You'll need to define a define
+   each cell instead of the value at the cell. You'll need to define
    the empty board as the map with all values available at each cell and
    implement `parse` using `peers` as a helper function.
 
@@ -230,7 +235,8 @@ We recomend proceeding in this order and testing as you go along:
 
    For the new board to be valid, you'll have to:
 
-   1. Remove `value` from set of available values of `peers(row, col)`.
+   1. Remove `value` from set of available values of each peer
+      (i.e., `peers(row, col)`).
    2. While doing (1), if a peer is constrained to exactly 1 value, remove
       that value from its peers.
 
@@ -241,6 +247,27 @@ We recomend proceeding in this order and testing as you go along:
    If not, iterate through the list of `nextStates`, applying `solve` to
    board. Return the first solution that you find. If no solution is found,
    return `None`.
+
+## Solvable Boards
+
+Your solver will not be able to solve arbitrary Sudoku boards. But,
+here are some boards that should work:
+
+{% highlight scala %}
+val fromCS121_1 = "85....4.1......67...21....3..85....7...982...3....15..5....43...37......2.9....58"
+val fromCS121_2 = ".1.....2..3..9..1656..7...33.7..8..........89....6......6.254..9.5..1..7..3.....2"
+val puz1 = ".43.8.25.6.............1.949....4.7....6.8....1.2....382.5.............5.34.9.71."
+val puz2 = "2...8.3...6..7..84.3.5..2.9...1.54.8.........4.27.6...3.1..7.4.72..4..6...4.1...3"
+{% endhighlight %}
+
+There are several sources of Sudoku puzzles on the Web. Here are 50
+purportedly easy puzzles:
+
+http://norvig.com/easy50.txt
+
+You can use this terminal command to translate them into the format for this assignment:
+
+    curl -s http://norvig.com/easy50.txt | tr '\n' ' ' | tr '0' '.' | sed 's/ //' | sed 's/ ======== /\'$'\n/g'
 
 ## Check Your Work
 
@@ -263,3 +290,6 @@ If this test suite does not run as-is, you risk getting a zero.
 
 Use the `submit` command within `sbt` to create `submission.tar.gz`. Upload
 this file to Moodle.
+
+[number of atoms in the observable universe]: http://en.wikipedia.org/wiki/Observable_univer
+se#Matter_content_.E2.80.94_number_of_atoms

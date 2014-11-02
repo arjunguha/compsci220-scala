@@ -4,7 +4,7 @@ object Solution extends SudokuLike {
 
   type T = SudokuBoard
 
-  val oneTo9 = 1.to(9).toSet
+  val oneTo9 = 1.to(9).toList
 
   def parse(str: String): SudokuBoard = {
     require(str.length == 81)
@@ -18,7 +18,7 @@ object Solution extends SudokuLike {
     board
   }
 
-  def calcPeers(row: Int, col: Int): Seq[(Int, Int)] = {
+  def calcPeers(row: Int, col: Int): List[(Int, Int)] = {
     val rowPeers = 0.to(8).map { r => (r,col) }
     val colPeers = 0.to(8).map { c => (row, c) }
     val boxRow: Int = (row / 3) * 3
@@ -30,7 +30,7 @@ object Solution extends SudokuLike {
     }
     (rowPeers ++ colPeers ++ boxPeers).filterNot {
       case (r, c) => r == row && col == c
-    }.toSet.toSeq
+    }.toList.distinct
   }
 
   val peersTbl = Map((0.to(8).flatMap { r =>
@@ -41,14 +41,14 @@ object Solution extends SudokuLike {
 
   def peers(row: Int, col: Int): Seq[(Int, Int)] = peersTbl((row, col))
 
-  def eliminate(available: Map[(Int, Int), Set[Int]],
+  def eliminate(available: Map[(Int, Int), List[Int]],
                 positions: Seq[(Int, Int)],
-                value: Int): Map[(Int, Int), Set[Int]] = positions match {
+                value: Int): Map[(Int, Int), List[Int]] = positions match {
     case Seq() => available
     case Seq(p, rest @ _ *) => {
       val availVals = available.getOrElse(p, oneTo9)
       if (availVals.contains(value)) {
-        val set = availVals - value
+        val set = availVals.filter(_ != value)
         val avail1 = available + (p -> set)
         val avail2 = if (set.size == 1) {
           val v = set.head
@@ -72,7 +72,7 @@ object Solution extends SudokuLike {
 }
 
 // // Top-left corner is (0,0). Bottom-right corner is (8,8).
-class SudokuBoard(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[SudokuBoard] {
+class SudokuBoard(val available: Map[(Int, Int), List[Int]]) extends BoardLike[SudokuBoard] {
   import Solution._
 
   val score: Int = available.values.map(_.size).sum
@@ -81,7 +81,7 @@ class SudokuBoard(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Su
 
   val isSolved = available.size == 81 && available.forall { case (_, set) => set.size == 1 }
 
-  def availableValuesAt(row: Int, col: Int): Set[Int] = {
+  def availableValuesAt(row: Int, col: Int): List[Int] = {
     available.getOrElse((row, col), oneTo9)
   }
 
@@ -92,7 +92,7 @@ class SudokuBoard(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Su
     }
   }
 
-  def nextStates(): Seq[SudokuBoard] = {
+  def nextStates(): Iterable[SudokuBoard] = {
     val nexts = for (row <- 0.to(8);
                      col <- 0.to(8);
                      value <- availableValuesAt(row, col);
@@ -104,11 +104,11 @@ class SudokuBoard(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Su
 
   def place(row: Int, col: Int, value: Int): SudokuBoard = {
     assert (availableValuesAt(row, col).contains(value))
-    val newAvailable = eliminate(available + ((row, col) -> Set(value)),
+    val newAvailable = eliminate(available + ((row, col) -> List(value)),
                                  peers(row, col),
                                  value)
     val s = newAvailable((row, col))
-    assert (s == Set(value) || s.isEmpty, s"expected Set($value), got ${newAvailable((row, col))}")
+    //assert (s == Set(value) || s.isEmpty, s"expected Set($value), got ${newAvailable((row, col))}")
     new SudokuBoard(newAvailable)
   }
 
@@ -132,13 +132,13 @@ class SudokuBoard(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Su
     }
   }
 
-  def subproblemOf(parent: SudokuBoard): Boolean = {
-    0.to(8).forall { row =>
-      0.to(8).forall { col =>
-        availableValuesAt(row, col).subsetOf(parent.availableValuesAt(row, col))
-      }
-    }
-  }
+  // def subproblemOf(parent: SudokuBoard): Boolean = {
+  //   0.to(8).forall { row =>
+  //     0.to(8).forall { col =>
+  //       availableValuesAt(row, col).subsetOf(parent.availableValuesAt(row, col))
+  //     }
+  //   }
+  // }
 }
 
 object Main extends App {

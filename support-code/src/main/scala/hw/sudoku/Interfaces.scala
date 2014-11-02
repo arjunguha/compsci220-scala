@@ -6,7 +6,7 @@ trait SudokuLike {
 
   def parse(board: String): T
 
-  def peers(row: Int, col: Int): Seq[(Int, Int)]
+  def peers(row: Int, col: Int): Iterable[(Int, Int)]
 
 }
 
@@ -16,13 +16,13 @@ abstract class BoardLike[T <: BoardLike[T]] {
 
   def isSolved(): Boolean
 
-  def availableValuesAt(row: Int, col: Int): Set[Int]
+  def availableValuesAt(row: Int, col: Int): Iterable[Int]
 
   def place(row: Int, col: Int, value: Int): T
 
   def isUnsolvable(): Boolean
 
-  def nextStates(): Seq[T]
+  def nextStates(): Iterable[T]
 
   def solve(): Option[T]
 
