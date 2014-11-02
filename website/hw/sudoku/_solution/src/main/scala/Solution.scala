@@ -9,12 +9,10 @@ object Solution extends SudokuLike {
   def parse(str: String): SudokuBoard = {
     require(str.length == 81)
     var board = emptyBoard
-    for (row <- 0.to(8)) {
-      for (col <- 0.to(8)) {
-        str(row * 9 + col) match {
-          case '.' => ()
-          case ch => board.place(row, col, ch.toString.toInt)
-        }
+    for (row <- 0.to(8); col <- 0.to(8)) {
+      str(row * 9 + col) match {
+        case '.' => ()
+        case ch => board = board.place(row, col, ch.toString.toInt)
       }
     }
     board
@@ -95,22 +93,13 @@ class SudokuBoard(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Su
   }
 
   def nextStates(): Seq[SudokuBoard] = {
-    0.to(8).flatMap { row =>
-      0.to(8).flatMap { col =>
-        val values = availableValuesAt(row, col)
-        if (values.size > 1) {
-          values.flatMap { value =>
-            val b = place(row, col, value)
-            assert(values.size > 1 || b.available == this.available,
-                   s"\n$this\nplace($row, $col, $value):\n$b")
-                Seq(b)
-          }
-        }
-        else {
-          Nil
-        }
-      }
-    }.sortWith((x, y) => x.score < y.score)
+    val nexts = for (row <- 0.to(8);
+                     col <- 0.to(8);
+                     value <- availableValuesAt(row, col);
+                     if availableValuesAt(row, col).size > 1) yield {
+      place(row, col, value)
+    }
+    nexts.sortWith((x, y) => x.score < y.score)
   }
 
   def place(row: Int, col: Int, value: Int): SudokuBoard = {
@@ -118,6 +107,8 @@ class SudokuBoard(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Su
     val newAvailable = eliminate(available + ((row, col) -> Set(value)),
                                  peers(row, col),
                                  value)
+    val s = newAvailable((row, col))
+    assert (s == Set(value) || s.isEmpty, s"expected Set($value), got ${newAvailable((row, col))}")
     new SudokuBoard(newAvailable)
   }
 
@@ -130,10 +121,8 @@ class SudokuBoard(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Su
     }
     else {
       for (board <- nextStates()) {
-        assert (board.subproblemOf(this))
         board.solve() match {
           case Some(board) => {
-            assert (board.subproblemOf(this))
             return Some(board)
           }
           case None => ()
@@ -150,4 +139,12 @@ class SudokuBoard(val available: Map[(Int, Int), Set[Int]]) extends BoardLike[Su
       }
     }
   }
+}
+
+object Main extends App {
+
+ val puz = "85...24..72......9..4.........1.7..23.5...9...4...........8..7..17..........36.4."
+ val board = Solution.parse(puz)
+ println(s"Trying to solve:\n$board\n-----------------")
+ println(board.solve())
 }
