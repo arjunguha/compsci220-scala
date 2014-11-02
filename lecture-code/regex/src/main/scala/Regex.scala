@@ -16,7 +16,7 @@ object Regex {
     case Character(ch) => str == List(ch)
     case Alt(lhs, rhs) => matches(lhs, str) || matches(rhs, str)
     case Seq(lhs, rhs) => {
-      for (n <- 0.to(str.length)) {
+      for (n <- util.Random.shuffle(0.to(str.length))) {
         val (str1, str2) = str.splitAt(n)
         if (matches(lhs, str1) && matches(rhs, str2)) {
           return true
@@ -24,7 +24,7 @@ object Regex {
       }
       return false
     }
-    case Star(re) => matches(Alt(One, Seq(re, Star(re))), str)
+    case Star(re) => str.isEmpty || matches(Seq(re, Star(re)), str)
   }
 
   def matches(re: Regex, str: String): Boolean = matches(re, str.toList)

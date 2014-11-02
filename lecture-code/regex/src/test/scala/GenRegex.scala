@@ -1,12 +1,10 @@
 import cmpsci220.regex._
 import org.scalacheck._
-import Gen._
-import Arbitrary.arbitrary
 
 object GenRegex {
 
   private def genChar: Gen[Regex] = for {
-    ch <- oneOf('a', 'b', 'c', 'd', 'e', 'f')
+    ch <- Gen.oneOf('a', 'b', 'c', 'd', 'e', 'f')
   } yield Character(ch)
 
   private def genStar(size: Int): Gen[Regex] = for {
@@ -29,11 +27,11 @@ object GenRegex {
       genChar
     }
     else {
-      oneOf(genSeq(size), genAlt(size), genStar(size))
+      Gen.oneOf(genSeq(size), genAlt(size), genStar(size))
     }
   }
 
-  def genRegex = sized(genSizedRegex)
+  def genRegex = Gen.sized(genSizedRegex)
 
 }
 

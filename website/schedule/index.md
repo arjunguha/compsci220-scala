@@ -33,13 +33,13 @@ title: Schedule
 | Friday, Oct 24    | *Lab:* [MST Lab] Again                                                                          |
 | Tuesday, Oct 28   |                                                                                                 |
 | Thursday, Oct 30  | [Java Regular Expressions] and [Scala Regular Expressions]                                      |
-| Friday, Oct 31    | *Lab:* [Regular Expressions Lab]                                                                 |
+| Friday, Oct 31    | *Lab:* [Regular Expressions Lab]                                                                |
 | Tuesday, Nov 4    | Due: [Tic Tac Toe]. Out: Sudoku. Reading: Odersky Chapters 19 and 20.                           |
-| Thursday, Nov 6   |                                                                                                 |
+| Thursday, Nov 6   | Reading: Odersky Chapter 21.                                                                    |
 | Friday, Nov 7     | *No Lab.* (Enjoy Veteran's Day weekend)                                                         |
 | Tuesday, Nov 11   | **No class.** (Veteran's Day)                                                                   |
-| Wednesday, Nov 12 | **Tuesday schedule.**                                                                           |
-| Thursday, Nov 13  |                                                                                                 |
+| Wednesday, Nov 12 | **Tuesday schedule.** Reading: Odersky Chapter 9.                                               |
+| Thursday, Nov 13  | Reading: [ScalaCheck].                                                                          |
 | Friday, Nov 14    | *Lab:* Parsing Lab                                                                              |
 | Tuesday, Nov 18   | Due: Sudoku. Out: Parsing. Reading: Odersky Chapter 33.                                         |
 | Thursday, Nov 20  |                                                                                                 |
@@ -80,3 +80,4 @@ title: Schedule
 [Functions]: ../reading/functions
 [MST Lab]: ../hw/mst_lab
 [Tic Tac Toe]: ../hw/tictactoe
+[ScalaCheck]: https://github.com/rickynils/scalacheck/wiki/User-Guide

@@ -3,9 +3,9 @@ package cmpsci220.regex
 object Derivative {
 
   def alt(re1: Regex, re2: Regex): Regex = (re1, re2) match {
-    case (Zero, Zero) => Zero
     case (Zero, q) => q
     case (p, Zero) => p
+    case (p, q) if (p == q) => p
     case _ => Alt(re1, re2)
   }
 
@@ -26,22 +26,32 @@ object Derivative {
     case Star(_) => One
   }
 
-  def next(char: Char, re: Regex): Regex = {
-     re match {
+  def next(char: Char, re: Regex): Regex = re match {
     case One => Zero
     case Zero => Zero
     case Character(ch) => if (char == ch) One else Zero
     case Alt(lhs, rhs) => alt(next(char, lhs), next(char, rhs))
-    case Seq(lhs, rhs ) => alt(seq(next(char, lhs), rhs),
+    case Seq(lhs, rhs) => alt(seq(next(char, lhs), rhs),
                               seq(containsEmpty(lhs), next(char, rhs)))
-    case Star(re) => next(char, Seq(re, Star(re)))
-  } }
+    case Star(re) => seq(next(char, re), Star(re))
+  }
 
   def matches(re: Regex, str: List[Char]): Boolean = {
-    println(re, str)
     str match {
       case Nil => containsEmpty(re) == One
       case ch :: rest => matches(next(ch, re), rest)
+    }
+  }
+
+  val fastNext = new Memoize((p: (Char, Regex)) => {
+    val (ch, re) = p
+    next(ch, re)
+  })
+
+  def fastMatches(re: Regex, str: List[Char]): Boolean = {
+    str match {
+      case Nil => containsEmpty(re) == One
+      case ch :: rest => fastMatches(fastNext((ch, re)), rest)
     }
   }
 
