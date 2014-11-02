@@ -3,7 +3,7 @@ layout: hw
 title: Sudoku
 ---
 
-<img src=" http://imgs.xkcd.com/comics/su_doku.jpg">
+<a href="http://xkcd.com/74/"><img src=" http://imgs.xkcd.com/comics/su_doku.jpg"></a>
 
 **This assignment has not been officially released. It may change completely.
 If you start it early, you do so at your own risk.**
