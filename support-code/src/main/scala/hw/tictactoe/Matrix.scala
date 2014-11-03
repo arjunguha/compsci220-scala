@@ -61,6 +61,12 @@ class Matrix[A] private(val dim: Int, default: A, values: Map[(Int, Int), A]) {
     builder.toString
   }
 
+  override def hashCode(): Int = {
+    (for (i <- 0.until(dim); j <- 0.until(dim)) yield {
+       this.get(i, j).hashCode
+     }).sum
+  }
+
   override def equals(other: Any): Boolean = other match {
     case other: Matrix[_] => {
       other.isInstanceOf[Matrix[_]] &&

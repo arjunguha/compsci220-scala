@@ -125,8 +125,10 @@ state. Here is an outline of a recursive implementation of Minimax:
 
       If it is Xs turn:
 
-        1. If game is a winning state for X, return Some(X)
-        2. If game is a draw state, return None
+        1. If X has won the game, return Some(X).
+        2. If the game is a draw, return None. (If all squares are filled
+           and nobody has won, then the game is a draw. However, you are
+           free to detect a draw earlier, if you wish.)
         3. Recursively apply minimax to all the successor states of game
            - If any recursive call produces X, return Some(X)
            - Or, if any recursive call produces None, return None
