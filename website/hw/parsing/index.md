@@ -40,9 +40,11 @@ name := "parsing"
 
 scalaVersion := "2.11.2"
 
-libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.6"
+libraryDependencies += "edu.umass.cs" %% "cmpsci220" % "1.10"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
+
+libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.11.6" % "test"
 {% endhighlight %}
 
 The `plugins.sbt` file must have exactly this line:
@@ -66,15 +68,20 @@ examples of the *concrete syntax* of the language:
 
 This grammar specifies the syntax of the language:
 
+        mul ::= exp | exp * mul | exp / mul
+        add ::= mul | mul + add | mul - add
+        expr :: add
+
+
     number ::= -? [0-9]+ (. [0-9]+)?
 
     atom ::= number
            | ( expr )
 
-    exp ::= atom
-          | exp ^ atom
+    exponent ::= atom
+               | exponent ^ atom
 
-    add ::= exp
+    add ::= exponent
           | exp + add
           | exp - add
 
@@ -120,7 +127,7 @@ object ArithParser extends ArithParserLike {
     throw new UnsupportedOperationException("not implemented")
   }
 
-  lazy val exp: PackratParser[Expr] = {
+  lazy val exponent: PackratParser[Expr] = {
     throw new UnsupportedOperationException("not implemented")
   }
 
@@ -152,16 +159,8 @@ We suggest proceeding in the following order:
    parser combinators, as discussed in the Odersky book.
 3. Implement `ArithPrinter`.
 
-You can and should write individual test cases. But, you can use this ScalaCheck
-property to test parsing and printing in tandem:
-
-{% highlight scala %}
-test("parse and pretty are related") {
-  forAll(genExpr) { (e: Expr) =>
-    assert(parseArith(print(e)) == e)
-  }
-}
-{% endhighlight %}
+The `build.sbt` file includes ScalaCheck, which you're free to use in testing.
+(You'll have to define generators as part of the test suite.)
 
 ## Check Your Work
 
@@ -177,12 +176,11 @@ class TrivialTestSuite extends org.scalatest.FunSuite {
     val eval: cmpsci220.hw.parsing.ArithEvalLike = ArithEval
   }
 
-
 }
 {% endhighlight %}
 
 You should place this test suite in `src/test/scala/TrivialTestSuite.scala`.
-If this test suite does not run as-is, you risk getting a zero.
+The tests must pass with no changes to the file.
 
 ## Submit Your Work
 

@@ -29,7 +29,7 @@ class TestSuite extends FunSuite with prop.GeneratorDrivenPropertyChecks {
   }
 
   test("parse and pretty are related") {
-    forAll(genExpr) { (e: Expr) =>
+    forAll(GenExpr.genExpr) { (e: Expr) =>
       val e1 = parseArith(print(e))
       assert(e == e1) // because parens are inserted naively
       assert(parseArith(print(e1)) == e1)

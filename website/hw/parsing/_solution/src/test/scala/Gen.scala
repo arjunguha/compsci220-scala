@@ -1,10 +1,9 @@
-package cmpsci220.hw
-
+import cmpsci220.hw.parsing._
 import org.scalacheck._
 import Gen._
 import Arbitrary.arbitrary
 
-package object parsing {
+object GenExpr {
 
   private def genNum: Gen[Expr] = for {
     n <- choose(-10, 10)

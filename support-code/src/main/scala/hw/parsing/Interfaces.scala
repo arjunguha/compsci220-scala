@@ -8,12 +8,12 @@ case class Add(e1: Expr, e2: Expr) extends Expr
 case class Sub(e1: Expr, e2: Expr) extends Expr
 case class Mul(e1: Expr, e2: Expr) extends Expr
 case class Div(e1: Expr, e2: Expr) extends Expr
-case class Exp(e1: Expr, e2: Expr) extends Expr
+case class Exponent(e1: Expr, e2: Expr) extends Expr
 
 trait ArithParserLike extends RegexParsers with PackratParsers {
   lazy val number: PackratParser[Double] = """-?\d+(\.\d*)?""".r ^^ { _.toDouble }
   val atom: PackratParser[Expr]
-  val exp: PackratParser[Expr]
+  val exponent: PackratParser[Expr]
   val add: PackratParser[Expr]
   val mul: PackratParser[Expr]
   val expr: PackratParser[Expr]
