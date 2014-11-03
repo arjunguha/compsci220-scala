@@ -248,6 +248,9 @@ We recomend proceeding in this order and testing as you go along:
 6. Implement `nextStates`, which returns the list of all boards that have
    exactly one additional value placed on the board.
 
+   You should sort the returned list: ensure that boards with fewer available
+   values occur earier in the list.
+
 7. Implement `solve`. If `this.isSolution` is true, then return `Some(this)`.
    If not, iterate through the list of `nextStates`, applying `solve` to
    board. Return the first solution that you find. If no solution is found,
