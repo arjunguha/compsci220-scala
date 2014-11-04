@@ -217,6 +217,9 @@ We recomend proceeding in this order and testing as you go along:
 1. Implement `Solution.peers`. `peers(r, c)` produces the coordinates of all
    cells in the same row as `r`, same column as `c`, and same block as `(r,c)`.
 
+   Do not include `(r, c)` in the set of its peers. i.e.,
+   `peers(r,c).contains((r, c)) == false`
+
 2. Implement `Solution.parse` You  should assume that the input string is
    matches the regular expression `"""(\.|[1-9]){81}""".r` and that
    each block of nine characters represents a row (i.e., row-major order).
