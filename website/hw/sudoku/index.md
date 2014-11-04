@@ -5,9 +5,6 @@ title: Sudoku
 
 <a href="http://xkcd.com/74/"><img src=" http://imgs.xkcd.com/comics/su_doku.jpg"></a>
 
-**This assignment has not been officially released. It may change completely.
-If you start it early, you do so at your own risk.**
-
 For this assignment, you will write a Sudoku solver. To do so, you will
 (1) use Scala collections extensively, (2) implement a *backtracking search*
 algorithm, and (3) implement *constraint propagation*.
