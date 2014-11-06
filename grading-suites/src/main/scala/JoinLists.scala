@@ -21,7 +21,7 @@ class JoinLists(targetYaml: String, solution: JoinListFunctions) {
       assert(max(Singleton(100), gt) == Some(100))
     }
 
-    test("Does max on a JoinList that only has 1 Singleotn produce the value?") {
+    test("Does max on a JoinList that only has 1 Singleton produce the value?") {
       assert(max(Join(Singleton(100), Empty(), 1), gt) == Some(100))
     }
 

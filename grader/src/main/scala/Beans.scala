@@ -2,7 +2,7 @@ package grader
 
 import java.util.{List, LinkedList}
 
-private[grader] class TestResultBean {
+class TestResultBean {
 
   private var criterion: String = null
   private var score: Int = 0
@@ -25,7 +25,7 @@ private[grader] class TestResultBean {
 
 }
 
-private[grader] class CumulativeBean {
+class CumulativeBean {
   private var score: Int = 0
   private var maxScore: Int = 0
 
@@ -39,7 +39,7 @@ private[grader] class CumulativeBean {
 
 }
 
-private[grader] class FeedbackBean {
+class FeedbackBean {
 
   private var rubric: List[TestResultBean] = new LinkedList[TestResultBean]()
   private var time: String = "not yet graded"

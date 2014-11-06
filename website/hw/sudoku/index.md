@@ -90,6 +90,8 @@ exactly 81 characters. This part of the assignment should be trivial.
 
 Solving Sudoku puzzles is much harder, but we'll walk you through it.
 
+Solving Sudoku puzzles is much harder, but we'll walk you through it.
+
 *Backtracking search* is a recursive algorithm that operates as follows. Given a
 a Sudoku board, *B*:
 
@@ -299,6 +301,54 @@ class TrivialTestSuite extends org.scalatest.FunSuite {
 
 You should place this test suite in `src/test/scala/TrivialTestSuite.scala`.
 If this test suite does not run as-is, you risk getting a zero.
+
+## <a name="review"></a>Testing and Review
+
+For this assignment there will be two testing and review phases worth 5%
+of your grade each (i.e., 10% total).
+
+### Phase 1
+
+**Due: Nov 11, 23:59**
+
+Create a test suite called `GradedTestSuite.scala`. In it, place 5--10
+interesting test cases for the `parse`, `valueAt`, and `peers` methods. Write
+tests that try to cover the space of interesting inputs to these
+methods.
+
+Submit this file to Captain Teach. Once you've logged in,
+click `sudoku-solver-phase-one` to submit `GradedTestSuite.scala`.
+
+### Phase 2
+
+**Due: Nov 14, 23:59**
+
+Extend `GradedTestSuite.scala`, adding 5--10
+interesting test cases for the `isSolved`, `isSolvable`, and `place` methods.
+Write tests that try to cover the space of interesting inputs to these methods.
+
+Submit this file to Captain Teach. Once you've logged in, click `sudoku-solver-
+phase-two` to submit `GradedTestSuite2.scala`.
+
+
+### Submitting to Captain Teach
+
+You can login to Captain Teach using your `@umass.edu` e-mail address. To
+ensure you are logged into this account, first visit:
+
+[https://apps.umass.edu/](https://apps.umass.edu/)
+
+Once you have authenticated your account visit:
+
+[https://www.captain-teach.org/umass-cmpsci220/assignments/](https://www.captain-teach.org/umass-cmpsci220/assignments/)
+
+
+After uploading your work, you will be given an opportunity to preview and
+change it. Once you are satisfied with your submission, be sure to click
+the `Publish` button for your assignment.
+
+*Note:* You will only be reviewing test cases. This means you should *not*
+submit any implementation details for review.
 
 ## Submit Your Work
 
