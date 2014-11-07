@@ -28,7 +28,7 @@ class Graphs(targetYaml: String, solution: GraphAlgorithms) {
      }
 
     test("Does reachable work on graph with a 4-cycle?") {
-      val g = disconnected()
+      val g = Graph(("A", (), "B"), ("B", (), "C"), ("C", (), "D"), ("D", (), "A"))
       assert(solution.reachable(g, "C") == Set("A", "B", "C", "D"))
     }
 
@@ -44,16 +44,22 @@ class Graphs(targetYaml: String, solution: GraphAlgorithms) {
        assert(solution.isValidPath(g, List("A", "B", "C", "E")))
     }
 
-    test("Does BFS work correctly on a disconnected graph?") {
-     val g = disconnected()
-     val s = solution.breathFirstSearch(g, "A", "B")
-     assert(!g.getVisitOrder.contains("B"))
+    test("BFS: are disconnected nodes reached (even if start and stop are connected)?") {
+     val g =  Graph(("X", (), "Y"),
+                    ("A", (), "B1"), ("A", (), "B2"),
+                    ("B1", (), "C1"), ("B2", (), "C2"))
+     val s = solution.breathFirstSearch(g, "A", "C2")
+     val order = g.getVisitOrder
+     assert(!order.contains("X") && !order.contains("Y"))
     }
 
-    test("Does DFS work correctly on a disconnected graph?") {
-     val g = disconnected()
-     val s = solution.depthFirstSearch(g, "A", "B")
-     assert(!g.getVisitOrder.contains("B"))
+    test("DFS: are disconnected nodes reached (even if start and stop are connected)?") {
+     val g =  Graph(("X", (), "Y"),
+                    ("A", (), "B1"), ("A", (), "B2"),
+                    ("B1", (), "C1"), ("B2", (), "C2"))
+     val s = solution.depthFirstSearch(g, "A", "C2")
+     val order = g.getVisitOrder
+     assert(!order.contains("X") && !order.contains("Y"))
     }
 
     test("Does BFS traverse breadth-first?") {

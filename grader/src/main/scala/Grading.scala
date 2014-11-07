@@ -8,10 +8,6 @@ import org.fusesource.jansi.AnsiConsole
 import org.fusesource.jansi.Ansi._
 import org.fusesource.jansi.Ansi.Color._
 import scala.concurrent.ExecutionContext.Implicits.global
-import java.lang.ProcessBuilder
-import com.github.tototoshi.csv._
-
-import ProcessTimer._
 
 object Grading {
 
@@ -39,45 +35,33 @@ object Grading {
     println("Any paths listed above are not graded.")
   }
 
-  private def fillRow(row: List[String]): List[String] = {
-    // TODO(arjun): port to use MoodleSheet
-    val id = row(0).substring(12)
-    val dir = Paths.get(id)
-    if (!Files.isDirectory(dir)) {
-      row
-    }
-    else if (Files.isRegularFile(dir.resolve("compile-error"))) {
-      row.updated(4, 0.toString) // 0
-         .updated(5, 100.toString)
-         .updated(7, (new java.util.Date()).toString)
-         .updated(8, "Your submission did not compile")
-     }
-     else if (Files.isRegularFile(dir.resolve(gradeFile))) {
-       val feedbackStr = new String(Files.readAllBytes(dir.resolve(gradeFile)))
-       val feedback = GradingYaml.yaml.load(feedbackStr) match {
-         case feedback: FeedbackBean => feedback
-       }
-       val m = feedback.getCumulative.getScore.toDouble
-       val n = feedback.getCumulative.getMaxScore.toDouble
-       val score = math.round(m / n * 100.0)
-       row.updated(4, score.toString)
-          .updated(5, 100.toString)
-          .updated(7, feedback.getTime)
-          .updated(8, feedbackStr.replace("\n", "<br>"))
-    }
-    else {
-      println("WARNING: skipped directory $id")
-      row
-    }
-  }
-
   def fillWorksheet(src: String, dst: String): Unit = {
     import scala.collection.JavaConversions._
 
-    val rows = CSVReader.open(new java.io.File(src)).all()
-    val writtenRows = rows.head :: rows.tail.map(fillRow)
-    val writer = CSVWriter.open(new java.io.File(dst))
-    writer.writeAll(writtenRows)
-    writer.close()
+    val srcSheet = MoodleSheet(src)
+    val dstSheet = srcSheet.fill { submitId =>
+      val dir = Paths.get(submitId)
+      if (!Files.isDirectory(dir)) {
+        (0, "You did not submit or your submission was ill-formed.")
+      }
+      else if (Files.isRegularFile(dir.resolve("compile-error"))) {
+        (0, "Your submission did not compile or you submitted the wrong assignnment.")
+      }
+      else if (Files.isRegularFile(dir.resolve(gradeFile))) {
+        val feedbackStr = new String(Files.readAllBytes(dir.resolve(gradeFile)))
+        val feedback = GradingYaml.yaml.load(feedbackStr) match {
+          case feedback: FeedbackBean => feedback
+        }
+        val m = feedback.getCumulative.getScore.toDouble
+        val n = feedback.getCumulative.getMaxScore.toDouble
+        val score = math.round(m / n * 100.0)
+        (score.toInt, feedbackStr)
+      }
+      else {
+        println(ansi().fg(RED).a(s"Skipped submission from $submitId").reset)
+        (0, "We did not grade your submission. Contact the course staff.")
+      }
+    }
+    dstSheet.saveAs(Paths.get(dst))
   }
 }

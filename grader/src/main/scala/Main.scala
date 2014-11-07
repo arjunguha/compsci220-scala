@@ -10,7 +10,6 @@ import org.fusesource.jansi.Ansi._
 import org.fusesource.jansi.Ansi.Color._
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.lang.ProcessBuilder
-import ProcessTimer._
 
 sealed trait GraderResult
 case object Graded extends GraderResult
@@ -73,6 +72,7 @@ object Main extends App {
     val tmpDir = Files.createTempDirectory(Paths.get("/tmp"), "extract")
     try {
       if (Seq("/usr/bin/unzip",
+              "-q",
               "-d", tmpDir.toString,
               submissionsZip).! != 0) {
         println(ansi().fg(RED).a(s"Error unzipping $submissionsZip")

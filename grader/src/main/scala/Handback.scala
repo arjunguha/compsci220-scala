@@ -4,6 +4,7 @@ import io.github.arjunguha.mail._
 import java.nio.file.{Paths, Files, Path}
 import com.typesafe.config.ConfigFactory
 
+// Hacks to handback submissions by email. This should be Moodleized.
 class Handback(smtpAuth: SMTPAuth,
                sheet: MoodleSheet,
                subject: String,

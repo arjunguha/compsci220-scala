@@ -5,10 +5,7 @@ import scala.concurrent._
 import scala.concurrent.duration._
 import org.yaml.snakeyaml._
 import scala.util.{Success, Failure}
-// import com.github.tototoshi.csv._
-
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import ExecutionContext.Implicits.global
 
 object TestSuite {
 
@@ -18,7 +15,7 @@ object TestSuite {
   private val desc = new TypeDescription(classOf[FeedbackBean])
   desc.putListPropertyType("rubric", classOf[TestResultBean])
   ctor.addTypeDescription(desc)
-  val yaml = new Yaml(ctor)
+  private[grader] val yaml = new Yaml(ctor)
 
 
   def apply(filename: String)(genTests: Builder => Unit): Unit = {
@@ -41,7 +38,7 @@ object TestSuite {
     val dump = yaml.dumpAs(feedback, nodes.Tag.MAP, DumperOptions.FlowStyle.BLOCK)
     Files.write(path, dump.getBytes)
 
-    System.exit(0) // usings futures and whatever, fuck scala
+    sys.exit(0)
   }
 
 }
@@ -69,7 +66,7 @@ private case class TestCase(description: String, points: Int, body: () => Boolea
   }
 }
 
-class Builder() {
+class Builder private[grader] () {
 
   private var maxPoints = 0
   private val tests = collection.mutable.Buffer[TestCase]()
@@ -173,36 +170,4 @@ class TestSuite(filename: String) {
       }
     }
   }
-
-  // private def fillRow(row: List[String]): List[String] = {
-  //   val id = row(0).substring(12)
-  //   val path = Paths.get(id, filename)
-  //   if (!Files.isRegularFile(path)) {
-  //     if (Files.isDirectory(Paths.get(id))) {
-  //       println(s"File not found $id/$filename")
-  //     }
-  //     row
-  //   }
-  //   else {
-  //     val feedbackStr = new String(Files.readAllBytes(path))
-  //     val feedback = yaml.load(feedbackStr) match {
-  //       case feedback: FeedbackBean => feedback
-  //     }
-  //     row.updated(4, feedback.getCumulative.getScore.toString)
-  //        .updated(5, feedback.getCumulative.getMaxScore.toString)
-  //        .updated(7, feedback.getTime)
-  //        .updated(8, feedbackStr.replace("\n", "<br>"))
-  //   }
-  // }
-
-  // def fillWorksheet(path: String): Unit = {
-  //   import scala.collection.JavaConversions._
-
-  //   val rows = CSVReader.open(new java.io.File(path)).all()
-  //   val writtenRows = rows.head :: rows.tail.map(fillRow)
-  //   val writer = CSVWriter.open(new java.io.File("filled.csv"))
-  //   writer.writeAll(writtenRows)
-  //   writer.close()
-  // }
-
 }

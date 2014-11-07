@@ -4,11 +4,8 @@ import java.nio.file._
 import scala.collection.JavaConversions._
 import scala.sys.process._
 
+// Hacks used to give feedback to a portion of the class
 object Feedback {
-
-  private def isGraded(p: Path): Boolean = {
-    Files.isDirectory(p) && Files.isRegularFile(p.resolve(".graded"))
-  }
 
   // base contains assignemnts with feedback, e.g.,
   //
