@@ -179,7 +179,7 @@ class Board(val available: Map[(Int, Int), List[Int]]) extends BoardLike[Board] 
   def availableValuesAt(row: Int, col: Int): List[Int] = {
     // Assumes that a missing value means all values are available. Feel
     // free to change this.
-    available.getOrElse((row, col), 1.to(9).toSet)
+    available.getOrElse((row, col), 1.to(9).toList)
   }
 
   def valueAt(row: Int, col: Int): Option[Int] = {
@@ -194,13 +194,13 @@ class Board(val available: Map[(Int, Int), List[Int]]) extends BoardLike[Board] 
     throw new UnsupportedOperationException("not implemented")
   }
 
-  def place(row: Int, col: Int, value: Int): T = {
+  def place(row: Int, col: Int, value: Int): Board = {
     require(availableValuesAt(row, col).contains(value))
     throw new UnsupportedOperationException("not implemented")
   }
 
   // You can return any Iterable (e.g., Stream)
-  def nextStates(): List[T] = {
+  def nextStates(): List[Board] = {
     if (isUnsolvable()) {
       return List()
     }
@@ -208,7 +208,7 @@ class Board(val available: Map[(Int, Int), List[Int]]) extends BoardLike[Board] 
     throw new UnsupportedOperationException("not implemented")
   }
 
-  def solve(): Option[T] = {
+  def solve(): Option[Board] = {
     throw new UnsupportedOperationException("not implemented")
   }
 }
@@ -234,7 +234,7 @@ We recomend proceeding in this order and testing as you go along:
 3. Implement `Board.valueAt`. You should produce the digit stored at the
    given row and column or `None` if it is blank.
 
-4. Implement `Board.isSolved` and `Board.isSolvable`. You may assume
+4. Implement `Board.isSolved` and `Board.isUnsolvable`. You may assume
    that the constraints represented by `available` are valid. Therefore, a board
    is solved if every cell is constrained to exactly one value. Similarly,
    a board is unsolvable if any cell is constrained to the empty set of values
