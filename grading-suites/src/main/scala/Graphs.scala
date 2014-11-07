@@ -52,7 +52,7 @@ class Graphs(targetYaml: String, solution: GraphAlgorithms) {
 
     test("Does DFS work correctly on a disconnected graph?") {
      val g = disconnected()
-     val s = solution.breathFirstSearch(g, "A", "B")
+     val s = solution.depthFirstSearch(g, "A", "B")
      assert(!g.getVisitOrder.contains("B"))
     }
 
@@ -71,8 +71,8 @@ class Graphs(targetYaml: String, solution: GraphAlgorithms) {
     test("Does DFS traverse depth-first?") {
       val g = Graph(("Root", (), "A"), ("Root", (), "B"),
                     ("A", (), "A1"), ("B", (), "B1"),
-                    ("B1", (), "B2"))
-      val r = solution.depthFirstSearch(g, "Root", "B2")
+                    ("B1", (), "B2"), ("B2", (), "B3"))
+      val r = solution.depthFirstSearch(g, "Root", "B3")
       val order = g.getVisitOrder
       val path = order.dropWhile(_ != "B").take(3)
       assert(path == List("B", "B1", "B2"))

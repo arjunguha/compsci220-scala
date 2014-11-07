@@ -99,12 +99,19 @@ object Main extends App {
     }
   }
 
+  def timeString(): String = {
+    import java.util.Calendar
+    import Calendar._
+    val cal = Calendar.getInstance()
+    s"${cal.get(HOUR)}:${cal.get(MINUTE)}:${cal.get(SECOND)}"
+  }
+
   // i.e. grades a simple .scala file
   def gradeScalaScript(solution: Path, appendTestSuite: Path): GraderResult = {
 
     val base = solution.getParent
 
-    println(s"Grading $base ...")
+    println(s"${timeString} Grading $base ...")
 
     val target = base.resolve("gradingHacks.scala")
     Files.deleteIfExists(target)
@@ -147,7 +154,7 @@ object Main extends App {
   }
 
   def sbtGrader(p: Path): GraderResult = {
-    println(s"Grading $p ...")
+    println(s"${timeString} Grading $p ...")
     Files.copy(Paths.get("build.sbt"), p.resolve("build.sbt"),
                REPLACE_EXISTING)
     Files.copy(Paths.get("GradingMain.scala"), p.resolve("GradingMain.scala"),
@@ -177,22 +184,24 @@ object Main extends App {
   def gradeAll(grader: Path => GraderResult): Unit = {
     import scala.collection.JavaConversions._
 
-    for (path <- Files.newDirectoryStream(Paths.get(""))) {
-      if (Files.isDirectory(path)) {
-        if (Files.isRegularFile(path.resolve(".graded"))) {
-          println(ansi().fg(YELLOW).a(s"Already graded $path").reset)
-        }
-        else {
-          grader(path) match {
-            case Ignored => {
-              println(ansi().fg(YELLOW).a(s"Ignoring $path").reset)
-            }
-            case Graded => {
-              Files.write(path.resolve(".graded"), Array[Byte]())
-            }
-            case GradingError(msg) => {
-              println(ansi().fg(RED).a(s"Error grading $path ($msg)").reset)
-            }
+    for (path <- Files.newDirectoryStream(Paths.get(""));
+         if Files.isDirectory(path)) {
+      if (Files.isRegularFile(path.resolve(".graded"))) {
+        println(ansi().fg(YELLOW).a(s"Already graded $path").reset)
+      }
+      else if (Files.isRegularFile(path.resolve("compile-error"))) {
+        println(ansi().fg(RED).a(s"Skipping $path due to earlier compile error").reset)
+      }
+      else {
+        grader(path) match {
+          case Ignored => {
+            println(ansi().fg(YELLOW).a(s"Ignoring $path").reset)
+          }
+          case Graded => {
+            Files.write(path.resolve(".graded"), Array[Byte]())
+          }
+          case GradingError(msg) => {
+            println(ansi().fg(RED).a(s"Error grading $path ($msg)").reset)
           }
         }
       }
