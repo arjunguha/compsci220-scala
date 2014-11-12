@@ -33,8 +33,9 @@ You should set up a directory that looks like this:
           `|-- scala
                `-- *your tests goes here*
 
-JoinList.scala is available >> [here]("./JoinList.scala") <<
-Sorting.scala is available >> [here]("./Sorting.scala") <<
+JoinList.scala is available >> [here](JoinList.scala) <<
+
+Sorting.scala is available >> [here](Sorting.scala) <<
 
 ### build.sbt File
 
@@ -90,6 +91,6 @@ Upload **only** the test file to Moodle.
 **If you work with a partner:** Both of you should submit the file. In addition,
 **put a comment with both of your names at the top of the file**.
 
-*(For example:
+For example, at the top of ScalaCheckLabTests.scala:
 
-// Completed by: Sarah Scalington and Jack Javahead*
+// Completed by: Sarah Scalington and Jack Javahead
