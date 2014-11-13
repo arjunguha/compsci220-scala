@@ -40,10 +40,10 @@ title: Schedule
 | Tuesday, Nov 11   | **No class.** (Veteran's Day)                                                                   |
 | Wednesday, Nov 12 | **Tuesday schedule.** Reading: Odersky Chapter 9.                                               |
 | Thursday, Nov 13  | Reading: [ScalaCheck].                                                                          |
-| Friday, Nov 14    | *Lab:* Parsing Lab                                                                              |
+| Friday, Nov 14    | *Lab:* [ScalaCheck Lab]                                                                         |
 | Tuesday, Nov 18   | Due: [Sudoku]. Out: [Parsing]. Reading: Odersky Chapter 33.                                     |
 | Thursday, Nov 20  |                                                                                                 |
-| Friday, Nov 21    | *Lab:*                                                                                          |
+| Friday, Nov 21    | *Lab:* Parsing Lab                                                                              |
 | Tuesday, Nov 25   | Due: [Parsing]. **Exam**.                                                                       |
 | Thursday, Nov 27  | **No class.** (Thanksgiving Break)                                                              |
 | Friday, Nov 28    | **No lab.** (Thanksgiving Break)                                                                |
@@ -66,6 +66,7 @@ title: Schedule
 [Regular Expressions Lab]: ../hw/regex_lab
 [Sudoku]: ../hw/sudoku
 [Parsing]: ../hw/parsing
+[ScalaCheck Lab]: ../hw/scalacheck_lab
 
 [Introduction]: ../reading/intro
 [Scala Basics]: ../reading/scala-basics

@@ -34,6 +34,8 @@ class MoodleSheet private (rows: List[List[String]]) {
      writer.close()
    }
 
+   lazy val submissionIds: List[String] = rows.tail.map(_(0).substring(12))
+
    /** Applies the supplied {@code grade} function to every student on the
        sheet. */
    def fill(grade: String => (Int, String)): MoodleSheet = {
