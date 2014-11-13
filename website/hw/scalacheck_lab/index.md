@@ -31,7 +31,7 @@ You should set up a directory that looks like this:
        |       `-- Sorting.scala
        `-- test
           `|-- scala
-               `-- *your tests goes here*
+               `-- *your tests go here*
 
 JoinList.scala is available >> [here](JoinList.scala) <<
 
@@ -70,7 +70,7 @@ You can run your tests using `sbt test` as usual.
 methods.*
 
 1. Make a generator called `smallIntegers` that produces integers between 50 and
-   100, inclusive.
+   150, inclusive.
 
 2. Make a generator called `smallIntLists` that produces lists of integers
    between 50 and 100, inclusive.
@@ -80,9 +80,17 @@ methods.*
 4. Make a test that counts how many numbers in a list are less than 100. To
    check the count, filter the list and the check the resulting length.
 
-5. Make a generator for the JoinList class.
+5. Make a generator for the JoinList[Int] class. You will need to define
+   four generators:
 
-6. Reimplement the tests from class, but use the JoinList generator instead.
+    - Empty
+    - Singleton
+    - JoinList
+    - JoinList[JoinList[Int]]
+    - You may use the JoinList.fromList function for the last 2 generators.
+
+6. Reimplement the tests from class, but use the JoinList generators that you
+   defined above instead.
 
 ## Submit Your Work
 
