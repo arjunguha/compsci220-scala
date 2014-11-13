@@ -99,13 +99,6 @@ object Main extends App {
     }
   }
 
-  def timeString(): String = {
-    import java.util.Calendar
-    import Calendar._
-    val cal = Calendar.getInstance()
-    s"${cal.get(HOUR)}:${cal.get(MINUTE)}:${cal.get(SECOND)}"
-  }
-
   // i.e. grades a simple .scala file
   def gradeScalaScript(solution: Path, appendTestSuite: Path): GraderResult = {
 
