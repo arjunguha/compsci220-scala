@@ -42,20 +42,35 @@ Sorting.scala is available >> [here](Sorting.scala) <<
 The `build.sbt` file should have these lines:
 
 {% highlight scala %}
-resolvers ++= Seq(
-  "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases"
-)
+scalaVersion := "2.11.2"
 
-libraryDependencies ++= Seq(
-  "org.scalacheck" %% "scalacheck" % "1.11.6" % "test"
-)
+resolvers +=
+  "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases"
+
+libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.11.6" % "test"
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
+
+libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.11.6" % "test"
 {% endhighlight %}
 
 ### Template File
 
 {% highlight scala %}
+import org.scalatest._
+import org.scalatest.prop._
 import Sorting._
 import JoinList._
+import org.scalacheck._
+import Gen._
+import Arbitrary.arbitrary
+
+class ScalaCheckTests extends FunSuite with GeneratorDrivenPropertyChecks {
+    // Your generators and tests here
+    test("This is a sample test, do not keep it.") {
+        forAll(someGenerator) {...}
+    }
+}
 {% endhighlight %}
 
 ## Programming Task
