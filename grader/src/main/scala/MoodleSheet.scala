@@ -6,12 +6,12 @@ import com.github.tototoshi.csv._
 /** For scripting Moodle grade sheets. Assumes "Simple directed grading"
  * with a maximum grade of 100 and Feedback comments enabled".
  */
-class MoodleSheet private (rows: List[List[String]]) {
+class MoodleSheet private (rows: List[List[String]], path: String) {
   import MoodleSheet._
 
   require(rows.length > 0 &&
           rows.head == expectedHeader,
-    s"the header row has unexpected columns. Expected $expectedHeader")
+    s"the header row in $path has unexpected columns. Expected $expectedHeader")
 
 
    private def rowById(id: String): Option[List[String]] = rows.tail.find {
@@ -49,7 +49,7 @@ class MoodleSheet private (rows: List[List[String]]) {
           .updated(7, now)
           .updated(8, feedback.replace("\n", "<br>"))
     }
-    new MoodleSheet(header :: data.toList)
+    new MoodleSheet(header :: data.toList, path)
    }
 }
 
@@ -69,7 +69,7 @@ object MoodleSheet {
   def apply(path: String): MoodleSheet = MoodleSheet(Paths.get(path))
 
   def apply(path: Path): MoodleSheet = {
-    new MoodleSheet(CSVReader.open(path.toFile).all())
+    new MoodleSheet(CSVReader.open(path.toFile).all(), path.toString)
   }
 
 }
