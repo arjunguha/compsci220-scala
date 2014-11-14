@@ -28,13 +28,29 @@ class MoodleSheet private (rows: List[List[String]], path: String) {
 
    def emailById(id: String): Option[String] = rowById(id).map { row => row(2) }
 
-   def saveAs(dst: Path) = {
+   def saveAs(dst: Path): Unit = {
      val writer = CSVWriter.open(dst.toFile)
      writer.writeAll(rows)
      writer.close()
    }
 
+   def saveAs(str: String): Unit = saveAs(Paths.get(str))
+
    lazy val submissionIds: List[String] = rows.tail.map(_(0).substring(12))
+
+   def update(grade: (String, Int, String) => (Int, String)): MoodleSheet = {
+     val now = new java.util.Date().toString
+     val header = rows.head
+     val data = for (row <- rows.tail) yield {
+       val id = row(0).substring(12)
+       val (score, feedback) = grade(id, row(4).toInt, row(8))
+       require (score >= 0 && score <= 100)
+       row.updated(4, score.toString)
+          .updated(7, now)
+          .updated(8, feedback.replace("\n", "<br>"))
+    }
+    new MoodleSheet(header :: data.toList, path)
+   }
 
    /** Applies the supplied {@code grade} function to every student on the
        sheet. */
