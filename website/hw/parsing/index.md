@@ -5,9 +5,6 @@ title: Parsing
 
 <a href="http://xkcd.com/1171/"><img src="http://imgs.xkcd.com/comics/perl_problems.png"></a>
 
-**This assignment has not been officially released. It may change completely.
-If you start it early, you do so at your own risk.**
-
 For this assignment, you will write a parser, printer, and evaluator for arithmetic
 expressions.  To do so, you will (1) learn how to read a *BNF grammar*, (2)
 learn how to use Scala's parser-combinator library, and (3) use property-based
@@ -59,12 +56,11 @@ For this assignment, you will work with a language of arithmetic expressions:
 numbers, addition, subtraction, multiplication, and division. Here are some
 examples of the *concrete syntax* of the language:
 
-    - `1 + 2`
-    - `10`
-    - `2 * 3 + 5 * -10`
-    - `2 * (3 + 5) * -10`
-
-    - `2 * (3 + 5) ^ 2 * -10`
+- `1 + 2`
+- `10`
+- `2 * 3 + 5 * -10`
+- `2 * (3 + 5) * -10`
+- `2 * (3 + 5) ^ 2 * -10`
 
 This grammar specifies the syntax of the language:
 
@@ -76,18 +72,18 @@ This grammar specifies the syntax of the language:
     number ::= -? [0-9]+ (. [0-9]+)?
 
     atom ::= number
-           | ( expr )
+           | "(" expr ")"
 
     exponent ::= atom
-               | exponent ^ atom
+               | exponent "^" atom
 
     add ::= exponent
-          | exp + add
-          | exp - add
+          | exp "+" add
+          | exp "-" add
 
     mul ::= add
-          | add * mul
-          | add / mul
+          | add "*" mul
+          | add "/" mul
 
     expr ::= mul
 
@@ -122,6 +118,8 @@ object ArithEval extends ArithEvalLike {
 }
 
 object ArithParser extends ArithParserLike {
+
+  // number: PackratParser[Double] is defined in ArithParserLike
 
   lazy val atom: PackratParser[Expr] = {
     throw new UnsupportedOperationException("not implemented")

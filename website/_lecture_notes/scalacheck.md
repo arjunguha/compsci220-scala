@@ -19,6 +19,11 @@ It can help to think of properties instead of test cases.
 ## Properties of list processing functions
 
 {% highlight scala %}
+test("reverse concat") {
+
+
+}
+
 test("concat distributes over map") {
   def incr(x: Int) = x + 1
 
@@ -144,7 +149,58 @@ test("testing naive matching") {
 }
 {% endhighlight %}
 
-This exposes a bug in the naive matcher!
+This exposes a bug in the naive matcher. But, it is an annoying stack
+overflow bug in how Star is handled.
+
+## Join List functions
+
+See Nov 11 lecture notes for CS220
+
+## Split and Join
+
+See https://www.fpcomplete.com/user/pbv/an-introduction-to-quickcheck-testing
+
+{% highlight scala %}
+def split[A](x: A, lst: List[A]): List[List[A]] = lst match {
+  case Nil => Nil // this is broken
+  case ys => {
+    val xs = lst.takeWhile(_ != x)
+    lst.dropWhile(_ != x) match {
+      case Nil => List(xs)
+      case _ :: rest => xs :: split(x, rest)
+    }
+  }
+}
+
+def join[A](x: A, xss: List[List[A]]): List[A] = xss match {
+  case Nil => Nil
+  case List(xs) => xs
+  case xs1 :: xs2 :: rest => xs1 ++ List(x) ++ join(x, xs2 :: rest)
+}
+
+import org.scalatest._
+import org.scalacheck._
+import org.scalacheck.Prop.{forAll, BooleanOperators}
+import Functions._
+
+class MyTestSuite extends FunSuite with prop.Checkers {
+
+  test("split-join") {
+    check {
+      forAll { (lst: List[Int], n: Int) =>
+        lst.contains(n) ==> (join(n, split(n, lst)) == lst)
+      }
+    }
+  }
+
+}
+{% endhighlight %}
+
+## Second lecture
+
+- Reverse concat properties
+- split/join properties
+- Stack machine example
 
 
 
