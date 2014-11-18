@@ -91,7 +91,7 @@ class TestSuite extends org.scalatest.FunSuite {
 Upload **only** ParsingLab.scala in Moodle.
 
 **If you work with a partner:** Both of you should submit the file. In addition,
-**put a comment with both of your names at the top of the file**. In case, 
+**put a comment with both of your names at the top of the file**. 
 
 
 
