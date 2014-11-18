@@ -84,7 +84,7 @@ object Solution extends SolutionLike {
 
   val notAbb: util.matching.Regex = "".r
 
-  def isPrime(n: Int): Boolean =  = {
+  def isPrime(n: Int): Boolean = {
     throw new UnsupportedOperationException("not implemented")
   }
 
@@ -123,7 +123,7 @@ simply examining the first elements of their fringe, it is obvious that they do
 not have the same fringe. But, a naive appoach would generate the entire fringe
 needlessly.
 
-To adress this problem, we'll use streams to generate the fringe lazily.
+To address this problem, we'll use streams to generate the fringe lazily.
 
 ### Programming Task
 

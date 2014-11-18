@@ -43,8 +43,8 @@ title: Schedule
 | Friday, Nov 14    | *Lab:* [ScalaCheck Lab]                                                                         |
 | Tuesday, Nov 18   | Due: [Sudoku]. Out: [Parsing]. Reading: Odersky Chapter 33.                                     |
 | Thursday, Nov 20  |                                                                                                 |
-| Friday, Nov 21    | *Lab:* Parsing Lab                                                                              |
-| Tuesday, Nov 25   | Due: [Parsing]. **Exam**.                                                                       |
+| Friday, Nov 21    | *Lab:* [Parsing Lab]                                                                            |
+| Tuesday, Nov 25   | Due: [Parsing]. **Mid-term Exam**.                                                              |
 | Thursday, Nov 27  | **No class.** (Thanksgiving Break)                                                              |
 | Friday, Nov 28    | **No lab.** (Thanksgiving Break)                                                                |
 | Tuesday, Dec 2    |                                                                                                 |
@@ -84,3 +84,4 @@ title: Schedule
 [MST Lab]: ../hw/mst_lab
 [Tic Tac Toe]: ../hw/tictactoe
 [ScalaCheck]: https://github.com/rickynils/scalacheck/wiki/User-Guide
+[Parsing Lab]: ../hw/parsing_lab
