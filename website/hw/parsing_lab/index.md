@@ -11,7 +11,7 @@ The purpose of this lab is to help you get you started with your parsing homewor
 
 You should set up a directory that looks like this:
 
-    .scalacheck
+    .parsinglab
     |-- build.sbt
     `-- src
        |-- main
