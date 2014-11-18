@@ -180,6 +180,54 @@ class TrivialTestSuite extends org.scalatest.FunSuite {
 You should place this test suite in `src/test/scala/TrivialTestSuite.scala`.
 The tests must pass with no changes to the file.
 
+## <a name="review"></a>Testing and Review
+
+For this assignment there will be two testing and review phases worth 5%
+of your grade each (i.e., 10% total).
+
+**Submission Due: Nov 20, 23:59**
+**Reviews Due: Nov 22, 23:59**
+
+Create a test suite called `GradedParserTestSuite.scala`. In it, place 5--10
+interesting test cases for the `ArithParser` and `ArithPrinter` object methods.
+Write tests that try to cover the space of interesting inputs to these
+methods.
+
+### Submitting to Captain Teach
+
+You can login to Captain Teach using your `@umass.edu` e-mail address. To
+ensure you are logged into this account, first visit:
+
+[https://apps.umass.edu/](https://apps.umass.edu/)
+
+Once you have authenticated your account visit:
+
+[https://www.captain-teach.org/umass-cmpsci220/assignments/](https://www.captain-teach.org/umass-cmpsci220/assignments/)
+
+Submit your `GradedParserTestSuite.scala` to the `parsing` assignment.
+
+After uploading your work, you will be given an opportunity to preview and
+change it. Once you are satisfied with your submission, be sure to click
+the `Publish` button for your assignment at the bottom of the screen.
+
+After submitting, you will be assigned to one of three groups:
+
+  * Reviewer - You will complete reviews for other students but you will
+    not receive any reviews.
+  * Reviewee - You will receive reviews from other students but you will
+    not complete any reviews.
+  * No Reviews - You will neither recieve nor complete reviews from other
+    students
+
+### Final Submission and Survey
+
+After you have completed your assignment, you will need to return to Captain
+Teach to turn in your final solution. This is the same file you upload to 
+moodle. You will not be able to submit this to Captain Teach if you have
+pending reviews to complete. After submitting your final implementation,
+you will be given a survey based on the group you were assigned for reviews.
+Complete this survey and submit it.
+
 ## Submit Your Work
 
 Use the `submit` command within `sbt` to create `submission.tar.gz`. Upload
