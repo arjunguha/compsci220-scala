@@ -77,15 +77,15 @@ This grammar specifies the syntax of the language:
     exponent ::= atom
                | exponent "^" atom
 
-    add ::= exponent
-          | exp "+" add
-          | exp "-" add
+    mul ::= exponent
+          | exponent "*" mul
+          | exponent "/" mul
 
-    mul ::= add
-          | add "*" mul
-          | add "/" mul
+    add ::= mul
+          | mul "+" add
+          | mul "-" add
 
-    expr ::= mul
+    expr ::= add
 
 Your first task is to implement a parser that parses strings to the `Expr`
 type. For example, `parse("1 + 2")` parses to `Add(Num(1), Num(2))`.
