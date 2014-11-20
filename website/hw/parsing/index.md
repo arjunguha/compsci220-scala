@@ -64,11 +64,6 @@ examples of the *concrete syntax* of the language:
 
 This grammar specifies the syntax of the language:
 
-        mul ::= exp | exp * mul | exp / mul
-        add ::= mul | mul + add | mul - add
-        expr :: add
-
-
     number ::= -? [0-9]+ (. [0-9]+)?
 
     atom ::= number
