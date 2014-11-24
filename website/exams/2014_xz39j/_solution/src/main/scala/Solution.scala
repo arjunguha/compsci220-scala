@@ -1,6 +1,26 @@
 
 
-object Solution {
+object Solution extends SolutionLike {
+
+  val eps = 0.0001
+
+  def ddx(f: Double => Double): Double => Double = (x: Double) => {
+    (f(x + eps) - f(x)) / eps
+  }
+
+
+  def isMirrored[A](tree: BinTree[A]): Boolean = {
+    def f[A](lhs: BinTree[A], rhs: BinTree[A]): Boolean = (lhs, rhs) match {
+      case (Leaf(x), Leaf(y)) => x == y
+      case (Node(lhs1, rhs1), Node(lhs2, rhs2)) => f(lhs1, rhs2) && f(rhs1, lhs2)
+      case _ => false
+    }
+    tree match {
+      case Leaf(x) => true
+      case Node(lhs, rhs) => f(lhs, rhs)
+    }
+  }
+
 
   def fringe[A](tree: BinTree[A]): Stream[A] = tree match {
     case Leaf(v) => Stream(v)
@@ -25,7 +45,7 @@ object Solution {
     case a :: rest => g(f(a)) :: mapmap(f, g, rest)
   }
 
-  val regex = """b*(aa*b?)*""".r
+  val notAbb = """b*(aa*b?)*""".r
 
   def isPrime(n: Int): Boolean = 2.to(n - 1).forall(m => n % m != 0)
 

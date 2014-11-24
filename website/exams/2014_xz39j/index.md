@@ -3,12 +3,15 @@ layout: hw
 title: 2014 Mid-term Exam
 ---
 
-## Important
+## Direction
 
-You have 24 hours to complete this exam. However, it is designed to require
-two hours. You must not discuss this exam with anyone. You may post
-questions on Piazza *privately to Instructors*. If relevant, we'll send
-answers to the whole class.
+You have 24 hours to complete this exam. However, it is designed to require two
+hours. You must not discuss this exam with anyone. If the directions are
+unclear, you may post questions on Piazza *privately to Instructors*. If
+relevant, we'll send answers to the whole class.
+
+**This exam has five parts. Complete any four of the five parts.** There is
+no extra-credit for completing all five parts.
 
 ## Preliminaries
 
@@ -51,13 +54,12 @@ case class Node[A](lhs: BinTree[A], rhs: BinTree[A]) extends BinTree[A]
 case class Leaf[A](value: A) extends BinTree[A]
 
 trait SolutionLike {
+  def ddx(f: Double => Double): Double => Double
+  def isMirrored[A](tree: BinTree[A]): Boolean
   def fringe[A](tree: BinTree[A]): Stream[A]
   def sameFringe[A](fringe1: Stream[A], fringe2: Stream[A]): Boolean
   def filterIndex[A](pred: Int => Boolean, lst: List[A]): List[A]
-  def mapmap[A,B,C](f: A => B, g: B => C, lst: List[A]): List[C]
   val notAbb: util.matching.Regex
-  def isPrime(n: Int): Boolean
-  val primes: Stream[Int]
 }
 {% endhighlight %}
 
@@ -65,6 +67,14 @@ Use this template for `Solution.scala`:
 
 {% highlight scala %}
 object Solution extends SolutionLike {
+
+  def ddx(f: Double => Double): Double => Double = {
+    throw new UnsupportedOperationException("not implemented")
+  }
+
+  def isMirrored[A](tree: BinTree[A]): Boolean = {
+    throw new UnsupportedOperationException("not implemented")
+  }
 
   def fringe[A](tree: BinTree[A]): Stream[A] = {
     throw new UnsupportedOperationException("not implemented")
@@ -84,19 +94,100 @@ object Solution extends SolutionLike {
 
   val notAbb: util.matching.Regex = "".r
 
-  def isPrime(n: Int): Boolean = {
-    throw new UnsupportedOperationException("not implemented")
-  }
-
-  val primes: Stream[Int] = Stream()
 
 }
 {% endhighlight %}
 
-## Part 1. Same Fringe
+### 1. Differential Calculus
 
-`Types.scala` defines a type `BinTree`, which represents trees with
-values stored at the leaves:
+In differential calculus, you've seen notation that looks like this:
+
+<img src="deriv_of_square.png">
+
+Let's unpack what all this notation means. It is obvious
+that <i>x<sup>2</sup></i> is a function that squares numbers and
+<i>2x</i> is a function that doubles numbers. We know how to write these
+in Scala:
+
+{% highlight scala %}
+def square(x: Double): Double = x * x
+def double(x: Double): Double = 2 * x
+{% endhighlight %}
+
+What does <i>d/dx</i> mean? <i>d/dx</i> is a function, which when applied to
+`square` produces `double`. Therefore, <i>d/dx</i> is a function that consumes a
+function, *f* over numbers and produces a new function that is the derivative of
+*f*. We can write its type in Scala as follows:
+
+{% highlight scala %}
+def ddx(f: Double => Double): Double => Double
+{% endhighlight %}
+
+Your task is to implement `ddx` using *numerical differentiation*. The value
+of the derivative of *f* at a point *x* is defined by this formula--
+
+<img src="numerical_differentiation.png">
+
+--as 𝜖 approaches zero. If you pick a small value of 𝜖, this formula
+calculates a reasonable approximation of the true value of the derivatie.
+Use *0.001* as the value of 𝜖 in your implementation of `ddx`.
+
+### 2. Mirrored Trees
+
+`Types.scala` defines a type `BinTree`, which represents trees with values
+stored at the leaves. You will use this datatype in this part.
+
+We say a binary tree is *mirrored* if its left and right sides are miror images
+of each other. For example, these trees are mirrored:
+
+<pre>
+         .                 .
+        / \               / \
+       /   \             /   \
+      .     .           .     .
+     / \   / \         / \   / \
+    1   2 2   1       .   3 3   .
+                     / \       / \
+                    1   2     2   1
+</pre>
+
+But, these trees are **not** mirrored:
+
+<pre>
+         .                 .
+        / \               / \
+       /   \             /   \
+      .     .           .     .
+     / \   / \         / \   / \
+    1   2 1   2       .   3 .   3
+                     / \   / \
+                    1   2 1   2
+</pre>
+
+Write a predicate called `isMirrored` that returns `true` when applied to
+mirrored trees and `false` on all other trees. **Assume that
+binary trees that only contain a single leaf are mirrored.**
+
+## Part 3. Filtering Lists
+
+Write a function called `filterIndex(pred, lst)`, where `pred` is applied to the
+indices of the elements in `lst`. The function should produce a list that only
+contains the elements of `lst`  that satisfy the given predicate. The elements
+should be returned in order.
+
+For example,
+
+1. `filterIndex(n => n < 2, List("a", "b", "c", "d")` produces `List("a", "b")`
+2. `filterIndex(n => n % 2 == 0, List("a", "b", "c", "d")` produces `List("a", "c")`
+3. `filterIndex(n => false, lst)` produces `List()`
+4. `filterIndex(n => true, lst)` produces `lst`
+
+## Part 4. Same Fringe
+
+`Types.scala` defines a type `BinTree`, which represents trees with values
+stored at the leaves. You will use this datatype in this part.
+
+Here are some examples of binary trees:
 
 {% highlight scala %}
 val example1 = Node(Node(Leaf(10), Leaf(20)), Node(Leaf(30), Leaf(40)))
@@ -121,11 +212,8 @@ However, this naive approach does a lot of unnecessary work if the two trees do
 not have the same fringe. For example, consider `example3` and `example4`. By
 simply examining the first elements of their fringe, it is obvious that they do
 not have the same fringe. But, a naive appoach would generate the entire fringe
-needlessly.
-
-To address this problem, we'll use streams to generate the fringe lazily.
-
-### Programming Task
+needlessly. To address this problem, we'll use streams to generate the fringe
+lazily.
 
 Write a function called `fringe` that produces the fringe as a `Stream[A]`.
 Ensure that the elements of the stream are only generated on demand. For
@@ -146,35 +234,10 @@ example, this interaction shows that elements are only generated when queried:
 
 Using the `fringe` function you wrote above, write a function called
 `sameFringe` to determine if two streams are identical. The `sameFringe`
-function should short-circuit and produce false as soon as it finds two elements
+function should short-circuit and produce `false` as soon as it finds two elements
 that are not identical.
 
-
-## Part 2. List Processing
-
-The `filter` function removes elements from a list that do not satisfy a given
-predicate. Write a function called `filterIndex` which removes elements whose
-position does not satisfy a given predicate.
-
-For example,
-
-1. `filterIndex(n => n < 2, List("a", "b", "c", "d")` produces `List("a", "b")`
-2. `filterIndex(n => n % 2 == 0, List("a", "b", "c", "d")` produces `List("a", "c")`
-
-
-The `map` function applies a function to every element in a list and returns the
-list of results. It is often convenient to map several functions over a list,
-e.g., `lst.map(f).map(g).map(h)`. However, this is inefficient because it
-creates two intermediate lists.
-
-Write a function called `mapmap` that applies two functions to every element
-in the list, without creating an intermediate list.
-
-The following property should hold:
-
-    lst.map(f).map(g) == mapmap(f, g, lst)
-
-### Part 3. Regular Expressions
+### Part 5. Regular Expressions
 
 Write a regular expression, `notAbb` that matches all strings of `a`s and `b`s
 that do not include `abb` as a substring.
@@ -190,13 +253,6 @@ These examples should not match:
 - `"abb"`
 - `"cab"`
 - `"aababba"`
-
-### Part 4. Primes
-
-Write a function `isPrime(n)` that produces `true` when applied to a prime number.
-You may assume that `n` is a positive number. Write a stream called `primes`
-of prime numbers, starting with `2` at the head.
-
 
 ## Submit Your Work
 
