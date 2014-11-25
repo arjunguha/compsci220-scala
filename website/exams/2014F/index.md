@@ -159,9 +159,9 @@ But, these trees are **not** mirrored:
        /   \             /   \
       .     .           .     .
      / \   / \         / \   / \
-    1   2 1   2       .   3 .   3
+    1   2 1   2       .   3 .   1
                      / \   / \
-                    1   2 1   2
+                    1   2 3   2
 </pre>
 
 Write a predicate called `isMirrored` that returns `true` when applied to
