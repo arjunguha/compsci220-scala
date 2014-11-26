@@ -88,10 +88,6 @@ object Solution extends SolutionLike {
     throw new UnsupportedOperationException("not implemented")
   }
 
-  def mapmap[A,B,C](f: A => B, g: B => C, lst: List[A]): List[C] = {
-    throw new UnsupportedOperationException("not implemented")
-  }
-
   val notAbb: util.matching.Regex = "".r
 
 
