@@ -81,6 +81,16 @@ class SudokuBoard(val available: Map[(Int, Int), List[Int]]) extends BoardLike[S
 
   val isSolved = available.size == 81 && available.forall { case (_, set) => set.size == 1 }
 
+  override def toString(): String = {
+    if (!isSolved) {
+      super.toString()
+    }
+    else {
+      val strs = for (row <- 0.to(8); col <- 0.to(8)) yield { valueAt(row, col).get.toString }
+      strs.mkString
+    }
+  }
+
   def availableValuesAt(row: Int, col: Int): List[Int] = {
     available.getOrElse((row, col), oneTo9)
   }
