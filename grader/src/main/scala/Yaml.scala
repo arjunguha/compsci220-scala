@@ -40,6 +40,12 @@ class GradingYaml private[grader] (path: Path, bean: FeedbackBean) {
     bean.setTime(new java.util.Date().toString)
   }
 
+  def setMaxScore(n: Int): Unit = {
+    import scala.collection.JavaConversions._
+    bean.getCumulative.setScore(math.min(n, bean.getCumulative.getScore))
+    bean.getCumulative.setMaxScore(n)
+  }
+
   private def updateTotal(): Unit = {
     import scala.collection.JavaConversions._
     bean.getCumulative.setScore(bean.getRubric.map(_.getScore).sum)

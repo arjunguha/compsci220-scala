@@ -1,5 +1,3 @@
-package cmpsci220.grading
-
 import grader.TestSuite
 
 object Main extends App {
