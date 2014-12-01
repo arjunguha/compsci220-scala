@@ -22,6 +22,24 @@ object GradingYaml {
 
 }
 
+case class RubricItem(criterion: String, score: Int, maxScore: Int) {
+
+  private[grader] def toBean(): TestResultBean = {
+    val bean = new TestResultBean()
+    bean.setCriterion(criterion)
+    bean.setScore(score)
+    bean.setMaxScore(maxScore)
+    bean
+  }
+}
+
+object RubricItem {
+
+  private[grader] def apply(bean: TestResultBean): RubricItem = {
+    RubricItem(bean.getCriterion, bean.getScore, bean.getMaxScore)
+  }
+}
+
 class GradingYaml private[grader] (path: Path, bean: FeedbackBean) {
 
   import GradingYaml._
@@ -34,6 +52,16 @@ class GradingYaml private[grader] (path: Path, bean: FeedbackBean) {
     bean.getRubric.add(result)
     updateTotal()
     updateTime()
+  }
+
+  def getRubric(): List[RubricItem] = {
+    import scala.collection.JavaConversions._
+    bean.getRubric.map(bean => RubricItem(bean)).toList
+  }
+
+  def setRubric(items: List[RubricItem]): Unit = {
+    import scala.collection.JavaConversions._
+    bean.setRubric(items.map(_.toBean))
   }
 
   def updateTime(): Unit = {
