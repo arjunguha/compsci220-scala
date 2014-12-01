@@ -83,7 +83,9 @@ lazy val compileLib = taskKey[Unit]("Compiles only the library to run locally")
 
 compileLib := ()
 
-compileLib <<= compileLib.dependsOn(compile in Compile in support)
+compileLib <<= compileLib.dependsOn(compile in Compile in support,
+                                    compile in Compile in grader,
+                                    publishLocal in Compile in gradingSuites)
 
 lazy val ppa = taskKey[Unit]("Builds and submits the PPA")
 
@@ -123,7 +125,7 @@ publishWeb := {
        "people.cs.umass.edu:/nfs/balder/web4/arjun/public_html/courses/cmpsci220-fall2014").!
  }
 
- publishWeb <<= publishWeb.dependsOn(compileWeb)
+publishWeb <<= publishWeb.dependsOn(compileWeb)
 
 lazy val release = taskKey[Unit]("Releases an update to Docker Registry / Ubuntu PPA")
 

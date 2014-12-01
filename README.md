@@ -2,13 +2,17 @@ CMPSCI220 Course Materials
 ==========================
 
 This repository holds all course materials for CMPSCI220. The root directory
-holds a [Vagrant] environemnt that you should use for any course development,
+holds a [Vagrant] environment that you should use for any course development,
 from updating the website to hacking on code.
 
 The Vagrant environment has the same GUI (Lubuntu), JVM, and Scala that students
 use in the course, but excludes utilities such as text editors. The Vagrant
 environment mounts this repository at `/home/vagrant/src`. So, you can use a
 text editor on the host to edit files.
+
+**I strongly recommend using VMWare instead of VirtualBox to run the development
+environment.** VirtualBox has terrible disk performance when working with
+host-mounted volumes (i.e., the `/home/vagrant/src` directory).
 
 ## Setup
 
@@ -64,9 +68,7 @@ There are two ways to build the system:
    and then pushes the package to LaunchPad PPA. It takes forever for Launchpad
    to build. You receive errors over email.
 
-
-TODO: If the Docker image is updated, you need to write a post-install script.
-
+**If the Docker image is updated, you need to write a post-install script.**
 
 ## Creating a new course VM for students
 
@@ -107,6 +109,10 @@ git fetch --all
 $ git subtree pull --prefix=submission submission master
 $ git subtree pull --prefix=support-code support-code master
 ~~~
+
+## Grading Scripts
+
+
 ## Writing a new homework assignment
 
 [FILL]
