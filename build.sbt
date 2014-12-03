@@ -85,7 +85,8 @@ compileLib := ()
 
 compileLib <<= compileLib.dependsOn(compile in Compile in support,
                                     compile in Compile in grader,
-                                    publishLocal in Compile in gradingSuites)
+                                    publishLocal in Compile in gradingSuites,
+                                    publishLocal in Compile in grader)
 
 lazy val ppa = taskKey[Unit]("Builds and submits the PPA")
 
