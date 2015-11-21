@@ -3,7 +3,10 @@ layout: default
 title: Home
 ---
 
-Welcome to the Fall 2014 offering of CMPSCI220 Programming Methodology!
+Welcome to the Spring 2016 offering of CMPSCI220 Programming Methodology!
+
+**This website is being updated. The current content is from an earlier offering
+  of the course.**
 
 You must read the entire [Course Policy] document.
 
