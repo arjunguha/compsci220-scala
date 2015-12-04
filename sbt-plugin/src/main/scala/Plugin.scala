@@ -1,17 +1,21 @@
 package cmpsci220.plugin
 
-import sbt._
-import Keys._
-import FileUtils._
-import spray.json._
 
 object Plugin extends sbt.AutoPlugin {
+  import org.apache.commons.io.IOUtils
+  import java.io.File
+  import sbt._
+  import Keys._
+  import FileUtils._
+  import spray.json._
+  import java.nio.file._
 
   override def trigger = allRequirements
 
   object autoImport {
     lazy val submit = TaskKey[Unit]("submit")
     lazy val submitTests = TaskKey[Unit]("submit-tests")
+    lazy val checkstyle = TaskKey[Unit]("checkstyle")
   }
 
   import autoImport._
@@ -45,13 +49,39 @@ object Plugin extends sbt.AutoPlugin {
     println("Created test-suite.tar.gz. Upload this file to Captain Teach.")
   }
 
-  override def projectSettings = super.projectSettings ++ Seq(
+  val scalastyleBytes = resourceToByteArray("scalastyle-config.xml")
+
+  override def projectSettings = super.projectSettings ++
+    Seq(org.scalastyle.sbt.ScalastylePlugin.projectSettings :_*) ++
+    Seq(
+    checkstyle := {
+      import org.scalastyle.sbt.Tasks.doScalastyle
+      import org.scalastyle.sbt.ScalastylePlugin
+      val p = Files.createTempFile(Paths.get(""), "scalastyle-config-", ".xml")
+      Files.write(p, scalastyleBytes)
+      val sources = (Paths.get("src/main/scala") ::
+        Paths.get("src/test/scala") ::
+        listDir(Paths.get(""), "*.scala")).map(_.toFile)
+      doScalastyle(
+        args = Seq(),
+        config = p.toFile,
+        configUrl = None,
+        failOnError = true,
+        scalastyleSources = sources,
+        scalastyleTarget = ScalastylePlugin.scalastyleTarget.value,
+        streams = streams.value,
+        refreshHours = 0,
+        target = target.value,
+        urlCacheFile = null)
+      Files.deleteIfExists(p)
+    },
     submit := {
       (test in Test).value
       submitTask
     },
     submitTests := {
       submitTestsTask
-    }
+    },
+    compile <<= (compile in Compile).dependsOn(checkstyle)
   )
 }

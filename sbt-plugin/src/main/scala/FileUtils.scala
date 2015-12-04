@@ -36,4 +36,22 @@ object FileUtils {
     r
   }
 
+  def listDir(path: Path, glob: String): List[Path] = {
+    import scala.collection.JavaConversions._
+    val stream = Files.newDirectoryStream(path, glob)
+    val lst = stream.toList
+    stream.close
+    lst
+  }
+
+  def resourceToByteArray(name: String): Array[Byte] = {
+    import org.apache.commons.io.IOUtils
+    val stream = this.getClass.getClassLoader().getResourceAsStream(name)
+    val buf = IOUtils.toByteArray(stream)
+    stream.close
+    buf
+  }
+
+
+
 }
