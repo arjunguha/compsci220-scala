@@ -13,7 +13,6 @@ scalacOptions in ThisBuild ++=
       "-Xfatal-warnings")
 
 lazy val root = project.in(file(".")).aggregate(
-  sbtPlugin,
   support,
   submission,
   grader,
@@ -26,8 +25,6 @@ lazy val root = project.in(file(".")).aggregate(
   parsingSolution)
 
 lazy val lectureCode = project.in(file("lecture-code"))
-
-lazy val sbtPlugin = project.in(file("sbt-plugin"))
 
 lazy val gradingSuites = project.in(file("grading-suites")).dependsOn(grader, support)
 
