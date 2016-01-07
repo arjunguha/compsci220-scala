@@ -352,26 +352,5 @@ class functions.
                       | case class C\[A](x : T, ...) extends C'\[A]
 
 
-## Lecture Outline
 
-
-- More list processing functions (e.g., sorting, searching sorted lists, etc.)
-
-- Recognizing when code can be abstracted
-
-  - E.g., Comparator in sort
-
-  - E.g., filtering predicate in filter
-
-  - E.g., Mapped function in map
-
-  - E.g., Combining function in sum
-
-  - E.g., Combining function in ifAll and ifAny
-
-- Recognizing when a type can be abstracted
-
-  - E.g., type of element in a list
-
-  - E.g., type of result from combining function
 

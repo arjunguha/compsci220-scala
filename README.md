@@ -1,5 +1,9 @@
+** This repository is in flux. It is being updated for Spring 2016. **
+
 CMPSCI220 Course Materials
 ==========================
+
+**
 
 This repository holds all course materials for CMPSCI220. The root directory
 holds a [Vagrant] environment that you should use for any course development,

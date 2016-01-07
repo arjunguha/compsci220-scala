@@ -1,0 +1,467 @@
+\documentclass{book}
+\usepackage{pervasives}
+
+\title{CMPSCI220 Course Book}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\chapter{Lecture 1}
+
+\textbf{Course Description}: Development of individual skills necessary for
+designing, implementing, testing and modifying larger programs, including: use
+of integrated design environments, design strategies and patterns, testing,
+working with large code bases and libraries, code refactoring, and use of
+debuggers and tools for version control.
+
+
+\section{Introduction}
+
+\emph{CMPSCI220 Programming Methodology} introduces you to all the concepts
+above in the context of a modern programming language,
+\href{http://www.scala-lang.org/what-is-scala.html}{Scala}.
+Scala lets you write exactly the same kind
+of object-oriented code that you've seen in Java. In fact, Scala code and Java
+code can seamlessly co-exist and interoperate in the same program; we'll
+leverage this feature later in the course. So, design strategies and patterns
+that you will learn in this course will be applicable to Java and Scala.
+However, you will find that programs in Scala are typically much shorter than
+their Java counterparts. With a little experience, we think you'll find Scala
+enjoyable to read and write. In addition, by learning a new programming language
+you will increase your understanding of Java and programming languages in
+general.
+
+An important reason we're using Scala is to expose you to programming techniques
+and language features that are beyond the scope of Java. The truth is that
+modern software systems are written in a plethora of languages. Moreover, large
+systems tend to use several programming languages. Therefore, to succeed in your
+computing career, you have to be familiar with several languages and be able to
+learn new languages on your own. New programming
+languages\footnote{\href{http://www.oreillynet.com/pub/a/oreilly/news/languageposter_0504.html}{This poster} is quite informative.} are constantly
+invented and it is impossible to predict the next big language that everyone
+will use or the language you'll need to learn for your next job.
+
+Scala is a big language with many unique features and we are not going to learn
+to use them all. Instead, we are going to focus on ideas that Scala shares with
+other modern programming languages. Here are some of the key ideas that we will
+cover in this course that go beyond Java:
+
+\begin{itemize}
+
+\item \emph{First-class functions} are a feature of almost every modern language
+  and the cornerstone of \emph{functional programming}. They are pervasive in
+  JavaScript, Ruby, Python, Swift, and almost all modern languages.
+
+  In fact, Java 8\footnote{\url{http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html}} and
+  C++11\footnote{\url{http://msdn.microsoft.com/en-us/library/dd293608.aspx}}
+  have limited support for first-class functions.
+
+\item \emph{Algebraic data types} are available in Apple Swift, Mozilla Rust,
+  Microsoft F\#, and several other programming languages. Programming with
+  algebraic data types is very different from programming in an object-oriented
+  style. You'll cover both styles of programming in this course and develop
+  a deep understanding of the tradeoffs.
+
+\item \emph{Type inference} is available in modern typed programming languages,
+  such as C\# and Swift, and even in a limited form in Java
+  7\footnote{\url{http://docs.oracle.com/javase/tutorial/java/generics/genTypeInference.html}}.
+  As the name suggests, in a language with type inference, the compiler can
+  often ``infer'' elided or omitted types. So, your programs become shorter, but
+  retain all the advantages of type checking.
+
+\end{itemize}
+
+The main themes of the course are not language-specific. We will emphasize
+the following broad ideas that are applicable in all software development:
+
+\begin{itemize}
+
+\item \emph{Testing} is critical for building reliable software. You will learn how
+  to think like a tester and make effective use of testing tools and frameworks.
+  Every programming problem you solve in this course will have to be tested. We
+  expect you to write good tests yourself. The quality of your tests will be a
+  significant portion of your grade on every assignment.
+
+\item \emph{Design patterns} are recipes for solving typical programming
+  problems. You'll learn several object-oriented design patterns that are
+  applicable to Java. In addition, you'll also learn several functional design
+  patterns (exploiting the ideas listed above) that are applicable to a variety
+  of modern languages.
+
+\item \emph{Refactoring} is a key concept that we emphasize throughout the
+  course. As we introduce new ideas, we will systematically refactor our old
+  code to exploit them.
+
+\item \emph{Debugging} is a necessary skill because even small programs often
+  have bugs.
+
+\item \emph{Command-line tools} such as compilers and build tools lie under the
+  hood of sophisticated IDEs such as Eclipse. Learning to use the command-line
+  will make you a better IDE user. Moreover, many advanced systems (e.g,
+  operating systems and Web browsers) are typically built using the command-line
+  directly.
+
+\item \emph{Version control} software is critical for collaborative software
+  development and used by all professional programmers. Although you will be
+  programming alone in the course, version control will still help you organize
+  your programming and save you a lot of time if you accidentally delete or
+  break your code.
+
+\item \emph{Using libraries} is critical for writing software that gets real
+  work done. You will start by using a simple graphics library that we've
+  developed for the course. By the end of the course, you'll know how to
+  discover and use software libraries on the Web.
+
+\end{itemize}
+
+\subsection{Recommended Reading}
+
+\begin{itemize}
+
+  \item \href{http://paulgraham.com/articles.html}{Paul Graham's Essays}.
+  The earlier essays are particularly pertinent, E.g.,
+  \href{http://paulgraham.com/avg.html}{Beating the Averages} and
+  \href{http://paulgraham.com/popular.html}{Being Popular}.
+
+  \item \href{http://www.joelonsoftware.com}{Joel Spolsky's blog}. E.g.,
+  \href{http://www.joelonsoftware.com/articles/CollegeAdvice.html}
+  {Advice for Computer Science College Students}
+  and \href{http://www.joelonsoftware.com/articles/ResumeRead.html}
+  {Getting Your Resume Read}.
+
+  \item \href{http://xkcd.com}{XKCD} comics will make more sense after you take
+  this course.
+
+\end{itemize}
+
+
+\section{SBT, Scala, and ScalaTest}
+
+\begin{itemize}
+
+\item Introduce the course VM.
+
+\item Introduce the command line (\verb|mkdir|, \verb|cd|, and, \verb|ls|).
+
+\item Introduce the \verb|sbt| command. Say that is can be used to
+compile and run programs, but show \verb|sbt console| first.
+
+\item On the console, show simple arithmetic expressions,
+\verb|let|, and one-line functions. E.g., implement factorial or fibonnaci
+and test them on the console.
+
+\item Copy the functions defined in the REPL into a \verb|.scala| file and
+ recompile.
+
+\begin{verbatim}
+// Scala wart: Do *not* "extend App" because it can't be evaluated in console.
+object Lecture1 {
+
+  def fac(n: Int) = if (n == 0) 1 else (n * fac(n - 1))
+
+}
+\end{verbatim}
+
+\item Re-enter the console and show students how to run the functions saved
+to the file.
+
+\begin{verbatim}
+import Lecture1._
+fac(10)
+\end{verbatim}
+
+\item Introduce the idea of test-cases (students know JUnit). Use the console
+to create \verb|test/main/scala| and create a test file:
+
+\begin{verbatim}
+class Lecture1Tests extends org.scalatest.FunSuite {
+
+  test("fac -- base case") {
+    assert(fac(0) == 1)
+  }
+
+  test("fac -- inductive case") {
+    assert(fac(5) == 120)
+  }
+
+}
+\end{verbatim}
+
+\item Show \verb|sbt test|.
+
+\item Propose a new function to write. Write the test-cases first, then
+the implementation and re-run \verb|sbt test|.
+
+\item Recap the development methodology: first write tests cases, then
+write the implementation, and re-test continuously. Show continuous
+testing with \verb|~test|.
+
+\end{itemize}
+
+\section{Building and Pattern-Matching on Lists}
+
+\begin{itemize}
+
+\item Using the console, introduce lists.
+First show \verb|Nil|, then \verb|::|. Discuss the type of \emph{non-empty lists}
+that is printed on the console and allude to type inference.
+
+\item Write the \verb|sum| function:
+
+\begin{verbatim}
+def sum(lst: List[Int]): Int = lst match {
+  case Nil => 0
+  case n :: rest => n + sum(rest)
+}
+\end{verbatim}
+
+This is the first example of pattern matching and the first written occurence of
+the list type.
+
+\item Some more functions that don't involve generics:
+%
+\begin{verbatim}
+def product(lst: List[Int]): Int = lst match {
+  case Nil => 1
+  case n :: rest => n * product(rest)
+}
+
+def double(lst: List[Int]): List[Int] = lst match {
+  case Nil => Nil
+  case n :: rest => (2 * n) :: double(rest)
+}
+
+def repeatTwice(lst: List[Int]): List[Int] = lst match {
+  case Nil => Nil
+  case n :: rest => n :: n :: repeatTwice(rest)
+}
+\end{verbatim}
+
+\item Pattern matching is quite powerful, you can express complex conditionals
+by just writing a pattern. For example, this function counts the number of
+$1$s in a list:
+%
+\begin{verbatim}
+def countOnes(lst: List[Int]): Int = lst match {
+  case Nil => 0
+  case n :: rest => if (n == 1) 1 + countOnes(rest) else countOnes(rest)
+}
+\end{verbatim}
+
+\item But, we can write it more compactly using patterns:
+%
+\begin{verbatim}
+def countOnes(lst: List[Int]): Int = lst match {
+  case Nil => 0
+  case 1 :: rest => 1 + countOnes(rest)
+}
+\end{verbatim}
+
+\item If we try to compile this, we get an \emph{exhuastivity error}. Here
+is the fix:
+%
+\begin{verbatim}
+def countOnes(lst: List[Int]): Int = lst match {
+  case Nil => 0
+  case 1 :: rest => 1 + countOnes(rest)
+  case _ :: rest => countOnes(rest)
+
+}
+\end{verbatim}
+
+\item Introduce \verb|List(x, y, z)| as shorthand for \verb|x :: y :: z :: Nil|.
+
+\item \verb|List| can be used in patterns too:
+%
+\begin{verbatim}
+def isSingleton(lst: List[Int]): Boolean = lst match {
+  case List(_) => true
+  case _ => false
+}
+\end{verbatim}
+
+\item Emphasize that pattern matching can be used on arbitrary data structures,
+including data structures that you define, which we will see later.
+
+\item Show that \verb|if| is a form of pattern matching.
+
+\end{itemize}
+
+\section{Define Your Own Types}
+
+\begin{itemize}
+
+\item Show a case-class definition in the console:
+%
+\begin{verbatim}
+case class Person(name: String, birthYear: Int)
+
+val me = Person("Arjun", 1984)
+\end{verbatim}
+
+\item Scala has Java-like classes, but case-classes have some nice features.
+(1) No need to write \verb|new|, (2) free pretty-printing, (3) equality
+that makes sense, (4) hash code that makes sense, and (5) \emph{pattern matching}.
+
+\item Pattern matching on case classes:
+%
+\begin{verbatim}
+def born1984(persons: List[Person]): List[String] = persons match {
+  case Nil => Nil
+  case Person(name, 1984) :: rest => name :: born1984(rest)
+  case _ :: rest => born1984(rest)
+}
+\end{verbatim}
+
+\end{itemize}
+
+\chapter{Homework 1: Introduction to Functional Programming}
+
+Scala ``finger exercises'' that involve writing recursive list-processing
+functions and defining datatypes. Ensure that everything is testable.
+
+\chapter{Lecture 2}
+
+\section{Lecture 1 Recap}
+
+FILL
+
+\section{Generics and Type Inference}
+
+\begin{itemize}
+
+\item Students should know generics, so just show the notation for defining
+functions:
+%
+\begin{verbatim}
+def length[A](lst: List[A]): Int = lst match {
+  case Nil => 0
+  case _ :: rest => 1 + length(rest)
+}
+
+def reverseHelper[A](lst: List[A], reversed: List[A]): List[A] = lst match {
+  case Nil => reversed
+  case head :: tail => reverse(tail, head :: reversed)
+}
+def reverse[A](lst: List[A]): List[A] = reverseHelper(lst, Nil)
+\end{verbatim}
+
+
+\item Discuss type inference: \verb|List[Int](1,2,3)| is the same as
+\verb|List(1, 2, 3)|. Scala figures out the type.
+
+\item Show an example of a nested list and discuss type inference.
+
+\item \emph{Scala Pitfall:} \verb|List(1, "2", 3)| has type \verb|List[Any]|,
+but it's almost certainly not what you had in mind!
+\verb|List[Int](1, "2", 3)| does not type-check.
+
+\item \emph{Preach:} Type inference is not magic. It saves you typing, but
+don't expect it to figure out exactly what you mean. It can make mistakes.
+Ensure you know what type expressions have. You'll learn how to do this
+with practice.
+
+\end{itemize}
+
+\section{Higher-Order Functions}
+
+\begin{verbatim}
+- More list processing functions (e.g., sorting, searching sorted lists, etc.)
+
+- Recognizing when code can be abstracted
+
+  - E.g., Comparator in sort
+
+  - E.g., filtering predicate in filter
+
+  - E.g., Mapped function in map
+
+  - E.g., Combining function in sum
+
+  - E.g., Combining function in ifAll and ifAny
+
+- Recognizing when a type can be abstracted
+
+  - E.g., type of element in a list
+
+  - E.g., type of result from combining function
+\end{verbatim}
+
+\chapter{Lecture 3}
+
+\section{More Higher-Order Functions}
+
+\section{Builtin methods}
+
+\section{Method Chaining}
+
+\chapter{Homework 2: Higher-Order Functions}
+
+\section{New higher-order functions for list processing}
+\section{Method chaining using Scala API}
+
+\chapter{Lecture 4}
+
+\section{Algebraic data types (sealed traits)}
+
+\section{Modeling Data}
+
+\subsection{Shape Library}
+
+\chapter{Lecture 5}
+
+\section{Recap: Modeling Data and Algebraic Data Types}
+
+\section{Evaluation by substitution}
+
+\chapter{Homework 3: Modeling Data}
+
+\section{Working with census data}
+
+\chapter{Lecture 6}
+
+\section{Evaluating Expressions}
+
+\section{Garbage collection}
+
+\chapter{Lecture 7}
+
+\section{Exceptions and the Option type}
+
+\chapter{Homework 4: More Data Modelling}
+
+\section{Working with more census data}
+
+Use the option type
+
+\chapter{Lecture 8}
+
+\section{Type checking Scala}
+
+\chapter{Homework 5: Type Checker and Evaluator}
+
+\chapter{Homework 6: Join Lists}
+
+\chapter{Homework  7: Graphs}
+
+\chapter{Homework 8: Tic Tac Toe}
+
+\chapter{Homework 9: Sudoku}
+
+\chapter{Homework 10: Parsing}
+
+\chapter{Homework 11: ??}
+
+\chapter{Homework 12: ??}
+
+
+
+
+
+
+
+
+
+\end{document}

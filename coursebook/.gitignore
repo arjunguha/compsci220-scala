@@ -1,0 +1,16 @@
+_minted-instructor
+_minted-student
+instructor.aux
+instructor.fdb_latexmk
+instructor.fls
+instructor.log
+instructor.out
+instructor.pdf
+instructor.toc
+student.aux
+student.fdb_latexmk
+student.fls
+student.log
+student.out
+student.pdf
+student.toc

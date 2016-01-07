@@ -30,7 +30,7 @@ title: Schedule
 | Wednesday, Mar 9  | *Lab:*                                                                                          |
 | Thursday, Mar 10  | Due: HW7.                                                                                       |
 | Tuesday, Mar 15   | **No class.** (Spring Recess)                                                                   |
-| Wednesday, Mar 16 | ** No lab.* (Spring Recess)                                                                     |
+| Wednesday, Mar 16 | **No lab.** (Spring Recess)                                                                     |
 | Thursday, Mar 17  | **No class.** (Spring Recess)                                                                   |
 | Tuesday, Mar 22   | Out: HW8.                                                                                       |
 | Wednesday, Mar 23 | *Lab:*                                                                                          |
@@ -50,7 +50,6 @@ title: Schedule
 | Tuesday, Apr 26   |                                                                                                 |
 | Wednesday, Apr 27 | *Lab:* Homework help session.                                                                   |
 | Friday, Apr 29    | **Not a class day.** Due: HW12.                                                                 |
-
 {: .table .table-striped :}
 
 

@@ -1,0 +1,25 @@
+\usepackage{titlesec}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{comment}
+\usepackage{minted}
+
+\newminted{scala}{fontsize=\footnotesize}
+
+\hypersetup{colorlinks,urlcolor=blue}
+
+\titleformat{\chapter}{\normalfont\huge}{}{0pt}{\huge\bfseries}
+%\simplechapter
+
+% Don't prefix sections (and subsections) with chapter number
+\renewcommand*\thesection{\arabic{section}}
+
+\ifinstructormode
+  \newenvironment{instructor}%
+  {\noindent\emph{Start of instructor-only material.}}%
+  {\noindent\emph{End of instructor-only material.}}
+\else
+  \excludecomment{instructor}
+\fi

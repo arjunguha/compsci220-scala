@@ -18,16 +18,19 @@ You must read the entire [Course Policy] document.
   <tr><th>What</th><th>When</th><th>Where</th></tr>
 </thead>
 <tbody>
-<tr><td>Lecture</td><td>Tuesday, 8:30AM--9:45AM</td><td>Herter Hall, Room 227</td></tr>
-<tr><td>Lecture</td><td>Thursday, 8:30AM--9:45AM</td><td>Herter Hall, Room 227</td></tr>
-<tr><td>Discussion C</td><td>Friday, 9:05AM--9:55AM</td><td>Engineering Lab, Room 323</td></tr>
-<tr><td>Discussion A</td><td>Friday, 11:15AM--12:05PM</td><td>Engineering Lab, Room 323</td></tr>
-<tr><td>Discussion B</td><td>Friday, 12:20PM--1:10PM</td><td>Lederle Graduate Research Center (LGRC), Room A201</td></tr>
+<tr><td>Lecture</td><td>Tuesday, 4:00PM--5:15PM</td><td>Morrill Science Center 1, Room N375</td></tr>
+<tr><td>Discussion C</td><td>Wednesday, 10:10AM--11:00AM</td><td>Engineering Lab, Room 323</td></tr>
+<tr><td>Discussion A</td><td>Wednesday, 11:15AM--12:05PM</td><td>Engineering Lab, Room 323</td></tr>
+<tr><td>Discussion B</td><td>Wednesday, 12:20PM--1:10PM</td><td>Engineering Lab, Room 323</td></tr>
+<tr><td>Lecture</td><td>Thursday, 4:00PM--5:15PM</td><td>Morrill Science Center 1, Room N375</td></tr>
 </tbody>
 </table>
 
 # Office Hours
 
+To be announced
+
+<!--
 <table class="table table-striped">
 <thead>
   <tr><th>When</th><th>Where</th><th>Who</th></tr>
@@ -40,6 +43,7 @@ You must read the entire [Course Policy] document.
 <tr><td>Friday, 5PM&mdash;7PM</td><td>LGRT 220</td><td>Amee</td></tr>
 </tbody>
 </table>
+-->
 
 # Textbook
 
