@@ -12,10 +12,13 @@ object Plugin extends sbt.AutoPlugin {
 
   override def trigger = allRequirements
 
+  Tasks.directoryWarnings()
+
   object autoImport {
     lazy val submit = TaskKey[Unit]("submit")
     lazy val submitTests = TaskKey[Unit]("submit-tests")
     lazy val checkstyle = TaskKey[Unit]("checkstyle")
+    lazy val findMisplacedFiles = TaskKey[Unit]("find-misplaced-files")
   }
 
   import autoImport._
@@ -61,6 +64,7 @@ object Plugin extends sbt.AutoPlugin {
         "-feature",
         "-Xfatal-warnings"
       ),
+      findMisplacedFiles := Tasks.findMisplacedFiles,
       checkstyle := {
         import org.scalastyle.sbt.Tasks.doScalastyle
         import org.scalastyle.sbt.ScalastylePlugin
@@ -89,6 +93,6 @@ object Plugin extends sbt.AutoPlugin {
       submitTests := {
         submitTestsTask
       },
-      compile <<= (compile in Compile).dependsOn(checkstyle)
+      compile <<= (compile in Compile).dependsOn(checkstyle, findMisplacedFiles)
     )
 }
