@@ -5,8 +5,13 @@
 \usepackage{cleveref}
 \usepackage{comment}
 \usepackage{minted}
+\usepackage{fancyvrb}
+\usepackage{subcaption}
 
 \newminted{scala}{fontsize=\footnotesize}
+\newminted{java}{fontsize=\footnotesize}
+\DefineVerbatimEnvironment%
+  {console}{Verbatim}{fontsize=\footnotesize}
 
 \hypersetup{colorlinks,urlcolor=blue}
 
@@ -23,3 +28,7 @@
 \else
   \excludecomment{instructor}
 \fi
+
+\newcommand{\classtime}[1]{\ifinstructormode~(#1 mins) \fi}
+
+\newcommand{\sbt}{\texttt{sbt}}

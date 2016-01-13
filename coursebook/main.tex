@@ -16,8 +16,7 @@ of integrated design environments, design strategies and patterns, testing,
 working with large code bases and libraries, code refactoring, and use of
 debuggers and tools for version control.
 
-
-\section{Introduction}
+\section{Introduction\classtime{15}}
 
 \emph{CMPSCI220 Programming Methodology} introduces you to all the concepts
 above in the context of a modern programming language,
@@ -38,9 +37,9 @@ and language features that are beyond the scope of Java. The truth is that
 modern software systems are written in a plethora of languages. Moreover, large
 systems tend to use several programming languages. Therefore, to succeed in your
 computing career, you have to be familiar with several languages and be able to
-learn new languages on your own. New programming
-languages\footnote{\href{http://www.oreillynet.com/pub/a/oreilly/news/languageposter_0504.html}{This poster} is quite informative.} are constantly
-invented and it is impossible to predict the next big language that everyone
+learn new languages on your own. Programming
+languages and constantly invented and abandoned\footnote{\href{http://www.oreillynet.com/pub/a/oreilly/news/languageposter_0504.html}{This poster} is a very incomplete history of the birth and death of programming languages.}
+ and it is impossible to predict the next big language that everyone
 will use or the language you'll need to learn for your next job.
 
 Scala is a big language with many unique features and we are not going to learn
@@ -54,27 +53,27 @@ cover in this course that go beyond Java:
   and the cornerstone of \emph{functional programming}. They are pervasive in
   JavaScript, Ruby, Python, Swift, and almost all modern languages.
 
-  In fact, Java 8\footnote{\url{http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html}} and
-  C++11\footnote{\url{http://msdn.microsoft.com/en-us/library/dd293608.aspx}}
+  In fact, \href{{http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html}}{Java 8} and
+  \href{http://msdn.microsoft.com/en-us/library/dd293608.aspx}{C++11}
   have limited support for first-class functions.
 
 \item \emph{Algebraic data types} are available in Apple Swift, Mozilla Rust,
   Microsoft F\#, and several other programming languages. Programming with
   algebraic data types is very different from programming in an object-oriented
-  style. You'll cover both styles of programming in this course and develop
+  style. We'll cover both styles of programming in this course and develop
   a deep understanding of the tradeoffs.
 
 \item \emph{Type inference} is available in modern typed programming languages,
-  such as C\# and Swift, and even in a limited form in Java
-  7\footnote{\url{http://docs.oracle.com/javase/tutorial/java/generics/genTypeInference.html}}.
+  such as C\# and Swift, and even in a limited form in
+  \href{http://docs.oracle.com/javase/tutorial/java/generics/genTypeInference.html}{Java 7}.
   As the name suggests, in a language with type inference, the compiler can
-  often ``infer'' elided or omitted types. So, your programs become shorter, but
+  often ``infer'' or fill-in types that you omit. So, your programs become shorter, but
   retain all the advantages of type checking.
 
 \end{itemize}
 
 The main themes of the course are not language-specific. We will emphasize
-the following broad ideas that are applicable in all software development:
+the following broad ideas that are applicable to all software development:
 
 \begin{itemize}
 
@@ -85,10 +84,9 @@ the following broad ideas that are applicable in all software development:
   significant portion of your grade on every assignment.
 
 \item \emph{Design patterns} are recipes for solving typical programming
-  problems. You'll learn several object-oriented design patterns that are
-  applicable to Java. In addition, you'll also learn several functional design
-  patterns (exploiting the ideas listed above) that are applicable to a variety
-  of modern languages.
+  problems. You'll learn object-oriented design patterns applicable to Java and
+  functional design patterns that are applicable to a variety of modern
+  languages.
 
 \item \emph{Refactoring} is a key concept that we emphasize throughout the
   course. As we introduce new ideas, we will systematically refactor our old
@@ -99,9 +97,8 @@ the following broad ideas that are applicable in all software development:
 
 \item \emph{Command-line tools} such as compilers and build tools lie under the
   hood of sophisticated IDEs such as Eclipse. Learning to use the command-line
-  will make you a better IDE user. Moreover, many advanced systems (e.g,
-  operating systems and Web browsers) are typically built using the command-line
-  directly.
+  will make you a better IDE user. Moreover, since many new languages lack good
+  IDEs, we will emphasize the use of command-line tools in this course.
 
 \item \emph{Version control} software is critical for collaborative software
   development and used by all professional programmers. Although you will be
@@ -110,14 +107,18 @@ the following broad ideas that are applicable in all software development:
   break your code.
 
 \item \emph{Using libraries} is critical for writing software that gets real
-  work done. You will start by using a simple graphics library that we've
-  developed for the course. By the end of the course, you'll know how to
-  discover and use software libraries on the Web.
+  work done. Initially, you'll use libraries that were developed specifically
+  for this course, but you will eventually learn to discover and use software
+  libraries on the Web.
 
 \end{itemize}
 
-\subsection{Recommended Reading}
-
+The overarching goal of this course is to make you a better programmer,
+and an important part of that is to get familiar with programming terminology
+and culture. Unfortunately, there is a lot of misinformation on the Web
+about programming, but we will try to point you to sources that are reliable.
+Here are two good places to start:
+%
 \begin{itemize}
 
   \item \href{http://paulgraham.com/articles.html}{Paul Graham's Essays}.
@@ -131,26 +132,178 @@ the following broad ideas that are applicable in all software development:
   and \href{http://www.joelonsoftware.com/articles/ResumeRead.html}
   {Getting Your Resume Read}.
 
-  \item \href{http://xkcd.com}{XKCD} comics will make more sense after you take
-  this course.
-
 \end{itemize}
 
+Finally, \href{http://xkcd.com}{XKCD} comics often make obscure programming
+references and this course will help you decipher some of them.
 
-\section{SBT, Scala, and ScalaTest}
+\section{The Command-Line\classtime{5}}
 
+The \emph{Linux command-line}\footnote{The command-line is also known as a
+\emph{terminal} or \emph{shell}.} is  a critical part of this course. If you're
+using the course virtual-machine, you should the program \textbf{LXTerminal}
+to start the command-line.
+
+
+Unless you're already familiar with the Linux command-line, you must read
+\href{http://learncodethehardway.org/cli/book/cli-crash-course.html}{Zed Shaw's Command Line Crash Course},
+up to and including the chapter ``Removing a File (rm)''. Zed likes to swear at
+his own readers, so we'd like to apologize in advance on his behalf. The rest
+of these lecture notes assume that you are familiar with the command-line.
+
+\begin{instructor}
 \begin{itemize}
 
 \item Introduce the course VM.
 
-\item Introduce the command line (\verb|mkdir|, \verb|cd|, and, \verb|ls|).
+\item  Introduce the command line (\verb|mkdir|, \verb|cd|, and, \verb|ls|).
+\end{itemize}
 
-\item Introduce the \verb|sbt| command. Say that is can be used to
-compile and run programs, but show \verb|sbt console| first.
+\end{instructor}
 
-\item On the console, show simple arithmetic expressions,
-\verb|let|, and one-line functions. E.g., implement factorial or fibonnaci
-and test them on the console.
+\section{\sbt{} and the Scala REPL\classtime{5}}
+
+\sbt{} is the Swiss Army Knife of Scala programming. It is a command-line tool
+that can be use to run Scala programs, compile them, test them, package them
+deployment, publish them to the Web, and more. Like many modern programming
+languages, \sbt{} has a \emph{REPL} (read-eval-print loop), which you can use to
+type in and run one-line programs immediately, without the bother of creating
+files, etc.
+
+To start the Scala REPL, open a terminal (LXTerminal on the course VM),
+type in \verb|sbt console| and press enter. Your screen will look like this:
+%
+\begin{verbatim}
+student@vm:~$ sbt console
+[info] Loading global plugins from /Users/arjun/.sbt/0.13/plugins
+[info] Set current project to del (in build file:/Users/arjun/scratch/del/)
+[info] Updating {file:/Users/arjun/}arjun...
+[info] Resolving org.fusesource.jansi#jansi;1.4 ...
+[info] Done updating.
+[info] Starting scala interpreter...
+[info]
+Welcome to Scala version 2.10.7 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_60).
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala>
+\end{verbatim}
+
+The \verb|scala>| prompt indicates that you can type in Scala expressions to evaluate.
+
+\section{Scala Basics\classtime{15}}
+
+\subsection{Simple Expressions and Names}
+
+Arithmetic in Scala is very similar to arithmetic in Java:
+
+\begin{verbatim}
+scala> 19 * 17
+res0: Int = 323
+\end{verbatim}
+
+Strings in Scala will also look familiar:
+
+\begin{verbatim}
+scala> "Hello, " + "world"
+res1: String = Hello, world
+\end{verbatim}
+
+Boolean expressions will be familiar too:
+
+\begin{verbatim}
+scala> true && false
+res2: Boolean = false
+\end{verbatim}
+
+Let's examine the last interaction more closely. When you type \verb|true && false|,
+Scala prints three things:
+%
+\begin{itemize}
+\item An automatically-generated \emph{name} (\verb|res2|),
+\item The \emph{type} of the expression (\verb|Boolean|), and
+\item The \emph{value} of the expression (\verb|false|).
+\end{itemize}
+
+On the Scala REPL, you can use the generated name as a variable. But, you're
+better off picking meaningful names yourself using \verb|val|:
+
+\begin{verbatim}
+scala> val mersenne = 524287
+mersenne : Int = 524287
+scala> val courseName = "Programming Methodology"
+courseName : String = Programming Methodology
+\end{verbatim}
+
+\subsection{Type Inference}
+
+You'll find that Scala programs are significantly shorter than their Java
+counterparts. A key feature of Scala that lets you write less code is \emph{type
+inference}. Notice in the variable definitions above, you did not have to write
+any types. Instead, Scala \emph{inferred} them for you. This feature is very helpful
+in larger programs, where types can become complex.
+
+Type inference is not magic; later in the course, you'll learn more about how it
+works and when it doesn't. For now, here's a rule of thumb: Scala can infer the
+type of variable named with \verb|val|. But, Scala \emph{cannot} infer the type of
+function parameters.
+
+\subsection{Functions}
+
+Here is a very simple Scala function:
+
+\begin{verbatim}
+scala> def double(n: Int): Int = n + n
+double: (n: Int)Int
+\end{verbatim}
+
+This code defines a function called \verb|double|, which takes an argument called
+\verb|n| of type \verb|Int| and returns a value of type \verb|Int|. We can apply the
+function as follows:
+
+\begin{verbatim}
+scala> double(10)
+res3: Int = 20
+\end{verbatim}
+
+The following function takes two arguments, \verb|x| and \verb|y|, and calculates the
+distance from the point \verb|(x,y)| to the origin:
+
+\begin{verbatim}
+scala> def dist(x: Double, y: Double): Double = math.sqrt(x * x + y * y)
+dist: (x: Double, y: Double)Double
+
+scala> dist(3.0, 4.0)
+res4: Double = 5.0
+\end{verbatim}
+
+Notice that unlike variable definitions, we need \emph{type annotations}
+on function parameters and result types.
+
+If your function actually fits on a line (without scrolling off your window),
+you can define them very tersely as shown above. But, many interesting
+functions span several lines and need local variables.
+
+\subsection{Blocks and Local Variables}
+
+You can define local variables within a \emph{block}. A block is code delimited by
+curly-braces. For example:
+
+\begin{scalacode}
+def dist2(x: Double, y: Double): Double = {
+  val xSq = x * x
+  val ySq = y * y
+  math.sqrt(xSq + ySq)
+}
+
+dist2(3.0, 4.0)
+\end{scalacode}
+
+\section{Scala Source Files\classtime{5}}
+
+
+\begin{itemize}
+
 
 \item Copy the functions defined in the REPL into a \verb|.scala| file and
  recompile.
@@ -171,6 +324,12 @@ to the file.
 import Lecture1._
 fac(10)
 \end{verbatim}
+
+\end{itemize}
+
+\section{Testing\classtime{5}}
+
+\begin{itemize}
 
 \item Introduce the idea of test-cases (students know JUnit). Use the console
 to create \verb|test/main/scala| and create a test file:
@@ -200,7 +359,7 @@ testing with \verb|~test|.
 
 \end{itemize}
 
-\section{Building and Pattern-Matching on Lists}
+\section{Building and Pattern-Matching on Lists\classtime{25}}
 
 \begin{itemize}
 
@@ -289,34 +448,6 @@ including data structures that you define, which we will see later.
 
 \end{itemize}
 
-\section{Define Your Own Types}
-
-\begin{itemize}
-
-\item Show a case-class definition in the console:
-%
-\begin{verbatim}
-case class Person(name: String, birthYear: Int)
-
-val me = Person("Arjun", 1984)
-\end{verbatim}
-
-\item Scala has Java-like classes, but case-classes have some nice features.
-(1) No need to write \verb|new|, (2) free pretty-printing, (3) equality
-that makes sense, (4) hash code that makes sense, and (5) \emph{pattern matching}.
-
-\item Pattern matching on case classes:
-%
-\begin{verbatim}
-def born1984(persons: List[Person]): List[String] = persons match {
-  case Nil => Nil
-  case Person(name, 1984) :: rest => name :: born1984(rest)
-  case _ :: rest => born1984(rest)
-}
-\end{verbatim}
-
-\end{itemize}
-
 \chapter{Homework 1: Introduction to Functional Programming}
 
 Scala ``finger exercises'' that involve writing recursive list-processing
@@ -324,9 +455,234 @@ functions and defining datatypes. Ensure that everything is testable.
 
 \chapter{Lecture 2}
 
-\section{Lecture 1 Recap}
+\begin{instructor}
 
-FILL
+\section{Lecture 1 Recap\classtime{15}}
+
+\begin{itemize}
+
+  \item Slowly talk through the command-line commands involved in creating,
+  changing to it, and starting \sbt{}.
+
+  \item Create a file with a simple list-processing function. (Pick something
+  that is not in the homework.)
+
+  \item Create a test-suite for the function and run it using \sbt{}.
+
+  \item Show the \sbt{} console briefly.
+
+\end{itemize}
+
+\end{instructor}
+
+\begin{figure}
+\begin{subfigure}[b]{.45\textwidth}
+\begin{javacode}
+public class Point {
+
+  double x;
+  double y;
+
+  public Point(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
+
+}
+
+Point pt = new Point(1, 2)
+\end{javacode}
+\caption{A Java class that represents a point.}\label{javapoint}
+\end{subfigure}
+\vrule
+%
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+class Point(x : Double, y : Double)
+val pt = new Point(1, 2)
+\end{scalacode}
+\caption{A Scala class that represents a point.}\label{scalapoint}
+\end{subfigure}
+\caption{Scala code is usually much shorter and simpler than Java code.}
+\end{figure}
+
+\section{Case Classes\classtime{10}}
+
+Just like Java, Scala has classes and even supports advanced features that are
+beyond the scope of classes in Java. Scala classes tend to be shorter than their
+Java counterparts. For example, \cref{javapoint} shows a \verb|Point| class
+in Java and \cref{scalapoint} shows the equivalent class in Scala, which
+is much shorter!
+
+Naturally, if want to add methods or other constructors, you'll have to write
+more code in Scala too. But, simple classes tend to be very short.
+But, we are not going to use classes yet. Instead, we are going to use
+\emph{case classes}, which are unique to Scala.
+
+If you write \verb|case class| instead of just \verb|class|, you get several
+conveniences:
+
+\begin{scalacode}
+case class Point(x: Double, y: Double)
+\end{scalacode}
+
+First, you can create values without writing \verb|new|:
+
+\begin{scalacode}
+val pt = Point(1, 2)
+\end{scalacode}
+
+Second, case classes have an automatically generated \verb|toString| method that
+prints the fields:
+
+\begin{verbatim}
+scala> pt
+pt: Point = Point(1.0,2.0)
+\end{verbatim}
+
+Third, all fields are public by default, so you can easily write simple
+functions, such as the this one, without writing getters:
+
+\begin{scalacode}
+def magnitude(pt: Point) : Double = {
+  math.sqrt(pt.x * pt.x + pt.y * pt.y)
+}
+
+test("3-4-5 triangles") {
+  assert(magnitude(Point(3, 4)) == 5)
+}
+\end{scalacode}
+
+\section{Sealed Case Classes\classtime{20}}
+
+Imagine you're a new age librarian, tasked with cataloging information on the
+Internet. There are many types of information. Here are some significant ones:
+
+\begin{scalacode}
+case class Tweet(user: String, number: Long)
+case class Xkcd(number: Int)
+case class HackerNews(item: Int, points: Int)
+\end{scalacode}
+
+Here are some examples:
+
+\begin{scalacode}
+// https://twitter.com/PLT_Borat/status/248038616654299136
+val tweet = Tweet("PLT_Borat", 248038616654299136L)
+// http://xkcd.com/1316/
+val comic = Xkcd(1316)
+// https://news.ycombinator.com/item?id=8169367
+val news = HackerNews(8169367, 305)
+\end{scalacode}
+
+Let's write a function called \verb|getURL| that maps these items to their URLs,
+which is easy to do with pattern matching.
+
+\begin{scalacode}
+def getURL(item: Any): String = item match {
+  case Tweet(user, number) => "https://twitter.com/" + user + "/status/" + number
+  case Xkcd(number) => "http://xkcd.com/" + number
+  case HackerNews(item, _) => "http://news.ycombinator.com/item?id=" + item
+  case _ => sys.error("not a library item")
+}
+\end{scalacode}
+
+This definition is unsatisfactory. \verb|getURL| takes values of \verb|Any|
+type. So, it is really easy to get a runtime error:
+
+\begin{console}
+scala> getURL("hello")
+java.lang.RuntimeException: not a library item
+ at scala.sys.package$.error(package.scala:27)
+  at cmpsci220.package$$anonfun$1.apply(package.scala:13)
+  at cmpsci220.package$$anonfun$1.apply(package.scala:13)
+  at .getURL(<console>:38)
+  ... 33 elided
+\end{console}
+
+To eliminate this kind of error, we need an \verb|Item| type:
+
+\begin{scalacode}
+sealed trait Item
+case class Tweet(user: String, number: Long) extends Item
+case class Xkcd(number: Int) extends Item
+case class HackerNews(item: Int, points: Int) extends Item
+\end{scalacode}
+
+A \emph{trait} in Scala is like an \emph{interface}. They're also much more
+versatile than interfaces, but we'll get into that later.
+
+Now, we can rewrite \verb|getURL|, restricting argument type:
+
+\begin{scalacode}
+def getURL(item: Item): String = item match {
+  case Tweet(user, number) => "https://twitter.com/" + user + "/status/" + number
+  case Xkcd(number) => "http://xkcd.com/" + number
+  case HackerNews(item, _) => "http://news.ycombinator.com/item?id=" + item
+}
+\end{scalacode}
+
+This time, applying \verb|getURL| to a non-item produces a type error as expected:
+
+\begin{console}
+scala> item("hello")
+<console>:43: error: type mismatch;
+ found   : String("hello")
+ required: Item
+              getURL("hello")
+\end{console}
+
+A really nice feature of `match` is that it checks to ensure you've handled all
+cases. For example, suppose we forgot to write the HackerNews case. Scala
+prints the following error:
+
+\begin{console}
+<console>:18: warning: match may not be exhaustive.
+It would fail on the following input: HackerNews(_, _)
+       def getURL(item: Item): String = item match {
+                                        ^
+error: No warnings can be incurred under -Xfatal-warnings.
+\end{console}
+
+\section{Sealed Classes\classtime{15}}
+
+You can use `match` to also match concrete values. For example, here is
+variant of getURL that censors a particular tweet from PLT Borat:
+
+\begin{scalacode}
+def getURL(item: Item): String = item match {
+  case Tweet("PLT_Borat", 301113983723794432L) => "http://disney.com"
+  case Tweet(user, number) => "https://twitter.com/" + user + "/status/" + number
+  case Xkcd(number) => "http://xkcd.com/" + number
+  case HackerNews(item, _) => "http://news.ycombinator.com/item?id=" + item
+}
+\end{scalacode}
+
+Imagine you'd added the censoring line, but accidentally removed the line
+that handles all other Tweets. Again, Scala will catch the error:
+
+\begin{console}
+<console>:62: warning: match may not be exhaustive.
+It would fail on the following inputs:
+  Tweet("PLT_Borat", (x: Long forSome x not in 301113983723794432L)),
+  Tweet((x: String forSome x not in "PLT_Borat"), 301113983723794432L),
+  Tweet((x: String forSome x not in "PLT_Borat"), _),
+  Tweet(_, (x: Long forSome x not in 301113983723794432L))
+       def getURL(item: Item): String = item match {
+                                        ^
+error: No warnings can be incurred under -Xfatal-warnings.
+\end{console}
+
+It is a long error message. But, if you read it carefully, you'll see that it is
+very precisely describing exactly the cases that are missing.
+
+\section{Addition Examples\classtime{35}}
+
+[FILL]
+
+
+\chapter{Lecture 3}
+
 
 \section{Generics and Type Inference}
 
@@ -365,6 +721,7 @@ with practice.
 
 \end{itemize}
 
+
 \section{Higher-Order Functions}
 
 \begin{verbatim}
@@ -388,8 +745,6 @@ with practice.
 
   - E.g., type of result from combining function
 \end{verbatim}
-
-\chapter{Lecture 3}
 
 \section{More Higher-Order Functions}
 
