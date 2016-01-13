@@ -8,10 +8,16 @@
 \usepackage{fancyvrb}
 \usepackage{subcaption}
 
-\newminted{scala}{fontsize=\footnotesize}
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+\newminted{scala}{fontsize=\footnotesize,bgcolor=bg}
+
 \newminted{java}{fontsize=\footnotesize}
+
 \DefineVerbatimEnvironment%
   {console}{Verbatim}{fontsize=\footnotesize}
+
+\newmintinline{scala}{}
 
 \hypersetup{colorlinks,urlcolor=blue}
 
@@ -30,5 +36,7 @@
 \fi
 
 \newcommand{\classtime}[1]{\ifinstructormode~(#1 mins) \fi}
+
+\newcommand{\instructornote}[1]{\ifinstructormode~(#1 mins) \fi}
 
 \newcommand{\sbt}{\texttt{sbt}}

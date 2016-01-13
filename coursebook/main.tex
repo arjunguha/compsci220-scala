@@ -683,8 +683,7 @@ very precisely describing exactly the cases that are missing.
 
 \chapter{Lecture 3}
 
-
-\section{Generics and Type Inference}
+\section{Generics and Type Inference\classtime{15}}
 
 \begin{itemize}
 
@@ -721,36 +720,274 @@ with practice.
 
 \end{itemize}
 
+\section{Higher-Order Functions on Lists}
 
-\section{Higher-Order Functions}
+[FILL] Introductory stuff
 
-\begin{verbatim}
-- More list processing functions (e.g., sorting, searching sorted lists, etc.)
 
-- Recognizing when code can be abstracted
+\begin{figure}
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+def incrs(lst: List[Int]): List[Int] = 
+  lst match {
+    case Nil => Nil
+    case h :: t => h + 1 :: incrs(t)
+  }
+\end{scalacode}
+\caption{A function that increments all numbers in a list.}
+\end{subfigure}
+\hskip 2em
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+def lengths(lst: List[String]): List[Int] = 
+  lst match {
+  case Nil => Nil
+  case h :: t => h.length :: lengths(t)
+}
+\end{scalacode}
+\caption{A function that calculates the lengths of all strings in a list.}
+\end{subfigure}
 
-  - E.g., Comparator in sort
+\vskip 2em
 
-  - E.g., filtering predicate in filter
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+def doubles(lst: List[Int]): List[Int] = 
+  lst match {
+    case Nil => Nil
+    case h :: t => h * 2 :: doubles(t)
+}
+\end{scalacode}
+\caption{A function that doubles all numbers in a list.}
+\end{subfigure}
+\hskip 2em
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+def negates(lst: List[Int]): List[Int] = 
+  lst match {
+    case Nil => Nil
+    case h :: t => -h :: negates(t)
+}
+\end{scalacode}
+\caption{A function that negates all numbers in a list.}
+\end{subfigure}
 
-  - E.g., Mapped function in map
+\caption{Four different functions that transform elements of a list.}
+\label{map_motivation}
+\end{figure}
 
-  - E.g., Combining function in sum
 
-  - E.g., Combining function in ifAll and ifAny
+\subsection{The Map Function\classtime{15}}
 
-- Recognizing when a type can be abstracted
+Study the four functions in \cref{map_motivation}. The function \verb|incrs|
+adds one to every element in a list of integers, the function \verb|lengths|
+calculates the length of every string in a list, the function \verb|doubles|
+doubles every number in a list, and the function \verb|negates| negates every
+number in a list. Hopefully, you've noticed that these four functions have a lot
+of in common. \emph{The only difference between them is the operation that they
+perform on the head of the list}.
 
-  - E.g., type of element in a list
+Here is a variant of \verb|doubles| that makes the operation explicit, by
+moving it into a separate function:
+%
+\begin{scalacode}
+def f(n: Int): Int = n * 2
 
-  - E.g., type of result from combining function
-\end{verbatim}
+def doubles(lst: List[Int]): List[Int] = lst match {
+  case Nil => Nil
+  case h :: t => f(h) :: doubles(t)
+}
+\end{scalacode}
 
-\section{More Higher-Order Functions}
+In this version, we're simply applying a function $f$ to $h$, where $f$
+is the doubling function. \emph{You should apply the same refactoring to the other
+functions}. E.g.,  instead of directly writing \verb|head.length|, refactor
+the function so that this expression is in a helper function.
 
-\section{Builtin methods}
+Once we've re-written the operation as \scalainline{f(h)}, all three
+functions look identical: the only different that that each refers to a
+different function.
+Instead of writing three functions that are almost identical, we can
+write one function that takes $f$ as an argument:
 
-\section{Method Chaining}
+\begin{scalacode}
+def map(f: Int => Int, lst: List[Int]): List[Int] = lst match {
+  case Nil => Nil
+  case h :: t => f(h) :: map(f, t)
+}
+\end{scalacode}
+
+With this function, we can make our examples much more succinct:
+
+\begin{scalacode}
+def doubles(lst: List[Int]) = {
+  def f(n: Int): Int = n * 2
+  map(f, lst)
+}
+
+def incrs(lst: List[Int]) = {
+  def f(n: Int): Int = n + 1
+  map(f, lst)
+}
+
+def lengths(lst: List[String]) = {
+  def f(str: String): Int = str.length
+  map(f, lst)
+}
+\end{scalacode}
+
+Unfortunately, the definition of \scalainline{lengths} above does not type-
+check. Scala reports two type errors and they are both very informative:
+
+\begin{console}
+<console>:15: error: type mismatch;
+ found   : String => Int
+ required: Int => Int
+         map(f, lst)
+             ^
+<console>:15: error: type mismatch;
+ found   : List[String]
+ required: List[Int]
+         map(f, lst)
+                  ^
+\end{console}
+
+The \scalainline{map} function only works of lists of integers. However, if you
+look at the definition of \scalainline{map} closely, you'll see that all the
+\scalainline{Int}-specific code has been factored out into \scalainline{f}. We
+can make the function even more generic by introducing two type-parameters:
+
+\begin{scalacode}
+def map[A,B](f: A => B, lst: List[A]): List[B] = lst match {
+  case Nil => Nil
+  case h :: t => f(h) :: map[A, B](f, t)
+}
+\end{scalacode}
+
+The type-parameter $A$ is the type of the elements in 
+\emph{lst} and the type-parameter $B$ is the type elements in the produced list.
+In the code above, we've make all the type-arguments explicit. But, as we've
+discussed before, we can rely on type-inference to fill them in:
+
+\begin{scalacode}
+def map[A,B](f: A => B, lst: List[A]): List[B] = lst match {
+  case Nil => Nil
+  case h :: t => f(h) :: map(f, t)
+}
+\end{scalacode}
+
+\subsection{The Filter Function\classtime{10}}
+
+Another common pattern when programming with lists is to select certain elements
+that have some property. For example, here is a function that consumes a list,
+and produces a new list that only contains the even numbers:
+
+\begin{scalacode}
+def filterEven(lst: List[Int]): List[Int] = lst match {
+  case Empty() => Empty()
+  case Cons(head, tail) =>
+    (head % 2 == 0) match {
+      case true => Cons(head, filterEven(tail))
+      case false => filterEven(tail)
+    }
+}
+\end{scalacode}
+
+This is a very common pattern too. For example, we could write a function to
+select the odd numbers or the prime numbers. If we had a list of strings, we
+could select all the strings with length 5 or all the strings that represent
+English-language words. All these functions have the same shape: they test
+the value of `head` in some way. If the test succeeds, `head` is added in
+the output list. But, if the test fails, it is excluded.
+
+Following the same strategy we used to derive `map`, we first package
+the `head`-test into a function:
+
+\begin{scalacode}
+def f(n: Int): Boolean = head % 2
+
+def filterEven(lst: List[Int]): List[Int] = lst match {
+  case Empty() => Empty()
+  case Cons(head, tail) =>
+    f(head) match {
+      case true => Cons(head, filterEven(tail))
+      case false => filterEven(tail)
+    }
+}
+\end{scalacode}
+
+Now that the pattern is clearer, we generalize `filterEven` to take `f`
+as an argument:
+
+\begin{scalacode}
+def filter(f: Int => Boolean, lst: List[Int]): List[Int] = lst match {
+  case Empty() => Empty()
+  case Cons(head, tail) =>
+    f(head) match {
+      case true => Cons(head, filter(f, tail))
+      case false => filter(f, tail)
+    }
+}
+
+def filterEven(lst: List[Int]): List[Int] = {
+  def f(n: Int): Boolean = head % 2
+  filter(f, lst)
+\end{scalacode}
+
+Finally, just as we did for `map`, we can generalize the type of `filter`
+so that it can be applied to `List[A]`:
+
+\begin{scalacode}
+def filter[A](f: A => Boolean, lst: List[Int]): List[A] = lst match {
+  case Empty() => Empty()
+  case Cons(head, tail) =>
+    f(head) match {
+      case true => Cons(head, filter(f, tail))
+      case false => filter(f, tail)
+    }
+}
+\end{scalacode}
+
+\subsection{The Find Function\classtime{10}}
+
+Another common operation on lists is to find an element. For example,
+the following function finds the first even number in a list:
+
+\begin{scalacode}
+def findEven(lst: List[Int]): Option[Int] = lst match {
+  case Empty() => None()
+  case Cons(head, tail) => (head % 2 == 0) match {
+    case true => Some(head)
+    case false => findEven(tail)
+  }
+}
+\end{scalacode}
+
+If we change `(head % 2 == 0)` to `(head % 2 == 1)`, we'll have the
+`findOdd` function. Again, instead of defining two slightly different
+functions, we can write the general `find` function:
+
+\begin{scalacode}
+def find[A](f: A => Boolean, lst: List[A]): Option[A] = lst match {
+  case Empty() => None()
+  case Cons(head, tail) => f(head) match {
+    case true => Some(head)
+    case false => find(f, tail)
+  }
+}
+\end{scalacode}
+
+
+\subsection{Discovering New Higher-Order Functions\classtime{10}}
+
+[FILL]
+
+- A generic sort function
+- TakeWhile
+
+\section{Builtin Methods on Lists\classtime{5}}
+
+\section{Method Chaining\classtime{5}}
 
 \chapter{Homework 2: Higher-Order Functions}
 
@@ -759,17 +996,196 @@ with practice.
 
 \chapter{Lecture 4}
 
-\section{Algebraic data types (sealed traits)}
+\section{Functions are Values}
 
-\section{Modeling Data}
+We've seen that functions in Scala can appear in almost any place. For example,
+we've seen nested functions:
 
-\subsection{Shape Library}
+\begin{scalacode}
+def doubleAll(lst: List[Int]) = {
+  def f(n: Int): Int = n * 2
+  map(f, lst)
+}
+\end{scalacode}
+
+We've seen functions that take other functions as arguments, such as `map`:
+
+\begin{scalacode}
+def map[A,B](f: A => B, lst: List[A]): List[B] = lst match {
+  case Empty() => Empty[B]()
+  case Cons(head, tail) => Cons[B](f(head), map[A,B](f, tail))
+}
+\end{scalacode}
+
+And, we've even see that functions can produce other functions:
+
+\begin{scalacode}
+def compose[A,B,C](f: A => B, g: B => C) : A => C = {
+  def h(a: A): C = { g(f(a)) }
+  h
+}
+\end{scalacode}
+
+Here is an even simpler example of a function that produces another function:
+
+\begin{scalacode}
+def makeAdder(x: Int): Int => Int = {
+  def addX(y: Int): Int = x + y
+  addX(x)
+}
+
+val addThree = makeAdder(3)
+test("add3 test") {
+  assert(addThree(10) == 13)
+}
+\end{scalacode}
+
+Functions can even be stored in data structures. For example, consider
+this simple, recursive evaluator for arithmetic expressions:
+
+\begin{scalacode}
+sealed trait Expr
+case class Num(n: Int) extends Expr
+case class Add(e1: Expr, e2: Expr) extends Expr
+case class Mul(e1: Expr, e2: Expr) extends Expr
+
+def eval(e: Expr): Expr = e match {
+  case Num(n) => n
+  case Add(e1, e2) => eval(e1) + eval(e2)
+  case Mul(e1, e2) => eval(e1) * eval(e2)
+}
+\end{scalacode}
+
+Imagine extending this evaluator to support subtraction, division, etc.
+We could do so by adding more cases to `Expr` and adding corresponding
+lines to `eval`. But, this will quickly become tedious and repetitive.
+
+But, since we can store functions in data structures, we can replace
+`Add`, `Mul`, `Div`, `Sub`, `Exp`, and all other binary operators with
+a single constructor for binary arithmetic expressions:
+
+\begin{scalacode}
+sealed trait Expr
+case class Num(n: Int) extends Expr
+case class BinOp(op: (Int, Int) => Int, e1: Expr, e2: Expr) extends Expr
+
+def eval(e: Expr): Expr = e match {
+  case Num(n) => n
+  case BinOp(op, e1, e2) => op(eval(e1), eval(e2))
+}
+\end{scalacode}
+
+With these definitions, we can represent any binary arithmetic expression
+we please:
+
+\begin{scalacode}
+def sub(x: Int, y: Int): Int = x - y
+
+test("subtraction test") {
+  assert(eval(BinOp(sub, 10, 3)) == 7)
+}
+\end{scalacode}
+
+\subsection{Anonymous Functions}
+
+In Scala, \emph{functions are values}, just like integers, strings, or any user-
+defined type. They can truly appear in all the contexts in which other values
+appear: as arguments, as results, as fields in a data-structure, and so on.
+
+Unlike other values, functions seem to have the following special property:
+every function has a name, but the other kinds of values do not.
+For example, we can simply write `Cons(1, Cons(2, Cons(3, Empty())))`
+and don't need to give this list a name. But, all functions
+start with `def functionName`.
+
+But, this is just convenience and a convention. Just like other values,
+functions don't need names. For example, here is a function that adds two
+numbers:
+
+\begin{scalacode}
+((x: Int, y: Int) => x + y)
+\end{scalacode}
+
+This function does not have a name, but it can be applied just like
+any other function:
+
+\begin{scalacode}
+((x: Int, y: Int) => x + y)(10, 20)
+\end{scalacode}
+
+The code above is not easy to read. It will be a lot clearer of we give the
+function a name. You already know how to name a function using `def`. But, all
+other values are named using `val`. In fact, we can use `val` to name functions
+too, just like any other type of value:
+
+\begin{scalacode}
+val adder = ((x: Int, y: Int) => x + y)
+
+adder(10, 20)
+\end{scalacode}
+
+You should think of `def` as a convenient shorthand for naming functions.
+That is, these two definitions are equivalent:
+
+\begin{scalacode}
+val adder = ((x: Int, y: Int) => x + y)
+
+def adder(x: Int, y: Int) = x + y
+\end{scalacode}
+
+In general, it is a good idea to name your functions. But, there are
+certain situations where a short, anonymous function can made your code
+easier to read and write.
+
+For example, we earlier defined the `doubleAll` function, which doubles
+every number in a list of numbers. Here is simple, one-line definition
+using an anonymous function as an argument to `map`:
+
+\begin{scalacode}
+def doubleAll(lst: List[Int]) = map((n: Int) => n * 2, lst)
+\end{scalacode}
+
+The anonymous function itself is extremely simple and the name of the enclosing
+function, `doubleAll`, really makes it clear what it does.
+
+For another example, suppose we want to remove all the odd numbers
+in a list. We can do this using `filter` and a short, anonymous function:
+
+\begin{scalacode}
+def removeOdds(lst: List[Int]) = filter((n: Int) => n % 2 == 0, lst)
+\end{scalacode}
+
+In these kinds of situations, anonymous functions can be very helpful.
+
+\subsection{Some Definitions}
+
+Here are some terminology that gets thrown around when comparing programming
+languages and programming techniques.
+
+\begin{itemize}
+
+  \item \emph{Higher-order functions} are functions that consume or return other
+  functions   as values. You can tell if a function is higher-order by inspecting
+  its type. Does it have any nested `=>`s in the type? If so, it is a higher-order
+  function.
+
+  But, what about the `eval` function we wrote above, which consumes `BinOp`s?
+  Is that a higher-order function?
+
+  \item \emph{First-class functions} is a property of a programming language. For
+  a programming language to have first-class functions, it must treat functions
+  as values, with all the rights and privileges that other values have. You must
+  be able to use functions as arguments, produce functions as results, and store
+  functions in data-structures.
+
+\end{itemize}
+
+\section{Evaluation by Substitution}
 
 \chapter{Lecture 5}
 
-\section{Recap: Modeling Data and Algebraic Data Types}
+\section{Trees, Pairs, and Other Containers}
 
-\section{Evaluation by substitution}
 
 \chapter{Homework 3: Modeling Data}
 
@@ -791,30 +1207,61 @@ with practice.
 
 Use the option type
 
-\chapter{Lecture 8}
-
-\section{Type checking Scala}
+\chapter{Lecture 8\instructornote{Thursday, Feb 11}}
 
 \chapter{Homework 5: Type Checker and Evaluator}
 
+\chapter{Lecture 9\instructornote{Thursday, Feb 18}}
+
+\section{Type checking Scala}
+
+\chapter{Lecture 10}
+
 \chapter{Homework 6: Join Lists}
+
+\chapter{Lecture 11}
+
+\chapter{Lecture 12}
 
 \chapter{Homework  7: Graphs}
 
+\chapter{Lecture 13}
+
+\chapter{Lecture 14\instructornote{Last lecture before Spring Recess}}
+
+\chapter{Lecture 15\instructornote{Tuesday, March 22}}
+
 \chapter{Homework 8: Tic Tac Toe}
+
+\chapter{Lecture 16}
+
+\chapter{Lecture 17}
+
+\chapter{Lecture 19}
 
 \chapter{Homework 9: Sudoku}
 
+\chapter{Lecture 20}
+
+\chapter{Lecture 21}
+
 \chapter{Homework 10: Parsing}
+
+\chapter{Lecture 22}
+
+\chapter{Lecture 23}
 
 \chapter{Homework 11: ??}
 
+\chapter{Lecture 24}
+
+\chapter{Lecture 25}
+
 \chapter{Homework 12: ??}
 
+\chapter{Lecture 26}
 
-
-
-
+\chapter{Lecture 27}
 
 
 
