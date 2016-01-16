@@ -6,9 +6,20 @@
 \usepackage{comment}
 \usepackage{minted}
 \usepackage{fancyvrb}
+\usepackage{listings}
+\usepackage[listings,xparse]{tcolorbox}
 \usepackage{subcaption}
+\usepackage{dirtree}
+\usepackage{arrayjobx}
 
 \definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% If mathescape is on, then then $ from command prompt screws things up.
+\lstdefinestyle{lstconsole}{}
+
+\lstnewenvironment{console}{\lstset{language={},mathescape=false}}{}
+
+%\newtcblisting{console}{colback=red!5!white,notitle,listing style=lstconsole}
 
 \newminted{scala}{fontsize=\footnotesize,bgcolor=bg}
 
@@ -28,15 +39,33 @@
 \renewcommand*\thesection{\arabic{section}}
 
 \ifinstructormode
+  \newtcolorbox{instructorbox}{colback=red!5!white, colframe=red!75!black}
   \newenvironment{instructor}%
-  {\noindent\emph{Start of instructor-only material.}}%
-  {\noindent\emph{End of instructor-only material.}}
+  {\begin{instructorbox}\paragraph{Note for instructors.}}
+  {\end{instructorbox}}
 \else
   \excludecomment{instructor}
 \fi
 
 \newcommand{\classtime}[1]{\ifinstructormode~(#1 mins) \fi}
 
-\newcommand{\instructornote}[1]{\ifinstructormode~(#1 mins) \fi}
+\newcommand{\instructornote}[1]{\ifinstructormode~#1 \fi}
 
 \newcommand{\sbt}{\texttt{sbt}}
+
+\newcounter{lecture_num}
+\stepcounter{lecture_num}
+
+\newcommand{\newlecture}{%
+\chapter{Lecture \the\value{lecture_num}}%
+\stepcounter{lecture_num}%
+}
+
+\newcounter{discussion_num}
+\stepcounter{discussion_num}
+
+\newcommand{\newdiscussion}[1]{%
+\chapter{Discussion \the\value{discussion_num}: #1}%
+\stepcounter{discussion_num}%
+}
+
