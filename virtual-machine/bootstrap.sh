@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -x
 
 apt-get update
@@ -11,20 +10,11 @@ apt-get upgrade -y
 apt-get install -y \
   lubuntu-core \
   curl \
-  virtualbox-guest-x11 \
   lxterminal \
   xdg-utils \
-  docker.io \
   vim-gtk \
   emacs24 \
   software-properties-common
-
-# Configure Docker
-cat << EOF > /etc/default/docker.io
-DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock"
-EOF
-sed -i 's/GRUB_CMDLINE_LINUX=\"\"/GRUB_CMDLINE_LINUX=\"cgroup_enable=memory swapaccount=1\"/' /etc/default/grub
-update-grub
 
 adduser --disabled-password --gecos "" student
 
@@ -63,11 +53,11 @@ apt-get -f -y install
 
 # Install Sublime Text
 if [ `arch` == "x86_64" ]; then
-  SUBL_DEB_FILE=sublime-text_build-3059_amd64.deb
+  SUBL_DEB_FILE=sublime-text_build-3083_i386.deb
 else
-  SUBL_DEB_FILE=sublime-text_build-3059_i386.deb
+  SUBL_DEB_FILE=sublime-text_build-3083_amd64.deb
 fi
-wget http://c758482.r82.cf2.rackcdn.com/$SUBL_DEB_FILE
+wget https://download.sublimetext.com/$SUBL_DEB_FILE
 dpkg -i $SUBL_DEB_FILE
 rm $SUBL_DEB_FILE
 
@@ -79,39 +69,17 @@ apt-get update
 apt-get install -y oracle-java8-installer
 
 # Install SBT
-wget http://dl.bintray.com/sbt/debian/sbt-0.13.5.deb
-dpkg -i sbt-0.13.5.deb
+wget http://dl.bintray.com/sbt/debian/sbt-0.13.9.deb
+dpkg -i sbt-0.13.9.deb
 rm sbt-0.13.5.deb
-
-# Install Scala
-wget http://downloads.typesafe.com/scala/2.11.2/scala-2.11.2.deb
-dpkg -i scala-2.11.2.deb
-rm scala-2.11.2.deb
 
 # Fix broken deps
 apt-get -f -y install
 
-# Install CS220 software
-add-apt-repository -y ppa:arjun-guha/umass-cs220
-apt-get update
-apt-get install -y cs220
-
-# Install CS220 docker image
-if [ `arch` == "x86_64" ]; then
-  docker.io pull arjunguha/cs220
-fi
 
 # Setup unattended upgrades
 cat << EOF > /etc/apt/apt.conf.d/10periodic
 APT::Periodic::Unattended-Upgrade "1";
-EOF
-
-cat << EOF /etc/apt/apt.conf.d/50-unattended-upgrades
-Unattended-Upgrade::Allowed-Origins {
-       "${distro_id}:${distro_codename}-security";
-       "LP-PPA-arjun-guha-umass-cs220 trusty";
-};
-EOF
 
 # Remove junk
 apt-get remove -y xterm
