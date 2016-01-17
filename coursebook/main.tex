@@ -291,6 +291,13 @@ scala> def dist2(x: Double, y: Double): Double = {
 }
 \end{console}
 
+\begin{figure}
+\scalafile{code/Lecture1fac.scala}
+
+\caption{A Scala module}
+\label{lecture1code}
+\end{figure}
+
 \section{\sbt{} Project Structure\classtime{5}}
 
 In principle, you can write a full-fleged program line-by-line in the Scala
@@ -344,39 +351,34 @@ student@vm:~/lecture1$ mkdir src/test
 student@vm:~/lecture1$ mkdir src/test/scala
 \end{console}
 
-\begin{itemize}
+We will now see how to save Scala code to files. Using a text editor
+(e.g., Sublime Text), create a file called \verb|Lecture1.scala| in the
+\verb|src/main/scala| directory, with the contents shown in \cref{lecture1code}.
+The code creates an object with a single function to calculate factorials.
 
+\begin{instructor}
+Scala wart: Do not \verb|extend App| because it can't be evaluated in console.
+\end{instructor}
 
-\item Copy the functions defined in the REPL into a \verb|.scala| file and
- recompile.
+When you write functions in a Scala file, you \emph{have} to place it in
+an object. You cannot just write \scalainline{def fac ...} without an enclosing
+object. This is a peculiarity of Scala that we will explain later in the course.
+In this example, the name of the object is ``Lecture1'', but it can be anything
+you like.
 
-\begin{verbatim}
-// Scala wart: Do *not* "extend App" because it can't be evaluated in console.
-object Lecture1 {
+Now that we've saved this function to a file, we can use it from the console:
+%
+\begin{console}
+sbt> console
+scala> import Lecture1._
+scala> fac(10)
+\end{console}
 
-  def fac(n: Int) = if (n == 0) 1 else (n * fac(n - 1))
-
-}
-\end{verbatim}
-
-\item Re-enter the console and show students how to run the functions saved
-to the file.
-
-\begin{verbatim}
+\begin{figure}
+\begin{scalacode}
+// src/main/scala/Lecture1Tests.scala
 import Lecture1._
-fac(10)
-\end{verbatim}
 
-\end{itemize}
-
-\section{Testing\classtime{5}}
-
-\begin{itemize}
-
-\item Introduce the idea of test-cases (students know JUnit). Use the console
-to create \verb|test/main/scala| and create a test file:
-
-\begin{verbatim}
 class Lecture1Tests extends org.scalatest.FunSuite {
 
   test("fac -- base case") {
@@ -388,9 +390,23 @@ class Lecture1Tests extends org.scalatest.FunSuite {
   }
 
 }
-\end{verbatim}
+\end{scalacode}
+\caption{Unit tests for the code in \cref{lecture1code}}
+\label{lecture1tests}
+\end{figure}
 
-\item Show \verb|sbt test|.
+\section{Testing\classtime{5}}
+
+The \sbt{} console is a convenient way to experiment with new code or write
+a ``one off' functionn. However, you must write \emph{unit tests} to test
+any actual code you write. \Cref{lecture1tests} shows an example of
+unit tests that use the \emph{ScalaTest} library. The code is quite self-explanatory:
+each test suite is a class that extends \scalainline{org.scalatest.FunSuite}.
+The body of the class has several test blocks, as shown in the figure.
+
+\begin{instructor}
+
+\begin{itemize}
 
 \item Propose a new function to write. Write the test-cases first, then
 the implementation and re-run \verb|sbt test|.
@@ -401,94 +417,350 @@ testing with \verb|~test|.
 
 \end{itemize}
 
+
+\end{instructor}
+
 \section{Building and Pattern-Matching on Lists\classtime{25}}
 
+
+In this section, we will show how to write simple list-processing functions. We
+will cover basic \emph{functional programming} and introduce \emph{pattern
+matching}.
+
+\subsection{Constructing Lists}
+
+The simplest list is the empty list, which is written in Scala as
+%
+\begin{scalacode}
+Nil
+\end{scalacode}
+%
+Given the empty list, we can construct larger lists using the \scalainline{::}
+operator (which is pronounced \emph{cons}). Here is a simple example that
+constructs a one-element list:
+%
+\begin{scalacode}
+50 :: Nil
+\end{scalacode}
+Given a one-element list, we can build a two-element list by using the 
+\scalainline{::} operator again:
+%
+\begin{scalacode}
+100 :: (50 :: Nil)
+\end{scalacode}
+%
+We can use \scalainline{::} again to build a three-element list:
+%
+\begin{scalacode}
+200 :: (100 :: (50 :: Nil))
+\end{scalacode}
+%
+In an expression \scalainline{x :: y},
+\scalainline{x} is known as the \emph{head} of the list and \scalainline{y} is
+known as the \emph{tail}. Note that the tail of a list is always a list itself,
+(though it may be the empty list \scalainline{Nil}). 
+
+For example, consider the list below:
+\begin{scalacode}
+val letters = "a" :: ("b" :: :: Nil)
+\end{scalacode}
+%
 \begin{itemize}
 
-\item Using the console, introduce lists.
-First show \verb|Nil|, then \verb|::|. Discuss the type of \emph{non-empty lists}
-that is printed on the console and allude to type inference.
+  \item The head of \scalainline{letters} is \scalainline{"a"}.
 
-\item Write the \verb|sum| function:
+  \item The tail of \scalainline{letters} is \scalainline{"b" :: Nil}.
 
-\begin{verbatim}
-def sum(lst: List[Int]): Int = lst match {
-  case Nil => 0
-  case n :: rest => n + sum(rest)
-}
-\end{verbatim}
+  \item The head of the tail of \scalainline{letters} is \scalainline{"b"}.
 
-This is the first example of pattern matching and the first written occurence of
-the list type.
+  \item The tail of the tail of \scalainline{letters} is \scalainline{Nil}.  
 
-\item Some more functions that don't involve generics:
+  \item \scalainline{Nil} does not have a head or a tail.
+
+\end{itemize}
+
+In our examples so far, we've used parenthesis to make the head and tail clear.
+However, you can simply write \scalainline{"a" :: "b" :: "c" :: Nil}. Intuitively,
+everything to the right of a \scalainline{::} is the tail. If you get confused
+up, write the parenthesis explicitly.
+
+It is usually easier to write lists in the following way:
 %
-\begin{verbatim}
+\begin{itemize}
+
+  \item \scalainline{List("a", "b", "c")} is equivalent to
+  \scalainline{"a" :: ("b" :: ("c" :: Nil))}.
+
+  \item \scalainline{List()} is equivalent to \scalainline{Nil}.
+
+\end{itemize}
+%
+However, it is important to understand that this is just a convenient notation.
+Under the hood, Scala transforms these expressions to use \scalainline{::}
+and \scalainline{Nil}, as we described above.
+
+\paragraph{Lists and Type Inference}
+
+You should try to type out the expressions above into the \sbt{} console.
+For example:
+%
+\begin{console}
+scala> val lst = 1 :: 2 :: 3 :: Nil
+lst: List[Int] = List(1, 2, 3)
+\end{console}
+%
+As you can see, Scala prints lists using the shorthand notation,
+even if you explicitly use \scalainline{::} and \scalainline{Nil}.
+More significantly, Scala has inferred that the type of the list
+is \scalainline{List[Int]}. There was no need to explicitly state that
+is is the case.
+
+Here is another example, where Scala infers that the type of a list is
+\scalainline{List[String]}:
+%
+\begin{console}
+scala> val lst = List("a", "b", "c")
+lst: List[String] = List("a", "b", "c")
+\end{console}
+
+Type inference is very convenient and spares you from having to explicitly
+specify the type of the element. However, type inference is not magic
+and can behave in unexpected ways. For example, in the interaction
+below, Scala infers that the type of the list is \scalainline{List[Any]}:
+%
+\begin{console}
+scala> val lst = List("a", 10, "c")
+lst: List[Any] = List("a", 10, "c")
+\end{console}
+Although this is technically true, if you write this code, it is more
+likely that you made a mistake and intended to actually create a list of
+strings. If you're ever unsure, you can write the type explicitly, which
+would signal a type error in this case:
+\begin{console}
+scala> val lst = List[String]("a", 10, "c")
+<console>:10: error: type mismatch;
+ found   : Int(10)
+ required: String
+       val lst = List[String]("a", 10, "c")
+                                   ^
+\end{console}
+
+\begin{figure}
+
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{scalacode}
+def countDown(n: Int): List[Int] = {
+  if (n == 0) {
+    Nil
+  }
+  else {
+    n :: countDown(n - 1)
+  }
+}
+\end{scalacode} 
+\caption{}
+\label{countDown}
+\end{subfigure}
+\hskip 2em
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{scalacode}
+def fromTo(lo: Int, hi: Int): List[Int] = {
+  if (lo == hi) {
+    lo :: Nil
+  }
+  else {
+    lo :: fromTo(lo + 1, hi)
+  }
+}
+\end{scalacode} 
+\caption{}
+\label{fromTo}
+\end{subfigure}
+
+\caption{Functions that produce lists.}
+\label{listcons}
+\end{figure}
+
+\paragraph{Functions that produce lists}
+
+Now that we've seen how to construct lists explicitly, it is straightforward
+to write functions that produce lists. \Cref{listcons} shows some simple
+recursive functions that construct new lists.
+
+\begin{figure}
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{scalacode}
 def product(lst: List[Int]): Int = lst match {
   case Nil => 1
   case n :: rest => n * product(rest)
 }
-
-def double(lst: List[Int]): List[Int] = lst match {
-  case Nil => Nil
-  case n :: rest => (2 * n) :: double(rest)
-}
-
+\end{scalacode}
+\caption{Calculate the product of a list of numbers.}
+\end{subfigure}
+\hskip 2em
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{scalacode}
 def repeatTwice(lst: List[Int]): List[Int] = lst match {
   case Nil => Nil
   case n :: rest => n :: n :: repeatTwice(rest)
 }
-\end{verbatim}
+\end{scalacode}
+\caption{Repeats every element of a list twice.}
+\end{subfigure}
 
-\item Pattern matching is quite powerful, you can express complex conditionals
-by just writing a pattern. For example, this function counts the number of
-$1$s in a list:
+\caption{Two simple functions that consume lists.}
+\label{listconsumers}
+\end{figure}
+
+
+\subsection{Pattern Matching}
+
+Now that we've seen how to write functions that produce lists, we'll
+learn how to write functions that consume lists as arguments. We'll
+start by writing a simple functions to calculate the sum of a list of numbers.
+Here are some examples of of \scalainline{sum} being used:
 %
-\begin{verbatim}
+\begin{scalacode}
+assert(sum(20 :: 30 :: Nil) == 50)
+assert(sum(1 :: 2 :: 3 :: Nil) == 6)
+\end{scalacode}
+
+Intuitively, to calculate \scalainline{sum(1 :: 2 :: 3 :: Nil)}, we can
+can recursively calculate the sum of the tail and and that value to the
+head:
+\begin{scalacode}
+   sum(1 :: 2 :: 3 :: Nil) 
+== 1 + sum(2 :: 3 :: Nil)
+== 1 + (2 + sum(3 :: Nil))
+== 1 + (2 + (3 + sum(Nil)))
+\end{scalacode}
+%
+The last line shows an important special case. Since the empty list
+doesn't have a head or a tail, we need to treat it differently. We'll say
+that \scalainline{sum(Nil)} is \scalainline{0}.
+
+We can write \scalainline{sum} by using a powerful feature of
+Scala called \emph{pattern matching}.
+%
+\begin{scalacode}
+def sum(lst: List[Int]): Int = {
+  lst match {
+    case Nil => 0
+    case h :: t => h + sum(t)
+  }
+}
+\end{scalacode}
+%
+This code makes it clear that the function is inspecting \scalainline{lst}
+and considering two \emph{cases}. When \scalainline{lst} is \scalainline{Nil},
+it produces \scalainline{0} and when \lstinline{lst} is constructed with
+the \scalainline{::} operator, the function recurs on the tail and ands
+that result to the head. In this code, 
+\scalainline{Nil} and \scalainline{h :: t} are called \emph{patterns}.
+
+\Cref{listconsumers} shows two more list-consuming functions that
+use pattern-matching. Notice that in \scalainline{::} cases, these functions
+use different variable names for the head and the tail. A pattern can use
+any variable to refer to the value of the head or the tail.
+
+\begin{figure}
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{scalacode}
 def countOnes(lst: List[Int]): Int = lst match {
   case Nil => 0
-  case n :: rest => if (n == 1) 1 + countOnes(rest) else countOnes(rest)
+  case n :: rest => {
+    if (n == 1) {
+      1 + countOnes(rest)
+    }
+    else {
+      countOnes(rest)
+    }
+  }
 }
-\end{verbatim}
-
-\item But, we can write it more compactly using patterns:
-%
-\begin{verbatim}
+\end{scalacode}
+\caption{Counting ones using an if-expression.}
+\label{countonescomplex}
+\end{subfigure}
+\hskip 2em
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{scalacode}
 def countOnes(lst: List[Int]): Int = lst match {
   case Nil => 0
   case 1 :: rest => 1 + countOnes(rest)
-}
-\end{verbatim}
+  case n :: rest => countOnes(rest)
 
-\item If we try to compile this, we get an \emph{exhuastivity error}. Here
-is the fix:
+}
+\end{scalacode}
+\caption{Counting ones using a composite pattern.}
+\label{countonessimple}
+\end{subfigure}
+
+\caption{Pattern matching can make complex conditionals clearer.}
+\end{figure}
+
+\paragraph{Complex Patterns}
 %
-\begin{verbatim}
-def countOnes(lst: List[Int]): Int = lst match {
+Pattern-matching is extremely powerful and can be used to express
+complex conditionals. For example, \cref{countonescomplex} is a function
+that counts the number of \scalainline{1}s that occur in a list: it uses
+pattern matching as introduced above and then an if-expression to
+check if the head of the list is \scalainline{1}.
+
+\Cref{countonessimple}
+is the same function, rewritten to use pattern matching. This version is shorter
+and makes it clear that there are three cases. To do so, we exploit the fact
+that patterns can match \emph{almost} any value, including numbers,
+strings, lists, and user-defined data structures too (which we will see
+in a later class).
+
+\paragraph{Exhaustivity and Reachability Checking}
+%
+Here is another function that uses pattern matching to count the number
+of tens in a list:
+%
+\begin{scalacode}
+def countTens(lst: List[Int]): Int = lst match {
+  case 10 :: rest => 1 + countTens(rest)
+  case n :: rest => countTens(rest)
+}
+\end{scalacode}
+
+However, this function had a bug. Do you see it? If you type this into
+a console, Scala prints the following:
+%
+\begin{console}
+<console>:10: warning: match may not be exhaustive.
+It would fail on the following input: Nil
+       def countTens(lst: List[Int]): Int = lst match {
+                                            ^
+\end{console}
+%
+Scala has detected that we forgot to write a case for \scalainline{Nil}. 
+Scala ensures that your patterns are \emph{exhaustive}. Here is another
+buggy version of the function:
+%
+\begin{scalacode}
+def countTens(lst: List[Int]): Int = lst match {
+  case n :: rest => 1 + countTens(rest)
+  case n :: rest => countTens(rest)
   case Nil => 0
-  case 1 :: rest => 1 + countOnes(rest)
-  case _ :: rest => countOnes(rest)
-
 }
-\end{verbatim}
-
-\item Introduce \verb|List(x, y, z)| as shorthand for \verb|x :: y :: z :: Nil|.
-
-\item \verb|List| can be used in patterns too:
+\end{scalacode}
 %
-\begin{verbatim}
-def isSingleton(lst: List[Int]): Boolean = lst match {
-  case List(_) => true
-  case _ => false
-}
-\end{verbatim}
+In this version, we wrote the patterns incorrectly, so the first and second
+patterns are identical. Scala reports the following error:
+\begin{scalacode}
+<console>:13: warning: unreachable code
+         case n :: rest => countTens(rest)
+\end{scalacode}
+%
+Scala ensures that all cases are \emph{reachable}.
 
-\item Emphasize that pattern matching can be used on arbitrary data structures,
-including data structures that you define, which we will see later.
-
-\item Show that \verb|if| is a form of pattern matching.
-
-\end{itemize}
+This automatic exhaustivity and reachability checking makes programs that
+use pattern-matching much more robust than programs that use complicated,
+nested if-statements. Pattern matching is a very powerful tool that you can
+exploit to make your programs more robust. We will emphasize pattern-matching
+over conditionals in this course.
 
 \chapter{Homework 1: Introduction to Functional Programming}
 
