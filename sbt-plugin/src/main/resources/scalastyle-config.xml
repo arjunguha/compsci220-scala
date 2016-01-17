@@ -2,31 +2,50 @@
 
  <name>Scalastyle configuration for CMPSCI220</name>
 
- <check
+  <check
    level="error"
    class="org.scalastyle.scalariform.NullChecker"
    enabled="true">
-   <customMessage>
-   You must not use null. Consider using the Option[T] type instead.
-  </customMessage>
- </check>
+    <customMessage>
+    You must not use null. Consider using the Option[T] type instead.
+    </customMessage>
+  </check>
 
- <check
+  <check
    level="error"
    class="org.scalastyle.scalariform.ReturnChecker"
    enabled="true">
-   <customMessage>
+    <customMessage>
     You do not need to use 'return' in Scala.
-   </customMessage>
-</check>
+    </customMessage>
+  </check>
 
- <check
+  <check
    level="error"
    class="org.scalastyle.scalariform.WhileChecker"
    enabled="true">
-   <customMessage>
+    <customMessage>
     Do not use 'while' loops. Use the 'map' method to process collections.
-   </customMessage>
-</check>
+    </customMessage>
+  </check>
+
+  <check
+   enabled="true"
+   class="org.scalastyle.scalariform.VarFieldChecker"
+   level="error">
+     <customMessage>
+     Do not use 'var' to declare global variables. Use 'val' instead.
+     </customMessage>
+  </check>
+
+  <check
+   enabled="true"
+   class="org.scalastyle.scalariform.VarLocalChecker"
+   level="error">
+     <customMessage>
+     Do not use 'var' to declare variables. Use 'val' instead.
+     </customMessage>
+  </check>
+
 
 </scalastyle>
