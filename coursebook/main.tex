@@ -442,7 +442,7 @@ constructs a one-element list:
 \begin{scalacode}
 50 :: Nil
 \end{scalacode}
-Given a one-element list, we can build a two-element list by using the 
+Given a one-element list, we can build a two-element list by using the
 \scalainline{::} operator again:
 %
 \begin{scalacode}
@@ -458,7 +458,7 @@ We can use \scalainline{::} again to build a three-element list:
 In an expression \scalainline{x :: y},
 \scalainline{x} is known as the \emph{head} of the list and \scalainline{y} is
 known as the \emph{tail}. Note that the tail of a list is always a list itself,
-(though it may be the empty list \scalainline{Nil}). 
+(though it may be the empty list \scalainline{Nil}).
 
 For example, consider the list below:
 \begin{scalacode}
@@ -473,7 +473,7 @@ val letters = "a" :: ("b" :: :: Nil)
 
   \item The head of the tail of \scalainline{letters} is \scalainline{"b"}.
 
-  \item The tail of the tail of \scalainline{letters} is \scalainline{Nil}.  
+  \item The tail of the tail of \scalainline{letters} is \scalainline{Nil}.
 
   \item \scalainline{Nil} does not have a head or a tail.
 
@@ -557,7 +557,7 @@ def countDown(n: Int): List[Int] = {
     n :: countDown(n - 1)
   }
 }
-\end{scalacode} 
+\end{scalacode}
 \caption{}
 \label{countDown}
 \end{subfigure}
@@ -572,7 +572,7 @@ def fromTo(lo: Int, hi: Int): List[Int] = {
     lo :: fromTo(lo + 1, hi)
   }
 }
-\end{scalacode} 
+\end{scalacode}
 \caption{}
 \label{fromTo}
 \end{subfigure}
@@ -629,7 +629,7 @@ Intuitively, to calculate \scalainline{sum(1 :: 2 :: 3 :: Nil)}, we can
 can recursively calculate the sum of the tail and and that value to the
 head:
 \begin{scalacode}
-   sum(1 :: 2 :: 3 :: Nil) 
+   sum(1 :: 2 :: 3 :: Nil)
 == 1 + sum(2 :: 3 :: Nil)
 == 1 + (2 + sum(3 :: Nil))
 == 1 + (2 + (3 + sum(Nil)))
@@ -655,7 +655,7 @@ This code makes it clear that the function is inspecting \scalainline{lst}
 and considering two \emph{cases}. When \scalainline{lst} is \scalainline{Nil},
 it produces \scalainline{0} and when \lstinline{lst} is constructed with
 the \scalainline{::} operator, the function recurs on the tail and ands
-that result to the head. In this code, 
+that result to the head. In this code,
 \scalainline{Nil} and \scalainline{h :: t} are called \emph{patterns}.
 
 \Cref{listconsumers} shows two more list-consuming functions that
@@ -735,7 +735,7 @@ It would fail on the following input: Nil
                                             ^
 \end{console}
 %
-Scala has detected that we forgot to write a case for \scalainline{Nil}. 
+Scala has detected that we forgot to write a case for \scalainline{Nil}.
 Scala ensures that your patterns are \emph{exhaustive}. Here is another
 buggy version of the function:
 %
@@ -762,11 +762,164 @@ nested if-statements. Pattern matching is a very powerful tool that you can
 exploit to make your programs more robust. We will emphasize pattern-matching
 over conditionals in this course.
 
-\chapter{Homework 1: Introduction to Functional Programming}
+\chapter{\texorpdfstring{Homework 1: Introduction to Scala}{file:hw/hw1}}
+
+\due{Thursday, Jan 28}
+
+This assignment has several ``finger exercises'' that introduce you
+to functional programming in Scala.
+
+\section{Setup}
+
+Before you start programming, you need to complete a few preliminary steps.
+
+\begin{enumerate}
+
+\item Download and start the course virtual machine. You will need it for all
+the assignments in this class.
+
+\item Using the command-line, create a directory for your assignment (e.g., the
+  \verb|hw1| directory). Within this directory, create the directories
+  \verb|src/main|scala| and \verb|src/test/scala|. For example, you could use
+  the following commands:
+  %
+  \begin{console}
+  mkdir hw1
+  cd hw1
+  mkdir src
+  mkdir src/main
+  mkdir src/main/scala
+  mkdir src/test
+  mkdir src/test/scala
+  \end{console}
+
+   \item Using a text editor, create the file \verb|src/main/scala/Lecture1.scala|
+   with the following contents:
+   %
+   \scalafile{../hw/lists/template/src/main/scala/Lecture1.scala}
+
+   \item Using a text editor, create the file \verb|src/test/scala/TestSuite.scala|
+   with the following contents:
+   %
+   \scalafile{../hw/lists/template/src/test/scala/TestSuite.scala}
+
+  \item From the command-line, start \sbt{} and run the test suite. You should
+  see output that looks like this:
+
+  \lstinputlisting[language=console]{../hw/lists/template/test-output.txt}
+
+  \emph{There should be errors or warnings printed.}
+
+\end{enumerate}
+
+\section{Exercises}
+
+For this assignment, you'll be writing several lists and list-processing
+functions. You must place these within the \verb|Lecture1| object that
+you created above. You must write tests cases, within the \verb|TestSuite|
+class that you created above.
+
+\begin{enumerate}
+
+  \item Write a function called \scalainline{sumDouble} that consumes a
+  \scalainline{List[Int]} and produces an \scalainline{Int}. The produced
+  value should be double the sum of the list of integers.
+
+  \item Write a function called \scalainline{removeZeroes} that consumes a
+  \scalainline{List[Int]} and produces a \scalainline{List[Int]}.
+  The produced list should the same as the input list, but with all zeroes
+  removes. The function must not change the order of elements.
+
+  \item Write a function called \scalainline{countEvens} that consumes a
+  \scalainline{List[Int]} and produces an \scalainline{Int} that represents
+  that number of even numbers in the input list.
+
+  \item Write a function called \scalainline{removeAlternating} that consumes a
+  \scalainline{List[String]} and produces a \scalainline{List[String]} that
+  has every other element in the input list.
+
+  The first element of the input list must be in the output list.
+  For example, \scalainline{removeAlternating(List("A", "B"))} should be
+  \scalainline{List("A")} and not \scalainline{List("B")}.
+
+  The function must not change the order of elments.
+
+  \item Write a function called \scalainline{isAscending} that consumes a
+  \scalainline{List[Int]} and produces a \scalainline{Boolean} that is
+  \scalainline{true} if the numbers in the input list are in ascending order.
+  Note that the input may have repeated numbers.
+
+  \item Write a function called \scalainline{addSub} that consumes a
+  \scalainline{List[Int]} and produces a \scalainline{Int}. The produced
+  value should add all the elements in even position and subtract all the
+  elements in odd position.
+
+  Note that the first element of a list is considered
+  ``zeroth'' element, thus it is in even position.
+  For example, \scalainline{addSub(List(10, 20, 30, 40))} should be
+  \scalainline{10 - 20 + 30 - 40}.
 
 
-Scala ``finger exercises'' that involve writing recursive list-processing
-functions. Ensure that everything is testable.
+  \item Write a function called \scalainline{alternate} that consumes \emph{two}
+  \scalainline{List[Int]} arguments and produces a \scalainline{List[Int]}.
+  The elements of the resulting list should alternate between the elements of
+  the arguments. You may assume that the two argument have the same
+  length.
+
+  For example, \scalainline{alternate(List(1, 3, 5), List(2, 4, 6))} should
+  be \scalainline{List(1, 2, 3, 4, 5, 6)}.
+
+  \item Write a function called \scalainline{fromTo} that takes
+  two \scalainline{Int}s as arguments and produces a \scalainline{List[Int]}.
+  The value of \scalainline{fromTo(x, y)} should be the list of consecutive 
+  integers starting from and including $x$ up to and excluding $y$. You may
+  should assume that $x \le y$.
+
+  For example, \scalainline{fromTo(9, 13)} should be \scalainline{List(9, 10, 11, 12)}
+  and \scalainline{fromTo(10, 10)} should be \scalainline{Nil}.
+
+  \item Write the following function:
+
+  \begin{scalacode}
+  def insertOrdered(n: Int, lst: List[Int]): List[Int]
+  \end{scalacode}
+
+  Assuming that \scalainline{lst} is in ascending order,  
+  \scalainline{insertOrdered} should produce a list that is the same as
+  the input, but with $n$ inserted such that the order is preserved.
+  For example, \scalainline{insertOrdered(5, List(1, 3, 7, 9))} should be
+  \scalainline{List(1, 3, 5, 7, 9)}. 
+
+  You should assume that \scalainline{lst} is in ascending order. Your function
+   may produce any result or even throw an exception if it is not.
+
+   \item Write the following function:
+
+   \begin{scalacode}
+   def sort(lst: List[Int]): List[Int]
+   \end{scalacode}
+
+   The result should be the sorted input list.
+
+\end{enumerate}
+
+\section{Hand In}
+
+From \sbt{}, run the command \verb|submit|. The command will create
+a file called \verb|submission.tar.gz| in your assignment directory.
+Submit this file using Moodle.
+
+For example, if the command runs successfully, you will see output similar
+to this:
+%
+\begin{console}
+Created submission.tar.gz. Upload this file to Moodle.
+[success] Total time: 0 s, completed Jan 17, 2016 12:55:55 PM
+\end{console}
+
+\textbf{Note:}  The command will not allow you to submit code that does not
+compile. If your code doesn't compile, you will receive no credit for the
+assignment.
 
 \newlecture
 

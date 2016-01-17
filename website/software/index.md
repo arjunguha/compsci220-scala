@@ -3,6 +3,8 @@ layout: default
 title: Course Software
 ---
 
+
+** TODO: update URL to VM**
 We have created a [virtual machine] with Scala and several other course-specific
 software tools installed. You must use this virtual machine to do the homework
 and projects for the class. Follow the steps below to install the virtual

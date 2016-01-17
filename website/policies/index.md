@@ -8,7 +8,7 @@ title: Policies
 # No Electronics
 
 You cannot use electronics of any kind in class. (i.e., no laptops, cell phones,
-tablets, Google Glasses, etc.)
+tablets, Google Glasses, Apple Watches, etc.)
 
 <a name="accomadations"></a>
 

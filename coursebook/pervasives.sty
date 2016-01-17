@@ -17,7 +17,18 @@
 % If mathescape is on, then then $ from command prompt screws things up.
 \lstdefinestyle{lstconsole}{}
 
-\lstnewenvironment{console}{\lstset{language={},mathescape=false}}{}
+\lstdefinelanguage{console}{
+  basicstyle=\ttfamily\footnotesize,
+  mathescape=false,
+  breaklines=true
+}
+
+\lstnewenvironment{console}{\lstset{language=console}}{}
+
+% \newcommand{consolefile}[1]{%
+% \lstset{lstconsole}%
+% \protect\lstinputlisting[fontsize=\footnotesize]{#1}%
+% }
 
 %\newtcblisting{console}{colback=red!5!white,notitle,listing style=lstconsole}
 
@@ -26,9 +37,6 @@
 \newminted{java}{fontsize=\footnotesize}
 
 \newmintedfile{scala}{fontsize=\footnotesize}
-
-\DefineVerbatimEnvironment%
-  {console}{Verbatim}{fontsize=\footnotesize}
 
 \newmintinline{scala}{}
 
@@ -59,7 +67,7 @@
 \stepcounter{lecture_num}
 
 \newcommand{\newlecture}{%
-\chapter{Lecture \the\value{lecture_num}}%
+\chapter{\texorpdfstring{Lecture \the\value{lecture_num}}{file:reading/lecture\the\value{lecture_num}}}%
 \stepcounter{lecture_num}%
 }
 
@@ -71,3 +79,4 @@
 \stepcounter{discussion_num}%
 }
 
+\newcommand{\due}[1]{\large\textbf{Due: #1 2016 1AM}}

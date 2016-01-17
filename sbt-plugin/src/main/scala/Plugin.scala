@@ -61,8 +61,8 @@ object Plugin extends sbt.AutoPlugin {
       },
       compile <<= compile.dependsOn(findMisplacedFiles, directoryWarnings),
       submit := {
-        (test in Test).value
         submitTask
-      }
+      },
+      submit <<= submit.dependsOn(compile)
     )
 }
