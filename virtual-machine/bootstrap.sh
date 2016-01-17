@@ -71,7 +71,7 @@ apt-get install -y oracle-java8-installer
 # Install SBT
 wget http://dl.bintray.com/sbt/debian/sbt-0.13.9.deb
 dpkg -i sbt-0.13.9.deb
-rm sbt-0.13.5.deb
+rm sbt-0.13.9.deb
 
 # Fix broken deps
 apt-get -f -y install
@@ -80,6 +80,7 @@ apt-get -f -y install
 # Setup unattended upgrades
 cat << EOF > /etc/apt/apt.conf.d/10periodic
 APT::Periodic::Unattended-Upgrade "1";
+EOF
 
 # Remove junk
 apt-get remove -y xterm
