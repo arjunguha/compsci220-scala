@@ -1,7 +1,5 @@
 package grading
 
-import com.github.dockerjava.api.model.Volume
-
 object WorkerMain extends App {
 
   import scala.concurrent._

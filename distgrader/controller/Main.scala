@@ -18,7 +18,7 @@ object Main extends App {
 
   args match {
     case Array("init-image") => CreateImage.init()
-    case Array("docker") => Grading.init()
+    // case Array("docker") => Grading.init()
     case Array("upload-worker") => CreateImage.uploadWorker()
     case Array("start-worker", ip) => Await.result(CreateImage.createWorker("my-worker", ip), Duration.Inf)
     case Array("start-controller", ip) => {

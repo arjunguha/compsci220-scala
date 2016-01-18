@@ -1,3 +1,6 @@
+
+/*
+
 package grading
 
 import com.github.dockerjava.api.DockerClient
@@ -52,3 +55,5 @@ object Grading {
   }
 
 }
+
+*/

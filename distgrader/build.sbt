@@ -13,7 +13,7 @@ scalacOptions in ThisBuild ++= Seq(
   "-Xfatal-warnings"
 )
 
-resolvers ++= Seq(
+resolvers in ThisBuild ++= Seq(
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
   "Typesafe Repository" at "http://repo.akka.io/snapshots/",
   "PLASMA" at "https://dl.bintray.com/plasma-umass/maven"
@@ -34,8 +34,9 @@ lazy val worker = project
     libraryDependencies ++= Seq(
       "com.ning" % "async-http-client" % "1.9.31",
       "com.lihaoyi" %% "upickle" % "0.3.6",
-      "com.spotify" % "docker-client" % "2.7.7",
+      "com.spotify" % "docker-client" % "3.5.9",
       "commons-io" % "commons-io" % "2.4",
+      "edu.umass.cs" %% "zip" % "1.2",
 //      ("com.github.docker-java" % "docker-java" % "2.1.2")
 //        .exclude("org.slf4j", "jcl-over-slf4j"),
       "org.scalatest" %% "scalatest" % "2.2.1" % "test"
@@ -50,7 +51,7 @@ lazy val controller = project
        "com.google.api-client" % "google-api-client" % "1.21.0",
        "com.google.apis" % "google-api-services-compute" % "v1-rev88-1.21.0",
        "com.google.apis" % "google-api-services-storage" % "v1-rev57-1.21.0",
-       "com.spotify" % "docker-client" % "3.4.0",
+       "com.spotify" % "docker-client" % "3.5.9",
        "org.scalatest" %% "scalatest" % "2.2.1" % "test",
        "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
        "commons-codec" % "commons-codec" % "1.10",
