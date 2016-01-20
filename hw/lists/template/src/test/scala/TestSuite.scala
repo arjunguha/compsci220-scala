@@ -1,4 +1,4 @@
- import Lecture1._
+import Lecture1._
 
 class TestSuite extends org.scalatest.FunSuite {
 

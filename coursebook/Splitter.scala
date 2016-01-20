@@ -1,13 +1,13 @@
 object Main extends App {
   import pdf._
-  val base = "../website/_site"
+  val base = "../website"
   PDF.loan(PDF.open("student.pdf")) { pdf =>
     val pageRanges = pdf.toc
       .map({ bookmark => (bookmark.title, bookmark.pageNumber) })
       .sliding(2)
       .map({ case Stream((title, start), (_, nextStart)) => (title, start, nextStart - 1) })
       .filter({ case (title, _, _) => title.startsWith("file:") })
-      .map({ case (title, start, stop) => (title.drop(5), start, stop) })
+      .map({ case (title, start, stop) => (title.drop(5), start, stop + 1) })
 
     for ((title, start, stop) <- pageRanges) {
       val section = PDF.create(pdf.pages.slice(start, stop))

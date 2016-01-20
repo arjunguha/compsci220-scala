@@ -5,7 +5,7 @@ title: Schedule
 
 | Date              | Notes                                                                                           |
 |:------------------|-------------------------------------------------------------------------------------------------|
-| Tuesday, Jan 19   |                                                                                                 |
+| Tuesday, Jan 19   | **No class.**                                                                                   |
 | Wednesday, Jan 20 | **No lab.**                                                                                     |
 | Thursday, Jan 21  | Out: [HW1]. [Lecture Notes](../reading/lecture1.pdf).                                           |
 | Tuesday, Jan 26   |                                                                                                 |

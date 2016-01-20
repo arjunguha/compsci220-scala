@@ -780,7 +780,7 @@ the assignments in this class.
 
 \item Using the command-line, create a directory for your assignment (e.g., the
   \verb|hw1| directory). Within this directory, create the directories
-  \verb|src/main|scala| and \verb|src/test/scala|. For example, you could use
+  \verb|src/main/scala| and \verb|src/test/scala|. For example, you could use
   the following commands:
   %
   \begin{console}
@@ -808,13 +808,13 @@ the assignments in this class.
 
   \lstinputlisting[language=console]{../hw/lists/template/test-output.txt}
 
-  \emph{There should be errors or warnings printed.}
+  \noindent \emph{There should be no errors or warnings printed.}
 
 \end{enumerate}
 
 \section{Exercises}
 
-For this assignment, you'll be writing several lists and list-processing
+For this assignment, you'll be writing several list-processing
 functions. You must place these within the \verb|Lecture1| object that
 you created above. You must write tests cases, within the \verb|TestSuite|
 class that you created above.
@@ -827,8 +827,8 @@ class that you created above.
 
   \item Write a function called \scalainline{removeZeroes} that consumes a
   \scalainline{List[Int]} and produces a \scalainline{List[Int]}.
-  The produced list should the same as the input list, but with all zeroes
-  removes. The function must not change the order of elements.
+  The produced list should be the same as the input list, but with all zeroes
+  removed. The function must not change the order of elements.
 
   \item Write a function called \scalainline{countEvens} that consumes a
   \scalainline{List[Int]} and produces an \scalainline{Int} that represents
@@ -839,8 +839,11 @@ class that you created above.
   has every other element in the input list.
 
   The first element of the input list must be in the output list.
-  For example, \scalainline{removeAlternating(List("A", "B"))} should be
-  \scalainline{List("A")} and not \scalainline{List("B")}.
+  For example:
+  \begin{scalacode}
+  assert(removeAlternating(List("A", "B")) == List("A"))
+  assert(removeAlternating(List("A", "B")) != List("B"))
+  \end{scalacode}
 
   The function must not change the order of elments.
 
@@ -850,8 +853,8 @@ class that you created above.
   Note that the input may have repeated numbers.
 
   \item Write a function called \scalainline{addSub} that consumes a
-  \scalainline{List[Int]} and produces a \scalainline{Int}. The produced
-  value should add all the elements in even position and subtract all the
+  \scalainline{List[Int]} and produces an \scalainline{Int}. The
+  function should add all the elements in even position and subtract all the
   elements in odd position.
 
   Note that the first element of a list is considered
@@ -859,24 +862,28 @@ class that you created above.
   For example, \scalainline{addSub(List(10, 20, 30, 40))} should be
   \scalainline{10 - 20 + 30 - 40}.
 
-
   \item Write a function called \scalainline{alternate} that consumes \emph{two}
   \scalainline{List[Int]} arguments and produces a \scalainline{List[Int]}.
   The elements of the resulting list should alternate between the elements of
-  the arguments. You may assume that the two argument have the same
+  the arguments. You may assume that the two arguments have the same
   length.
 
-  For example, \scalainline{alternate(List(1, 3, 5), List(2, 4, 6))} should
-  be \scalainline{List(1, 2, 3, 4, 5, 6)}.
+  For example:
+
+  \begin{scalacode}
+  assert(alternate(List(1, 3, 5), List(2, 4, 6)) == List(1, 2, 3, 4, 5, 6))
+  \end{scalacode}
 
   \item Write a function called \scalainline{fromTo} that takes
   two \scalainline{Int}s as arguments and produces a \scalainline{List[Int]}.
-  The value of \scalainline{fromTo(x, y)} should be the list of consecutive 
-  integers starting from and including $x$ up to and excluding $y$. You may
-  should assume that $x \le y$.
+  The value of \scalainline{fromTo(x, y)} should be the list of consecutive
+  integers that start from and include $x$, going up to and excluding $y$.
+  You may assume that $x < y$.
 
-  For example, \scalainline{fromTo(9, 13)} should be \scalainline{List(9, 10, 11, 12)}
-  and \scalainline{fromTo(10, 10)} should be \scalainline{Nil}.
+  For example:
+  \begin{scalacode}
+  assert(fromTo(9, 13) == List(9, 10, 11, 12))
+  \end{scalacode}
 
   \item Write the following function:
 
@@ -884,11 +891,11 @@ class that you created above.
   def insertOrdered(n: Int, lst: List[Int]): List[Int]
   \end{scalacode}
 
-  Assuming that \scalainline{lst} is in ascending order,  
+  Assuming that \scalainline{lst} is in ascending order,
   \scalainline{insertOrdered} should produce a list that is the same as
   the input, but with $n$ inserted such that the order is preserved.
   For example, \scalainline{insertOrdered(5, List(1, 3, 7, 9))} should be
-  \scalainline{List(1, 3, 5, 7, 9)}. 
+  \scalainline{List(1, 3, 5, 7, 9)}.
 
   You should assume that \scalainline{lst} is in ascending order. Your function
    may produce any result or even throw an exception if it is not.
