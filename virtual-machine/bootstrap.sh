@@ -93,18 +93,6 @@ cat <<EOF > /home/student/.sbt/plugins/plugins.sbt
 addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.0")
 EOF
 
-cd /home/student
-cat <<EOF > Main.scala
-object Main extends App {
-  println("SBT ready")
-}
-EOF
-su student sbt run
-
-rm -rf /home/student/project
-rm /home/student/Main.scala
-
-
 # Zero free space
 cat /dev/zero > zero.fill; sync; sleep 1; sync; rm -f zero.fill
 echo "DONE"
