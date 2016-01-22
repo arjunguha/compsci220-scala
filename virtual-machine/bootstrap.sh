@@ -53,9 +53,9 @@ apt-get -f -y install
 
 # Install Sublime Text
 if [ `arch` == "x86_64" ]; then
-  SUBL_DEB_FILE=sublime-text_build-3083_i386.deb
-else
   SUBL_DEB_FILE=sublime-text_build-3083_amd64.deb
+else
+  SUBL_DEB_FILE=sublime-text_build-3083_i386.deb
 fi
 wget https://download.sublimetext.com/$SUBL_DEB_FILE
 dpkg -i $SUBL_DEB_FILE
@@ -75,7 +75,6 @@ rm sbt-0.13.9.deb
 
 # Fix broken deps
 apt-get -f -y install
-
 
 # Setup unattended upgrades
 cat << EOF > /etc/apt/apt.conf.d/10periodic
