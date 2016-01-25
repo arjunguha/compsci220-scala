@@ -16,8 +16,6 @@ apt-get install -y \
   emacs24 \
   software-properties-common
 
-adduser --disabled-password --gecos "" student
-
 # Allow sudo with password
 usermod -a -G sudo student
 cat << EOF > /etc/sudoers

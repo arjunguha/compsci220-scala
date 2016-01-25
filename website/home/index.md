@@ -5,9 +5,6 @@ title: Home
 
 Welcome to the Spring 2016 offering of CMPSCI220 Programming Methodology!
 
-**This website is being updated. The current content is from an earlier offering
-  of the course.**
-
 You must read the entire [Course Policy] document.
 
 # Course Locations
@@ -29,22 +26,16 @@ You must read the entire [Course Policy] document.
 
 # Office Hours
 
-To be announced
+**Office hours start on Monday, January 25.**
 
-<!--
-<table class="table table-striped">
-<thead>
-  <tr><th>When</th><th>Where</th><th>Who</th></tr>
-</thead>
-<tbody>
-<tr><td>Tuesday, 5PM&mdash;7PM</td><td>LGRT 220</td><td>Stephen</td></tr>
-<tr><td>Wednesday, 11:30AM&mdash;12:30PM</td><td>CS 230</td><td>Arjun</td></tr>
-<tr><td>Wednesday, 4:30PM&mdash;5:30PM</td><td>CS 258</td><td>Tim</td></tr>
-<tr><td>Friday, 3PM&mdash;5PM</td><td>LGRT 220</td><td>Teddy</td></tr>
-<tr><td>Friday, 5PM&mdash;7PM</td><td>LGRT 220</td><td>Amee</td></tr>
-</tbody>
-</table>
--->
+| When                       | Where                                | Who                               |
+|:---------------------------|--------------------------------------|-----------------------------------|
+| Monday, 11:00AM--12:00PM   | USpace (CS Building, Room 144)       | Rian Shambaugh and Tommy Nyugen   |
+| Tuesday, 11:45AM--12:45PM  | LGRT, Room 220                       | Brendan Murphy and Cassie Corey   |
+| Wednesdays, 1:00PM--2:00PM | CS Building, Room 230                | Arjun Guha                        |
+| Fridays, 12:00PM--1:00PM   | USpace (CS Building, Room 144)       | Josh Sherman and Aaron Weiss      |
+{: .table .table-striped :}
+
 
 # Textbook
 
