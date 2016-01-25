@@ -626,7 +626,7 @@ assert(sum(1 :: 2 :: 3 :: Nil) == 6)
 \end{scalacode}
 
 Intuitively, to calculate \scalainline{sum(1 :: 2 :: 3 :: Nil)}, we can
-can recursively calculate the sum of the tail and and that value to the
+can recursively calculate the sum of the tail and add that value to the
 head:
 \begin{scalacode}
    sum(1 :: 2 :: 3 :: Nil)
