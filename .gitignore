@@ -8,3 +8,6 @@ submission.log
 *.swp
 classpath
 /lectures
+website/reading/*.pdf
+website/hw/*.pdf
+website/discussion/*.pdf
