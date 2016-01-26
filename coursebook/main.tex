@@ -963,6 +963,12 @@ def incrList(lst: List[Int]): List[Int] = lst match {
 
 \section{Immutability \classtime{10}}
 
+\begin{instructor}
+This really belongs in the previous lecture, but wasn't emphasized.
+There was extra time in the first lecture, so this can easily be
+placed there.
+\end{instructor}
+
 Consider the function \scalainline{incrList} in \cref{incrlist}, which
 increments all numbers in a list. We want to emphasize that \scalainline{incrList}
 \emph{produces a new list} and leaves the original list unchanged.
@@ -1008,7 +1014,7 @@ Point pt = new Point(1, 2)
 \end{javacode}
 \caption{A Java class that represents a point.}\label{javapoint}
 \end{subfigure}
-\vrule
+\quad\vrule\quad
 %
 \begin{subfigure}[b]{.45\textwidth}
 \begin{scalacode}
@@ -1022,41 +1028,38 @@ val pt = new Point(1, 2)
 
 \section{Case Classes\classtime{10}}
 
-Just like Java, Scala has classes and even supports advanced features that are
-beyond the scope of classes in Java. Scala classes tend to be shorter than their
-Java counterparts. For example, \cref{javapoint} shows a \verb|Point| class
+Scala classes tend to be shorter than their
+Java counterparts. For example, \cref{javapoint} shows a \scalainline{Point} class
 in Java and \cref{scalapoint} shows the equivalent class in Scala, which
 is much shorter!
-
-Naturally, if want to add methods or other constructors, you'll have to write
+If we start adding methods , you'll have to write
 more code in Scala too. But, simple classes tend to be very short.
 But, we are not going to use classes yet. Instead, we are going to use
 \emph{case classes}, which are unique to Scala.
 
-If you write \verb|case class| instead of just \verb|class|, you get several
-conveniences:
-
+If you write \scalainline{case class}---
+%
 \begin{scalacode}
 case class Point(x: Double, y: Double)
 \end{scalacode}
-
-First, you can create values without writing \verb|new|:
-
+---instead of just \scalainline{class}, you get several conveniences. 
+First, you can create values without writing \scalainline{new}:
+%
 \begin{scalacode}
 val pt = Point(1, 2)
 \end{scalacode}
-
-Second, case classes have an automatically generated \verb|toString| method that
-prints the fields:
-
-\begin{verbatim}
+%
+Second, case classes have an automatically generated \scalainline{toString} 
+method that prints the fields:
+%
+\begin{console}
 scala> pt
 pt: Point = Point(1.0,2.0)
-\end{verbatim}
-
-Third, all fields are public by default, so you can easily write simple
+\end{console}
+%
+Finally, all fields are public by default, so you can easily write simple
 functions, such as the this one, without writing getters:
-
+%
 \begin{scalacode}
 def magnitude(pt: Point) : Double = {
   math.sqrt(pt.x * pt.x + pt.y * pt.y)
@@ -1126,7 +1129,7 @@ case class HackerNews(item: Int, points: Int) extends Item
 A \emph{trait} in Scala is like an \emph{interface}. They're also much more
 versatile than interfaces, but we'll get into that later.
 
-Now, we can rewrite \verb|getURL|, restricting argument type:
+Now, we can rewrite \verb|getURL|, restricting the argument type:
 
 \begin{scalacode}
 def getURL(item: Item): String = item match {
@@ -1190,9 +1193,78 @@ error: No warnings can be incurred under -Xfatal-warnings.
 It is a long error message. But, if you read it carefully, you'll see that it is
 very precisely describing exactly the cases that are missing.
 
-\section{Additional Examples\classtime{30}}
+\section{Binary Search Trees\classtime{15}}
 
-[FILL]
+\begin{figure}
+\begin{scalacode}
+sealed trait BinTree
+case class Node(lhs: BinTree, key: Int, value: String, rhs: BinTree) extends BinTree
+case class Leaf() extends BinTree
+
+def find(k: Int, t: BinTree): String = t match {
+  case Leaf() => sys.error("not found")
+  case Node(lhs, key, value, rhs) => {
+    if (k == key) { 
+      value 
+    }
+    else if (k < key) { 
+      find(k, lhs) 
+    }
+    else { 
+      find(k, rhs) 
+    }
+  }
+}
+
+def insert(k: Int, v: String, t: BinTree): BinTree = t match {
+  case Leaf() => Node(Leaf(), k, v, Leaf())
+  case Node(lhs, key, value, rhs) => {
+    if (k == key) { 
+      Node(lhs, key, v, rhs) 
+    }
+    else if (k < key) { 
+      Node(insert(k, v, lhs), key, value, rhs) 
+    }
+    else { 
+      Node(lhs, key, value, insert(k, v, rhs)) 
+    }
+  }
+}
+
+def size(t: BinTree): BinTree = t match {
+  case Leaf() => 1
+  case Node(lhs, k, v, rhs) => size(lhs) + size(rhs) + 1
+}
+\end{scalacode}
+
+\caption{Binary search trees.}
+\label{bintree}
+\end{figure}
+
+\Cref{bintree} shows a type definition for binary search trees, where
+keys are integers and values are strings. There are two
+kinds of binary trees: (1) empty trees, or \scalainline{Leaf{}}s, and (2)
+non-empty trees, or \scalainline{Node(..)}s, which have a left-subtree,
+a numertic key, a string value, and a right-subtree. 
+
+Given this definition, we can write canonical functions such
+as \scalainline{count}, \scalainline{find}, and \scalainline{insert}.
+We emphasize that the \scalainline{insert} function does not modify the 
+original tree, and instead produces a new binary tree with the element added.
+
+\paragraph{Testing}
+There is a lot of code in \cref{bintree} that needs to be tested. There
+are two kinds of tests that we can write. 
+
+[FILL] - testing corner cases
+
+[FILL] - property-based testing
+
+\section{Lists}
+
+[FILL] lists using case classees, some list processing functions
+
+
 
 \newdiscussion{Homework 1 Help Session (Jan 27)}
 
@@ -1610,7 +1682,7 @@ appear: as arguments, as results, as fields in a data-structure, and so on.
 
 Unlike other values, functions seem to have the following special property:
 every function has a name, but the other kinds of values do not.
-For example, we can simply write \scalainline{1 :: 2 :: 3 :: Nil} 
+For example, we can simply write \scalainline{1 :: 2 :: 3 :: Nil}
 and don't need to give this list a name. So far, all of the functions we've seen
 start with \scalainline{def functionName}.
 

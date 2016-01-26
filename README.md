@@ -1,7 +1,13 @@
-** This repository is in flux. It is being updated for Spring 2016. **
+# CMPSCI220 Course Materials
 
-CMPSCI220 Course Materials
-==========================
+
+# Requirements
+
+- SBT
+- Pygments
+- LaTeX (at least TeXLive 2015)
+
+## OLD DOCUMENTATION BELOW
 
 **
 
