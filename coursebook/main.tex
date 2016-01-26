@@ -1146,7 +1146,7 @@ scala> item("hello")
               getURL("hello")
 \end{console}
 
-A really nice feature of `match` is that it checks to ensure you've handled all
+A really nice feature of \scalainline{match} is that it checks to ensure you've handled all
 cases. For example, suppose we forgot to write the HackerNews case. Scala
 prints the following error:
 
@@ -1160,7 +1160,7 @@ error: No warnings can be incurred under -Xfatal-warnings.
 
 \paragraph{More Pattern Matching}
 
-You can use `match` to also match concrete values. For example, here is
+You can use \scalainline{match} to also match concrete values. For example, here is
 variant of getURL that censors a particular tweet from PLT Borat:
 
 \begin{scalacode}
@@ -1413,11 +1413,11 @@ This is a very common pattern too. For example, we could write a function to
 select the odd numbers or the prime numbers. If we had a list of strings, we
 could select all the strings with length 5 or all the strings that represent
 English-language words. All these functions have the same shape: they test
-the value of `head` in some way. If the test succeeds, `head` is added in
+the value of \scalainline{head} in some way. If the test succeeds, \scalainline{head} is added in
 the output list. But, if the test fails, it is excluded.
 
-Following the same strategy we used to derive `map`, we first package
-the `head`-test into a function:
+Following the same strategy we used to derive \scalainline{map}, we first package
+the \scalainline{head}-test into a function:
 
 \begin{scalacode}
 def f(n: Int): Boolean = head % 2
@@ -1432,7 +1432,7 @@ def filterEven(lst: List[Int]): List[Int] = lst match {
 }
 \end{scalacode}
 
-Now that the pattern is clearer, we generalize `filterEven` to take `f`
+Now that the pattern is clearer, we generalize \scalainline{filterEven} to take \scalainline{f}
 as an argument:
 
 \begin{scalacode}
@@ -1450,8 +1450,8 @@ def filterEven(lst: List[Int]): List[Int] = {
   filter(f, lst)
 \end{scalacode}
 
-Finally, just as we did for `map`, we can generalize the type of `filter`
-so that it can be applied to `List[A]`:
+Finally, just as we did for \scalainline{map}, we can generalize the type of \scalainline{filter}
+so that it can be applied to \scalainline{List[A]}:
 
 \begin{scalacode}
 def filter[A](f: A => Boolean, lst: List[Int]): List[A] = lst match {
@@ -1479,9 +1479,9 @@ def findEven(lst: List[Int]): Option[Int] = lst match {
 }
 \end{scalacode}
 
-If we change `(head % 2 == 0)` to `(head % 2 == 1)`, we'll have the
-`findOdd` function. Again, instead of defining two slightly different
-functions, we can write the general `find` function:
+If we change \scalainline{(head % 2 == 0)} to \scalainline{(head % 2 == 1)}, we'll have the
+\scalainline{findOdd} function. Again, instead of defining two slightly different
+functions, we can write the general \scalainline{find} function:
 
 \begin{scalacode}
 def find[A](f: A => Boolean, lst: List[A]): Option[A] = lst match {
@@ -1524,7 +1524,7 @@ def doubleAll(lst: List[Int]) = {
 }
 \end{scalacode}
 
-We've seen functions that take other functions as arguments, such as `map`:
+We've seen functions that take other functions as arguments, such as \scalainline{map}:
 
 \begin{scalacode}
 def map[A,B](f: A => B, lst: List[A]): List[B] = lst match {
@@ -1573,11 +1573,11 @@ def eval(e: Expr): Expr = e match {
 \end{scalacode}
 
 Imagine extending this evaluator to support subtraction, division, etc.
-We could do so by adding more cases to `Expr` and adding corresponding
-lines to `eval`. But, this will quickly become tedious and repetitive.
+We could do so by adding more cases to \scalainline{Expr} and adding corresponding
+lines to \scalainline{eval}. But, this will quickly become tedious and repetitive.
 
 But, since we can store functions in data structures, we can replace
-`Add`, `Mul`, `Div`, `Sub`, `Exp`, and all other binary operators with
+\scalainline{Add}, \scalainline{Mul}, \scalainline{Div}, \scalainline{Sub}, \scalainline{Exp}, and all other binary operators with
 a single constructor for binary arithmetic expressions:
 
 \begin{scalacode}
@@ -1610,11 +1610,11 @@ appear: as arguments, as results, as fields in a data-structure, and so on.
 
 Unlike other values, functions seem to have the following special property:
 every function has a name, but the other kinds of values do not.
-For example, we can simply write `Cons(1, Cons(2, Cons(3, Empty())))`
-and don't need to give this list a name. But, all functions
-start with `def functionName`.
+For example, we can simply write \scalainline{1 :: 2 :: 3 :: Nil} 
+and don't need to give this list a name. So far, all of the functions we've seen
+start with \scalainline{def functionName}.
 
-But, this is just convenience and a convention. Just like other values,
+It turns out that this is just a convention. As with other values,
 functions don't need names. For example, here is a function that adds two
 numbers:
 
@@ -1630,8 +1630,8 @@ any other function:
 \end{scalacode}
 
 The code above is not easy to read. It will be a lot clearer of we give the
-function a name. You already know how to name a function using `def`. But, all
-other values are named using `val`. In fact, we can use `val` to name functions
+function a name. You already know how to name a function using \scalainline{def}. But, all
+other values are named using \scalainline{val}. In fact, we can use \scalainline{val} to name functions
 too, just like any other type of value:
 
 \begin{scalacode}
@@ -1640,7 +1640,7 @@ val adder = ((x: Int, y: Int) => x + y)
 adder(10, 20)
 \end{scalacode}
 
-You should think of `def` as a convenient shorthand for naming functions.
+You should think of \scalainline{def} as a convenient shorthand for naming functions.
 That is, these two definitions are equivalent:
 
 \begin{scalacode}
@@ -1653,19 +1653,19 @@ In general, it is a good idea to name your functions. But, there are
 certain situations where a short, anonymous function can make your code
 easier to read and write.
 
-For example, we earlier defined the `doubleAll` function, which doubles
+For example, we earlier defined the \scalainline{doubleAll} function, which doubles
 every number in a list of numbers. Here is simple, one-line definition
-using an anonymous function as an argument to `map`:
+using an anonymous function as an argument to \scalainline{map}:
 
 \begin{scalacode}
 def doubleAll(lst: List[Int]) = map((n: Int) => n * 2, lst)
 \end{scalacode}
 
 The anonymous function itself is extremely simple and the name of the enclosing
-function, `doubleAll`, really makes it clear what it does.
+function, \scalainline{doubleAll}, really makes it clear what it does.
 
 For another example, suppose we want to remove all the odd numbers
-in a list. We can do this using `filter` and a short, anonymous function:
+in a list. We can do this using \scalainline{filter} and a short, anonymous function:
 
 \begin{scalacode}
 def removeOdds(lst: List[Int]) = filter((n: Int) => n % 2 == 0, lst)
@@ -1682,10 +1682,10 @@ languages and programming techniques.
 
   \item \emph{Higher-order functions} are functions that consume or return other
   functions   as values. You can tell if a function is higher-order by inspecting
-  its type. Does it have any nested `=>`s in the type? If so, it is a higher-order
+  its type. Does it have any nested uses of \scalainline{=>} in the type? If so, it is a higher-order
   function.
 
-  But, what about the `eval` function we wrote above, which consumes `BinOp`s?
+  But, what about the \scalainline{eval} function we wrote above, which consumes \scalainline{BinOp}s?
   Is that a higher-order function?
 
   \item \emph{First-class functions} is a property of a programming language. For
