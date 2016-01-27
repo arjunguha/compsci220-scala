@@ -1753,7 +1753,7 @@ languages and programming techniques.
 \begin{itemize}
 
   \item \emph{Higher-order functions} are functions that consume or return other
-  functions   as values. You can tell if a function is higher-order by inspecting
+  functions as values. You can tell if a function is higher-order by inspecting
   its type. Does it have any nested uses of \scalainline{=>} in the type? If so, it is a higher-order
   function.
 
@@ -1770,7 +1770,71 @@ languages and programming techniques.
 
 \section{Evaluation by Substitution}
 
-\newdiscussion{TODO -- Dan (Feb 3)}
+\newdiscussion{First-class and Higher-Order Functions -- Dan (Feb 3)}
+
+\begin{instructor}
+  \begin{itemize}
+    \item Briefly introduce the first-class functions.
+    \item Briefly introduce higher-order functions.
+    \item Pair up students.
+    \item Introduce lab assignments and let students work.  Answer questions when raised.
+  \end{itemize}
+\end{instructor}
+
+Your initial reaction upon learning about \emph{first-class functions} and \emph{higher-order functions} is likely more along the lines of ``Why do I have to learn this?  What's so wrong with Java?'' than ``Cool, new features!''  The purpose of this lab is to demonstrate that these two language features actually make your job as a programmer easier in the long run.
+
+\section{A Gentle Warm-Up}
+
+Let's refresh our memories about these two concepts.  Feel free to skip ahead to the exercises if you already know all about first-class and higher-order functions.
+
+A programming language is said to have \emph{first-class functions} if it treats functions the same way that it treats ordinary values.  For instance, Scala has first class functions, which means that we can assign functions to variables just as we do with ordinary data.
+
+\begin{scalacode}
+val myData = 5                  // myData is an Integer
+val myFunc = (x: Int) => x + 1  // myFunc is a function
+\end{scalacode}
+
+We can also use these function variables in all the same ways that we use ordinary variables.
+
+\begin{scalacode}
+// here, we pass both our function and our value into the function compute
+def compute(f: Int => Int, d: Int) = f(d)
+val result = compute(myFunc, myData)
+// result: Int = 6
+\end{scalacode}
+
+A \emph{higher-order function} consumes or returns other functions.  Note that \scalainline{compute} above takes a function (from \scalainline{Int} to \scalainline{Int}) and returns an Int, so by definition is is a higher-order function.
+
+Together, these two concepts let you express complicated programs very simply.
+
+\section{Exercise \#1}
+
+You are in charge of a pat\'e factory.  One of the annoying facts about making pat\'e is that ducks and geese are friendly, so ducks are always mixing themselves in with the geese.  But you realize that you can make a little extra money for the company if you can build a machine that turns ducks into dogfood.
+
+Spec: Given a \scalainline{List[Bird]}, write a program that uses \scalainline{map} to output \scalainline{"pate"} whenever it encounters a \scalainline{Goose} and \scalainline{"dogfood"} whenever it encounters a \scalainline{Duck}.
+
+For your reference, here's \scalainline{map}:
+
+\begin{scalacode}
+def map[A,B](f: A => B, xs: List[A]): List[B] = xs match {
+  case Nil => Nil
+  case head :: tail => f(head) :: map[A,B](f, tail)
+}
+\end{scalacode}
+
+and here are object definitions for birds, ducks, and geese:
+
+\begin{scalacode}
+sealed trait Bird
+case class Duck() extends Bird
+case class Goose() extends Bird
+\end{scalacode}
+
+For example, given \scalainline{val birds = List(Duck(), Duck(), Goose())}, your program should produce \scalainline{List("dogfood", "dogfood", "pate")}.  Since this is just an in-class exercise, you should not harm any actual ducks or geese.
+
+\section{Exercise \#2}
+
+Write a ScalaTest (consult your notes from Lecture \#1) that tests that your function really does convert \scalainline{List(Duck(), Duck(), Goose()} into \scalainline{List("dogfood", "dogfood", "pate")}.
 
 \newlecture
 
