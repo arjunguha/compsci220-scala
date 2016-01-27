@@ -58,7 +58,7 @@ a virtual machine, you can run Scala without a VM by following these directions:
        mkdir "/cygdrive/c/Users/$USERNAME/.sbt"
        mkdir "/cygdrive/c/Users/$USERNAME/.sbt/0.13"
        mkdir "/cygdrive/c/Users/$USERNAME/.sbt/0.13/plugins"
-       echo 'addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.0")' > "/cygdrive/c/Users/$USERNAME/.sbt/0.13/plugins/plugins.sbt"
+       echo 'addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.1")' > "/cygdrive/c/Users/$USERNAME/.sbt/0.13/plugins/plugins.sbt"
 
 5. To verify that everything installed, type `sbt` to start SBT. You should see
    output that looks like this:
@@ -88,7 +88,7 @@ a virtual machine, you can run Scala without a VM by following these directions:
        mkdir ~/.sbt
        mkdir ~/.sbt/0.13
        mkdir ~/.sbt/0.13/plugins
-       echo 'addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.0")' > ~/.sbt/0.13/plugins/plugins.sbt
+       echo 'addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.1")' > ~/.sbt/0.13/plugins/plugins.sbt
 
 5. To verify that everything installed, type `sbt` to start SBT. You should see
    output that looks like this:
@@ -121,7 +121,7 @@ a virtual machine, you can run Scala without a VM by following these directions:
        mkdir ~/.sbt
        mkdir ~/.sbt/0.13
        mkdir ~/.sbt/0.13/plugins
-       echo 'addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.0")' > ~/.sbt/0.13/plugins/plugins.sbt
+       echo 'addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.1")' > ~/.sbt/0.13/plugins/plugins.sbt
 
 4. To verify that everything installed, type `sbt` to start SBT. You should see
    output that looks like this:

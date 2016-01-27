@@ -8,7 +8,7 @@ title: Schedule
 | Tuesday, Jan 19   | **No class.**                                                                                   |
 | Wednesday, Jan 20 | **No lab.**                                                                                     |
 | Thursday, Jan 21  | Out: [HW1]. [Lecture Notes](../reading/lecture1.pdf).                                           |
-| Tuesday, Jan 26   |                                                                                                 |
+| Tuesday, Jan 26   | [Lecture Notes](../reading/lecture2.pdf)                                                        |
 | Wednesday, Jan 27 | *Lab:* Help session for Homework 1.                                                             |
 | Thursday, Jan 28  | Due: [HW1]. Out: HW2.                                                                           |
 | Tuesday, Feb 2    |                                                                                                 |

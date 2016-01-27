@@ -63,6 +63,11 @@ object Plugin extends sbt.AutoPlugin {
       submit := {
         submitTask
       },
+      test := {
+        val result = (test in Test).value
+        checkstyle.value
+        result
+      },
       submit <<= submit.dependsOn(compile)
     )
 }
