@@ -2296,11 +2296,11 @@ case object Duck extends Bird
 case object Goose extends Bird
 \end{scalacode}
 
-For example, given \scalainline{List(Duck, Duck, Goose)}, your program should produce \scalainline{List("dog food", "dog food", "pate")}.  As this is just an in-class exercise, no actual ducks or geese should be harmed.
+For example, given \scalainline[breaklines]{List(Duck, Duck, Goose)}, your program should produce \scalainline[breaklines]{List("dog food", "dog food", "pate")}.  As this is just an in-class exercise, no actual ducks or geese should be harmed.
 
 \section{Exercise \#2}
 
-\emph{Your task}: Write a ScalaTest (consult your notes from Lecture \#1) that tests that your function really does convert \scalainline{List(Duck, Duck, Goose)} into \scalainline{List("dog food", "dog food", "pate")}.
+\emph{Your task}: Write a ScalaTest (consult your notes from Lecture \#1) that tests that your function really does convert \scalainline[breaklines]{List(Duck, Duck, Goose)} into \scalainline[breaklines]{List("dog food", "dog food", "pate")}.
 
 \section{Fold}
 
@@ -2317,7 +2317,7 @@ def fold[A,B](acc: B, f: (B,A) => B, xs: List[A]) : B = {
 
 \scalainline{fold} is similar to \scalainline{map}, except that instead of applying a function to each element of the list, the function \scalainline{f} is applied to each element and an \emph{accumulator} \scalainline{acc}.  This may sound very abstract, but at this point in your life, you have actually done this operation countless times.  Let's see a concrete example.
 
-Suppose I want to add all of the elements of \scalainline{List(1,2,3,4,5)}.  How might you do this with pencil and paper?  One way is something like:
+Suppose I want to add all of the elements of \scalainline[breaklines]{List(1,2,3,4,5)}.  How might you do this with pencil and paper?  One way is something like:
 
 \begin{scalacode}
 sum = 0
