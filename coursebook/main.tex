@@ -2321,14 +2321,20 @@ Suppose I want to add all of the elements of \scalainline[breaklines]{List(1,2,3
 
 \begin{scalacode}
 sum = 0
+// sum: Int = 0
 sum = sum + 1
+// sum: Int = 1
 sum = sum + 2
+// sum: Int = 3
 sum = sum + 3
+// sum: Int = 6
 sum = sum + 4
+// sum: Int = 10
 sum = sum + 5
+// sum: Int = 15
 \end{scalacode}
 
-There's a pattern here.  We started with an initial value (\scalainline{0}) and then we applied a function (\scalainline{+}) over and over again to our placeholder variable (\scalainline{sum}) and a new value from our list.  This is the pattern that \scalainline{fold} solves, but it is designed in such a way (using generic types \scalainline{A} and \scalainline{B}) so that you can use it in many situations, not just those involving addition.
+There's a pattern here.  We started with an initial value (\scalainline{0}) and then we applied a function (\scalainline{+}) over and over again to an accumulator variable (\scalainline{sum}) and a new value from our list.  This is the pattern that \scalainline{fold} solves, but it is designed in such a way (using generic types \scalainline{A} and \scalainline{B}) so that you can use it in many situations, not just those involving addition.
 
 Here's how you can use \scalainline{fold} to add numbers in a list:
 
