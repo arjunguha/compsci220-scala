@@ -1,8 +1,10 @@
 package grading
 
 import java.io.ByteArrayInputStream
+import java.util.zip.GZIPInputStream
 
 import com.spotify.docker.client.DockerClient.ExecStartParameter
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 
 
 object Worker {
@@ -25,9 +27,13 @@ object Worker {
     }
   }
 
+
   def run(docker: DockerClient, image: String, timeoutSeconds: Int,
+          workingDir: String,
           command: Seq[String],
           zippedVolumes: Map[String, Array[Byte]]) = {
+    import scala.collection.JavaConversions._
+
     val root = Files.createTempDirectory(null)
     try {
 
@@ -38,31 +44,32 @@ object Worker {
           val hostPath = Files.createTempDirectory(root, null)
           zip.unzipTo(hostPath)
           zip.close()
-          //println(Files.list(hostPath).toArray.toList.map(_.asInstanceOf[Path].getFileName))
           (hostPath, containerPath)
         }
       }
 
 
-      docker.pull(image)
       val containerConfig = ContainerConfig.builder
         .image(image)
         .memory(1024L * 1024L)
         .attachStderr(true)
         .attachStdin(false)
         .attachStdout(false)
-        .cmd(command: _*).build
+        .cmd(command: _*)
+        .workingDir(workingDir)
+        .build
+
+
+
       val container = docker.createContainer(containerConfig)
 
-      // This probably works, but copyToContainer requires the directories to be on the Docker host.
       for ((hostPath, containerPath) <- binds) {
         println(Files.list(hostPath).toArray.toList.map(_.asInstanceOf[Path].getFileName))
+        // docker.
         docker.copyToContainer(hostPath, container.id, containerPath)
       }
 
       docker.startContainer(container.id)
-
-
 
       val exit = docker.waitContainer(container.id).statusCode
 

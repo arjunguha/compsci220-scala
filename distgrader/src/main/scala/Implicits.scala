@@ -5,6 +5,7 @@ object Implicits {
 
   import com.ning.http.client.ListenableFuture
   import scala.concurrent.{ExecutionContext, Future}
+  import java.nio.file._
 
   import scala.language.implicitConversions
 

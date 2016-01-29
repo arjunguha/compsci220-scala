@@ -41,6 +41,8 @@ case class SimpleInstance(
   autoDeleteDisk: Boolean = true,
   sourceImage: String = "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-1404-trusty-v20151113")
 
+object GCE {
+
 object Implicits {
 
   import com.google.api.client.googleapis.services.AbstractGoogleClientRequest
@@ -144,7 +146,7 @@ object Implicits {
         .setNetworkInterfaces(List(intf))
         .setMetadata(new Metadata().setItems(metadata))
         .setTags(new Tags().setItems(inst.tags))
-        .setServiceAccounts(List(new ServiceAccount().setEmail("default").setScopes(List(ComputeScopes.DEVSTORAGE_READ_ONLY))))
+        .setServiceAccounts(List(new ServiceAccount().setEmail("default").setScopes(List("https://www.googleapis.com/auth/logging.write", ComputeScopes.DEVSTORAGE_READ_ONLY))))
 
       instances.insert(compute.project, compute.zone, instance).future
     }
@@ -175,4 +177,5 @@ object Implicits {
 
   }
 
+}
 }

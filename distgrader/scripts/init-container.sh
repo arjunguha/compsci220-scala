@@ -18,3 +18,4 @@ apt-get update
 apt-get install -yq oracle-java8-installer
 
 apt-get install -yq supervisor
+

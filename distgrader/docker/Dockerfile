@@ -26,6 +26,13 @@ RUN adduser --disabled-password --gecos "" student
 USER student
 WORKDIR /home/student
 
+# Needed to copy files in
+RUN mkdir hw
+
+# Install SBT plugin
+RUN mkdir -p /home/student/.sbt/0.13/plugins
+COPY plugins.sbt /home/student/.sbt/0.13/plugins/plugins.sbt
+
 # Pre-fetch typically dependencies
 RUN mkdir /home/student/scala-init
 COPY Init.scala /home/student/scala-init/Init.scala

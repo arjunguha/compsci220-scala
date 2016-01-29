@@ -1,7 +1,7 @@
 package grading
 
 import java.io.FileInputStream
-import java.nio.file.{Files, Paths}
+import java.nio.file.{Files, Paths, Path}
 
 import com.google.api.client.http.InputStreamContent
 import com.google.api.services.compute.model._
@@ -11,7 +11,11 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Try, Success, Failure}
 
+case class WorkerInstanceSignature(jar: String, init: String)
+
+
 object CreateImage {
+
 
   import ExecutionContext.Implicits.global
 
@@ -28,17 +32,19 @@ object CreateImage {
   val compute = myCompute.compute
 
 
-  import Implicits._
+  import GCE.Implicits._
 
   val bucket = "umass-cmpsci220-artifacts"
 
-  case class WorkerInstanceSignature(jar: String, init: String)
+  def workerSignature(): WorkerInstanceSignature = {
+    WorkerInstanceSignature(DigestUtils.md5Hex(Files.readAllBytes(Paths.get("target/distgrader.jar"))),
+      DigestUtils.md5Hex(new String(Files.readAllBytes(Paths.get("scripts/init-worker.sh")))))
+  }
 
   def createWorker(name: String, controllerHost: String): Future[String] = {
     val script = new String(Files.readAllBytes(Paths.get("scripts/init-worker.sh")))
 
-    val sig = WorkerInstanceSignature(DigestUtils.md5Hex(Files.readAllBytes(Paths.get("target/worker.jar"))),
-                                      DigestUtils.md5Hex(script))
+    val sig = workerSignature()
 
     val inst = SimpleInstance(name = name,
       sourceImage = "global/images/worker-template",
@@ -58,10 +64,10 @@ object CreateImage {
 
     }
 
-    val jarPath = Paths.get("target/worker.jar")
+    val jarPath = Paths.get("target/distgrader.jar")
     val hash = DigestUtils.md5Hex(Files.readAllBytes(jarPath))
 
-    Try(storage.storage.objects().get(bucket, "worker.jar").execute) match {
+    Try(storage.storage.objects().get(bucket, "distgrader.jar").execute) match {
       case Failure(_) => ()
       case Success(obj) => {
         if (obj.getMetadata != null && obj.getMetadata.get("md5") == hash) {
@@ -72,7 +78,7 @@ object CreateImage {
     }
 
     storage.storage.objects().insert(bucket,
-      new StorageObject().setName("worker.jar").setContentDisposition("attachment").setMetadata(Map("md5" -> hash)),
+      new StorageObject().setName("distgrader.jar").setContentDisposition("attachment").setMetadata(Map("md5" -> hash)),
       new InputStreamContent("application/octet-stream", new FileInputStream(jarPath.toFile))).execute
 
     println("Uploaded worker.jar")
@@ -94,8 +100,8 @@ object CreateImage {
       Await.result(compute.disks.delete(projectId, zone, "docker-template").future, Duration.Inf)
     }
 
-    val startupScript = new String(Files.readAllBytes(Paths.get("init-container.sh")))
-    val startupScriptModifiedTime = Files.getLastModifiedTime(Paths.get("init-container.sh")).toMillis
+    val startupScript = new String(Files.readAllBytes(Paths.get("scripts/init-container.sh")))
+    val startupScriptModifiedTime = Files.getLastModifiedTime(Paths.get("scripts/init-container.sh")).toMillis
 
     val needsRefresh = compute.images().list().find(_.getName == "worker-template") match {
       case None => true
