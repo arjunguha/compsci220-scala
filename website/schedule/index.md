@@ -8,9 +8,9 @@ title: Schedule
 | Tuesday, Jan 19   | **No class.**                                                                                   |
 | Wednesday, Jan 20 | **No lab.**                                                                                     |
 | Thursday, Jan 21  | Out: [HW1]. [Lecture Notes](../reading/lecture1.pdf).                                           |
-| Tuesday, Jan 26   | [Lecture Notes](../reading/lecture2.pdf)                                                        |
+| Tuesday, Jan 26   | [Lecture Notes](../reading/lecture2.pdf).                                                       |
 | Wednesday, Jan 27 | *Lab:* Help session for Homework 1.                                                             |
-| Thursday, Jan 28  | Due: [HW1]. Out: HW2.                                                                           |
+| Thursday, Jan 28  | Due: [HW1]. Out: [HW2]. [Lecture Notes](../reading/lecture3.pdf).                               |
 | Tuesday, Feb 2    |                                                                                                 |
 | Wednesday, Feb 3  | *Lab:*                                                                                          |
 | Thursday, Feb 4   | Due: HW2. Out: HW3.                                                                             |
@@ -53,3 +53,4 @@ title: Schedule
 {: .table .table-striped :}
 
 [HW1]: ../hw/hw1.pdf
+[HW2]: ../hw/hw2.pdf

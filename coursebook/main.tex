@@ -1,3 +1,4 @@
+
 \documentclass{book}
 \usepackage{pervasives}
 
@@ -1042,14 +1043,14 @@ If you write \scalainline{case class}---
 \begin{scalacode}
 case class Point(x: Double, y: Double)
 \end{scalacode}
----instead of just \scalainline{class}, you get several conveniences. 
+---instead of just \scalainline{class}, you get several conveniences.
 First, you can create values without writing \scalainline{new}:
 %
 \begin{scalacode}
 val pt = Point(1, 2)
 \end{scalacode}
 %
-Second, case classes have an automatically generated \scalainline{toString} 
+Second, case classes have an automatically generated \scalainline{toString}
 method that prints the fields:
 %
 \begin{console}
@@ -1211,8 +1212,8 @@ def find(k: Int, t: SBinTree): String = t match {
 def insert(k: Int, v: String, t: SBinTree): SBinTree = t match {
   case SLeaf() => SNode(SLeaf(), k, v, SLeaf())
   case SNode(lhs, key, _, rhs) if (k == key) => SNode(lhs, key, v, rhs)
-  case SNode(lhs, key, value, rhs) if (k <= key) =>  SNode(insert(k, v, lhs), key, value, rhs) 
-  case SNode(lhs, key, value, rhs) => SNode(lhs, key, value, insert(k, v, rhs)) 
+  case SNode(lhs, key, value, rhs) if (k <= key) =>  SNode(insert(k, v, lhs), key, value, rhs)
+  case SNode(lhs, key, value, rhs) => SNode(lhs, key, value, insert(k, v, rhs))
 }
 
 def size(t: BinTree): SBinTree = t match {
@@ -1230,18 +1231,18 @@ keys are integers and values are strings (which is why we call them
 \scalainline{SBinTree}s). There are two
 kinds of binary trees: (1) empty trees, or \scalainline{SLeaf()}s, and (2)
 non-empty trees, or \scalainline{SNode(..)}s, which have a left-subtree,
-a numeric key, a string value, and a right-subtree. 
+a numeric key, a string value, and a right-subtree.
 Given this definition, we can write canonical functions such
 as \scalainline{size}, \scalainline{find}, and \scalainline{insert},
 as shown in the same figure.
-We emphasize that the \scalainline{insert} function does not modify the 
+We emphasize that the \scalainline{insert} function does not modify the
 original tree, and instead produces a new binary tree with the element added.
 
 
 \subsection{Testing}
 
 There is a lot of code in \cref{bintree} that needs to be tested and there
-are two categories of tests that we can write. First, we should \emph{test all the 
+are two categories of tests that we can write. First, we should \emph{test all the
 cases} of a function. For example, the \scalainline{insert} function has
 four cases and the four tests below are chosen to exercise each case:
 \begin{scalacode}
@@ -1271,7 +1272,7 @@ descriptive string states.
 
 The second kind if test is to \emph{test properties that relate functions
 to each other}. There isn't a neat recipe for these kinds of tests. You have
-to think hard about what your code is actually doing. But, here 
+to think hard about what your code is actually doing. But, here
 are some properties for binary trees.
 
 \begin{property}
@@ -1399,7 +1400,7 @@ def add(n: Int, lst: IList): IList = lst match {
 \end{scalacode}
 
 A test suite should test the two cases in the function. Moreover, we can
-also test simple properties of this function alone. 
+also test simple properties of this function alone.
 
 For example, for all \scalainline{m}, \scalainline{n}, and \scalainline{lst}:
 %
@@ -1418,7 +1419,7 @@ def append(lst1: IList, lst2: IList): IList = lst1 match {
 
 Again, we should test the two cases of this function. But, there are
 several other properties that we can test. For example, if we append
-three lists together, the order in which we apply the function 
+three lists together, the order in which we apply the function
 does not matter:
 %
 \begin{scalacode}
@@ -1433,7 +1434,7 @@ append(lst, INil()) == lst
 %
 Notice that this is \emph{not} a case of \scalainline{append}: the function
 pattern-matches on the first argument. This property shows that both cases
-of \scalainline{append} behave in a similar way when the second argument is 
+of \scalainline{append} behave in a similar way when the second argument is
 \scalainline{INil()}.
 
 Finally, we can write properties that relate the \scalainline{add} and
@@ -1487,7 +1488,7 @@ def length[A](lst: List[A]): Int = lst match {
 \end{scalacode}
 
 In the code above, \verb|A| is a \emph{type argument}. It truly is an argument
-to the function, just like \verb|lst|. i.e., when \scalainline{length} is 
+to the function, just like \verb|lst|. i.e., when \scalainline{length} is
 invoked, we need to specify \verb|A|:
 %
 \begin{scalacode}
@@ -1505,10 +1506,10 @@ length(List("A", "B", "C", "D"))
 \end{scalacode}
 %
 But, it is important to note that under the hood, Scala figures out that we
-meant \scalainline{A} to be \scalainline{Int} on the first line and 
+meant \scalainline{A} to be \scalainline{Int} on the first line and
 \scalainline{String} on the second line and inserts the type arguments for us.
 In fact, we relied on this in the definition of \scalainline{length}: Scala
-expands the recursive call \scalainline{length(tail)} to 
+expands the recursive call \scalainline{length(tail)} to
 \scalainline{length[A](tail)}. Note that Scala isn't just ``guessing'' the
 right type. It uses the type of the value-arguments to infer the missing
 type argument.
@@ -1556,7 +1557,7 @@ case class SNode(
 \label{monobintrees}
 \end{figure}
 
-\Cref{monobintrees} 
+\Cref{monobintrees}
 In the last lecture, we build a data structure that represents binary
 search trees with strings for values. We can write a similar data structure
 with integer-values, as shown in \cref{monobintrees}. But, this will force
@@ -1708,7 +1709,7 @@ def lengths(lst: List[String]) = {
 }
 \end{scalacode}
 
-Unfortunately, the definition of \scalainline{lengths} above does not 
+Unfortunately, the definition of \scalainline{lengths} above does not
 type-check. Scala reports two type errors and they are both very informative:
 
 \begin{console}
@@ -1936,6 +1937,13 @@ In this assignment, you'll write several higher-order functions over lists. You
 should place all the functions below within an object called
 \scalainline{Homework2}.
 
+\textbf{Restrictions}: You must not use Scala's builtin methods. You
+may not use imperative features, such as \scalainline{while} and \scalainline{var}.
+Feel free to reuse or modify any code your wrote for the previous assignment.
+You should also write any helper functions you think are necessary. You
+may also use functions you write for one part of the assignment to solve
+another part of the assignment.
+
 \section{Exercises}
 
 \begin{enumerate}
@@ -1952,17 +1960,35 @@ test("map2 with add") {
 }
 \end{scalacode}
 
-You may assume that \scalainline{lst1} and \scalainline{lst2} have the same 
+You may assume that \scalainline{lst1} and \scalainline{lst2} have the same
 length (i.e., do whatever you think is reasonable).
 
 \item
-Write the \scalainline{zip} function, which pairs corresponding elements in a list:
+Scala lets you write \scalainline{(x, y)} to create \emph{tuples}. For example:
+
+\begin{scalacode}
+val nameSsn: (String, Int) = ("John Smith", 19970293)
+val emailAdmin: (String, Boolean) = ("carberry@cs.umass.edu", true)
+val xy: (Double, Double) = (3.0, 4.0)
+\end{scalacode}
+
+Tuples are a convenient way to package two related values together, without
+having to create a new type to hold them. You can use pattern matching to
+extract the components of tuples, or simply write \scalainline{xy._1}
+and \scalainline{xy._2} to access the first and second component respectively.
+
+Write the \scalainline{zip} function, which tuples corresponding elements in a list:
 
 \begin{scalacode}
 def zip[A,B](lst1: List[A], lst2: List[B]): List[(A, B)]
 
-test("zip test") {
+test("zip test 1") {
   assert(zip(List(1, 2, 3), List(4, 5, 6)) == List((1,4), (2, 5), (3, 6)))
+}
+
+test("zip test 2") {
+  assert(zip(List("George", "Teddy"), List("Washington", "Roosevelt")) ==
+         List(("George", "Washington"), ("Teddy", "Roosevelt")))
 }
 \end{scalacode}
 
@@ -2011,16 +2037,29 @@ test("mapList test") {
 \end{scalacode}
 
 \item
-Write the \scalainline{groupBy} function, which groups the elements of
-a list into sub-lists:
+Write the \scalainline{partition(f, lst)} function, which splits a list into
+two sub-lists, where the first list has all the elements of \scalainline{lst}
+on which \scalainline{f} produces \scalainline{true} and the second
+list has all the elements of \scalainline{lst} on which \scalainline{f}
+produces \scalainline{false}.
+
+The ordering of elements in the two sub-lists should be the same
+as in \scalainline{lst}.
 
 \begin{scalacode}
-def groupBy[A](f: (A, A) => Bool, lst: List[A]): List[List[A]]
+def partition[A](f: A => Bool, lst: List[A]): (List[A], List[A])
 
-test("groupBy test") {
-  def f(x: Int, y): Boolean = n % 3 == m % 3
-  assert(groupBy(f, List(1, 2, 3, 4, 5, 6, 7, 8)) == 
-    List(List(1, 4, 7), List(2, 5, 8), List(3, 6)))
+  def isEven(x: Int): Boolean n % 2 == 0
+
+test("partition test 1") {
+  assert(partition(isEven, List(1,2,3,4,5,6)) == (List(2,4,6), List(1,3,5)))
+}
+
+test("partition test 2") {
+  assert(partition(isEven, List(2,4,6)) == (List(2,4,6), Nil))
+
+test("partition test 3") {
+  assert(partition(isEven, List(1,3,5)) == (Nil, List(1,3,5)))
 }
 \end{scalacode}
 
