@@ -2234,16 +2234,18 @@ languages and programming techniques.
 
 \section{Evaluation by Substitution}
 
-\newdiscussion{First-class and Higher-Order Functions -- Dan (Feb 3)}
+\newdiscussion{First-class and Higher-Order Functions (Feb 3)}
 
 \begin{instructor}
   \begin{itemize}
-    \item Briefly introduce the first-class functions.
-    \item Briefly introduce higher-order functions.
+    \item Dan will be running this discussion.
+    \item Hand out assignments.
     \item Pair up students.
     \item Introduce lab assignments and let students work.  Answer questions when raised.
   \end{itemize}
 \end{instructor}
+
+\textbf{Note:} See the end of this handout for formatting and submission instructions.
 
 Your initial reaction upon learning about \emph{first-class functions} and \emph{higher-order functions} is likely more along the lines of ``Why do I have to learn this?  What's so wrong with Java?'' than ``Cool, new features!''  The purpose of this lab is to demonstrate that these two language features actually make your job as a programmer easier in the long run.
 
@@ -2267,17 +2269,17 @@ val result = compute(myFunc, myData)
 // result: Int = 6
 \end{scalacode}
 
-A \emph{higher-order function} consumes or returns other functions.  Note that \scalainline{compute} above takes a function (from \scalainline{Int} to \scalainline{Int}) and returns an Int, so by definition is is a higher-order function.
+A \emph{higher-order function} consumes or returns other functions.  Note that \scalainline{compute} (shown above) takes a function (from \scalainline{Int} to \scalainline{Int}) and returns an \scalainline{Int}, so by definition it is a higher-order function.
 
 Together, these two concepts let you express complicated programs very simply.
 
 \section{Exercise \#1}
 
-You are in charge of a pat\'e factory.  One of the annoying facts about making pat\'e is that ducks and geese are friendly, so ducks are always mixing themselves in with the geese.  But you realize that you can make a little extra money for the company if you can build a machine that turns ducks into dogfood.
+You are in charge of a foie gras factory.  One of the annoying facts about making fois gras is that ducks and geese are friendly, so ducks are always mixing themselves in with the geese.  You can only make foie gras from geese.  But you realize that you can make a little extra money for the company if you can build a machine that can distinguish between ducks and geese, and turn the ducks into dog food instead.
 
-Spec: Given a \scalainline{List[Bird]}, write a program that uses \scalainline{map} to output \scalainline{"pate"} whenever it encounters a \scalainline{Goose} and \scalainline{"dogfood"} whenever it encounters a \scalainline{Duck}.
+\emph{Your task}: Given a \scalainline{List[Bird]}, write a program that uses \scalainline{map} to output \scalainline{"pate"} whenever it encounters a \scalainline{Goose} and \scalainline{"dog food"} whenever it encounters a \scalainline{Duck}.
 
-For your reference, here's \scalainline{map}:
+For your reference, here's an implementation of \scalainline{map}:
 
 \begin{scalacode}
 def map[A,B](f: A => B, xs: List[A]): List[B] = xs match {
@@ -2294,17 +2296,90 @@ case object Duck extends Bird
 case object Goose extends Bird
 \end{scalacode}
 
-For example, given \scalainline{val birds = List(Duck, Duck, Goose)}, your program should produce \scalainline{List("dogfood", "dogfood", "pate")}.  As this is just an in-class exercise, you should not harm any actual ducks or geese.
+For example, given \scalainline[breaklines]{List(Duck, Duck, Goose)}, your program should produce \scalainline[breaklines]{List("dog food", "dog food", "pate")}.  As this is just an in-class exercise, no actual ducks or geese should be harmed.
 
 \section{Exercise \#2}
 
-Write a ScalaTest (consult your notes from Lecture \#1) that tests that your function really does convert \scalainline{List(Duck, Duck, Goose)} into \scalainline{List("dogfood", "dogfood", "pate")}.
+\emph{Your task}: Write a ScalaTest (consult your notes from Lecture \#1) that tests that your function really does convert \scalainline[breaklines]{List(Duck, Duck, Goose)} into \scalainline[breaklines]{List("dog food", "dog food", "pate")}.
+
+\section{Fold}
+
+\scalainline{map} is very useful for transforming a \scalainline{List[A]} into a \scalainline{List[B]}, but sometimes what you actually want to do is \emph{aggregate} a list in some way.  This operation is called a \scalainline{fold} in functional programming.  Here's one implementation for \scalainline{fold}:
+
+\begin{scalacode}
+def fold[A,B](acc: B, f: (B,A) => B, xs: List[A]) : B = {
+  xs match {
+    case Nil => acc
+    case h :: tail => fold(f(acc, h), f, tail)
+  }
+}
+\end{scalacode}
+
+\scalainline{fold} is similar to \scalainline{map}, except that instead of applying a function to each element of the list, the function \scalainline{f} is applied to each element and an \emph{accumulator} \scalainline{acc}.  This may sound very abstract, but at this point in your life, you have actually done this operation countless times.  Let's see a concrete example.
+
+Suppose I want to add all of the elements of \scalainline[breaklines]{List(1,2,3,4,5)}.  How might you do this with pencil and paper?  One way is something like:
+
+\begin{scalacode}
+sum = 0
+// sum: Int = 0
+sum = sum + 1
+// sum: Int = 1
+sum = sum + 2
+// sum: Int = 3
+sum = sum + 3
+// sum: Int = 6
+sum = sum + 4
+// sum: Int = 10
+sum = sum + 5
+// sum: Int = 15
+\end{scalacode}
+
+There's a pattern here.  We started with an initial value (\scalainline{0}) and then we applied a function (\scalainline{+}) over and over again to an accumulator variable (\scalainline{sum}) and a new value from our list.  This is the pattern that \scalainline{fold} solves, but it is designed in such a way (using generic types \scalainline{A} and \scalainline{B}) so that you can use it in many situations, not just those involving addition.
+
+Here's how you can use \scalainline{fold} to add numbers in a list:
+
+\begin{scalacode}
+val nums = List(1,2,3,4,5)
+val add = (a: Int, b: Int) => a + b
+val result = fold(0, add, nums)
+// result: Int = 15
+\end{scalacode}
 
 \section{Exercise \#3}
 
+Your boss likes your idea about turning ducks into dog food, but he wants to know first how much money you are likely to make in a variety of scenarios.  Each can of p\^at\'e made from a goose sells for \$10.  Each can of dog food made from a duck sells for \$1.
 
+\emph{Your task}: Using the definition for \scalainline{fold} above, write a program that computes the amount of money you'll make given a \scalainline{List[Bird]}.
 
 \section{Exercise \#4}
+
+\emph{Your task}: Write ScalaTests for the following inputs.  Make sure that all of the following cases produce the right sums (which you should compute by hand).
+
+\begin{scalacode}
+List(Duck, Duck, Goose)
+List(Goose, Goose, Goose, Goose, Duck, Goose)
+List()
+\end{scalacode}
+
+\section{Hand In}
+
+From \sbt{}, run the command \verb|submit|. The command will create
+a file called \verb|submission.tar.gz| in your assignment directory.
+Submit this file using Moodle.
+
+For example, if the command runs successfully, you will see output similar
+to this:
+%
+\begin{console}
+Created submission.tar.gz. Upload this file to Moodle.
+[success] Total time: 0 s, completed Jan 17, 2016 12:55:55 PM
+\end{console}
+
+\textbf{Note:}  Each exercise should be its own Scala source file.  Make sure that exercises that do tests go in the right place.
+
+\textbf{Note:}  The command will not allow you to submit code that does not
+compile. If your code doesn't compile, you will receive no credit for the
+assignment.
 
 \newlecture
 
