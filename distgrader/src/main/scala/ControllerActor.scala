@@ -8,31 +8,56 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
   import akka.actor.{ActorRef, Terminated}
   import java.nio.file.Paths
   import Messages._
+  import scala.concurrent._
+  import scala.concurrent.duration._
 
   import this.context._
 
   val availableWorkers = scala.collection.mutable.Set[ActorRef]()
-  val busyWorkers = scala.collection.mutable.Map[ActorRef, (Run, ActorRef)]()
-  val pendingJobs = scala.collection.mutable.Queue[(Run, ActorRef)]()
+  val busyWorkers = scala.collection.mutable.Map[ActorRef, (String, Run, ActorRef)]()
+  val pendingJobs = scala.collection.mutable.Queue[(String, Run, ActorRef)]()
 
   def startJobs(): Unit = {
     if (availableWorkers.isEmpty || pendingJobs.isEmpty) {
-      ()
+      log.info(s"${pendingJobs.length} jobs queued, ${busyWorkers.size} busy workers. ${availableWorkers.size} idle workers.")
     }
     else {
       val worker = availableWorkers.head
       availableWorkers -= worker
-      val (run, p) = pendingJobs.dequeue
+      val (label, run, p) = pendingJobs.dequeue
       worker ! run
-      busyWorkers += worker -> (run, p)
+      log.info(s"Sent a job to $worker ($label)")
+      busyWorkers += worker -> (label, run, p)
       startJobs()
     }
   }
 
+  akka.pattern.after(30.seconds, context.system.scheduler) {
+    Future {
+      self ! "timer"
+    }
+  }
+
+  var previouslyActive = List[String]()
+
   override def receive = {
+    case "timer" => {
+      for ((lbl, _, _) <- busyWorkers.values) {
+        if (previouslyActive.contains(lbl)) {
+          println(s"$lbl is taking a long time")
+        }
+      }
+      println ("Timing")
+      previouslyActive = busyWorkers.values.map(_._1).toList
+      akka.pattern.after(30.seconds, context.system.scheduler) {
+        Future {
+          self ! "timer"
+        }
+      }
+    }
     case akka.actor.Status.Failure(exn) => {
       busyWorkers.get(sender) match {
-        case Some((run, p)) => {
+        case Some((label, run, p)) => {
           log.info(s"Failure from ${sender.path} $exn")
           p ! akka.actor.Status.Failure(exn)
           busyWorkers -= sender
@@ -43,10 +68,10 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
          log.warning(s"Stray failure from ${sender.path}")}
         }
     }
-    case WorkerReady => {
-      availableWorkers += sender
-      context.watch(sender)
-      log.info(s"New worker connected: ${sender.path}")
+    case WorkerReady(workerRef) => {
+      availableWorkers += workerRef
+      context.watch(workerRef)
+      log.info(s"New worker connected: ${workerRef.path}")
       startJobs()
     }
     case Terminated(actorRef) => {
@@ -56,9 +81,9 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
       }
       else {
         busyWorkers.get(actorRef) match {
-          case Some((run, p)) => {
+          case Some((label, run, p)) => {
            log.warning(s"Worker ${actorRef.path} died running job")
-            pendingJobs.enqueue((run, p))
+            pendingJobs.enqueue((label, run, p))
             startJobs()
           }
           case None => log.warning(s"Received stray Terminated(${actorRef.path})")
@@ -67,12 +92,13 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
     }
     case exit : ContainerExit => {
       busyWorkers.get(sender) match {
-        case Some((run, p)) => {
+        case Some((label, run, p)) => {
 
           p ! exit
           // p.success(exit)
           availableWorkers += sender
           busyWorkers -= sender
+          log.info(s"Result from $sender ($label)")
           startJobs()
         }
         case None => {
@@ -80,44 +106,11 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
         }
       }
     }
-    case run : Run => {
+    case (label: String, run : Run) => {
       val p = Promise[ContainerExit]()
-      pendingJobs.enqueue(run -> sender)
+      pendingJobs.enqueue((label, run, sender))
       startJobs()
     }
   }
-
-
-  def findExistingWorkers(): Unit = {
-    import GCE.Implicits._
-    import scala.collection.JavaConversions._
-
-    val auth = SimpleAuth(Paths.get("cred.json"))
-
-    implicit val compute = SimpleCompute("umass-cmpsci220", "us-east1-b", auth)
-
-    val expectedSig = CreateImage.workerSignature()
-
-    for (instance <- compute.compute.instances().list()) {
-      val items = instance.getMetadata.getItems()
-      (if (items != null) items.toList.find(_.getKey == "signature") else None) match {
-        case Some(metadata) => {
-          val sig = metadata.getValue()
-          if (true) { // expectedSig == upickle.default.read[WorkerInstanceSignature](sig)) {
-            val ip = instance.getNetworkInterfaces.get(0).getNetworkIP()
-            log.info(s"Found candidate worker at $ip")
-            context.actorSelection(s"akka.tcp://worker@$ip:5000/user/worker") ! AreYouReady
-
-          }
-        }
-        case None => ()
-      }
-    }
-
-  }
-
-  findExistingWorkers()
-
-
 
 }

@@ -26,42 +26,7 @@ object Main extends App {
       scripting.system.terminate()
     }
 
-    case Array("hw1") => {
-      val scripting = new grading.Scripting("10.8.0.6")
-      import java.nio.file._
-      import scripting._
-
-      import scripting.system.dispatcher
-
-      val lst = assignments("hw1").map(dir => {
-        val zip = ZipBuilder()
-         .filterAdd(dir, "", p => p.filename.endsWith(".scala") && p.filename != "GradingMain.scala")
-         .build()
-        run(120, Seq("sbt", "compile"), zip)
-          .map({
-            case msg@ContainerExit(0, stdout, stderr) => {
-              Files.write(dir.resolve("compile-ok.txt"), stdout.getBytes)
-              Some(msg)
-            }
-            case msg@ContainerExit(n, stdout, stderr) => {
-              Files.write(dir.resolve("compile-error-stdout.txt"), stdout.getBytes)
-              Files.write(dir.resolve("compile-error-stderr.txt"), stderr.getBytes)
-              println(s"Cannot compile $dir (exit $n)")
-              Some(msg)
-            }
-          })
-          .recover({
-            case exn: Throwable => {
-              println(s"Exception compiling $dir $exn")
-              None
-            }
-          })
-      })
-      Await.result(Future.sequence(lst), Duration.Inf)
-      //val r = run("gcr.io/umass-cmpsci220/student", 30, Seq("/bin/ls", "/"))
-      //println(Await.result(r, Duration.Inf))
-      scripting.system.terminate()
-    }
+    case Array("hw1") => GradeHW1.main()
     case Array("worker") => {
       import akka.actor.{Props, ActorSystem}
       val ip = Await.result(InstanceMetadata.getPrivateIP(ExecutionContext.Implicits.global), 15.seconds)

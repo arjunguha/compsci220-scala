@@ -11,12 +11,12 @@ import scala.concurrent.Future
 class Scripting(ip: String) {
 
   import java.nio.file.{Paths, Files, Path, FileSystems}
-  import akka.actor.{Props, ActorSystem}
+  import akka.actor.{Props, ActorSystem, Actor}
   import akka.util.Timeout
+  import scala.concurrent._
   import scala.concurrent.duration._
   import akka.pattern._
   import Messages._
-
   import scala.collection.JavaConversions._
 
   // Matches submission ID
@@ -27,10 +27,23 @@ class Scripting(ip: String) {
 
   import system.dispatcher
 
-  def run(timeout: Int, command: Seq[String], zip: Array[Byte]): Future[ContainerExit] = {
-    implicit val t = Timeout((timeout * 2).seconds)
-    ask(controllerActor, Run("gcr.io/umass-cmpsci220/student", timeout, "/home/student/hw", command, Map("/home/student/hw" -> zip)))
-      .mapTo[ContainerExit]
+  class RunActor(promise: Promise[ContainerExit], run: (String, Run)) extends Actor {
+
+    controllerActor ! run
+
+    def receive = {
+      case exit: ContainerExit => {
+        promise.success(exit)
+        context.stop(self)
+      }
+    }
+
+  }
+
+  def run(timeout: Int, command: Seq[String], zip: Array[Byte], label: String = "No label"): Future[ContainerExit] = {
+    val p = Promise[ContainerExit]()
+    system.actorOf(Props(new RunActor(p,(label, Run("gcr.io/umass-cmpsci220/student", timeout, "/home/student/hw", command, Map("/home/student/hw" -> zip))) )))
+    p.future
   }
 
 
@@ -88,6 +101,29 @@ class Scripting(ip: String) {
         .filterAdd(dir, "./", p => p.filename.endsWith(".scala") && p.filename != "GradingMain.scala")
       moreFiles(zip)
       zip.build()
+    })
+  }
+
+
+  def updateState(file: Path)(body: Rubric => Future[Rubric]) = {
+    import MyJsonProtocol._
+    import spray.json._
+
+    assert(!Files.exists(file) || Files.isRegularFile(file),
+           s"$file is a directory or special file")
+    val oldState = if (!Files.exists(file)) {
+      Rubric(Map())
+    }
+    else {
+      (new String(Files.readAllBytes(file))).parseJson.convertTo[Rubric]
+    }
+
+    body(oldState).map(newState => {
+      Files.write(file, newState.toJson.prettyPrint.getBytes)
+      Files.write(file.getParent.resolve("report.txt"), newState.toString.getBytes)
+      if (oldState != newState) {
+        println(s"Updated $file")
+      }
     })
   }
 

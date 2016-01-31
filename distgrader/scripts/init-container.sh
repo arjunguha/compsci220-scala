@@ -19,3 +19,5 @@ apt-get install -yq oracle-java8-installer
 
 apt-get install -yq supervisor
 
+curl https://dl.google.com/cloudagents/install-logging-agent.sh | bash
+

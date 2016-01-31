@@ -3,9 +3,40 @@ package grading
 import akka.actor.Status
 import com.spotify.docker.client.messages.{HostConfig, ContainerConfig}
 
+class ServerMonitorActor(serverUrl: String, worker: akka.actor.ActorRef)
+  extends akka.actor.Actor with akka.actor.ActorLogging {
+
+  import Messages._
+  import akka.actor._
+  import scala.concurrent.duration._
+  import context.dispatcher
+
+  def notifyServer(): Unit = {
+    val f = context.actorSelection(serverUrl).resolveOne(30.seconds)
+    f.onSuccess {
+      case ref => {
+        log.info(s"Found server $ref")
+        ref ! WorkerReady(worker)
+        context.watch(ref)
+      }
+    }
+    f.onFailure { case _ => notifyServer() }
+  }
+
+  notifyServer()
+
+  def receive = {
+    case Terminated(actorRef) => {
+      log.info("Server terminated")
+      notifyServer()
+    }
+  }
+
+}
 
 class WorkerActor extends akka.actor.Actor with  akka.actor.ActorLogging {
 
+  import akka.actor._
   import java.nio.file.{Files, Paths, Path}
   import scala.util.{Try, Success, Failure}
   import context.dispatcher
@@ -18,8 +49,9 @@ class WorkerActor extends akka.actor.Actor with  akka.actor.ActorLogging {
   val docker = DefaultDockerClient.builder.uri("http://localhost:2376").build
 
   val controllerHost = Await.result(InstanceMetadata.metadata("controller-host"), 10.seconds)
+  val controllerUrl = s"akka.tcp://controller@$controllerHost:5000/user/controller"
 
-  context.actorSelection(s"akka.tcp://controller@$controllerHost:5000/user/controller") ! WorkerReady
+  context.actorOf(Props(new ServerMonitorActor(controllerUrl,self)))
 
   override def receive = {
     case AreYouReady => sender ! WorkerReady
