@@ -2086,6 +2086,28 @@ assignment.
 
 \newlecture
 
+\begin{instructor}
+\section{Administrative}
+
+\begin{itemize}
+
+  \item Discussion tomorrow has you write two functions during discussion period.
+
+  \item You can bring your laptops and work in pairs if needed.
+
+  \item You'll get the assignment on paper, during the discussion.
+
+  \item You have to submit it on Moodle by 7PM on that day. It is designed
+  to be done in class. The extra time is b/c some rooms don't have wireless.
+
+  \item In particular, you cannot discuss the discussion on Piazza.
+
+  \item You cannot hand it in late. No exceptions.
+
+\end{itemize}
+
+\end{instructor}
+
 
 \begin{figure}
 \begin{subfigure}{.45\textwidth}
@@ -2170,7 +2192,7 @@ totalLen(List("hi", "cs220", "student")) = binop("hi", binop("cs220", binop("stu
 
 \end{itemize}
 
-Now that we've seen the common pattern, it's clear that we abstract 
+Now that we've seen the common pattern, it's clear that we abstract
 these functions to a higher-order
 function that takes three arguments (1) the original list, (2)
 a two-argument function instead of a fixed binary operator, and (3) a
@@ -2217,7 +2239,7 @@ def fold[A,B](baseCase: B, binOp: (A, B) => B, lst: List[A]): B = lst match {
 
 \paragraph{Functions can be passed as arguments to functions.}
 The last lecture introduced functions can be passed as arguments
-to other functions. For example, the function \scalainline{filter(f, lst)} 
+to other functions. For example, the function \scalainline{filter(f, lst)}
 produces a list of all the items of \scalainline{lst} for which \scalainline{f}
 is \scalainline{true}:
 %
@@ -2411,7 +2433,7 @@ f(11)
 y
 \end{scalacode}
 
-Although the program defines a variable called \scalainline{y}, the 
+Although the program defines a variable called \scalainline{y}, the
 \emph{scope} of the variable is limited to the function \scalainline{f}.
 Therefore, we cannot refer to the variable outside the function, which
 is why we get an error.
@@ -2430,9 +2452,9 @@ f(10) + x
 
 The result is \scalainline{35}. Within the body of \scalainline{f}, the
 the name \scalainline{x} refers to the argument to the function, which
-\emph{shadows} the global variable \scalainline{val x = 20}. Therefore, 
+\emph{shadows} the global variable \scalainline{val x = 20}. Therefore,
 \scalainline{f(10) == 15}. However, outside the function \scalainline{x}
-refers to the global variable \scalainline{x == 20}, and 
+refers to the global variable \scalainline{x == 20}, and
 \scalainline{15 + 20 == 35}.
 
 We can make this argument more precise by \emph{substituting} variables
@@ -2473,7 +2495,7 @@ Here is a more compact way of making the same argument:
 \begin{array}{l|l|l}
  & \textrm{Expression} & \textrm{Reasoning} \\
 \hline
-& \scalainline{val x = 20; def f(x: Int): Int = { x + 5 }; f(10) + x} 
+& \scalainline{val x = 20; def f(x: Int): Int = { x + 5 }; f(10) + x}
 & \textrm{Original expression} \\
 = & \scalainline{def f(x: Int): Int = { x + 5 }; f(10) + 20}
 & \textrm{Substitute \scalainline{x} with \scalainline{20}} \\
@@ -2490,7 +2512,7 @@ Here is a more compact way of making the same argument:
 Scope can appear tricker when working with higher-order functions. But, we can
 use the same substitution principle to reason about nested functions.
 
-For example, we wrote the \scalainline{makeAdder} higher-order function before 
+For example, we wrote the \scalainline{makeAdder} higher-order function before
 and used it to create the \scalainline{add10} function:
 \begin{scalacode}
 def makeAdder(x: Int): Int => Int = {
@@ -2502,7 +2524,7 @@ val add10 = makeAdder(10)
 \end{scalacode}
 
 The following calculate starts with the definition above (written in a single
-line for brevity) and shows that it is equivalent to the more obvious 
+line for brevity) and shows that it is equivalent to the more obvious
 definition of \scalainline{add10}:
 \[
 \small
@@ -2523,7 +2545,7 @@ val add10 = ((y: Int) => { x + 10 })
 } & \textrm{Substitute \scalainline{add} with its definition} \\
 = & \scalainline{
 def add10(y: Int) = x + 10
-} & \textrm{Rewrite \scalainline{add} using \scalainline{def} notation} 
+} & \textrm{Rewrite \scalainline{add} using \scalainline{def} notation}
 \end{array}
 \]
 
@@ -2533,7 +2555,7 @@ should check!) and all the lines are truly equivalent to each other.
 It is always possible to perform these kinds of calculations to simplify
 expressions with higher-order functions. For large programs, a detailed
 calculation may be infeasibly wrong. But, if you understand how these
-calculuations work in detail on small programs, you'll be able to reason 
+calculuations work in detail on small programs, you'll be able to reason
 carefully about larger programs without needing to actually do the calculuates
 in detail.
 
@@ -2547,7 +2569,7 @@ fields:
 case class Point(
   getX: () => Double,
   getY: () => Double,
-  magnitude: () => Double, 
+  magnitude: () => Double,
   add: Point => Point)
 \end{scalacode}
 
@@ -2581,10 +2603,10 @@ assert(pt1.getY() == 4.0)
 Note that this looks an awful lot like vanilla object-oriented programming.
 In fact, you could say that \scalainline{makePoint} is a \emph{constructor}
 that produces object that have the \emph{interface} \scalainline{Point}
-and that \scalainline{getX}, \scalainline{getY}, etc. are \emph{methods} that the 
+and that \scalainline{getX}, \scalainline{getY}, etc. are \emph{methods} that the
 interface defines.
 Furthermore, \scalainline{x} and \scalainline{y} are \emph{private fields},
-since they are not in scope outside the \scalainline{makePoint} 
+since they are not in scope outside the \scalainline{makePoint}
 function.\footnote{However, \scalainline{x} and \scalainline{y} are in scope
 for the methods, since they are local to \scalainline{makePoint}.}
 
@@ -2597,7 +2619,7 @@ ideas like inheritence can be encoded using higher-order functions too.
 Conversely, it turns out that higher-order functions can be encoded using
 objects, which we will see later in the course. The point of this exercise
 is that functional programming and object-oriented programming are two sides
-of the same coin. 
+of the same coin.
 
 \newdiscussion{First-class and Higher-Order Functions (Feb 3)}
 
@@ -2748,6 +2770,80 @@ assignment.
 
 \newlecture
 
+\section{Required Reading}
+
+Must be something to assign
+
+\section{The Option Type}
+
+\section{Handy List Functions}
+
+Only show 5-6
+\begin{scalacode}
+.combinations(num).toList
+.contains(pred)
+.corresponds(other)(pred)
+.distinct
+.take(num)
+.drop(num)
+.find(p)
+.exists(p)
+.filter(p)
+.forall(p)
+.groupBy(proj)
+.max
+.min
+.sum
+.product
+.partition
+.permutations.toList
+.reverse
+.fold
+.zip
+\end{scalacode}
+
+and many more
+
+\section{Handy Set Functions}
+
+\begin{scalacode}
+.union
+.intersect
+.filter
+.map
+.diff
+.isEmpty
+.subsets
+\end{scalacode}
+
+\section{Handy Map Functions}
+
+\begin{scalacode}
+.get
+ + (k -> v)
+.contains
+.keys
+.values
+\end{scalacode}
+
+\section{Conversions}
+
+Functions to convert between maps and lists and sets
+
+\section{An example of a data processing pipeline}
+
+https://raw.githubusercontent.com/fivethirtyeight/data/master/congress-age/congress-terms.csv
+
+New members of congress on a particular year
+
+% lst.filter(year = N && incumbent = NO).map(_.firstName)
+
+Years in congress, by person
+
+% lst.groupBy(firstName, lastName) =
+
+Oldest congressman:
+
 
 
 \section{New}
@@ -2810,19 +2906,154 @@ appear: as arguments, as results, as fields in a data-structure, and so on.
 
 \section{Option type}
 
-\chapter{Homework 3: Modeling Data}
+\chapter{\texorpdfstring{Homework 3: Data Wrangling}{file:hw/hw3}}
 
-\section{Working with census data}
+\due{Thursday, Feb 11}
+
+
+The United States Social Security Administration releases data dating back to
+1880 on babies' first names, genders, and their
+popularity.\footnote{\url{https://www.ssa.gov/oact/babynames/limits.html}}
+Similarly, the Centers for Disease Control releases data on life expectancy
+in the United States.\footnote{\url{http://www.cdc.gov/nchs/products/life_tables.htm}}.
+In this assignment, you'll be putting these two data sources together
+to answer vital questions such as ``What is the most popular baby name in 2007?'',
+``Approximately how many Emmas are alive today?'', and so on.
+
+To do so, you'll use Scala's built-in data
+structures (lists, sets, and maps) to write several data-processing functions
+that can be composed together to answer complicated queries.
+Although you can write all these functions directly using recursion,
+the point of the assignment is to sequence Scala's built-in methods together
+to write them quickly and compactly. Most of the functions only need
+1 line of code, if you exploit the right library features.
+
+In addition, you'll be working with CSV files (\emph{comma-separated values}),
+which is the format in which a lot of public data sets are released.
+
+\section{Template and Data}
+
+The template and data for this assignment are available herE:
+
+\url{https://www.cs.umass.edu/~arjun/courses/cmpsci220-spring2016/hw/wrangling.zip}
+
+\section{The Data}
+
+In a CSV file, each line has a row of data, where each row
+has a sequence of columns, separated by a commas. For example, the
+first few rows of \texttt{ssa-births.csv} are:
+
+\begin{verbatim}
+1880,Mary,F,7065
+1880,Anna,F,2604
+1880,Emma,F,2003
+1880,Elizabeth,F,1939
+\end{verbatim}
+
+We can interpret this data as ``In the year 1880, 7065 female babies were born
+named Mary; in the year 1880, 2604 female babies were born named Anna'' and so on.
+In fact, the file has over 1.8 million lines of entries like this, with data
+as recent as 2014. \emph{If this file is too large for your computer to handle,
+you should delete some entries}.
+
+The file \texttt{cdc-life-expectancy.csv} is much shorter and has entries
+that look like this:
+
+\begin{verbatim}
+2010,76,81
+2009,75,80
+2008,75,80
+\end{verbatim}
+
+We can interpret this data as ``The average life expectancy of U.S. babies born
+in 2010 is 76 years for males and 81 years for females'', and so
+on.\footnote{The CDC releases more precise statistics. The numbers have been
+cleaned up to make the assignment a little easier.}
+
+The \texttt{build.sbt} file for this assignment is
+configured to load a library for reading CSV files. For example, the program:
+\begin{scalacode}
+import edu.umass.cs.CSV
+CSV.fromFile("cdc-life-expectancy.csv")
+\end{scalacode}
+Produces the value:
+\begin{scalacode}
+List(
+  List("2010", "76", "81"),
+  List("2009", "75", "80"),
+  List("2008", "75", "80"),
+  ...)
+\end{scalacode}
+
+\section{Programming Task}
+
+Your programming task is to implement the functions described
+in \texttt{src/main/scala/Main.scala}. You'll notice that many functions
+consume and produce a list of births. The key idea is that you can
+compose these functions together to pose complex queries. For example,
+suppose \scalainline{allBirths} holds the complete list of births:
+
+\begin{scalacode}
+val allBirths = CSV.fromFile("ssa-births.csv")
+\end{scalacode}
+
+\begin{itemize}
+
+  \item The following query calculates how many girls and boys were born between 1990
+  and 2000:
+
+  \begin{scalacode}
+  countGirlsAndBoys(yearGT(yearLT(allBirths, 2001), 1989))
+  \end{scalacode}
+
+  \item The following query tells is if there were more Emma's born in 2010 than
+  in 2009:
+
+  \begin{scalacode}
+  count(onlyName(yearIs(2010, allBirths), "Emma")) > count(onlyName(yearIs(2010, allBirths), "Emma"))
+  \end{scalacode}
+
+  \item The following query reports the most popular name of 2013:
+
+  \begin{scalacode}
+  mostPopular(yearIs(2013, allBirths))
+  \end{scalacode}
+
+  \item The following query estimates the number of John's alive today who
+  were born after 1980:
+
+  \begin{scalacode}
+  estimatePopulation(yearGT(allBirths, 1980), 2015)
+  \end{scalacode}
+
+\end{itemize}
+
+\section{Hand In}
+
+From \sbt{}, run the command \verb|submit|. The command will create
+a file called \verb|submission.tar.gz| in your assignment directory.
+Submit this file using Moodle.
+
+For example, if the command runs successfully, you will see output similar
+to this:
+%
+\begin{console}
+Created submission.tar.gz. Upload this file to Moodle.
+[success] Total time: 0 s, completed Jan 17, 2016 12:55:55 PM
+\end{console}
+
+\textbf{Note:}  The command will not allow you to submit code that does not
+compile. If your code doesn't compile, you will receive no credit for the
+assignment.
+
 
 \newlecture
 
-\section{Evaluating Expressions}
+\section{Inside the Scala compiler}
+
+\newlecture
 
 \section{Garbage collection}
-
-\newlecture
-
-\section{Exceptions and the Option type}
 
 \newdiscussion{TODO -- ??? (Feb 10)}
 
@@ -2834,13 +3065,15 @@ Use the option type
 
 \newlecture
 
+\section{Object Oriented Scala}
+
 \newdiscussion{TODO -- Dan (Feb 17)}
 
 \chapter{Homework 5: Type Checker and Evaluator}
 
 \newlecture
 
-\section{Type checking Scala}
+\section{The Expression Problem}
 
 \newlecture
 
@@ -2850,16 +3083,23 @@ Use the option type
 
 \newlecture
 
+\section{Variance}
+
 \newlecture
 
-\newdiscussion{TODO -- Dan (Mar 2)}
+\section{Streams}
 
+\newdiscussion{TODO -- Dan (Mar 2)}
 
 \chapter{Homework  7: Graphs}
 
 \newlecture
 
+\section{Regular Expressions}
+
 \newlecture
+
+\section{Implicits}
 
 \newdiscussion{TODO -- Dan (Mar 9)}
 

@@ -5,7 +5,7 @@ import java.util.zip.ZipOutputStream
 import akka.util.Timeout
 import grading.Messages.ContainerExit
 import org.apache.commons.io.{FileUtils, IOUtils}
-
+import edu.umass.cs.zip._
 import scala.concurrent.Future
 
 class Scripting(ip: String) {

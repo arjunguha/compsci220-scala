@@ -5,6 +5,7 @@ object GradeHW1 {
   import scala.concurrent._
   import scala.concurrent.duration._
   import Messages._
+  import edu.umass.cs.zip._
 
   def main(): Unit = {
     val scripting = new grading.Scripting("10.8.0.6")
