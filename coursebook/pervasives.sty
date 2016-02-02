@@ -83,3 +83,9 @@
 \newcommand{\due}[1]{\large\textbf{Due: #1 2016 1AM}}
 
 \newtheorem{property}{Property}
+
+\newtcolorbox{notationbox}{colback=green!5!white, colframe=green!75!black}
+
+\newenvironment{notation}%
+{\begin{notationbox}\paragraph{Notation}}%
+{\end{notationbox}}
