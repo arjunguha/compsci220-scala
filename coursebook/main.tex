@@ -1781,7 +1781,7 @@ def f(n: Int): Boolean = head % 2
 
 def filterEven(lst: List[Int]): List[Int] = lst match {
   case Nil => Nil
-  case Cons(head, tail) =>
+  case head :: tail =>
     f(head) match {
       case true => head :: filterEven(tail)
       case false => filterEven(tail)
@@ -1795,7 +1795,7 @@ as an argument:
 \begin{scalacode}
 def filter(f: Int => Boolean, lst: List[Int]): List[Int] = lst match {
   case Nil => Nil
-  case Cons(head, tail) =>
+  case head :: tail =>
     f(head) match {
       case true => head :: filter(f, tail)
       case false => filter(f, tail)
@@ -1812,9 +1812,9 @@ Finally, just as we did for \scalainline{map}, we can generalize the type of \sc
 so that it can be applied to \scalainline{List[A]}:
 
 \begin{scalacode}
-def filter[A](f: A => Boolean, lst: List[Int]): List[A] = lst match {
+def filter[A](f: A => Boolean, lst: List[A]): List[A] = lst match {
   case Nil => Nil
-  case Cons(head, tail) =>
+  case head :: tail =>
     f(head) match {
       case true => head :: filter(f, tail)
       case false => filter(f, tail)
@@ -2772,7 +2772,7 @@ assignment.
 
 \section{Required Reading}
 
-Must be something to assign
+Read Chapters 16 and 17 of \emph{Programming in Scala}.
 
 \section{Partial Functions and Signalling Errors}
 
@@ -3020,7 +3020,7 @@ There are several other useful methods. For example:
   \end{notation}
 
   \item \scalainline{lst.exists(f)} produces \scalainline{true} if there
-  exists any element in the list on which \scalainline{f} produces 
+  exists any element in the list on which \scalainline{f} produces
   \scalainline{true}.
 
   \begin{scalacode}
@@ -3072,7 +3072,7 @@ assert(Set(1, 2, 3, 4).filter(x => x % 2 == 0) == Set(2, 4))
 assert(Set(1, 2, 3, 4, 5).map(x => x % 2) = Set(0, 1))
 \end{scalacode}
 
-There are severy other useful methods in the 
+There are severy other useful methods in the
 \href{http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.immutable.Set}{Set API}.
 
 \paragraph{Maps}
@@ -3118,7 +3118,7 @@ We can augment maps using the following syntax:
 \begin{scalacode}
 val moreDueDates = dueDates + (4 -> "Feb 18")
 \end{scalacode}
-We emphasize that this produces a new map with all the contents of 
+We emphasize that this produces a new map with all the contents of
 \scalainline{dueDates} and the key mapping for \scalainline{4}.
 The original map is not modified.
 
@@ -3126,8 +3126,8 @@ The original map is not modified.
 The notation \scalainline{m + (k -> v)} seems to be something
 new, but we know how to unpack it. We just learned the arrow notation is
 another way of writing tuples, we can first rewrite it as \scalainline{m + (k, v)}.
-We also learned that all operators on objects are actually methods, so 
-can rewrite it again as \scalainline{m.+((k, v))}. 
+We also learned that all operators on objects are actually methods, so
+can rewrite it again as \scalainline{m.+((k, v))}.
 
 Therefore, we can conclude that maps have a method called \scalainline{+} that
 takes one argument. This argument is a tuple where the first component is a key
@@ -3147,7 +3147,7 @@ want to turn the iterator into a list immediately:
 assert(dueDates.values.toList == List("Jan 28", "Feb 4", "Feb 11"))
 \end{scalacode}
 
-As usual, there are dozens of handy methods over maps. You should 
+As usual, there are dozens of handy methods over maps. You should
 explore the \href{http://www.scala-lang.org/api/2.11.7/index.html#scala.collection.Map}{Map API}.
 
 \section{Conversions}
@@ -3171,7 +3171,7 @@ assert(List(("X", 10), ("Y", 20)).toMap == Map("X" -> 10, "Y" -> 20))
   \item Visit \url{https://github.com/fivethirtyeight/data} and show what's
   there.
 
-  \item Explain CSV files 
+  \item Explain CSV files
 
   \item Download the file
 

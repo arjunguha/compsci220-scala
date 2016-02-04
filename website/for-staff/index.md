@@ -7,6 +7,13 @@ This page has links to all course content, but is not shared with the students
 in the class. It is not a big deal if students see this page, but keeping it
 confidential will give us more flexibility.
 
+## Instructor Manual
+
+This has all lectures, homework assignments, notes for instructors, etc.
+Some of the stuff toward the end is really rough.
+
+[instructor.pdf](instructor.pdf)
+
 ## Piazza duty
 
 Spend up to 1 hour per day on Piazza. You should check it in dedicate blocks of
