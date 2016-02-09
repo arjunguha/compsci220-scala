@@ -3326,23 +3326,134 @@ assignment.
 
 \newlecture
 
-\section{New}
 
-Functions can even be stored in data structures. For example, consider
-this simple, recursive evaluator for arithmetic expressions:
+\section{Expressions as Trees}
 
 \begin{scalacode}
 sealed trait Expr
 case class Num(n: Int) extends Expr
 case class Add(e1: Expr, e2: Expr) extends Expr
+case class Sub(e1: Expr, e2: Expr) extends Expr
 case class Mul(e1: Expr, e2: Expr) extends Expr
 
-def eval(e: Expr): Expr = e match {
-  case Num(n) => n
-  case Add(e1, e2) => eval(e1) + eval(e2)
-  case Mul(e1, e2) => eval(e1) * eval(e2)
+def eval(e: Expr): Int = ??? // fill this in
+\end{scalacode}
+
+\section{Stack-representation of programs}
+
+\begin{scalacode}
+sealed trait Instruction
+case class INum(n: Int) extends Instruction
+case class IAdd() extends Instruction
+case class IMul() extends Instruction
+case class ISub() extends Instruction
+
+def eval(e: Expr, stack: List[Int]): List[Int] = (e, stack) match {
+  case (Num(n), stack) => n :: stack
+  case (IAdd, n1 :: n2 :: stack) => n1 + n2 :: stack
+  ...
 }
 \end{scalacode}
+
+Do some hand-translations
+
+\section{Evaluation using a Stack Machine}
+
+Get the order of arguments right, eventually.
+
+\begin{scalacode}
+def compile(e: Expr): List[Instruction] = e match {
+  case Num(n) => List(INum(n))
+  case Add(e1, e2) => compile(e1) ++ compile(e2) ++ List(IAdd())
+  case Sub(e1, e2) => compile(e1) ++ compile(e2) ++ List(ISub())
+  case Mul(e1, e2) => compile(e1) ++ compile(e2) ++ List(IMul())
+}
+
+\end{scalacode}
+
+\section{Inside Java}
+
+Show javac on a simple class with factorial. Talk through what the code does.
+
+\begin{javacode}
+class Simple {
+
+  static int factorial(int n, int result) {
+    if (n == 0) {
+      return result;
+    }
+    else {
+      return factorial(n - 1, result * n);
+    }
+  }
+
+  public static void main(String[] args) {
+    System.out.println("Hello, world!");
+     System.out.println(factorial(5, 1));
+  }
+
+}
+\end{javacode}
+
+\begin{console}
+static int factorial(int, int);
+  Code:
+     0: iload_0
+     1: ifne          6
+     4: iload_1
+     5: ireturn
+     6: iload_0
+     7: iconst_1
+     8: isub
+     9: iload_1
+    10: iload_0
+    11: imul
+    12: invokestatic  #2
+    15: ireturn
+\end{console}
+
+\section{Scala}
+
+\begin{scalacode}
+class SimpleScala {
+
+  def factorial(n: Int, result: Int): Int = {
+    if (n == 0) {
+      result
+    }
+    else {
+      factorial(n - 1, result * n)
+    }
+  }
+
+}
+\end{scalacode}
+
+\begin{console}
+  public int factorial(int, int);
+    Code:
+       0: iload_1
+       1: iconst_0
+       2: if_icmpne     9
+       5: iload_2
+       6: goto          19
+       9: aload_0
+      10: iload_1
+      11: iconst_1
+      12: isub
+      13: iload_2
+      14: iload_1
+      15: imul
+      16: invokevirtual #12                 // Method factorial:(II)I
+      19: ireturn
+\end{console}
+
+\section{New}
+
+
+Functions can even be stored in data structures. For example, consider
+this simple, recursive evaluator for arithmetic expressions:
+
 
 Imagine extending this evaluator to support subtraction, division, etc.
 We could do so by adding more cases to \scalainline{Expr} and adding corresponding
