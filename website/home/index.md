@@ -26,13 +26,11 @@ You must read the entire [Course Policy] document.
 
 # Office Hours
 
-**Office hours start on Monday, January 25.**
-
 | When                       | Where                                | Who                               |
 |:---------------------------|--------------------------------------|-----------------------------------|
 | Monday, 11:00AM--12:00PM   | USpace (CS Building, Room 144)       | Rian Shambaugh and Tommy Nguyen   |
 | Tuesday, 11:45AM--12:45PM  | LGRT, Room 220                       | Brendan Murphy and Cassie Corey   |
-| Wednesdays, 1:00PM--2:00PM | CS Building, Room 230                | Arjun Guha                        |
+| Wednesdays, 2:00PM--3:00PM | CS Building, Room 230                | Arjun Guha                        |
 | Fridays, 12:00PM--1:00PM   | USpace (CS Building, Room 144)       | Josh Sherman and Aaron Weiss      |
 {: .table .table-striped :}
 

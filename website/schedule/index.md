@@ -13,10 +13,10 @@ title: Schedule
 | Thursday, Jan 28  | Due: [HW1]. Out: [HW2]. [Lecture Notes](../reading/lecture3.pdf).                               |
 | Tuesday, Feb 2    | [Lecture Notes](../reading/lecture4.pdf).                                                       |
 | Wednesday, Feb 3  | *Lab:* Distributed during lab.                                                                  |
-| Thursday, Feb 4   | [Lecture Notes](../reading/lecture5.pdf). Due: [HW2]. Out: HW3.                                 |
+| Thursday, Feb 4   | [Lecture Notes](../reading/lecture5.pdf). Due: [HW2]. Out: [HW3].                                 |
 | Tuesday, Feb 9    |                                                                                                 |
 | Wednesday, Feb 10 | *Lab:*                                                                                          |
-| Thursday, Feb 11  | Due: HW3. Out: HW4.                                                                             |
+| Thursday, Feb 11  | Due: [HW3]. Out: HW4.                                                                             |
 | Tuesday, Feb 16   |  **No class.** (Monday schedule)                                                                |
 | Wednesday, Feb 17 | *Lab:*                                                                                          |
 | Thursday, Feb 18  | Due: HW4. Out: HW5.                                                                             |
@@ -54,3 +54,4 @@ title: Schedule
 
 [HW1]: ../hw/hw1.pdf
 [HW2]: ../hw/hw2.pdf
+[HW3]: ../hw/hw3.pdf
