@@ -39,6 +39,7 @@ case class SimpleInstance(
   tags: Seq[String] = Seq(),
   metadata: Map[String, String] = Map(),
   autoDeleteDisk: Boolean = true,
+  isPreemptible: Boolean = false,
   sourceImage: String = "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-1404-trusty-v20151113")
 
 object GCE {
@@ -146,6 +147,7 @@ object Implicits {
         .setNetworkInterfaces(List(intf))
         .setMetadata(new Metadata().setItems(metadata))
         .setTags(new Tags().setItems(inst.tags))
+        .setScheduling(new Scheduling().setPreemptible(inst.isPreemptible))
         .setServiceAccounts(List(new ServiceAccount().setEmail("default").setScopes(List("https://www.googleapis.com/auth/logging.write", ComputeScopes.DEVSTORAGE_READ_ONLY))))
 
       instances.insert(compute.project, compute.zone, instance).future

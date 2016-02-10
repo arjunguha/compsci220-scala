@@ -19,14 +19,15 @@ object Main extends App {
 
 
   args match {
-    case Array("extract-hw1") => {
+    case Array("extract", src, dst) => {
       val scripting = new grading.Scripting("10.8.0.6")
       import scripting._
-      extract("hw1.zip", "hw1")
+      extract(src, dst)
       scripting.system.terminate()
     }
 
     case Array("hw1") => GradeHW1.main()
+    case Array("hw2") => GradeHW2.main()
     case Array("worker") => {
       import akka.actor.{Props, ActorSystem}
       val ip = Await.result(InstanceMetadata.getPrivateIP(ExecutionContext.Implicits.global), 15.seconds)

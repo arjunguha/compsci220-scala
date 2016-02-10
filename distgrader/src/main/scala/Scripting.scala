@@ -46,16 +46,6 @@ class Scripting(ip: String) {
     p.future
   }
 
-
-  /*
-  def validateSubmission(src: Path) = {
-    val tgz = FileSystems.newFileSystem(src, null)
-    for (file <- Files.newDirectoryStream(tgz.getPath("/"))) {
-     println(file)
-    }
-  }
-  */
-
   def extract(src: String, dst: String) = {
     assert(Files.isDirectory(Paths.get(dst)), s"$dst must be a directory")
     assert(Files.isRegularFile(Paths.get(src)), s"$src must be a .zip file")

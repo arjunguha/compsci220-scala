@@ -23,6 +23,8 @@ object Messages {
 
   case class Rubric(tests: Map[String, Result]) {
 
+    def -(key: String): Rubric = Rubric(tests - key)
+
     override def toString(): String = {
       val  points = tests.values.map({
         case Passed(score) => score
@@ -66,7 +68,7 @@ object Messages {
     override def toString(): String = {
       val fmtStdout = stdout.split("\n").map(str => "    " + str).mkString("\n")
       val fmtStderr = stderr.split("\n").map(str => "    " + str).mkString("\n")
-      s"failed ($maxScore/$maxScore points)\nStandard output:$fmtStdout\n\nStandard error:\n\n$fmtStderr\n\nExit code: $exitCode\n"
+      s"failed (0/$maxScore points)\nStandard output:$fmtStdout\n\nStandard error:\n\n$fmtStderr\n\nExit code: $exitCode\n"
     }
 
 

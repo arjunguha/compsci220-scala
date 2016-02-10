@@ -42,12 +42,11 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
 
   override def receive = {
     case "timer" => {
-      for ((lbl, _, _) <- busyWorkers.values) {
+      for ((ref, (lbl, _, _)) <- busyWorkers) {
         if (previouslyActive.contains(lbl)) {
-          println(s"$lbl is taking a long time")
+          println(s"$lbl is taking a long time (on $ref)")
         }
       }
-      println ("Timing")
       previouslyActive = busyWorkers.values.map(_._1).toList
       akka.pattern.after(30.seconds, context.system.scheduler) {
         Future {
