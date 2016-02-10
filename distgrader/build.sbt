@@ -21,6 +21,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-slf4j" % "2.4.1",
   "org.slf4j" % "slf4j-simple" % "1.7.12",
   "com.ning" % "async-http-client" % "1.9.31",
+  "org.scalariform" %% "scalariform" % "0.1.8",
   "com.lihaoyi" %% "upickle" % "0.3.7",
   "io.spray" %%  "spray-json" % "1.3.2",
   "com.spotify" % "docker-client" % "3.5.9",
