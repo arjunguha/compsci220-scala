@@ -1,9 +1,25 @@
-import cmpsci220.hw.joinlists._
+object FunctionalDataStructures {
 
-object Solution extends JoinListFunctions {
 
-  def max[A](lst: JoinList[A],
-             compare: (A, A) => Boolean): Option[A] = lst match {
+  //
+  // Part 1. Persistent Queues
+  //
+
+  def enqueue[A](elt: A, q: Queue[A]): Queue[A] = Queue(q.front, elt :: q.back)
+
+  def dequeue[A](q: Queue[A]): Option[(A, Queue[A])] = q match {
+    case Queue(head :: tail, back) => Some((head, Queue(tail, back)))
+    case Queue(Nil, back) => back.reverse match {
+      case Nil => None
+      case head :: tail => Some((head, Queue(tail, Nil)))
+    }
+  }
+
+  //
+  // Part 2. Join Lists
+  //
+
+  def max[A](lst: JoinList[A], compare: (A, A) => Boolean): Option[A] = lst match {
     case Empty() => None
     case Singleton(elt) => Some(elt)
     case Join(lst1, lst2, _) => (max(lst1, compare), max(lst2, compare)) match {
@@ -23,9 +39,9 @@ object Solution extends JoinListFunctions {
   def rest[A](lst: JoinList[A]): Option[JoinList[A]] = lst match {
     case Empty() => None
     case Singleton(x) => None
-    case Join(lst1, lst2, _) => rest(lst1) match {
+    case Join(lst1, lst2, size) => rest(lst1) match {
       case None => rest(lst2)
-      case Some(lst1rest) => Some(join(lst1rest, lst2))
+      case Some(lst1rest) => Some(Join(lst1rest, lst2, size - 1))
     }
   }
 
@@ -39,11 +55,11 @@ object Solution extends JoinListFunctions {
       }
     }
     case Join(lst1, lst2, size) => {
-      if (n >= 0 && n < length(lst1)) {
+      if (n >= 0 && n < lst1.size) {
         nth(lst1, n)
       }
-      else if (n < length(lst2)) {
-        nth(lst2, n - length(lst1))
+      else if (n < lst2.size) {
+        nth(lst2, n - lst2.size)
       }
       else {
         None
@@ -61,17 +77,11 @@ object Solution extends JoinListFunctions {
   def filter[A](pred: A => Boolean, lst: JoinList[A]): JoinList[A] = lst match {
     case Empty() => Empty()
     case Singleton(x) => if (pred(x)) { Singleton(x) } else { Empty() }
-    case Join(lst1, lst2, _) => join(filter(pred, lst1), filter(pred, lst2))
+    case Join(lst1, lst2, size) => {
+      val lst1Filtered = filter(pred, lst1)
+      val lst2Filtered = filter(pred, lst2)
+      Join(lst1Filtered, lst2Filtered, lst1Filtered.size + lst2Filtered.size)
+    }
   }
-
-  // import scala.concurrent._
-
-  // def parMap[A, B](f: A => B, lst: JoinList[A])
-  //   (implicit ec: ExecutionContext): Future[JoinList[B]] = lst match {
-  //   case Empty() => Future(Empty())
-  //   case Singleton(x) => Future(Singleton(f(x)))
-  //   case Join(lst1, lst2, size) =>
-  //     parMap(f, lst1).zip(parMap(f, lst2)).map { case (lhs, rhs) => Join(lhs, rhs, size) }
-  // }
 
 }
