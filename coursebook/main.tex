@@ -3211,7 +3211,7 @@ which is the format in which a lot of public data sets are released.
 
 \section{Template and Data}
 
-The template and data for this assignment are available herE:
+The template and data for this assignment are available here:
 
 \url{https://www.cs.umass.edu/~arjun/courses/cmpsci220-spring2016/hw/wrangling.zip}
 
@@ -3501,12 +3501,173 @@ appear: as arguments, as results, as fields in a data-structure, and so on.
 
 \newdiscussion{TODO -- ??? (Feb 10)}
 
-\chapter{Homework 4: More Data Modelling}
+\chapter{\texorpdfstring{Homework 4: Functional Data Structures}{file:hw/hw4}}
 
-\section{Working with more census data}
+In this assignment, you'll build two data structures that use functional
+programming ideas in a unique way.
 
-Use the option type
+The template and data for this assignment are available here:
 
+\url{https://www.cs.umass.edu/~arjun/courses/cmpsci220-spring2016/hw/fundata.zip}
+
+\section{Persistent Queues}
+
+Recall from earlier classes, that a \emph{queue} is a data structure that
+supports three operations:
+
+\begin{enumerate}
+
+\item \emph{Empty} constructs an empty queue,
+
+\item \emph{Enqueue} adds a new element to the back of the queue,
+
+\item \emph{Dequeue} removes an element from the front of the queue, if the queue is
+  not empty.
+
+\end{enumerate}
+
+In the following exercises, you will build a \emph{persistent queue}. A
+persistent queue has the operations defined. But, instead of having enqueue and
+dequeue update the queue, they leave the original queue unchanged and return a
+new queue.
+
+It is easy to implement a persistent queue using a list:
+
+\begin{scalacode}
+type SlowQueue[A] = List[A]
+
+def emptySlow[A](): SlowQueue[A] = Nil()
+
+def enqueueSlow[A](elt: A, q: SlowQueue[A]): SlowQueue[A] = q match {
+  case Nil => List(elt)
+  case head :: tail => head :: enqueueSlow(elt, tail)
+}
+
+def dequeueSlow[A](q: SlowQueue[A]): Option[(A, SlowQueue[A])] = q match {
+  case Nil => None()
+  case head :: tail => Some((head, tail))
+}
+\end{scalacode}
+
+Read the code above carefully. The \emph{enqueue} operation traverses the
+entire list each time (i.e., $O(n)$ running time). Your task is to implement
+the queue more efficiently.
+
+The trick is to represent the queue using two lists. The first list, called
+\emph{front}, has the elements at the front of the queue. The second list, called
+\emph{back}, has the elements at the back of the queue, \emph{in reverse order}.
+
+For example, if \emph{front} is \scalainline{List(1, 2, 3)} and \emph{back} is \scalainline{List(6, 5, 4)}, then
+the elements of the queue, in order, are 1, 2, 3, 4, 5, 6. With this
+representation:
+
+\begin{itemize}
+
+\item \emph{Enqueue} adds an element to \emph{back}, but doesn't need to
+  traverse the whole list.
+
+\item \emph{Dequeue} removes an element from \emph{front}, unless \emph{front}
+  is empty. If it is empty, it reverses \emph{back} and uses it as the front.
+
+\end{itemize}
+
+In the assignment template, the file \texttt{src/main/scala/Types.scala}
+defines a type called \scalainline{Queue} that you should use to define
+ define the following functions:
+
+\begin{scalacode}
+def enqueue[A](elt: A, q: Queue[A]): Queue[A]
+
+def dequeue[A](q: Queue[A]): Option[(A, Queue[A])]
+\end{scalacode}
+
+\section{Join Lists}
+
+A \emph{join list} is a data structure that represents a list, but the
+elements are arranged into a tree. This tree-shape makes some operations,
+like list-concatenation very efficient.
+You'll be working with the \scalainline{JoinList[A]} type, which is
+defined in \texttt{src/main/scala/Types.scala}.
+ The type has three constructors:
+
+\begin{enumerate}
+
+\item \scalainline{Empty()} represents an empty list.
+
+\item \scalainline{Singleton(x)} represents a list with one element $x$.
+
+\item \scalainline{Join(lst1, lst2, length)} represents \scalainline{lst1} appended to
+       \scalainline{lst2}. The \scalainline{length} field is the total number of
+       elements in the list.
+
+\end{enumerate}
+
+It should be clear that it is very cheap to append two join lists: you simply
+use the \scalainline{Join} constructor. It is also cheap to calculate the length of a
+join list, since it is stored at each node.
+
+
+Finally, since join lists represent lists, we've provided two
+functions to convert between join lists and tests in the
+\scalainline{src/main/test/scala/Tests.scala} file:
+
+\begin{itemize}
+
+\item \scalainline{toList[A](lst: JoinList[A]): List[A]} converts a join list into a Scala
+  list.  This
+  operation can be very expensive, but is useful for testing.
+
+\item \scalainline{fromList[A](lst: List[A]): JoinList[A]} converts a Scala list into a join
+  list by repeatedly splitting a list into two equal halves.
+
+\end{itemize}
+
+These two fucntions are provided for testing only. You must not use them in your
+solution.
+
+\paragraph{Programming Task}
+
+Your task is to write some typically list-processing functions for join lists.
+
+\begin{enumerate}
+
+\item \scalainline{max(lst, compare)} produces the maximum value in
+  \scalainline{lst}. The second argument is a comparator. If
+  \scalainline{compare(x, y) == true}, then \scalainline{x} is greater than
+  \scalainline{y}. If the list is empty, the function produces
+   \scalainline{None}.
+
+\item \scalainline{map(f, lst)} produces a new join list, which has exactly the same
+ shape as \scalainline{lst}, but with \scalainline{f} applied to every element.
+
+\item \scalainline{filter(pred, lst)} produces a new join list that has only
+  includes elements of \scalainline{lst} that satisfy the given predicate.
+  The order of elements should not change.
+
+\item \scalainline{first(lst)} and \scalainline{rest(lst)} produce the head and tail, respectively,
+   of \scalainline{lst} if it is non-empty.
+
+\item \scalainline{nth(lst, i)} produces the $n$th element of the list (the first element has index 0).
+
+\end{enumerate}
+
+\section{Hand In}
+
+From \sbt{}, run the command \verb|submit|. The command will create
+a file called \verb|submission.tar.gz| in your assignment directory.
+Submit this file using Moodle.
+
+For example, if the command runs successfully, you will see output similar
+to this:
+%
+\begin{console}
+Created submission.tar.gz. Upload this file to Moodle.
+[success] Total time: 0 s, completed Jan 17, 2016 12:55:55 PM
+\end{console}
+
+\textbf{Note:}  The command will not allow you to submit code that does not
+compile. If your code doesn't compile, you will receive no credit for the
+assignment.
 \newlecture
 
 \section{Object Oriented Scala}
