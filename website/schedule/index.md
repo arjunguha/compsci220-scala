@@ -19,7 +19,7 @@ title: Schedule
 | Thursday, Feb 11  | Due: [HW3]. Out: [HW4]. [Lecture Notes](../reading/gc.pdf)                                      |
 | Tuesday, Feb 16   |  **No class.** (Monday schedule)                                                                |
 | Wednesday, Feb 17 | *Lab:*                                                                                          |
-| Thursday, Feb 18  | Due: [HW4]. Out: HW5.                                                                           |
+| Thursday, Feb 18  | Due: [HW4]. Out: HW5. [Lecture Notes](../reading/lecture8.pdf)                                  |
 | Tuesday, Feb 23   |                                                                                                 |
 | Wednesday, Feb 24 | *Lab:*                                                                                          |
 | Thursday, Feb 25  | Due: HW5. Out: HW6.                                                                             |

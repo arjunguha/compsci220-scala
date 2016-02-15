@@ -39,6 +39,7 @@
 \newmintedfile{scala}{fontsize=\footnotesize}
 
 \newmintinline{scala}{}
+\newmintinline{java}{}
 
 \hypersetup{colorlinks,urlcolor=blue}
 
@@ -89,3 +90,10 @@
 \newenvironment{notation}%
 {\begin{notationbox}\paragraph{Notation}}%
 {\end{notationbox}}
+
+\newtcolorbox{thinkbox}{colback=green!5!white, colframe=green!75!black}
+
+\newenvironment{think}%
+{\begin{thinkbox}\paragraph{Think!}}%
+{\end{thinkbox}}
+
