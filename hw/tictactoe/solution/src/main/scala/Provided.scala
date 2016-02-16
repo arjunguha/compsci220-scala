@@ -1,4 +1,29 @@
-package cmpsci220.hw.tictactoe
+// You'll need to read and understand this file, but don't change its contents.
+// Do not change the contents of this file
+
+sealed trait Player
+case object X extends Player
+case object O extends Player
+
+trait GameLike[T <: GameLike[T]] {
+
+  def isFinished(): Boolean
+
+  /** Assume that isFinished} is true. */
+  def getWinner(): Option[Player]
+
+  def nextBoards(): List[T]
+}
+
+trait MinimaxLike {
+
+  type T <: GameLike[T]
+
+  def createGame(turn: Player, dim: Int, board: Map[(Int, Int), Player]): T
+
+  def minimax(board: T): Option[Player]
+
+}
 
 class Matrix[A] private(val dim: Int, default: A, values: Map[(Int, Int), A]) {
 
@@ -36,13 +61,15 @@ class Matrix[A] private(val dim: Int, default: A, values: Map[(Int, Int), A]) {
     }
   }
 
-  def mapWithPos[B](f: (Int, Int, A) => B): List[B] = {
+  def toList[B](f: (Int, Int, A) => B): List[B] = {
     0.to(dim - 1).map { row =>
       0.to(dim - 1).map { col =>
         f(row, col, values.getOrElse((row, col), default))
       }
     }.flatten.toList
   }
+
+  def toMap(): Map[(Int, Int), A] = values
 
   def get(x: Int, y: Int): A = {
     require(x >= 0 && x < dim)
@@ -84,6 +111,14 @@ object Matrix {
 
   def apply[A](dim: Int, init: A): Matrix[A] = {
     new Matrix(dim, init, Map.empty)
+  }
+
+  def fromMap[A](dim: Int, default: A, values: Map[(Int, Int), A]) = {
+    for (((x, y), _) <- values) {
+      require(x >= 0 && x < dim)
+      require(y >= 0 && y < dim)
+    }
+    new Matrix(dim, default, values)
   }
 
 }

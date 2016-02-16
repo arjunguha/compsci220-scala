@@ -1,0 +1,35 @@
+Compiled from "Simple.java"
+class Simple {
+  Simple();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  static int factorial(int, int);
+    Code:
+       0: iload_0
+       1: ifne          6
+       4: iload_1
+       5: ireturn
+       6: iload_0
+       7: iconst_1
+       8: isub
+       9: iload_1
+      10: iload_0
+      11: imul
+      12: invokestatic  #2                  // Method factorial:(II)I
+      15: ireturn
+
+  public static void main(java.lang.String[]);
+    Code:
+       0: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       3: ldc           #4                  // String Hello, world!
+       5: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+       8: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      11: iconst_5
+      12: iconst_1
+      13: invokestatic  #2                  // Method factorial:(II)I
+      16: invokevirtual #6                  // Method java/io/PrintStream.println:(I)V
+      19: return
+}

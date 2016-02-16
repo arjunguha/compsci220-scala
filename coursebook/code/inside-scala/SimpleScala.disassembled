@@ -1,0 +1,25 @@
+Compiled from "SimpleScala.scala"
+public class SimpleScala {
+  public int factorial(int, int);
+    Code:
+       0: iload_1
+       1: iconst_0
+       2: if_icmpne     9
+       5: iload_2
+       6: goto          19
+       9: aload_0
+      10: iload_1
+      11: iconst_1
+      12: isub
+      13: iload_2
+      14: iload_1
+      15: imul
+      16: invokevirtual #12                 // Method factorial:(II)I
+      19: ireturn
+
+  public SimpleScala();
+    Code:
+       0: aload_0
+       1: invokespecial #21                 // Method java/lang/Object."<init>":()V
+       4: return
+}

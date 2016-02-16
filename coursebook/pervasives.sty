@@ -11,6 +11,7 @@
 \usepackage{subcaption}
 \usepackage{dirtree}
 \usepackage{arrayjobx}
+\usepackage{tikz}
 
 \definecolor{bg}{rgb}{0.95,0.95,0.95}
 
@@ -80,6 +81,16 @@
 \chapter{\texorpdfstring{Discussion \the\value{discussion_num}: #1}{file:discussion/discussion\the\value{discussion_num}}}%
 \stepcounter{discussion_num}%
 }
+
+\newcounter{hw_num}
+\stepcounter{hw_num}
+
+\newcommand{\newhw}[1]{%
+\chapter{\texorpdfstring{Homework \the\value{discussion_num}: #1}{file:hw/hw\the\value{hw_num}}}%
+\stepcounter{hw_num}%
+}
+
+
 
 \newcommand{\due}[1]{\large\textbf{Due: #1 2016 1AM}}
 

@@ -1,5 +1,3 @@
-import cmpsci220.hw.tictactoe._
-
 // Assumes matrix is consistent: at most 1 player has one, difference
 // between  Xs and Os is 0, -1, +1
 class Board(val turn: Player, matrix: Matrix[Option[Player]]) extends GameLike[Board] {
@@ -42,7 +40,7 @@ class Board(val turn: Player, matrix: Matrix[Option[Player]]) extends GameLike[B
 
   // Should return empty list if isFinalState
   def nextBoards(): List[Board] = {
-    val nextStates: List[Option[Board]] = matrix.mapWithPos { (x, y, value) => value match {
+    val nextStates: List[Option[Board]] = matrix.toList { (x, y, value) => value match {
       case Some(_) => None
       case None => {
         val newMatrix = matrix.set(x, y, Some(turn))
@@ -58,8 +56,8 @@ object Solution extends MinimaxLike {
 
   type T = Board
 
-  def createGame(turn: Player, board: Matrix[Option[Player]]): Board = {
-      new Board(turn, board)
+  def createGame(turn: Player, dim: Int, board: Map[(Int, Int), Player]): Board = {
+      new Board(turn, Matrix.fromMap(dim, None, board.mapValues(p => Some(p))))
   }
 
   def minimax(board: Board): Option[Player] = {
