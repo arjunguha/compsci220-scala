@@ -3676,12 +3676,7 @@ assignment.
 
 \section{Reading}
 
-Programming in Scala, Chapter 6.1--6.11.
-
-
-\begin{instructor}
-Assign reading from the Odersky Book.
-\end{instructor}
+Programming in Scala, Chapter 6.1---6.11.
 
 \section{Object Oriented Scala}
 
@@ -3792,22 +3787,14 @@ The semantics of classes in Scala and Java are exactly the same (for now).
 
 \begin{figure}
 \begin{scalacode}
-package fshapes
-
 sealed trait Shape
-// Center of the circle is (0, 0)
-case class Circle(radius: Double) extends Shape
-// Bottom-left corner of the square is (0, 0)
-case class Square(side: Double) extends Shape
+case class Circle(radius: Double) extends Shape // Center of the circle is (0, 0)
+case class Square(side: Double) extends Shape // Bottom-left corner of the square is (0, 0)
 
 object Shape {
   def inShape(s: Shape, x: Double, y: Double) = s match {
-    case Circle(radius) => {
-      math.sqrt(x * x + y * y) <= radius
-    }
-    case Square(side) => {
-      x >= 0 && x <= side && y >= 0 && y <= side
-    }
+    case Circle(radius) => math.sqrt(x * x + y * y) <= radius
+    case Square(side) => x >= 0 && x <= side && y >= 0 && y <= side
   }
 }
 \end{scalacode}
@@ -3825,7 +3812,6 @@ uses pattern-matching to handle the two cases for circles and squares.
 \begin{figure}
 \begin{scalacode}
 trait Shape {
-
   def inShape(x: Double, y: Double) = {
     if (this.isInstanceOf[Circle]) {
       math.sqrt(x * x + y * y) <= this.asInstanceOf[Circle].radius
@@ -3838,9 +3824,7 @@ trait Shape {
       sys.error("unknown shape!")
     }
   }
-
 }
-
 class Circle(val radius: Double) extends Shape
 class Square(val side: Double) extends Shape
 \end{scalacode}
@@ -3853,7 +3837,7 @@ object-oriented style, we need to stop using case classes and pattern matching
 and turn \scalainline{inShape} into a method instead of a function.
 A literal translation of the code would be to turn the case classes
 into classes with public fields, move the method into the \scalainline{Shape}
-trait\footnote{Similar to an abstract class.}, and rewrite the body to
+trait,\footnote{Think of this trait as an abstract class in Java. Traits are actually more powerful, but we'll get to that later.}, and rewrite the body to
 use type-tests and casts.
  \Cref{jshapesbad} shows this refactoring of the
 code.
@@ -3903,8 +3887,9 @@ class Square(side: Double) extends Shape {
 
 The right way to build an object-oriented shape library is shown in \Cref{jshapes1}.
 We've made
-\scalainline{inShape} an abstract method in the trait \scalainline{Shape}\footnote{Notice
-that we're using the trait like an interface in Java.} and each shape provides
+\scalainline{inShape} an abstract method in the trait
+\scalainline{Shape}\footnote{Now, we're using the trait like an interface
+in Java.} and each shape provides
 an implementation. Note that we are not using any type-casts or type-tests and
 that the shapes' fields are private, which is typically good practice in
 object-oriented code. \textbf{Most significantly,} notice that the method
@@ -3961,7 +3946,7 @@ object-oriented code by following this recipe:
 
 \begin{think}
 A key feature of pattern-matching is the \emph{exhuastivity check}. If
-we forget to write a case in a function, Scala compiles that pattern-matching
+we forget to write a case in a function, Scala complains that pattern-matching
 may not be exhaustive and actually lists all the cases that we have not
 handled. Since we are no longer using pattern-matching, we no longer rely
 on exhuastivity-checking. Is this okay? How do similar bugs manifest in
@@ -4027,6 +4012,9 @@ either one by editing the \texttt{build.sbt} file:
 
 \begin{scalacode}
 libraryDependencies += "compsci220" %% "fshapes" % "1.0"
+\end{scalacode}
+or
+\begin{scalacode}
 libraryDependencies += "compsci220" %% "jshapes" % "1.0"
 \end{scalacode}
 
@@ -4037,16 +4025,15 @@ i.e., whether we prefer to think functionally or in an object-oriented way.
 
 But, let's consider the choices more carefully. In particular, suppose neither
 library was quite right and we needed to extend them in some way. In fact,
-our libraries are so small, its easy to imagine that we'd want a larger
+our libraries are so small, it's easy to imagine that we'd want a larger
 variety of shapes and other functions or methods. So, let's see what it
 takes to extend each library.
 
-Remember that these are meant to be libraries that someone else wrote and that
-we are re-using. So, we do not want to read or modify their code (imagine that
-the library has millions of lines of code!). In fact, it may be a closed-source
+Remember that these are meant to be libraries that someone else wrote that
+we are re-using in our own project. So, we do not want to read or modify their code. (Imagine that
+the library has millions of lines of code). In fact, it may be a closed-source
 library, so the original code may not even be available for us to read or modify.
-So, imagine that all we have to work with is the Scaladoc and some examples
-of use.
+So, imagine that all we have to work with is the Scaladoc and some example code.
 
 We'll consider two kinds of extensions:
 
@@ -4065,14 +4052,11 @@ It is easy to write a new function to double the size of a shape. In our
 own project, we could simply write:
 
 \begin{scalacode}
-import fshapes._
-object Fshapesplus {
-
+object FunctionalExtension {
   def growShape(s: Shape): Shape = s match {
     case Circle(radius) => Circle(radius * 2)
     case Square(side) => Square(side * 2)
   }
-
 }
 \end{scalacode}
 
@@ -4092,14 +4076,11 @@ analysis it did on the library remains valid.)
 
 \begin{figure}
 \begin{scalacode}
-import fshapes._
-
 sealed trait ShapeExt
 case class Rectangle(width: Double, height: Double) extends ShapeExt
 case class OtherShape(s: Shape) extends ShapeExt
 
 object FunctionalExtension {
-
   def growShape(s: ShapeExt): ShapeExt = s match {
     case OtherShape(Circle(radius)) => OtherShape(Circle(radius * 2))
     case OtherShape(Square(side)) => OtherShape(Square(side * 2))
@@ -4108,9 +4089,7 @@ object FunctionalExtension {
 
   def inShape(s: ShapeExt, x: Double, y: Double): Boolean = s match {
     case OtherShape(shape) => Shape.inShape(shape, x, y)
-    case Rectangle(width, height) => {
-      x >= 0 && y >= 0 && x <= width && y <= height
-    }
+    case Rectangle(width, height) => x >= 0 && y >= 0 && x <= width && y <= height
   }
 }
 \end{scalacode}
@@ -4127,7 +4106,20 @@ and invokes the original \scalainline{inShape} function on other shapes.
 Now, imagine doing this on a large library with hundreds of functions. It would
 be extremely tiresome. But, this illustrates a \emph{fundamental limitation of
 functional programming}: it is easy to extends a library by adding new
-functions, but it is hard to extends a library to support new kinds of data.
+functions, but it is hard to extend a library to support new kinds of data.
+
+\begin{think}
+Imagine that the original library had a \scalainline{growShape} function
+and that we were trying to write the \scalainline{inShape} function.
+Would wrapping still work?
+
+Suppose the original library had a constructor for creating composite
+shapes:
+\begin{scalacode}
+case class Overlay(top: Shape, bottom: Shape) extends Shape
+\end{scalacode}
+Would wrapping still work?
+\end{think}
 
 \subsection{Extending the Object-Oriented Shape Library}
 
@@ -4136,22 +4128,19 @@ have to do is create a new class that extends \scalainline{Shape}
 and define its \scalainline{inShape} method:
 %
 \begin{scalacode}
-import jshapes._
-
 class Rectangle(width: Double, height: Double) extends Shape {
   def inShape(x: Double, y: Double): Boolean = x >= 0 && y >= 0 && x <= width && y <= height
 }
 \end{scalacode}
 
 Now, let's try to add a feature to double the size of shapes. The object-oriented
-thing to do have a \scalainline{growShape} method in the \scalainline{Shape}
+way is to have a \scalainline{growShape} method in the \scalainline{Shape}
 trait. But, we can't do that because \scalainline{Shape} was defined in
 a library that someone else wrote (and we don't have the source code).
 
 \begin{figure}
 \begin{scalacode}
 object JShapesExtension {
-
   def growShape(shape: Shape) {
     if (this.isInstanceOf[Circle]) {
       new Circle(this.asInstanceOf[Circle].radius * 2)
@@ -4160,14 +4149,12 @@ object JShapesExtension {
       new Square(this.asInstanceOf[Square].side * 2)
     }
     else if (this.isInstanceOf[Rectangle]) {
-      new Rectangle(this.asInstanceOf[Rectangle].width * 2,
-                    this.asInstanceOf[Rectangle].height * 2)
+      new Rectangle(this.asInstanceOf[Rectangle].width * 2, this.asInstanceOf[Rectangle].height * 2)
     }
     else {
       sys.error("unknown shape!")
     }
   }
-
 }
 \end{scalacode}
 \caption{Using type-tests and type-casts to grow shows. Does not compile.}
@@ -4185,8 +4172,6 @@ Why doesn't the code in \cref{jshapesext1} compile?
 
 \begin{figure}
 \begin{scalacode}
-import jshapes._
-
 trait Growable {
   def growShape(): Shape
 }
@@ -4210,24 +4195,34 @@ class Rectangle(width: Double, height: Double) extends Shape with Growable {
 \end{figure}
 
 An alternative approach uses inheritance, as shown
-in \cref{jshapesext2}. The key idea is to create our new types for circles
+in \cref{jshapesext2}. The key idea is to create  new types for circles
 and squares that inherit from the existing libraries.
 Again, imagine doing this at scale: if the library had dozens of objects
 and dozens of methods, this would be extremely tedious.
  This illustrates a \emph{fundamental limitation of
-object-oriented programming}: it is easy to extends a library by new
+object-oriented programming}: it is easy to extends a library with new
 kinds of data (new classes), but it is hard to extend a library to support
 new methods.
 
-\begin{instructor}
-NOTE: If the original class had a method that returned the self-type, we'd
-be in more trouble!
-\end{instructor}
+\begin{think}
+Suppose the original library had a class that represented composite
+shapes:
+\begin{scalacode}
+class Overlay(top: Shape, bottom: Shape) extends Shape { ... }
+\end{scalacode}
+Would wrapping work?
+\end{think}
 
-\paragraph{Perspective} These two examples illustrate that functional
-and object-oriented styles involve tradeoffs. It is misguided to argue that
-one is better than the other. What matters is how you expect your code
-to be used (and extended.)
+\section{Perspective}
+
+These two examples illustrate that functional
+and object-oriented styles involve fundamental tradeoffs when it comes
+to extending and re-using code. There are certain kinds of extensions
+that can be done in object-oriented style that cannot be done in
+functional style, and vice versa.  It is misguided to argue that
+one style is better than the other. What matters is how you expect your code
+to be used (and extended). One could argue that a language that forces you to
+pick one style of programming limits the kinds of code re-use that are possible.
 
 \newdiscussion{Maps and Error-Handling (Feb 17)}
 
@@ -4388,7 +4383,7 @@ class ExerciseTests extends FunSuite {
     "Edible Teacup" -> BigDecimal(4.79),
     "Wonka Bar" -> BigDecimal(1.50)
   )
-  
+
   def barcodeTester(database: CandyDatabase, candy_name: String) : BigDecimal = {
     database
     // query the database for the barcode
@@ -4398,18 +4393,18 @@ class ExerciseTests extends FunSuite {
     // return $0 if any of those lookups fail
       .getOrElse(BigDecimal(0))
   }
-  
+
   val db = new CandyDatabase(candies)
-  
+
   test("Everlasting Gobstoppers cost $0.99.") {
     val price = barcodeTester(db, "Everlasting Gobstopper")
-    
+
     assert(price == candies("Everlasting Gobstopper"))
   }
-  
+
   test("There is no price on file for a River of Chocolate.") {
     val price = barcodeTester(db, "River of Chocolate")
-    
+
     assert(price == BigDecimal(0))
   }
 }
@@ -4594,7 +4589,7 @@ I recommend proceeding in the following way, using
    fill in the body of the \scalainline{Solution.createGame(turn, dim, board)} function.
    You may assume that \scalainline{dim >= 2} and that all the pieces described
    in \scalainline{board} are within bounds. However, \emph{The board may be in an
-   arbitrary, even illegal state.}. For example, the board may have seven Xs.
+   arbitrary, even illegal state}. For example, the board may have seven Xs.
    Similarly, the \scalainline{turn} could be either X or O.
 
 
@@ -4603,8 +4598,7 @@ I recommend proceeding in the following way, using
    program that plays until every single square is filled.
 
 
-\item Implement the \scalainline{getWinner} method. The \scalainline{Matrix} class has several methods
-   that will help. There is no need for you to use direct recursion.
+\item Implement the \scalainline{getWinner} method.
 
    \texttt{Provided.scala} has a class called \scalainline{Matrix} that
    has some useful methods. You may find it easier to use a matrix to represent
@@ -4728,9 +4722,12 @@ Here is the equivalent in Scala:
 
 \begin{scalacode}
 object Singleton {
-  def myMethod = println("It works")
+  def myMethod() = println("It works")
 }
 \end{scalacode}
+
+So, all the top-level functions we've created so far (in class and in
+assignment) can be thought of as methods of singleton objects.
 
 \section{Case Objects}
 
@@ -4744,8 +4741,8 @@ case class BinTree(lhs: BinTree, value: Int, rhs: BinTree) extends BinTree
 case class Leaf() extends BinTree
 \end{scalacode}
 
-However, we can also represent leaves using a case object, which is essentially
-a singleton that we can be used in pattern-matching:
+However, we can also represent leaves using a \emph{case object}, which is essentially
+a singleton that can be used in pattern-matching:
 %
 \begin{scalacode}
 sealed trait BinTree
@@ -4753,7 +4750,7 @@ case class BinTree(lhs: BinTree, value: Int, rhs: BinTree) extends BinTree
 case object Leaf extends BinTree
 \end{scalacode}
 
-Since \scalainline{Leaf} is an object and not a class/constructor, it \emph{cannot}
+Since \scalainline{Leaf} is an object and not a class, it \emph{cannot}
 take any arguments, which why we can simply write \scalainline{Leaf} instead
 of \scalainline{Leaf()}. Scala uses case objects extensively. For example,
 \scalainline{Nil} and \scalainline{None} are case objects. If they
@@ -4769,14 +4766,15 @@ We write $A <: B$ to mean $A$ is a subtype of $B$.
 \end{notation}
 
 The intuition behind subtyping is that a subtype always ``adds more features''
-to a type, and doesn't ``subtract features''. Therefore, if $A <: B$,
+to its super-type, and doesn't ``subtract features''. Therefore, if $A <: B$,
 then $A$ can be used in any context where $B$ is expected. The context simply
 won't try to use the extra features of $A$. However, $B$ \emph{cannot}
 be used in contexts where $A$ is expected, because the context may rely on
 the ``added features'' of $A$ that $B$ does not provide.
 
-For example, suppose we have classes that represents cats and dogs that
-implement a common animal trait:
+For example, consider the following hierarchy of types, all of which
+implement the \scalainline{Animal} trait\footnote{Think of a trait as an interface in Java. Traits
+are actually more flexible, but we are only going to use them like interfaces for now.}
 %
 \begin{scalacode}
 trait Animal {
@@ -4827,19 +4825,20 @@ Given the traits and types defined above, we can say that:
   \item \scalainline{X <: X} for all $X$ (subtyping is reflexive).
 
 \end{itemize}
-
+%
 In addition, scala has two special types:
-
+%
 \begin{itemize}
 
   \item \scalainline{X <: Any} for all types X.
 
-  \item \scalainline{Nothing <: X} for all types X. In particular,
-  \emph{there are no values with type \scalainline{Nothing}}!
+  \item \scalainline{Nothing <: X} for all types X.
 
 \end{itemize}
 
-It may seem pointless to have a type with no values. In fact, the following
+A peculiar property of \scalainline{Nothing} is that
+\emph{there are no values with type} \scalainline{Nothing}!
+It may seem pointless to have a type with no values. For example, the following
 function cannot be applied to anything (not even to \scalainline{null}):
 \begin{scalacode}
 def useless(x: Nothing): Unit = {
@@ -4847,20 +4846,61 @@ def useless(x: Nothing): Unit = {
 }
 \end{scalacode}
 
-But, we'll see why this type is useful in a moment.
+But, we'll see why \scalainline{Nothing} is useful in a moment.
 
 \section{Generics and Subtyping}
+
+\begin{figure}
+\begin{subfigure}[b]{0.26\textwidth}
+\begin{scalacode}
+def useDog(c: Single[Dog]) = {
+  c.get().bite()
+}
+
+useDog(new Single(new Cat()))
+\end{scalacode}
+\caption{Cats can't bite.}
+\label{catdog1}
+\end{subfigure}
+~\vrule~
+\begin{subfigure}[b]{0.33\textwidth}
+\begin{scalacode}
+def useAnimal(c: Single[Animal]) = {
+  c.get().sound()
+}
+
+val c = new Single[Dog](new Dog())
+useAnimal(c)
+\end{scalacode}
+\label{catdog2}
+\caption{Scala is being conservative.}
+\end{subfigure}
+~\vrule~
+\begin{subfigure}[b]{0.31\textwidth}
+\begin{scalacode}
+def useAnimal2(c: Single[Animal]) = {
+  c.set(new Cat())
+  c.get().sound()
+}
+
+val c = new Single[Dog](new Dog())
+useAnimal2(c)
+c.get().bite()
+\end{scalacode}
+\label{catdog3}
+\caption{Sneaky function confuses our code.}
+\end{subfigure}
+\caption{None of these programs type-check.}
+\end{figure}
 
 Subtyping becomes more complicated when we working with generics types, such
 as lists, sets, or any other kind of container. To illustrate, we'll work
 with the following generic type, which is the simplest possible container:
-
+%
 \begin{scalacode}
 class Container[T](private var x: T) {
-
   def get(): T = x
   def set(newX: T): Unit = x = newX
-
 }
 
 val c1: Container[Dog] = new Container(new Dog)
@@ -4870,48 +4910,18 @@ c1.set(new Poodle)
 Unsurprisingly, we can't store cats in \scalainline{c1}. If we did, a function
 that consumes a container with a dog, might try to \scalainline{.get} the
 dog and call the \scalainline{bite} method, which cats don't have.
-Therefore, the following code does not type-check:
-
-\begin{scalacode}
-def useDog(c: Container[Dog]) = {
-  c.get().bite()
-}
-
-useDog(new Container(new Cat()))
-\end{scalacode}
-
+Therefore, the code in \cref{catdog1} does not type-check.
 However, since \scalainline{Dog <: Animal}, can we send a dog-container
-to a function that expects an animal container. For example, this code
-appears to be safe:
-
-\begin{scalacode}
-def useAnimal(c: Container[Animal]) = {
-  c.get().sound()
-}
-
-val c: Container[Dog] = new Container(new Dog())
-useAnimal(c)
-\end{scalacode}
-
-Unfortunately, this code does not type-check. Although the particular example
-above is safe, consider this variation:
-\begin{scalacode}
-def useAnimal2(c: Container[Animal]) = {
-  c.set(new Cat())
-  c.get().sound()
-}
-
-val c: Container[Dog] = new Container(new Dog())
-useAnimal2(c)
-c.get().bite() // We would get a cat instead of a dog!
-\end{scalacode}
+to a function that expects an animal container. For example, \cref{catdog2}
+appears to be safe. Unfortunately, this code does not type-check either. Although this particular example
+is safe, consider the variation in \cref{catdog3}.
 
 The problem above is that \scalainline{useAnimal2} sneakily stores a cat in
 the container. After the function returns, \scalainline{c.get} would produce
 a cat even though the type indicates that it should produce a dog.
 Therefore, the Scala type-checker does not allow this program to type-check.
 
-Unfortunately, the original example (which was safe) does not type-check either, just so that
+Unfortunately, \cref{catdog2} (which was safe) does not type-check either, just so that
 this kind of unsafe example can be ruled out. Individual methods and functions
 are type-checked only once. Similarly, when a function or method call is type-checked,
 the body of the function is not re-examined.
@@ -4945,7 +4955,7 @@ class Container[+T](private val x: T) {
 The \scalainline{+T} annotation indicates \scalainline{Container[A] <:
 Container[B]} when \scalainline{A <: B}. For this to be safe,
 Scala ensures that \scalainline{T}-typed values are never updated
-by the class. (The class may have other kind of state, but it can't
+by the class.\footnote{Coavariance is actually more subtle than this. The reading discusses it in more depth, but you don't have to remember all the details.} (The class may have other kind of state, but it can't
 update \scalainline{T}s.)
 
 As a rule of thumb, almost any immutable data structure can be made
@@ -4962,42 +4972,41 @@ Cons is easy to define as follows:
 \begin{scalacode}
 case class ::[A](head: A, tail: List[A]) extends List[A]
 \end{scalacode}
-However, the definition of \scalainline{Nil} is tricker. It is intuitive
-to write:
+However, the definition of \scalainline{Nil} is trickier. If it were a case-class,
+we could write:
+\begin{scalacode}
+case class Nil[A]() extends List[A]
+\end{scalacode}
+However, recall that \scalainline{Nil} is a case-object. So, we may try to
+write this:
 \begin{scalacode}
 case object Nil[A] extends List[A]
 \end{scalacode}
-However, since \scalainline{Nil} is an object and not a class, it can't
-take parameters (not even type parameters).
-However, recall our special type \scalainline{Nothing} that has no values is the subtype of all other types, thus
-\scalainline{Nothing <: B}. Therefore, by covariance of lists, \scalainline{List[Nil] <: List[A]}, so
+However, objects can't have type parameters (or any parameters for that matter).
+
+As discussed earlier, Scala has a special type \scalainline{Nothing} that has no values
+and is the subtype of all other types: i.e.,
+\scalainline{Nothing <: A}. Therefore, by covariance of lists, \scalainline{List[Nil] <: List[A]}, so
 we can write:
 \begin{scalacode}
 case object Nil extends List[Nothing]
 \end{scalacode}
-
-
-Remember, although there a no values of type \scalainline{Nothing}, the list \scalainline{Nil}
-doesn't contain any values, so we can give it the type \scalainline{List[Nothing]}.
+Although there a no values of type \scalainline{Nothing}, an empty list of
+of type \scalainline{List[A]} doesn't contain any values of type \scalainline{A}.
+Therefore, the \scalainline{Nil} object can be given the type \scalainline{List[Nothing]}.
 
 \newdiscussion{TODO -- ??? (Feb 24)}
 
 \newlecture
+
 
 \section{Bounded Quantification}
 
 \begin{figure}
 \begin{scalacode}
 def insert[A](toInt: A => Int, x: A, alist: List[A]): List[A] = alist match {
+  case hd :: tl => if (toInt(x) <= toInt(hd)) { x :: hd :: tl } else { hd :: insert(toInt, x tl) }
   case Nil => List(x)
-  case hd :: tl => {
-    if (x.toInt <= hd.toInt) {
-      x :: hd :: tl
-    }
-    else {
-      hd :: insert(toInt, x tl)
-    }
-  }
 }
 
 def sort[A](toInt: A => Int, alist: List[A]): List[A] = alist match {
@@ -5028,10 +5037,20 @@ sort((p: Person) => p.age, personList)
 
 However, it can be annoying to pass the \scalainline{toInt} function around,
 especially since there is a natural ordering for \scalainline{Person}s.
+We can address this issue by adding a \scalainline{toInt} method
+to \scalainline{Person} and modifying \scalainline{insert} to invoke this
+method instead:
+\begin{scalacode}
+def insert[A](x: A, alist: List[A]): List[A] = alist match {
+  case hd :: tl => if (x.toInt <= hd.toInt) ...
+  case Nil => ...
+}
+\end{scalacode}
+Unfortunately, this code does not type-check: \scalainline{x} and \scalainline{hd} both have type \scalainline{A},
+would could be \emph{any} type. There is no guarantee that \scalainline{A}-values have a \scalainline{toInt}
+method.
 
-We can address this issue by introducing an \scalainline{IntLike} trait
-that converts values to integers:
-
+\begin{figure}
 \begin{scalacode}
 trait IntLike {
   def toInt(): Int
@@ -5040,22 +5059,10 @@ trait IntLike {
 case class Person(name: String, age: Int) extends IntLike {
   def toInt(): Int = age
 }
-\end{scalacode}
 
-Now, we can rewrite the sorting function as follows:
-
-\begin{scalacode}
-
-def insert(x: IntLike, alist: List[IntLike]) = alist match {
+def insert(x: IntLike, alist: List[IntLike]): List[IntLike] = alist match {
   case Nil => List(x)
-  case hd :: tl => {
-    if (x.toInt <= hd.toInt) {
-      x :: hd :: tl
-    }
-    else {
-      hd :: insert(x, tl)
-    }
-  }
+  case hd :: tl => if (x.toInt <= hd.toInt) { x :: hd :: tl } else { hd :: insert(x, tl) }
 }
 
 def sort(alist: List[IntLike]): List[IntLike] = alist match {
@@ -5063,11 +5070,16 @@ def sort(alist: List[IntLike]): List[IntLike] = alist match {
   case hd :: tl => insert(hd, sort(tl))
 }
 \end{scalacode}
+\caption{This code type-checks, but the types lose too much information.}
+\label{sorting_fail}
+\end{figure}
 
-Unfortunately, the type of \scalainline{sort} is not helpful. We can use it
-to sort a list of \scalainline{Person}s, we get back a list of \scalainline{IntLike}s,
+We can address this problem by introducing a trait for objects that have a
+\scalainline{ToInt} method and modify \scalainline{Person} to extend this trait.
+We could then rewrite the sorting function, as shown in \cref{sorting_fail}.
+Unfortunately, the type of \scalainline{sort} is not helpful. When we apply
+it to a \scalainline{List[Person]}, we get back a list \scalainline{List[IntLike]},
 and loose track of the fact that we were working with \scalainline{Person}s:
-
 \begin{scalacode}
 val alist = List(Person("Alice", 12), Person("Bob", 7), Person("Carol", 3))
 val sortedList = sort(alist)
@@ -5075,26 +5087,30 @@ sortedList.head.age // type error, since head has type IntLike
 \end{scalacode}
 
 We need to know that the type of the argument and the type of the result
-of \scalainline{sort} are the same, which is what generics do:
+of \scalainline{sort} are the same, which is what generics did for us:
 %
 \begin{scalacode}
 def sort[A](alist: List[A]): List[A]
 \end{scalacode}
-%
-However, this type won't work either, since \scalainline{A} could be
-any time and not one that implements \scalainline{IntLike}. We need to
+However, the problem with this generic type was that \scalainline{A} could
+be any type, and not necessary a type with a \scalainline{toInt} method,
+which is what this type ensured:
+\begin{scalacode}
+def sort(alist: List[IntLike]): List[IntLike]
+\end{scalacode}
+We need to
 ensure that \scalainline{alist} and the result have the same type \emph{and}
 that they implement \scalainline{IntLike}. We can do this by using
 \emph{bounded quantification}:
-
 \begin{scalacode}
 def sort[A <: IntLike](alist: List[A]): List[A]
 \end{scalacode}
+You should read this as ``sort consumes and produces lists of $A$, where $A$
+is a subtype of IntLike''. \Cref{sort_bq} shows a complete version of this code.
+Note that none of this is Scala-specific. \Cref{sorting_java_omg} converts
+this code into Java.
 
-You should read this as ``sort consumes and produces lists of $A$, and $A$
-must implement IntLike''.
-
-When we write:
+Finally, note that when we write:
 \begin{scalacode}
 def sort[A](alist: List[A]): List[A]
 \end{scalacode}
@@ -5104,129 +5120,298 @@ What we're really saying is that \scalainline{A} can be any type, or:
 def sort[A <: Any](alist: List[A]): List[A]
 \end{scalacode}
 %
-Using bounded quantification, we're restricting \scalainline{A} to be any
+The bound \scalainline{Any} is implicit. Using bounded quantification, we're restricting \scalainline{A} to be any
 type that implements \scalainline{IntLike}.
 
-\paragraph{Recursive Bounds}
-
-It is cumbersome to sort values by explicitly mapping them to integers.
-E.g., if we wanted to sort by name, it would be very annoying to convert
-all names to unique integers. The simplest way to do this is for sortable
-types is to give them a \scalainline{lessThan} method:
-
+\begin{figure}
 \begin{scalacode}
-case class Person(name: String, age: Int) {
-  def lessThan(other: Person): Boolean = this.name < other.name
+def insert[A <: IntLike](x: A, alist: List[A]): List[A] = alist match {
+  case Nil => List(x)
+  case hd :: tl => if (x.toInt <= hd.toInt) { x :: hd :: tl } else { hd :: insert(x, tl) }
 }
 
-case class Time(h: Int, m: Int, s: Int) {
-  def lessThan(o: Time): Boolean = {
-    this.h < o.h || (this.h == o.h && this.m < o.min || (this.m == o.min && this.s < o.s))
+def sort[A <: IntLike](alist: List[A]): List[A] = alist match {
+  case Nil => Nil
+  case hd :: tl => insert(hd, sort(tl))
+}
+\end{scalacode}
+\caption{A well-typed sort using bounded quantification.}
+\label{sort_bq}
+\end{figure}
+
+\begin{figure}
+\begin{javacode}
+interface IntLike {
+  int toInt();
+}
+
+class Person implements IntLike {
+  String name;
+  int age;
+  Person(String name, int age) { this.name = name; this.age = age; }
+  public int toInt() { return age; }
+}
+
+interface List<T>  { }
+class Empty<T> implements List<T> { }
+class Cons<T> implements List<T> {
+  public final T head;
+  public final List<T> tail;
+  public Cons(T head, List<T> tail) {
+    this.head = head;
+    this.tail = tail;
   }
 }
-\end{scalacode}
 
-For \scalainline{insert} to invoke \scalainline{lessThan}, we need to bound
-\scalainline{A} appropriately:
+class Sorting {
 
-\begin{scalacode}
-def insert[A <: LessThanLike](x: A, alist: List[A]): List[A] = ...
-\end{scalacode}
-
-Naturally, \scalainline{LessThanLike} should be a trait that inclues
-the \scalainline{lessThan} method:
-%
-\begin{scalacode}
-trait LessThanLike {
-  def lessThan(other: ???): Boolean
-}
-
-case class Person(name: String, age: Int) extends LessThanLike {
-  def lessThan(other: Person): Boolean = ...
-}
-
-case class Time(h: Int, m: Int, s: Int) extends LessThanLike {
-  def lessThan(other: Time): Boolean = ...
-}
-\end{scalacode}
-
-However, the type of the argument \scalainline{other} varies in each class,
-so we can't write down a specific type. When a type must vary, we have to introduce
-a type variable:
-%
-\begin{scalacode}
-trait LessThanLike[A] {
-  def lessThan(other: A): Boolean
-}
-\end{scalacode}
-%
-
-Now that \scalainline{LessThanLike} takes an argument \scalainline{A},
-the signatures of \scalainline{Person} and \scalainline{Time} are invalid:
-
-\begin{scalacode}
-case class Person(name: String, age: Int) extends LessThanLike[???]
-case class Time(h: Int, m: Int, s: Int) extends LessThanLike[???]
-\end{scalacode}
-
-Let's reason through what the type-argument should be in \scalainline{Person}
-\begin{itemize}
-
-  \item The class \scalainline{Person} implements the trait \scalainline{LessThanLike[A]},
-
-  \item The trait constraints the type of the argument called \scalainline{other}
-  of the method \scalainline{lessThan} to be \scalainline{A},
-
-  \item The class declares the type of \scalainline{other} argument to be
-  \scalainline{Person},
-
-  \item Therefore, the type argument must be \scalainline{Person}.
-\end{itemize}
-A similar argument applies to \scalainline{Time}:
-
-\begin{scalacode}
-case class Person(name: String, age: Int) extends LessThanLike[Person]
-case class Time(h: Int, m: Int, s: Int) extends LessThanLike[Time]
-\end{scalacode}
-
-Finally, we need to correct the bound in \scalainline{insert}. The
-current definition is wrong, since \scalainline{LessThanLike} requires
-a type argument:
-%
-\begin{scalacode}
-def insert[A <: LessThanLike[???]](x: A, alist: List[A]): List[A] = alist match {
-  case Nil => List(x)
-  case head :: tail => {
-    if (x.lessThan(head)) {
-      x :: head :: tail
+  static <T extends IntLike> List<T> insert(T x, List<T> alist) {
+    if (alist instanceof Empty) {
+      return new Cons<T>(x, new Empty<T>());
     }
     else {
-      head :: insert(x, tail)
+      T hd = ((Cons<T>)alist).head;
+      List<T> tl = ((Cons<T>)alist).tail;
+      if (x.toInt() < hd.toInt()) {
+        return new Cons<T>(x, new Cons<T>(hd, tl));
+      }
+      else {
+        return new Cons<T>(hd, insert(x, tl));
+      }
     }
   }
+
+  static <T extends IntLike> List<T> sort(List<T> alist) {
+    if (alist instanceof Empty) {
+      return alist;
+    }
+    else {
+      T hd = ((Cons<T>)alist).head;
+      List<T> tl = ((Cons<T>)alist).tail;
+      return insert(hd, sort(tl));
+    }
+  }
+
+}
+\end{javacode}
+\caption{\Cref{sort_bq} converted into Java (with lists and person too).}
+\label{sorting_java_omg}
+\end{figure}
+
+\section{Type Parameters to Traits}
+
+Traits in Scala (and interfaces in Java) can take type arguments.
+For example, the following trait T takes three type arguments:
+\begin{scalacode}
+trait T[X,Y,Z] {
+  def f(x: X): Y
+  def g(z: Z): Z
 }
 \end{scalacode}
+Therefore, when a class extends the trait, it needs to supply type-arguments:
+\begin{scalacode}
+class C1 extends T[???, ???, ???] {
+  def f(x: Int): String = x.toString
+  def g(z: Boolean): Boolean = !z
+}
+\end{scalacode}
+We can infer the arguments by examining the body of the
+class.\footnote{Surprisingly, Scala's type-inference cannot infer these arguments for us.}
+\begin{itemize}
+  \item The class states that the argument of \scalainline{f} is an \scalainline{Int}
+  and the trait states that the argument of \scalainline{f} is an \scalainline{X}.
+  Therefore, \scalainline{X = Int}.
+
+  \item The class states that the result of \scalainline{f} is a \scalainline{String}
+  and the trait states that the result of \scalainline{f} is a \scalainline{Y}.
+  Therefore, \scalainline{Y = String}.
+
+  \item The class states that the argument and result of \scalainline{g} are both \scalainline{Boolean}
+  and the trait states that the argument and result of \scalainline{g} are both \scalainline{Z}.
+  Therefore, \scalainline{Z = Int}.
+\end{itemize}
+Therefore, the class can extend the trait as follows:
+\begin{scalacode}
+class C1 extends T[Int, String, Boolean] {
+  def f(x: Int): String = x.toString
+  def g(z: Boolean): Boolean = !z
+}
+\end{scalacode}
+
+Consider the following class that is trying to extend the same trait:
+\begin{scalacode}
+class C2 extends T[Int, String, ???] {
+  def f(x: Int): String = x.toString
+  def g(z: Boolean): Int = 42
+}
+\end{scalacode}
+This extension is impossible, since it would imply that \scalainline{Boolean = Int}, which
+is a contradiction.
+
+Consider the following class:
+\begin{scalacode}
+class C3(head: Int, tail: C3) extends T[???, ???, ???] {
+  def f(x: Int): C3 = new C3(x, this)
+  def g(z: C3): C3 = z
+}
+\end{scalacode}
+We can reason through the type parameters in exactly the same way as before:
+\begin{itemize}
+  \item The class states that the argument of \scalainline{f} is an \scalainline{Int}
+  and the trait states that the argument of \scalainline{f} is an \scalainline{X}.
+  Therefore, \scalainline{X = Int}.
+
+  \item The class states that the result of \scalainline{f} is a \scalainline{C3}
+  and the trait states that the result of \scalainline{f} is a \scalainline{Y}.
+  Therefore, \scalainline{Y = C3}.
+
+  \item The class states that the argument and result of \scalainline{g} are both \scalainline{C3}
+  and the trait states that the argument and result of \scalainline{g} are both \scalainline{Z}.
+  Therefore, \scalainline{Z = C3}.
+\end{itemize}
+Here is the complete definition:
+\begin{scalacode}
+class C3(head: Int, tail: C3) extends T[Int, C3, C3] {
+  def f(x: Int): C3 = new C3(x, this)
+  def g(z: C3): C3 = z
+}
+\end{scalacode}
+
+Consider the following generalization:
+\begin{scalacode}
+class C4[A](head: A, tail: C4[A]) extends T[???, ???, ???] {
+  def f(x: A): C4[A] = new C4[A](x, this)
+  def g(z: C4[A]): C4[A] = z
+}
+\end{scalacode}
+
+We can apply the same reasoning to get:
+\begin{scalacode}
+class C4[A](head: A, tail: C4[A]) extends T[Int, C4[A], C4[A]] { ... }
+\end{scalacode}
+
+\begin{instructor}
+Note that we have not covered covariant/contravariant type-arguments to traits.
+\end{instructor}
+
+\section{Leveraging Recursive Bounded Quantification}
+
+It is cumbersome to sort values by explicitly mapping them to integers,
+which is what we did before.
+E.g., if we wanted to people sort by name, it would be very annoying to convert
+all names to unique integers. Alternative, if we want to sort a list of time
+objects, it would be annoying (and needless) to convert them all to seconds
+from some fixed date.\footnote{Most computers store the current time as the number of seconds elapsed since Jan 1, 1970.}
+
+A better approach would be to give sortable classes a \scalainline{lessThan} method
+and then have them inherit from a common trait:
+\begin{scalacode}
+case class Person(name: String, age: Int) extends Comparable = {
+  def lessThan(other: Person): Boolean = this.name < other.name
+}
+case class Time(h: Int, m: Int, s: Int) extends Comparable = {
+  def lessThan(o: Time): Boolean = this.h < o.h || (this.h == o.h && this.m < o.min || (this.m == o.min && this.s < o.s))
+}
+\end{scalacode}
+But, defining \scalainline{Comparable} is tricky:
+\begin{scalacode}
+trait Comparable {
+  def lessThan(other: ???): Boolean
+}
+\end{scalacode}
+The problem is that \scalainline{Person} requires the type of the argument
+to be \scalainline{Person}, whereas \scalainline{Time} requires it to be \scalainline{Time}.
+However, \scalainline{Comparable} should be a generic trait that any type can extend.
+When a type in a trait must vary, we can simply turn it into a type variable,
+\begin{scalacode}
+trait Comparable[T] {
+  def lessThan(other: T): Boolean
+}
+\end{scalacode}
+However, the definitions of \scalainline{Person} and \scalainline{Time}
+above are now incomplete, since they extend \scalainline{Comparable}, which
+takes a type argument:
+\begin{scalacode}
+case class Person(name: String, age: Int) extends Comparable[???] = {
+  def lessThan(other: Person): Boolean = ...
+}
+case class Time(h: Int, m: Int, s: Int) extends Comparable[???] = {
+  def lessThan(o: Time): Boolean = ...
+}
+\end{scalacode}
+We can reason about the types in exactly the way we did before.
+For example, \scalainline{Person} states that the argument of \scalainline{lessThan}
+is \scalainline{Person}, whereas the trait states that it is \scalainline{T}.
+Therefore, \scalainline{T = Person}:
+\begin{scalacode}
+case class Person(name: String, age: Int) extends Comparable[Person] = ...
+\end{scalacode}
+We can make a similar argument for \scalainline{Time}:
+\begin{scalacode}
+case class Time(h: Int, m: Int, s: Int) extends ComparableTime = ...
+\end{scalacode}
+
+Now that both classes extend the \scalainline{Comparable[T]} trait, let's
+update \scalainline{insert} to use it. Here is our first attempt, which
+uses generics to constrain the type of the argument and result:
 %
+\begin{scalacode}
+def insert[A](x: A, alist: List[A]): List[A] = alist match {
+  case Nil => List(x)
+  case head :: tail => if (x.lessThan(head)) { x :: head :: tail } else { head :: insert(x, tail) }
+}
+\end{scalacode}
+As before, this code will not type-check, since \scalainline{A} could be any
+type, whereas the body requires \scalainline{A}-typed objects to have a \scalainline{lessThan}
+method. Fortunately, we have a trait for these kinds of objects:
+\begin{scalacode}
+def insert[A <: Comparable](x: A, alist: List[A]): List[A] = ...
+\end{scalacode}
+However, this will not type-check either, because \scalainline{Comparable} needs
+a type argument. So, we really need to write something like this:
+\begin{scalacode}
+def insert[A <: Comparable[???]](x: A, alist: List[A]): List[A] = ...
+\end{scalacode}
+
 Let's reason through this systematically again:
 %
 \begin{itemize}
 
-  \item \scalainline{x} has type $\scalainline{A <: LessThanLike[???]}$,
+  \item \scalainline{x} has type $\scalainline{A <: Comparable[???]}$,
 
   \item \scalainline{x.lessThan} takes an argument of type \scalainline{???},
 
   \item \scalainline{x.lessThan} is applied to \scalainline{head}, which has
   type \scalainline{A},
 
-  \item Therefore, \scalainline{???} must be \scalainline{A}.
+  \item Therefore, \scalainline{??? = A}.
 
 \end{itemize}
 
-\begin{scalacode}
-def insert[A <: LessThanLike[A]](x: A, alist: List[A]): List[A] = ...
-\end{scalacode}
+\Cref{sort_sortable_complete} shows a complete version of sorting using
+the \scalainline{Comparable} trait.
 
-\subsection{Expression Evaluator}
+\begin{figure}
+\begin{scalacode}
+trait Comparable[T] {
+  def lessThan(other: T): Boolean
+}
+
+def insert[A <: Comparable[A]](x: A, alist: List[A]): List[A] = alist match {
+  case Nil => List(x)
+  case head :: tail => if (x.lessThan(head)) { x :: head :: tail } else { head :: insert(x, tail) }
+}
+
+def sort[A <: Comparable[A]](alist: List[A]): List[A] = alist match {
+  case Nil => Nil
+  case head :: tail => insert(x, sort(tail))
+}
+\end{scalacode}
+\caption{Sorting with a recursive bound.}
+\label{sort_sortable_complete}
+\end{figure}
+
+\section{Expression Evaluator}
 
 
 \begin{figure}
@@ -5363,6 +5548,23 @@ def eval[T <: NumLike[T]](expr: Expr[T]): T = expr match {
 }
 \end{scalacode}
 
+Although we've managed to reuse a lot of code in our evaluator,
+we had to wrap \scalainline{Int}s and \scalainline{Double}s, which was
+quite annoying. We'll learn how to address this problem soon.
+
+\section{Bounded Quantification in the Java and Scala standard libraries}
+
+Bounded quantification is used extensively in libraries. For example,
+here is the signature of the \javacode{Integer} class in Java:
+
+\begin{scalacode}
+public final class Integer extends Number implements Comparable<Integer>
+\end{scalacode}
+
+The standard \javacode{Comparable} interface is very similar to the one we
+defined.
+
+
 \newhw{Generics}
 
 \newlecture
@@ -5400,10 +5602,10 @@ example the following tree:
 \begin{scalacode}
 val t2 = Node(Node(Leaf(10), Leaf(20)), Leaf(40))
 \end{scalacode}
-Has the same fringe as \scalainline{t1}. 
+Has the same fringe as \scalainline{t1}.
 
 We can write a simple recursive function to calculate the fringe of a tree,
-as shown in \cref{fringeRec}, so a simple solution to the same-fringe problem 
+as shown in \cref{fringeRec}, so a simple solution to the same-fringe problem
 is:
 \begin{scalacode}
 fringe(t1) == fringe(t2)

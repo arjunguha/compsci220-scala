@@ -19,10 +19,10 @@ title: Schedule
 | Thursday, Feb 11  | Due: [HW3]. Out: [HW4]. [Lecture Notes](../reading/gc.pdf)                                      |
 | Tuesday, Feb 16   |  **No class.** (Monday schedule)                                                                |
 | Wednesday, Feb 17 | *Lab:*                                                                                          |
-| Thursday, Feb 18  | Due: [HW4]. Out: HW5. [Lecture Notes](../reading/lecture8.pdf)                                  |
-| Tuesday, Feb 23   |                                                                                                 |
+| Thursday, Feb 18  | Due: [HW4]. Out: [HW5]. [Lecture Notes](../reading/lecture8.pdf)                                |
+| Tuesday, Feb 23   | [Lecture Notes](../reading/lecture9.pdf)                                                        |
 | Wednesday, Feb 24 | *Lab:*                                                                                          |
-| Thursday, Feb 25  | Due: HW5. Out: HW6.                                                                             |
+| Thursday, Feb 25  | Due: [HW5]. Out: HW6. [Lecture Notes](../reading/lecture10.pdf)                                 |
 | Tuesday, Mar 1    |                                                                                                 |
 | Wednesday, Mar 2  | *Lab:*                                                                                          |
 | Thursday, Mar 3   | Due: HW6. Out: HW7.                                                                             |
@@ -56,3 +56,4 @@ title: Schedule
 [HW2]: ../hw/hw2.pdf
 [HW3]: ../hw/hw3.pdf
 [HW4]: ../hw/hw4.pdf
+[HW5]: ../hw/hw5.pdf
