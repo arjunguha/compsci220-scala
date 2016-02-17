@@ -38,7 +38,7 @@ object FunctionalDataStructures {
 
   def rest[A](lst: JoinList[A]): Option[JoinList[A]] = lst match {
     case Empty() => None
-    case Singleton(x) => None
+    case Singleton(x) => Some(Empty())
     case Join(lst1, lst2, size) => rest(lst1) match {
       case None => rest(lst2)
       case Some(lst1rest) => Some(Join(lst1rest, lst2, size - 1))
