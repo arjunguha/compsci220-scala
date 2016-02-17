@@ -4248,6 +4248,7 @@ The \scalainline{toMap} function (which is defined in the \scalainline{Traversab
 \begin{scalacode}
 val friendsBirthdays = List(("Anja", "1994-10-01"), ("Brent", "1995-07-23"), ("Ammar", "1994-01-12"))
 val fb = friendsBirthdays.toMap
+// fb: scala.collection.immutable.Map[String,String] = Map(Anja -> 1994-10-01, Brent -> 1995-07-23, Ammar -> 1994-01-12)
 val anja_bday = fb("Anja")
 // anja_bday: String = 1994-10-01
 \end{scalacode}
@@ -4260,7 +4261,7 @@ val anja_bday = fb("Anja")
 // anja_bday: String = 1994-10-01
 \end{scalacode}
 
-In the above examples, the element on the left (e.g., "Anja") is referred to as the \emph{key} and the element on the right (e.g., "1994-10-01") is referred to as the \emph{value}.  Thus \scalainline{Map[A,B]} also has two very handy methods.  \scalainline{keys} returns a list of the keys and \scalainline{values} returns a list of the values.
+In the above examples, the element on the left of the \scalainline{->} (e.g., ``Anja'') is referred to as the \emph{key} and the element on the right (e.g., ``1994-10-01'') is referred to as the \emph{value}.  Thus \scalainline{Map[A,B]} also has two very handy methods.  \scalainline{keys} returns a list of the keys and \scalainline{values} returns a list of the values.
 
 \begin{scalacode}
 val fb = Map("Anja" -> "1994-10-01", "Brent" -> "1995-07-23", "Ammar" -> "1994-01-12")
@@ -4284,7 +4285,7 @@ val fb = Map("Anja" -> "1994-10-01", "Anja" -> "1995-07-23")
 
 \scalainline{Option[T]} is very simple algebraic data type.  It has two cases: \scalainline{Some} of \scalainline{T}, and \scalainline{None} of \scalainline{T}.
 
-\scalainline{Option[T]} is useful for lots of things, but a common use is to handle unexpected outcomes in code.  Unlike \scalainline{Exception} in Java, which is a \emph{runtime} mechanism for handling unexpected outcomes in a program, \scalainline{Option[T]} is a \emph{compile time} mechanism.  This means that programmers who rely on \scalainline{Option[T]} can be assured that error-handling code is correct \emph{before the program runs}.  This magical ability is thanks to the fact that Scala's \emph{exhaustivity check} will ensure that all cases are handled.
+\scalainline{Option[T]} is useful for lots of things, but a common use is to handle unexpected outcomes in code.  Unlike \scalainline{Exception} in Java, which is a \emph{runtime} mechanism for handling unexpected outcomes in a program, \scalainline{Option[T]} is a \emph{compile time} mechanism.  This means that programmers who rely on \scalainline{Option[T]} can be assured that their code handles all known error cases \emph{before the program runs}.  This magical ability is thanks to the fact that Scala's \emph{exhaustivity check} will ensure that all cases are handled.
 
 Here's a simple example.  Often we want to retrieve the first element in a \scalainline{List}.  But what if the \scalainline{List} is empty?  This case is easy to forget.  \scalainline{headOption} makes handling this case foolproof.  This code does not compile:
 
@@ -4306,7 +4307,7 @@ val firstFriend : String = friends.headOption match {
 // firstFriend: String = My first friend is Anja.
 \end{scalacode}
 
-Since the compiler told us that we made a mistake in our first example, we were able to correct it in the second example before we ran the program.  Contrast this against the following code, which compiles without error but throws an exception when we run the program:
+Since the compiler told us that we made a mistake in our first version, we were able to correct it in the second version before we ran the program.  Contrast this against the following code, which compiles without error but throws an exception when we run the program:
 
 \begin{scalacode}
 val friends : List[String] = List()
@@ -4338,7 +4339,7 @@ val candies : Map[String,BigDecimal] = Map(
 )
 \end{scalacode}
 
-Barcodes will be represented using Java's UUID type.  UUID stands for ``universally unique identifier.''
+Barcodes will be represented using Java's UUID type.  UUID stands for ``universally unique identifier.''  You can create new UUIDs by calling \scalainline{UUID.randomUUID()}.
 
 The Wonka company wants you to implement two functions.  First, they want a function \scalainline{getBarcodeForCandy(c: String) : Option[UUID]} that returns \scalainline{Some} barcode given a candy name, or \scalainline{None} if the candy name is not known.  Second, they want a function \scalainline{getPriceFromBarcode(b: UUID) : Option[BigDecimal]} that returns \scalainline{Some} price given a barcode, or \scalainline{None} if the barcode is not known.
 
@@ -4348,13 +4349,13 @@ You will need to create two \scalainline{Map[A,B]} data structures for those two
 
 \scalainline{val prices : Map[UUID,BigDecimal]} stores the mapping from barcodes to prices.
 
-\underline{Important note:} You are \emph{not} allowed to create \scalainline{barcodes} and \scalainline{prices} by hand.  You must transform \scalainline{candies} into those two maps.  Hint: use our old friend, \scalainline{map} with \scalainline{toMap}.  \scalainline{getBarcodeForCandy} and \scalainline{getPriceFromBarcode} should check whether the appropriate \scalainline{Map} contains the key.  If it does, the function should return \scalainline{Some} of the value, otherwise \scalainline{None}.
+\underline{Important note:} You are \emph{not} allowed to create \scalainline{barcodes} and \scalainline{prices} by hand.  You must transform \scalainline{candies} programmatically.  Hint: use our old friend, \scalainline{map} with \scalainline{toMap}.  \scalainline{getBarcodeForCandy} and \scalainline{getPriceFromBarcode} should check whether the appropriate \scalainline{Map} contains the key.  If it does, the function should return \scalainline{Some} of the value, otherwise \scalainline{None}.
 
 \section{Templates}
 
 To facilitate a useful discussion, please use the following templates.  \scalainline{???} indicates where you should provide implementations.
 
-Place the following file in \texttt{src/main/scala/CandyDatabase.scala}
+Place the following file in \texttt{Discussion4/src/main/scala/CandyDatabase.scala}
 
 \begin{scalacode}
 import java.util.UUID
@@ -4370,7 +4371,7 @@ class CandyDatabase(candies: Map[String, BigDecimal]) {
 }
 \end{scalacode}
 
-Place the following test file in \texttt{src/test/scala/CandyDatabaseTests.scala}
+Place the following test file in \texttt{Discussion4/src/test/scala/CandyDatabaseTests.scala}
 
 \begin{scalacode}
 import org.scalatest.FunSuite
