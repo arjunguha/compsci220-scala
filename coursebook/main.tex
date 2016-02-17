@@ -4238,7 +4238,7 @@ determines which player will win, or if the game will be a draw.
 You're going to make significant use of Scala collections and learn the the
 \emph{Minimax algorithm}, which is a form of \emph{backtracking search}.
 
-The template for this assignment is 
+The template for this assignment is
 \href{https://www.cs.umass.edu/~arjun/courses/cmpsci220-spring2016/hw/tictactoe.zip}{available here}\footnote{\url{https://www.cs.umass.edu/~arjun/courses/cmpsci220-spring2016/hw/tictactoe.zip}}.
 
 
@@ -4249,7 +4249,7 @@ the representation of tic-tac-toe boards that you will use. All
 the types mentioned below are in the file \texttt{src/main/scala/Provided.scala}
 in the template code.
 
-The \scalainline{sealed trait Player} has two constructors, 
+The \scalainline{sealed trait Player} has two constructors,
 \scalainline{O} and \scalainline{X}, that represent the
 two players.
 
@@ -4272,7 +4272,7 @@ the bottom-right corner:
 \end{tikzpicture}
 
 The \scalainline{Solution.createGame} function, which you need to implement,
-takes as input the player who makes the first move, the 
+takes as input the player who makes the first move, the
 value $n$ that specifies the dimensions of the board, and a map from coordinates to \scalainline{Player}s
 that indicates where the pieces are.
 
@@ -4515,7 +4515,7 @@ public class Singleton {
 
 At times, it is often desirable to only have a single instance of a particular
 class. For example, if you have a class that lets you read input from the
-user, it doesn't make sense to have two instances, since the user just has 
+user, it doesn't make sense to have two instances, since the user just has
 one keyboard. You can create a singleton object in Java by following the
 design pattern in \cref{javasingleton}. The only instance of \javainline{Singleton}
 that can exist is the one stored in the private field. (Notice that the constructor
@@ -4560,7 +4560,7 @@ were case classes, we've have to write \scalainline{Nil()} and
 
 \section{Subtyping}
 
-Subtyping in Scala is very similar to subtyping in Java. 
+Subtyping in Scala is very similar to subtyping in Java.
 
 \begin{notation}
 We write $A <: B$ to mean $A$ is a subtype of $B$.
@@ -4596,7 +4596,7 @@ class Cat extends Animal {
 }
 \end{scalacode}
 
-A function that expects an \scalainline{Animal} can be applied to an object 
+A function that expects an \scalainline{Animal} can be applied to an object
 of any class defined above. Similarly, a function that expects a \scalainline{Dog}
 can be applied to a \scalainline{Dog} or a \scalainline{Poodle}, but not to a
 \scalainline{Cat}. For example, the following function takes dogs and makes
@@ -4617,7 +4617,7 @@ Given the traits and types defined above, we can say that:
 
   \item \scalainline{Poodle <: Dog} because \scalainline{Poodle extends Dog}
 
-  \item \scalainline{Cat <: Animal} because \scalainline{Cat extends Animal}  
+  \item \scalainline{Cat <: Animal} because \scalainline{Cat extends Animal}
 
   \item \scalainline{Poodle <: Animal} because \scalainline{Poodle <: Dog} and
   \scalainline{Dog <: Animal} (subtyping is transitive),
@@ -4630,9 +4630,9 @@ In addition, scala has two special types:
 
 \begin{itemize}
 
-  \item \scalainline{X <: Any} for all types X. 
+  \item \scalainline{X <: Any} for all types X.
 
-  \item \scalainline{Nothing <: X} for all types X. In particular, 
+  \item \scalainline{Nothing <: X} for all types X. In particular,
   \emph{there are no values with type \scalainline{Nothing}}!
 
 \end{itemize}
@@ -4666,7 +4666,7 @@ c1.set(new Poodle)
 \end{scalacode}
 
 Unsurprisingly, we can't store cats in \scalainline{c1}. If we did, a function
-that consumes a container with a dog, might try to \scalainline{.get} the 
+that consumes a container with a dog, might try to \scalainline{.get} the
 dog and call the \scalainline{bite} method, which cats don't have.
 Therefore, the following code does not type-check:
 
@@ -4766,7 +4766,7 @@ to write:
 case object Nil[A] extends List[A]
 \end{scalacode}
 However, since \scalainline{Nil} is an object and not a class, it can't
-take parameters (not even type parameters). 
+take parameters (not even type parameters).
 However, recall our special type \scalainline{Nothing} that has no values is the subtype of all other types, thus
 \scalainline{Nothing <: B}. Therefore, by covariance of lists, \scalainline{List[Nil] <: List[A]}, so
 we can write:
@@ -4807,7 +4807,7 @@ def sort[A](toInt: A => Int, alist: List[A]): List[A] = alist match {
 \label{sortToIntHOF}
 \end{figure}
 
-We've used higher-order functions to write generic sorting functions. 
+We've used higher-order functions to write generic sorting functions.
 \Cref{sortToIntHOF} is small variation of the kind of function we've
 seen before: instead of taking a comparator function as an argument, it takes a
 \scalainline{toInt} function that maps
@@ -4880,7 +4880,7 @@ def sort[A](alist: List[A]): List[A]
 \end{scalacode}
 %
 However, this type won't work either, since \scalainline{A} could be
-any time and not one that implements \scalainline{IntLike}. We need to 
+any time and not one that implements \scalainline{IntLike}. We need to
 ensure that \scalainline{alist} and the result have the same type \emph{and}
 that they implement \scalainline{IntLike}. We can do this by using
 \emph{bounded quantification}:
@@ -4903,7 +4903,7 @@ def sort[A <: Any](alist: List[A]): List[A]
 \end{scalacode}
 %
 Using bounded quantification, we're restricting \scalainline{A} to be any
-type that implements \scalainline{IntLike}. 
+type that implements \scalainline{IntLike}.
 
 \paragraph{Recursive Bounds}
 
@@ -4917,7 +4917,7 @@ case class Person(name: String, age: Int) {
   def lessThan(other: Person): Boolean = this.name < other.name
 }
 
-case class Time(h: Int, m: Int, s: Int) { 
+case class Time(h: Int, m: Int, s: Int) {
   def lessThan(o: Time): Boolean = {
     this.h < o.h || (this.h == o.h && this.m < o.min || (this.m == o.min && this.s < o.s))
   }
@@ -4943,7 +4943,7 @@ case class Person(name: String, age: Int) extends LessThanLike {
   def lessThan(other: Person): Boolean = ...
 }
 
-case class Time(h: Int, m: Int, s: Int) extends LessThanLike { 
+case class Time(h: Int, m: Int, s: Int) extends LessThanLike {
   def lessThan(other: Time): Boolean = ...
 }
 \end{scalacode}
@@ -4959,7 +4959,7 @@ trait LessThanLike[A] {
 \end{scalacode}
 %
 
-Now that \scalainline{LessThanLike} takes an argument \scalainline{A}, 
+Now that \scalainline{LessThanLike} takes an argument \scalainline{A},
 the signatures of \scalainline{Person} and \scalainline{Time} are invalid:
 
 \begin{scalacode}
@@ -4972,7 +4972,7 @@ Let's reason through what the type-argument should be in \scalainline{Person}
 
   \item The class \scalainline{Person} implements the trait \scalainline{LessThanLike[A]},
 
-  \item The trait constraints the type of the argument called \scalainline{other} 
+  \item The trait constraints the type of the argument called \scalainline{other}
   of the method \scalainline{lessThan} to be \scalainline{A},
 
   \item The class declares the type of \scalainline{other} argument to be
@@ -4987,7 +4987,7 @@ case class Person(name: String, age: Int) extends LessThanLike[Person]
 case class Time(h: Int, m: Int, s: Int) extends LessThanLike[Time]
 \end{scalacode}
 
-Finally, we need to correct the bound in \scalainline{insert}. The 
+Finally, we need to correct the bound in \scalainline{insert}. The
 current definition is wrong, since \scalainline{LessThanLike} requires
 a type argument:
 %
@@ -5165,6 +5165,141 @@ def eval[T <: NumLike[T]](expr: Expr[T]): T = expr match {
 
 \newlecture
 
+\section{The \emph{Same Fringe} Problem}
+
+\begin{figure}
+\begin{scalacode}
+def fringe[A](t: BinTree[A]): List[A] = t match {
+  case Leaf(x) => List(x)
+  case Node(lhs, rhs) => fringe(lhs) ++ fringe(rhs)
+}
+\end{scalacode}
+\caption{Recursively calculating the fringe of a binary tree.}
+\label{fringeRec}
+\end{figure}
+
+Given a binary tree:
+
+\begin{scalacode}
+sealed trait BinTree[+A]
+case class Node[A](lhs: BinTree[A], rhs: BinTree[A]) extends BinTree[A]
+case class Leaf[A](x: A) extends BinTree[A]
+\end{scalacode}
+
+The \emph{fringe} of a binary tree are the values in left-to-right order. For
+example, the fringe of the following tree:
+\begin{scalacode}
+val t1 = Node(Leaf(10), Node(Leaf(20), Leaf(40)))
+\end{scalacode}
+is $10$, $20$, and $40$, in that order. The \emph{same-fringe problem} is to write
+a function to determine if two trees have the same fringe. For
+example the following tree:
+%
+\begin{scalacode}
+val t2 = Node(Node(Leaf(10), Leaf(20)), Leaf(40))
+\end{scalacode}
+Has the same fringe as \scalainline{t1}. 
+
+We can write a simple recursive function to calculate the fringe of a tree,
+as shown in \cref{fringeRec}, so a simple solution to the same-fringe problem 
+is:
+\begin{scalacode}
+fringe(t1) == fringe(t2)
+\end{scalacode}
+
+But, this is not a very efficient solution:
+\begin{itemize}
+
+  \item If the trees are very large, we'll spend a lot of time appending
+  lists, and
+
+  \item If the fringes are different, we'll generate the entire fringe instead
+  of terminating as soon as a difference is detected.
+
+\end{itemize}
+
+\section{An Imperative Solution}
+
+\begin{figure}
+\begin{scalacode}
+class FringeIterator[A](tree: BinTree[A]) extends Iterator[A] {
+  private val stack = collection.mutable.Stack(tree)
+  def hasNext = stack.isEmpty
+  def next() = {
+    val top = stack.pop()
+    top match {
+      case Leaf(x) => x
+      case Node(lhs, rhs) => { stack.push(rhs); stack.push(lhs); next() }
+    }
+  }
+}
+
+def sameFringe[A](t1: BinTree[A], t2: BinTree[A]): Boolean = {
+  val iter1 = new FringeIterator(t1)
+  val iter2 = new FringeIterator(t2)
+  while (iter1.hasNext && iter2.hasNext) {
+    val x = iter1.next
+    val y = iter2.next
+    if (x != y) {
+      return false
+    }
+  }
+  return !iter1.hasNext && !iter2.hasNext
+}
+\end{scalacode}
+\caption{An imperative solution.}
+\label{samefringe_imperative}
+\end{figure}
+
+- Describe the imperative solution
+- Seems to be fundamentally imperative: each call to .next returns a new value,
+  which means that iter1 must use mutable state internally
+- Consider writing list-equal for for JoinLists: very similar, but trickier
+  iterator
+
+
+\section{A Functional Solution}
+
+\begin{figure}
+\begin{scalacode}
+trait Generator[T] {
+  def apply(): Option[(T, Generator[T])]
+
+  def andThen(rest: () => Generator[T]): Generator[T] = {
+    val self = this
+    new Generator[T] {
+      def apply() = self() match {
+        case None => rest()()
+        case Some((x, lhsRest)) => Some((x, lhsRest.andThen(rest)))
+      }
+    }
+  }
+}
+
+object Generator {
+  def one[T](x: T) = new Generator[T] {
+    def apply() = Some((x, new Generator[T] { def apply() = None }))
+  }
+}
+
+def fringe[T](t: BinTree[T]): Generator[T] = t match {
+  case Leaf(x) => Generator.one(x)
+  case Node(lhs, rhs) => fringe(lhs).andThen(() => fringe(rhs))
+}
+
+def sameFringeRec[T](t1: Generator[T], t2: Generator[T]): Boolean = (t1(), t2()) match {
+  case (None, None) => true
+  case (Some((x, t1Rest)), Some((y, t2Rest))) => x == y && sameFringeRec(t1Rest, t2Rest)
+  case _ => false
+}
+
+def sameFringe[T](t1: BinTree[T], t2: BinTree[T]) = sameFringeRec(fringe(t1), fringe(t2))
+\end{scalacode}
+\caption{A functional solution.}
+\label{sameFringeFun}
+\end{figure}
+
+
 \newdiscussion{TODO -- Dan (Mar 2)}
 
 \newlecture
@@ -5175,8 +5310,6 @@ Something that covers everything, due after Spring Break. Try to make students
 write at least 700 lines of code.
 
 \newlecture
-
-\section{same fringe / generators}
 
 \newlecture
 
@@ -5246,20 +5379,20 @@ def rpnCalc(instructions: List[Instr]) {
 \quad
 \begin{minipage}{0.45\textwidth}
 \begin{scalacode}
-def doRpn(e: List[Instr], stack: List[Int]): List[Int] = 
+def doRpn(e: List[Instr], stack: List[Int]): List[Int] =
   (e, stack) match {
     case (Nil, stack) => stack
     case (IInt(n) :: rest, stack) => doRpn(rest, n :: stack)
-    case (IAdd :: rest, n2 :: n1 :: stack) => 
+    case (IAdd :: rest, n2 :: n1 :: stack) =>
       doRpn(rest, (n1 + n2) :: stack)
-    case (IMul :: rest, n2 :: n1 :: stack) => 
+    case (IMul :: rest, n2 :: n1 :: stack) =>
       doRpn(rest, (n1 * n2) :: stack)
-    case (ISub :: rest, n2 :: n1 :: stack) => 
+    case (ISub :: rest, n2 :: n1 :: stack) =>
       doRpn(rest, (n1 - n2) :: stack)
     case _ => sys.error("ill-formed expression")
   }
 
-def rpnCalc(instructions: List[Instr]) = 
+def rpnCalc(instructions: List[Instr]) =
   doRpn(instructions, Nil) match {
     case List(n) => n
     case _ => sys.error("ill-formed expression")
@@ -5289,7 +5422,7 @@ be nested expression:
 \begin{scalacode}
 List(IAdd, IInt(2), ISub, IInt(10), IInt(20))
 \end{scalacode}
-And there may be instructions for the context. E.g., the following list 
+And there may be instructions for the context. E.g., the following list
 of instructions is valid, so long as it's the tail of a list that has
 some other operand as its head:
 \begin{scalacode}
