@@ -4353,11 +4353,11 @@ You will need to create two \scalainline{Map[A,B]} data structures for those two
 
 \scalainline{val prices : Map[UUID,BigDecimal]} stores the mapping from barcodes to prices.
 
-\underline{Important note:} You are \emph{not} allowed to create \scalainline{barcodes} and \scalainline{prices} by hand.  You must transform \scalainline{candies} into those two maps.  Hint: use our old friend, \scalainline{map} with \scalainline{toMap}.  \scalainline{getBarcodeForCandy} and \scalainline{getPriceFromBarcode} should check whether these two \scalainline{Map}s contain the key.  If they do, they should return \scalainline{Some} of the value, otherwise \scalainline{None}.
+\underline{Important note:} You are \emph{not} allowed to create \scalainline{barcodes} and \scalainline{prices} by hand.  You must transform \scalainline{candies} into those two maps.  Hint: use our old friend, \scalainline{map} with \scalainline{toMap}.  \scalainline{getBarcodeForCandy} and \scalainline{getPriceFromBarcode} should check whether the appropriate \scalainline{Map} contains the key.  If it does, the function should return \scalainline{Some} of the value, otherwise \scalainline{None}.
 
 \section{Templates}
 
-To facilitate a useful discussion, please use the following templates.  \scalainline{???} is used where you need to provide implementations.
+To facilitate a useful discussion, please use the following templates.  \scalainline{???} indicates where you should provide implementations.
 
 Place the following file in \texttt{src/main/scala/CandyDatabase.scala}
 
@@ -4428,8 +4428,6 @@ to this:
 Created submission.tar.gz. Upload this file to Moodle.
 [success] Total time: 0 s, completed Jan 17, 2016 12:55:55 PM
 \end{console}
-
-\textbf{Note:}  Please use the 
 
 \textbf{Note:}  The command will not allow you to submit code that does not
 compile. If your code doesn't compile, you will receive no credit for the
