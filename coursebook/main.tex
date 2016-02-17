@@ -4224,7 +4224,211 @@ and object-oriented styles involve tradeoffs. It is misguided to argue that
 one is better than the other. What matters is how you expect your code
 to be used (and extended.)
 
-\newdiscussion{TODO -- Dan (Feb 17)}
+\newdiscussion{Maps and Error-Handling (Feb 17)}
+
+\underline{Note}: See the end of this handout for formatting and submission instructions.
+
+This assignment has two goals:
+
+\begin{itemize}
+  \item To understand the Map data structure.
+  \item To understand how to use the Option type to signal errors.
+\end{itemize}
+
+\section{Warm-Up}
+
+\subsection{Map}
+
+\underline{Note}: The data structure \scalainline{Map[A,B]} is not the same thing as the \emph{function} \scalainline{map[A,B]}, although they are based on related concepts.
+
+A \scalainline{Map[A,B]} is a data structure that associates values of type \scalainline{A} with values of type \scalainline{B}.  This is useful whenever you want an efficient way of associating two kinds of data.  For example, you might want to associate the names of your friends (of type \scalainline{String}) with their birthdays (of type \scalainline{Date}).
+
+The \scalainline{toMap} function (which is defined in the \scalainline{TraversableOnce} trait) will build a \scalainline{Map[A,B]} given a collection of pairs of \scalainline{A} and \scalainline{B}, e.g., \scalainline{List[(A,B)]}.  For example,
+
+\begin{scalacode}
+val friendsBirthdays = List(("Anja", "1994-10-01"), ("Brent", "1995-07-23"), ("Ammar", "1994-01-12"))
+val fb = friendsBirthdays.toMap
+val anja_bday = fb("Anja")
+// anja_bday: String = 1994-10-01
+\end{scalacode}
+
+Scala also allows you to specify a \scalainline{Map[A,B]} in \emph{literal form}.  For example, the following does the same thing:
+
+\begin{scalacode}
+val fb = Map("Anja" -> "1994-10-01", "Brent" -> "1995-07-23", "Ammar" -> "1994-01-12")
+val anja_bday = fb("Anja")
+// anja_bday: String = 1994-10-01
+\end{scalacode}
+
+In the above examples, the element on the left (e.g., "Anja") is referred to as the \emph{key} and the element on the right (e.g., "1994-10-01") is referred to as the \emph{value}.  Thus \scalainline{Map[A,B]} also has two very handy methods.  \scalainline{keys} returns a list of the keys and \scalainline{values} returns a list of the values.
+
+\begin{scalacode}
+val fb = Map("Anja" -> "1994-10-01", "Brent" -> "1995-07-23", "Ammar" -> "1994-01-12")
+val names = fb.keys
+// names: Iterable[String] = Set(Anja, Brent, Ammar)
+val dates = fb.values
+// dates: Iterable[String] = MapLike(1994-10-01, 1995-07-23, 1994-01-12)
+\end{scalacode}
+
+\scalainline{contains(key: A): Boolean} will tell you if a key is present in a \scalainline{Map[A,B]}.
+
+Lastly, note that keys must always be distinct.  A \scalainline{Map[A,B]} will only ever store a single copy of a key-value pair.
+
+\begin{scalacode}
+val fb = Map("Anja" -> "1994-10-01", "Anja" -> "1995-07-23")
+// fb: scala.collection.immutable.Map[String,String] = Map(Anja -> 1995-07-23)
+\end{scalacode}
+
+
+\subsection{Option[T]}
+
+\scalainline{Option[T]} is very simple algebraic data type.  It has two cases: \scalainline{Some} of \scalainline{T}, and \scalainline{None} of \scalainline{T}.
+
+\scalainline{Option[T]} is useful for lots of things, but a common use is to handle unexpected outcomes in code.  Unlike \scalainline{Exception} in Java, which is a \emph{runtime} mechanism for handling unexpected outcomes in a program, \scalainline{Option[T]} is a \emph{compile time} mechanism.  This means that programmers who rely on \scalainline{Option[T]} can be assured that error-handling code is correct \emph{before the program runs}.  This magical ability is thanks to the fact that Scala's \emph{exhaustivity check} will ensure that all cases are handled.
+
+Here's a simple example.  Often we want to retrieve the first element in a \scalainline{List}.  But what if the \scalainline{List} is empty?  This case is easy to forget.  \scalainline{headOption} makes handling this case foolproof.  This code does not compile:
+
+\begin{scalacode}
+val friends : List[String] = List("Anja", "Brent", "Ammar")
+val firstFriend : String = friends.headOption
+\end{scalacode}
+
+Think for a minute about why this does not compile.
+
+The right way to use \scalainline{headOption} is with your old friend, \emph{pattern matching}.  The following code \emph{does} compile:
+
+\begin{scalacode}
+val friends : List[String] = List("Anja", "Brent", "Ammar")
+val firstFriend : String = friends.headOption match {
+  case Some(friend) => s"My first friend is ${friend}."
+  case None => "I have no friends!"
+}
+// firstFriend: String = My first friend is Anja.
+\end{scalacode}
+
+Since the compiler told us that we made a mistake in our first example, we were able to correct it in the second example before we ran the program.  Contrast this against the following code, which compiles without error but throws an exception when we run the program:
+
+\begin{scalacode}
+val friends : List[String] = List()
+val firstFriend : String = friends.head
+\end{scalacode}
+
+We get:
+
+\begin{scalacode}
+java.util.NoSuchElementException: head of empty list
+  at scala.collection.immutable.Nil$.head(List.scala:420)
+  at scala.collection.immutable.Nil$.head(List.scala:417)
+  ... 33 elided
+\end{scalacode}
+
+\section{Exercise}
+
+The Willy Wonka candy company calls you one morning because they need help modernizing their operation.  They want customers at supermarkets to be able to scan their candy in the self-checkout lanes at the supermarket.  Right now, customers can't do this because there are no barcodes on Wonka products.  Customers are flocking to Slugworth's Sizzlers because buying Wonka candy is so inconvenient.  Wonka wants you to put barcodes on their candy to deal with this situation.
+
+The Wokna company gives you a \scalainline{Map[String,BigDecimal]} of candy names and their prices:
+
+\begin{scalacode}
+val candies : Map[String,BigDecimal] = Map(
+  "Snozzberries" -> BigDecimal(2.49),
+  "Everlasting Gobstopper" -> BigDecimal(0.99),
+  "Fizzy Lifting Drink" -> BigDecimal(1.99),
+  "Edible Teacup" -> BigDecimal(4.79),
+  "Wonka Bar" -> BigDecimal(1.50)
+)
+\end{scalacode}
+
+Barcodes will be represented using Java's UUID type.  UUID stands for ``universally unique identifier.''
+
+The Wonka company wants you to implement two functions.  First, they want a function \scalainline{getBarcodeForCandy(c: String) : Option[UUID]} that returns \scalainline{Some} barcode given a candy name, or \scalainline{None} if the candy name is not known.  Second, they want a function \scalainline{getPriceFromBarcode(b: UUID) : Option[BigDecimal]} that returns \scalainline{Some} price given a barcode, or \scalainline{None} if the barcode is not known.
+
+You will need to create two \scalainline{Map[A,B]} data structures for those two functions to work.
+
+\scalainline{val barcodes : Map[String,UUID]} stores the mapping from candy names to barcodes.
+
+\scalainline{val prices : Map[UUID,BigDecimal]} stores the mapping from barcodes to prices.
+
+\underline{Important note:} You are \emph{not} allowed to create \scalainline{barcodes} and \scalainline{prices} by hand.  You must transform \scalainline{candies} into those two maps.  Hint: use our old friend, \scalainline{map} with \scalainline{toMap}.  \scalainline{getBarcodeForCandy} and \scalainline{getPriceFromBarcode} should check whether these two \scalainline{Map}s contain the key.  If they do, they should return \scalainline{Some} of the value, otherwise \scalainline{None}.
+
+\section{Templates}
+
+To facilitate a useful discussion, please use the following templates.  \scalainline{???} is used where you need to provide implementations.
+
+Place the following file in \texttt{src/main/scala/CandyDatabase.scala}
+
+\begin{scalacode}
+import java.util.UUID
+
+class CandyDatabase(candies: Map[String, BigDecimal]) {
+  val barcodes : Map[String,UUID] = ???
+
+  val prices : Map[UUID,BigDecimal] = ???
+
+  def getPriceFromBarcode(b: UUID) : Option[BigDecimal] = ???
+
+  def getBarcodeForCandy(c: String) : Option[UUID] = ???
+}
+\end{scalacode}
+
+Place the following test file in \texttt{src/test/scala/CandyDatabaseTests.scala}
+
+\begin{scalacode}
+import org.scalatest.FunSuite
+
+class ExerciseTests extends FunSuite {
+  val candies : Map[String,BigDecimal] = Map(
+    "Snozzberries" -> BigDecimal(2.49),
+    "Everlasting Gobstopper" -> BigDecimal(0.99),
+    "Fizzy Lifting Drink" -> BigDecimal(1.99),
+    "Edible Teacup" -> BigDecimal(4.79),
+    "Wonka Bar" -> BigDecimal(1.50)
+  )
+  
+  def barcodeTester(database: CandyDatabase, candy_name: String) : BigDecimal = {
+    database
+    // query the database for the barcode
+      .getBarcodeForCandy(candy_name)
+    // and then query the database for the price using the barcode
+      .flatMap(database.getPriceFromBarcode)
+    // return $0 if any of those lookups fail
+      .getOrElse(BigDecimal(0))
+  }
+  
+  val db = new CandyDatabase(candies)
+  
+  test("Everlasting Gobstoppers cost $0.99.") {
+    val price = barcodeTester(db, "Everlasting Gobstopper")
+    
+    assert(price == candies("Everlasting Gobstopper"))
+  }
+  
+  test("There is no price on file for a River of Chocolate.") {
+    val price = barcodeTester(db, "River of Chocolate")
+    
+    assert(price == BigDecimal(0))
+  }
+}
+\end{scalacode}
+
+\section{Hand In}
+
+From \sbt{}, run the command \verb|submit|. The command will create
+a file called \verb|submission.tar.gz| in your assignment directory.
+Submit this file using Moodle.
+
+For example, if the command runs successfully, you will see output similar
+to this:
+%
+\begin{console}
+Created submission.tar.gz. Upload this file to Moodle.
+[success] Total time: 0 s, completed Jan 17, 2016 12:55:55 PM
+\end{console}
+
+\textbf{Note:}  Please use the 
+
+\textbf{Note:}  The command will not allow you to submit code that does not
+compile. If your code doesn't compile, you will receive no credit for the
+assignment.
 
 \newhw{Generalized Tic Tac Toe}
 
