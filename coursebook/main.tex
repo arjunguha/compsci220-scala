@@ -5464,24 +5464,15 @@ def sameFringe[A](t1: BinTree[A], t2: BinTree[A]): Boolean = {
 
 \begin{figure}
 \begin{scalacode}
-trait Generator[T] {
-  def apply(): Option[(T, Generator[T])]
-
-  def andThen(rest: () => Generator[T]): Generator[T] = {
-    val self = this
-    new Generator[T] {
-      def apply() = self() match {
-        case None => rest()()
-        case Some((x, lhsRest)) => Some((x, lhsRest.andThen(rest)))
-      }
-    }
-  }
+class Generator[T](val gen: () => Option[(T, Generator[T])]) { self =>
+  def andThen(rest: () => Generator[T]): Generator[T] = new Generator[T](() => self.gen() match {
+      case None => rest().gen()
+      case Some((x, lhsRest)) => Some((x, lhsRest.andThen(rest)))
+  })
 }
 
 object Generator {
-  def one[T](x: T) = new Generator[T] {
-    def apply() = Some((x, new Generator[T] { def apply() = None }))
-  }
+  def one[T](x: T) = new Generator[T](() => Some((x, new Generator[T](() => None))))
 }
 
 def fringe[T](t: BinTree[T]): Generator[T] = t match {
@@ -5489,7 +5480,7 @@ def fringe[T](t: BinTree[T]): Generator[T] = t match {
   case Node(lhs, rhs) => fringe(lhs).andThen(() => fringe(rhs))
 }
 
-def sameFringeRec[T](t1: Generator[T], t2: Generator[T]): Boolean = (t1(), t2()) match {
+def sameFringeRec[T](t1: Generator[T], t2: Generator[T]): Boolean = (t1.gen(), t2.gen()) match {
   case (None, None) => true
   case (Some((x, t1Rest)), Some((y, t2Rest))) => x == y && sameFringeRec(t1Rest, t2Rest)
   case _ => false
