@@ -30,7 +30,7 @@ object GradeHW2 {
         "src/main/scala/GradingMain.scala")
     }
 
-    val lst = assignments("hw2").map(dir => {
+    val lst = Scripting.assignments("hw2").map(dir => {
       updateState(dir.resolve("grading.json")) { case report =>
 
         SBTTesting.testWithSbt(scripting, dir, testBuilder, report) {  case root =>

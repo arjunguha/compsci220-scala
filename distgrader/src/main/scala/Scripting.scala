@@ -8,43 +8,14 @@ import org.apache.commons.io.{FileUtils, IOUtils}
 import edu.umass.cs.zip._
 import scala.concurrent.Future
 
-class Scripting(ip: String) {
+object Scripting {
 
   import java.nio.file.{Paths, Files, Path, FileSystems}
-  import akka.actor.{Props, ActorSystem, Actor}
-  import akka.util.Timeout
-  import scala.concurrent._
-  import scala.concurrent.duration._
-  import akka.pattern._
-  import Messages._
   import scala.collection.JavaConversions._
+  import Messages._
 
   // Matches submission ID
   private val moodleSubmissionRegex = """^(?:[^_]*)_(\d+)_.*$""".r
-
-  val system = ActorSystem("controller", AkkaInit.remotingConfig(ip, 5000))
-  private val controllerActor = system.actorOf(Props[ControllerActor], name="controller")
-
-  import system.dispatcher
-
-  class RunActor(promise: Promise[ContainerExit], run: (String, Run)) extends Actor {
-
-    controllerActor ! run
-
-    def receive = {
-      case exit: ContainerExit => {
-        promise.success(exit)
-        context.stop(self)
-      }
-    }
-
-  }
-
-  def run(timeout: Int, command: Seq[String], zip: Array[Byte], label: String = "No label"): Future[ContainerExit] = {
-    val p = Promise[ContainerExit]()
-    system.actorOf(Props(new RunActor(p,(label, Run("gcr.io/umass-cmpsci220/student", timeout, "/home/student/hw", command, Map("/home/student/hw" -> zip))) )))
-    p.future
-  }
 
   def extract(src: String, dst: String) = {
     assert(Files.isDirectory(Paths.get(dst)), s"$dst must be a directory")
@@ -84,18 +55,62 @@ class Scripting(ip: String) {
       .filter(p => Files.isDirectory(p))
   }
 
-  def updateState(file: Path)(body: Rubric => Future[Rubric]) = {
+  def readRubric(path: Path): Rubric = {
     import MyJsonProtocol._
     import spray.json._
 
-    assert(!Files.exists(file) || Files.isRegularFile(file),
-           s"$file is a directory or special file")
-    val oldState = if (!Files.exists(file)) {
+    assert(!Files.exists(path) || Files.isRegularFile(path),
+      s"$path is a directory or special file")
+    if (!Files.exists(path)) {
       Rubric(Map())
     }
     else {
-      (new String(Files.readAllBytes(file))).parseJson.convertTo[Rubric]
+      (new String(Files.readAllBytes(path))).parseJson.convertTo[Rubric]
     }
+  }
+
+}
+
+class Scripting(ip: String) {
+
+  import java.nio.file.{Paths, Files, Path, FileSystems}
+  import akka.actor.{Props, ActorSystem, Actor}
+  import akka.util.Timeout
+  import scala.concurrent._
+  import scala.concurrent.duration._
+  import akka.pattern._
+  import Messages._
+  import scala.collection.JavaConversions._
+
+  val system = ActorSystem("controller", AkkaInit.remotingConfig(ip, 5000))
+  private val controllerActor = system.actorOf(Props[ControllerActor], name="controller")
+
+  import system.dispatcher
+
+  class RunActor(promise: Promise[ContainerExit], run: (String, Run)) extends Actor {
+
+    controllerActor ! run
+
+    def receive = {
+      case exit: ContainerExit => {
+        promise.success(exit)
+        context.stop(self)
+      }
+    }
+
+  }
+
+  def run(timeout: Int, command: Seq[String], zip: Array[Byte], label: String = "No label"): Future[ContainerExit] = {
+    val p = Promise[ContainerExit]()
+    system.actorOf(Props(new RunActor(p,(label, Run("gcr.io/umass-cmpsci220/student", timeout, "/home/student/hw", command, Map("/home/student/hw" -> zip))) )))
+    p.future
+  }
+
+
+  def updateState(file: Path)(body: Rubric => Future[Rubric]) = {
+    import MyJsonProtocol._
+    import spray.json._
+    val oldState = Scripting.readRubric(file)
 
     body(oldState).map(newState => {
       Files.write(file, newState.toJson.prettyPrint.getBytes)

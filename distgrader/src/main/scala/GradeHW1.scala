@@ -110,7 +110,7 @@ object GradeHW1 {
       })
     }
 
-    val lst = assignments("hw1").map(dir => {
+    val lst = Scripting.assignments("hw1").map(dir => {
       updateState(dir.resolve("grading.json")) { case report =>
 
       val removeZeroes = Test("removeZeroes have the right type?", 10, {

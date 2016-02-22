@@ -62,7 +62,7 @@ object GradeHW3 {
         "src/main/scala/GradingMain.scala")
     }
 
-    val lst = assignments("hw3").map(dir => {
+    val lst = Scripting.assignments("hw3").map(dir => {
       updateState(dir.resolve("grading.json")) { case report_ =>
 
 

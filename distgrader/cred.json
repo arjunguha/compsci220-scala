@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "umass-cmpsci220",
+  "private_key_id": "72ccd0cb7eeb83a156a6bd74195a36880681921e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCpD2wjOCQiOH+K\ntUa/xoWrtzA/E+vt7qvu2Ls1dQFYDb40c2dyfqX45o2mYNjHt0hZYWiwowYTqxcu\nTFSZ32e/DvvSo0Xz8QQmJcOjXTTPXhbY/2XG/laKpM5nMFzSHf16asoxcrqb3Ug2\n4wiCIixNQiMFsHPMnIVnDTaHjjHciRidhvMm7SXmuaHv61j9BiiI2vyEN1Ahtxws\nZIWLrJU4WUjMtcWQg0MGqpBzpsQDI72uqyZKcA050xTe/KxuUhDV8sHTu2QehOkT\nEbYkSmN9ob5f/SMJFT1SpJRShGLmYLFX/TWgwYod4trWLGqfukbjFBV1y+GqFa6h\ncwp6A9iDAgMBAAECggEAOstqSDVWG7Caaprwp/Fau4VR+h3rhyviD4bAVK8EcKMW\n6xbXezIgdpd3280ClzJervb5ebS4gE6YGTnikkDny8JiQbcWtOe1Ea9Agqf/nb6T\nI5RuyO3bGwyF280t+sUDSnepKdlEnMAwRSZf5yILVjMSCwB6xUYJ/vTRagNBw/g3\n3q5Xz0ic8SgX5EinIXjzy+afkBN/jRUNZHbGc72xIRsSlw+mz8W0nd7EwF409JS/\nGFWsjlWPMFkxTgy1CYR6Z02Nmsk5khbxs0F35YT1v9nealtCu/SPXNmPAjeJQ450\nt+Vn/wtawnWbp1qjXzSJohll92gAfny/fIBY+qHWgQKBgQDt3btGZudD2fHRIHDz\nBeA6fYBp0Iptz0C2lHEi1HKvJ01vRKCS+oVHFApnF/bWfb3PmO/x0d5LMfjcik1F\nrgmm14qz5ZUNx9aKVdyEWAKJKSnjXwPz2t9nwQcBFtOq8X+/Hf0Cwo9iZlIcwnFU\n+UzAtYqjvmUYBdV1A/lEF88lyQKBgQC18tqbnT5x47/lhJ8zcUL76uN5jofHFtYQ\n15ykSEwVtC2BFtbFgdBJuRRn6F5eWVl9FCZwLiUPVJXSLEWyKQm9hHjkabcL5ojy\nhxQukxPhGt/tpXsmHSVDcmzUbSCj4kgZEBqeGyuqTXD0Yl/CmjVayu5DEnLUWfiK\n674BBrNh6wKBgGHrjKO/yuZ4uv6PL1AsFBGgBpQI4GOyFP7UfvqKoKeQM2VhyASZ\nkvIewuWLzPahjtj+KZDQB4XHDZ6kZIkRyzFeu9+w3DpvENej3wKwRGL4iiDqxXLG\noH9SzDJblklh32fqzXQsaeBlJNpoBUWo1zrhwTAFOhK4nBXuy9eHQaRZAoGAFdJO\njaNKPfaGqUxCm7TVx8jgB1Ak0KfYfKSfUMSq+19kpbrLf1yWUoE0BVJFHyOwK+Qi\nyAmAwFnwrghJQ5jQZj5hEWPsZCz997hjn0Jce/7xJFtYbbXJJlGu47tC0uTsqLTZ\nvGSd1Ar9pRG3UmuUQpNcCAdKZlV0DZVAcHcRRIkCgYEArINyArfWb3u9+BU31zV3\nk2kNoIql6E0SexLqzdAfeR7tpqoKTWCieWTPsxJuhIB+n4N9t6EMzejNCnfhgXJf\n6fQzxPbbmUHSJd+Q53FvQ6eUPnWb8p6AC23eDxiBi657TfZW+WN3lXrzo6VzpQ7z\nnR8NJW7RI1UMfxFgOqUIFkk=\n-----END PRIVATE KEY-----\n",
+  "client_email": "arjun-laptop@umass-cmpsci220.iam.gserviceaccount.com",
+  "client_id": "111405082308901725699",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/arjun-laptop%40umass-cmpsci220.iam.gserviceaccount.com"
+}

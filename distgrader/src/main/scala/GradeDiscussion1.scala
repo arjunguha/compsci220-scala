@@ -18,7 +18,7 @@ object GradeDiscussion1 {
     }
 
     val dir = "discussion1"
-    val lst = assignments(dir).map(dir => {
+    val lst = Scripting.assignments(dir).map(dir => {
       updateState(dir.resolve("grading.json")) { case rubric =>
 
         val rubric_ = rubric

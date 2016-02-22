@@ -35,7 +35,8 @@ libraryDependencies ++= Seq(
   "com.spotify" % "docker-client" % "3.5.9",
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
-  "commons-codec" % "commons-codec" % "1.10")
+  "commons-codec" % "commons-codec" % "1.10",
+  "com.github.scopt" %% "scopt" % "3.3.0")
   .map(_.exclude("com.google.guava", "guava-jdk5"))
 
 
