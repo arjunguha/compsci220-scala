@@ -1,6 +1,7 @@
 package grading
 
 import scala.concurrent.Promise
+import scala.util.{Success, Try}
 
 
 class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
@@ -13,9 +14,50 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
 
   import this.context._
 
-  val availableWorkers = scala.collection.mutable.Set[ActorRef]()
-  val busyWorkers = scala.collection.mutable.Map[ActorRef, (String, Run, ActorRef)]()
-  val pendingJobs = scala.collection.mutable.Queue[(String, Run, ActorRef)]()
+  private object Tick
+
+  private val availableWorkers = scala.collection.mutable.Set[ActorRef]()
+  private val busyWorkers = scala.collection.mutable.Map[ActorRef, Job]()
+  private val pendingJobs = scala.collection.mutable.Queue[Job]()
+
+  private class Job(val label: String, val command: Run, val respondTo: ActorRef) {
+
+    import java.time.Instant
+
+    private val running = scala.collection.mutable.Map[ActorRef, Instant]()
+
+    def start(worker: ActorRef)(implicit ec: ExecutionContext): Unit = {
+        if (running.isEmpty == false) {
+          log.info(s"Retrying $label")
+        }
+        assert(running.contains(worker) == false)
+        val t = Instant.now()
+        worker ! command
+       running += (worker -> t)
+    }
+
+    def complete(result: Try[ContainerExit])(implicit ec: ExecutionContext): Unit = {
+      result match {
+        case scala.util.Failure(exn) => respondTo ! akka.actor.Status.Failure(exn)
+        case Success(x) => respondTo ! x
+      }
+      for (worker <- running.keys) {
+        busyWorkers -= worker
+        availableWorkers += worker
+      }
+      running.clear()
+    }
+
+    def isLate(): Boolean = {
+      val now = Instant.now()
+      running.forall { case (actorRef, startTime) =>
+        startTime.plusSeconds(command.timeout + 30).isBefore(now)
+      }
+    }
+
+  }
+
+
 
   def startJobs(): Unit = {
     if (availableWorkers.isEmpty || pendingJobs.isEmpty) {
@@ -24,43 +66,40 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
     else {
       val worker = availableWorkers.head
       availableWorkers -= worker
-      val (label, run, p) = pendingJobs.dequeue
-      worker ! run
-      log.info(s"Sent a job to $worker ($label)")
-      busyWorkers += worker -> (label, run, p)
+      val job = pendingJobs.dequeue
+      job.start(worker)
+      log.info(s"Sent a job to $worker (${job.label})")
+      busyWorkers += worker ->job
       startJobs()
     }
   }
 
   akka.pattern.after(30.seconds, context.system.scheduler) {
     Future {
-      self ! "timer"
+      self ! Tick
     }
   }
 
-  var previouslyActive = List[String]()
-
   override def receive = {
-    case "timer" => {
-      for ((ref, (lbl, _, _)) <- busyWorkers) {
-        if (previouslyActive.contains(lbl)) {
-          println(s"$lbl is taking a long time (on $ref)")
+    case Tick => {
+      for ((ref, job) <- busyWorkers) {
+        if (job.isLate() && !pendingJobs.contains(job)) {
+          println(s"${job.label} is taking a long time (on $ref)")
         }
+        pendingJobs.enqueue(job)
       }
-      previouslyActive = busyWorkers.values.map(_._1).toList
+      startJobs()
       akka.pattern.after(30.seconds, context.system.scheduler) {
         Future {
-          self ! "timer"
+          self ! Tick
         }
       }
     }
     case akka.actor.Status.Failure(exn) => {
       busyWorkers.get(sender) match {
-        case Some((label, run, p)) => {
+        case Some(job) => {
           log.info(s"Failure from ${sender.path} $exn")
-          p ! akka.actor.Status.Failure(exn)
-          busyWorkers -= sender
-          availableWorkers += sender
+          job.complete(scala.util.Failure(exn))
           startJobs()
         }
         case None => {
@@ -80,9 +119,9 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
       }
       else {
         busyWorkers.get(actorRef) match {
-          case Some((label, run, p)) => {
+          case Some(job) => {
            log.warning(s"Worker ${actorRef.path} died running job")
-            pendingJobs.enqueue((label, run, p))
+            pendingJobs.enqueue(job)
             startJobs()
           }
           case None => log.warning(s"Received stray Terminated(${actorRef.path})")
@@ -91,13 +130,9 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
     }
     case exit : ContainerExit => {
       busyWorkers.get(sender) match {
-        case Some((label, run, p)) => {
-
-          p ! exit
-          // p.success(exit)
-          availableWorkers += sender
-          busyWorkers -= sender
-          log.info(s"Result from $sender ($label)")
+        case Some(job) => {
+          job.complete(Success(exit))
+          log.info(s"Result from $sender (${job.label}")
           startJobs()
         }
         case None => {
@@ -107,7 +142,7 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
     }
     case (label: String, run : Run) => {
       val p = Promise[ContainerExit]()
-      pendingJobs.enqueue((label, run, sender))
+      pendingJobs.enqueue(new Job(label, run, sender))
       startJobs()
     }
   }
