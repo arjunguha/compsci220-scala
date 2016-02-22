@@ -7,7 +7,7 @@ object GradeHW2 {
   import Messages._
   import edu.umass.cs.zip._
   import java.nio.file._
-
+  import Scripting._
   def main(): Unit = {
 
     val scripting = new grading.Scripting("10.8.0.6")
@@ -129,21 +129,6 @@ object GradeHW2 {
 
     val result = Await.result(Future.sequence(lst), Duration.Inf)
     println("Grading jobs complete")
-
-    val gradeRegex = """Percentage: (\d+)%""".r
-    val grades = MoodleSheet("hw2/moodle.csv").fill(id => {
-      val reportPath = Paths.get(s"hw2/$id/report.txt")
-      if (Files.exists(reportPath)) {
-        val feedback = new String (Files.readAllBytes(reportPath))
-        val grade = gradeRegex.findFirstMatchIn(feedback).get.group(1).toInt
-        (grade, feedback)
-      }
-      else {
-        (0, "Late submission. Will be graded later")
-      }
-    })
-    grades.saveAs("hw2/moodle.csv")
-    println("Done grading")
     scripting.system.terminate()
 
   }

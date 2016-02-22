@@ -6,6 +6,7 @@ object GradeHW1 {
   import scala.concurrent.duration._
   import Messages._
   import edu.umass.cs.zip._
+  import Scripting._
 
   def main(): Unit = {
     val scripting = new grading.Scripting("10.8.0.6")
@@ -218,22 +219,7 @@ object GradeHW1 {
     })
     Await.result(Future.sequence(lst), Duration.Inf)
 
-    val gradeRegex = """Percentage: (\d+)%""".r
-    val grades = MoodleSheet("hw1/moodle.csv").fill(id => {
-      val reportPath = Paths.get(s"hw1/$id/report.txt")
-      if (Files.exists(reportPath)) {
-        val feedback = new String (Files.readAllBytes(reportPath))
-        val grade = gradeRegex.findFirstMatchIn(feedback).get.group(1).toInt
-        (grade, feedback)
-      }
-      else {
-        (0, "Late submission. Will be graded later")
-      }
-    })
-    grades.saveAs("hw1/moodle.csv")
     println("Done grading")
-    //val r = run("gcr.io/umass-cmpsci220/student", 30, Seq("/bin/ls", "/"))
-    //println(Await.result(r, Duration.Inf))
     scripting.system.terminate()
   }
 

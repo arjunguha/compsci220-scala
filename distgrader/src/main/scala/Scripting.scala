@@ -6,7 +6,7 @@ import akka.util.Timeout
 import grading.Messages.ContainerExit
 import org.apache.commons.io.{FileUtils, IOUtils}
 import edu.umass.cs.zip._
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 object Scripting {
 
@@ -28,6 +28,10 @@ object Scripting {
       moodleSubmissionRegex.findFirstIn(filename) match {
         case Some(moodleSubmissionRegex(spireID)) => {
           val dir = Paths.get(dst).resolve(spireID)
+          if (Files.isDirectory(dir) &&
+              Files.getLastModifiedTime(dir).compareTo(Files.getLastModifiedTime(submission)) < 0) {
+            println(s"$dir has been updated on Moodle. Delete the directory to overwrite it.")
+          }
           if (!Files.isDirectory(dir)) {
             // Pull it out of the zip file
             val tgz = Paths.get(dst).resolve(filename)
@@ -42,6 +46,8 @@ object Scripting {
               println(s"No .metadata for $filename")
               FileUtils.deleteDirectory(dir.toFile)
             }
+
+            Files.setLastModifiedTime(dir, Files.getLastModifiedTime(submission))
             Files.delete(tgz)
           }
         }
@@ -67,6 +73,17 @@ object Scripting {
     else {
       (new String(Files.readAllBytes(path))).parseJson.convertTo[Rubric]
     }
+  }
+
+  def updateState(file: Path)(body: Rubric => Future[Rubric])(implicit ec: ExecutionContext) = {
+    import MyJsonProtocol._
+    import spray.json._
+    val oldState = Scripting.readRubric(file)
+
+    body(oldState).map(newState => {
+      Files.write(file, newState.toJson.prettyPrint.getBytes)
+      Files.write(file.getParent.resolve("report.txt"), newState.toString.getBytes)
+    })
   }
 
 }
@@ -107,19 +124,6 @@ class Scripting(ip: String) {
   }
 
 
-  def updateState(file: Path)(body: Rubric => Future[Rubric]) = {
-    import MyJsonProtocol._
-    import spray.json._
-    val oldState = Scripting.readRubric(file)
-
-    body(oldState).map(newState => {
-      Files.write(file, newState.toJson.prettyPrint.getBytes)
-      Files.write(file.getParent.resolve("report.txt"), newState.toString.getBytes)
-      if (oldState != newState) {
-        println(s"Updated $file")
-      }
-    })
-  }
 
   implicit class RichPath(p: Path) {
 

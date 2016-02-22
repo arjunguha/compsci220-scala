@@ -26,7 +26,8 @@ object Main extends App {
   case object StartController extends Command
   case object StartWorker extends Command
   case object Summarize extends Command
-
+  case object Forget extends Command
+  case object UpdateCSV extends Command
 
 
   case class Config(command: Command, opts: Map[String, String], ints: Map[String, Int])
@@ -65,6 +66,14 @@ object Main extends App {
     cmd("summarize")
       .action((_, cfg) => cfg.copy(command = Summarize))
       .children(key("root"))
+    cmd("forget")
+      .action((_, cfg) => cfg.copy(command = Forget))
+      .text("Forget that we graded the specified item")
+      .children(key("root"), key("label"))
+    cmd("update-csv")
+      .action((_, cfg) => cfg.copy(command = UpdateCSV))
+      .text("Updates moodle.csv with grades")
+      .children(key("root"))
 
   }
 
@@ -76,13 +85,13 @@ object Main extends App {
     case Some(config) =>{
       val opts = config.opts
       val ints = config.ints
-      println(opts)
       config.command match {
         case Grade => {
           opts("name") match {
             case "hw1" => GradeHW1.main()
             case "hw2" => GradeHW2.main()
             case "hw3" => GradeHW3.main()
+            case "hw4" => GradeHW4.main()
             case "discussion1" => GradeDiscussion1.main()
             case _ => {
               println("Unknown assignment")
@@ -115,6 +124,38 @@ object Main extends App {
           val src = opts("src")
           val dst = opts("dst")
           Scripting.extract(src, dst)
+        }
+        case Forget => {
+          import scala.concurrent.ExecutionContext.Implicits.global
+          val label = opts("label")
+          var i = 0
+          for (dir <- Scripting.assignments(opts("root"))) {
+            Scripting.updateState(dir.resolve("grading.json")) { rubric =>
+              if (rubric.tests.contains(label)) {
+                i = i + 1
+              }
+              Future { rubric - label }
+            }
+          }
+          println(s"Forgot $i tests.")
+        }
+        case UpdateCSV => {
+          import java.nio.file._
+          val dir = opts("root")
+          val gradeRegex = """Percentage: (\d+)%""".r
+          val grades = MoodleSheet(s"$dir/moodle.csv").fill(id => {
+            val reportPath = Paths.get(s"$dir/$id/report.txt")
+            if (Files.exists(reportPath)) {
+              val feedback = new String (Files.readAllBytes(reportPath))
+              val grade = gradeRegex.findFirstMatchIn(feedback).get.group(1).toInt
+              (grade, feedback)
+            }
+            else {
+              (0, "Not graded")
+            }
+          })
+          grades.saveAs(s"$dir/moodle.csv")
+          println(s"Updated $dir/moodle.csv")
         }
         case Summarize => {
           import Scripting._
