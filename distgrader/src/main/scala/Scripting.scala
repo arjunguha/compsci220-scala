@@ -84,17 +84,6 @@ class Scripting(ip: String) {
       .filter(p => Files.isDirectory(p))
   }
 
-  def packageAssignments[A](src: String, moreFiles: ZipBuilder => A): List[Array[Byte]] = {
-
-    assignments(src).map(dir => {
-      val zip = ZipBuilder()
-        .filterAdd(dir, "./", p => p.filename.endsWith(".scala") && p.filename != "GradingMain.scala")
-      moreFiles(zip)
-      zip.build()
-    })
-  }
-
-
   def updateState(file: Path)(body: Rubric => Future[Rubric]) = {
     import MyJsonProtocol._
     import spray.json._
@@ -122,6 +111,5 @@ class Scripting(ip: String) {
     def filename(): String = p.getFileName.toString
 
   }
-
 
 }

@@ -28,6 +28,7 @@ object Main extends App {
 
     case Array("hw1") => GradeHW1.main()
     case Array("hw2") => GradeHW2.main()
+    case Array("hw3") => GradeHW3.main()
     case Array("discussion1") => GradeDiscussion1.main()
     case Array("worker") => {
       import akka.actor.{Props, ActorSystem}

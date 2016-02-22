@@ -12,19 +12,18 @@ object GradeDiscussion1 {
     import scripting._
     import scripting.system.dispatcher
 
+    def testBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {
+      zip.add(s"object GradingMain extends App { import Exercises._; $body }".getBytes,
+        "src/main/scala/GradingMain.scala")
+    }
+
     val dir = "discussion1"
     val lst = assignments(dir).map(dir => {
       updateState(dir.resolve("grading.json")) { case rubric =>
 
-        val prefix = """
-
-        import Exercises._
-
-                     """
-
         val rubric_ = rubric
 
-        SBTTesting.testWithSbt(scripting, dir, prefix, rubric_) {  case root =>
+        SBTTesting.testWithSbt(scripting, dir, testBuilder, rubric_) {  case root =>
           val compiles = root.thenCompile("Check that object Exercises is defined", "()")
 
 

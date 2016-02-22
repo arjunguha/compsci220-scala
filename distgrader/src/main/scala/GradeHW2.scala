@@ -14,21 +14,26 @@ object GradeHW2 {
     import scripting._
     import scripting.system.dispatcher
 
+    def testBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {
+      zip.add(s"""
+        object GradingMain extends App {
+          case class A(x: Int)
+          case class B(y: Int)
+          case class C(z: Int)
+
+          def combine(x: A, y: B): C = C(x.x + y.y)
+
+          import Homework2._
+          $body
+        }
+        """.getBytes,
+        "src/main/scala/GradingMain.scala")
+    }
+
     val lst = assignments("hw2").map(dir => {
       updateState(dir.resolve("grading.json")) { case report =>
 
-        val prefix = """
-        case class A(x: Int)
-        case class B(y: Int)
-        case class C(z: Int)
-
-        def combine(x: A, y: B): C = C(x.x + y.y)
-
-        import Homework2._
-
-        """
-
-        SBTTesting.testWithSbt(scripting, dir, prefix, report) {  case root =>
+        SBTTesting.testWithSbt(scripting, dir, testBuilder, report) {  case root =>
           val compiles = root.thenCompile("Check that object Homework2 is defined", "()")
 
           val map2OK = compiles.thenCompile(
