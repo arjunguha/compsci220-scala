@@ -19,36 +19,37 @@ title: Schedule
 | Thursday, Feb 11  | Due: [HW3]. Out: [HW4]. [Lecture Notes](../reading/gc.pdf)                                      |
 | Tuesday, Feb 16   |  **No class.** (Monday schedule)                                                                |
 | Wednesday, Feb 17 | *Lab:*                                                                                          |
-| Thursday, Feb 18  | Due: [HW4]. Out: [HW5]. [Lecture Notes](../reading/lecture8.pdf)                                |
-| Tuesday, Feb 23   | [Lecture Notes](../reading/lecture9.pdf)                                                        |
-| Wednesday, Feb 24 | *Lab:*                                                                                          |
-| Thursday, Feb 25  | Due: [HW5]. Out: HW6. [Lecture Notes](../reading/lecture10.pdf)                                 |
-| Tuesday, Mar 1    |                                                                                                 |
+| Thursday, Feb 18  | Out: [HW5]. [Lecture Notes](../reading/lecture8.pdf)                                            |
+| Tuesday, Feb 23   | Due: [HW4]. [Lecture Notes](../reading/lecture9.pdf)                                            |
+| Wednesday, Feb 24 | *Lab:*  Steps 1 and 2 of [HW5]                                                                  |
+| Thursday, Feb 25  | [Lecture Notes](../reading/lecture10.pdf)                                                       |
+| Tuesday, Mar 1    | Due: [HW5]. Out: HW6.                                                                           |
 | Wednesday, Mar 2  | *Lab:*                                                                                          |
-| Thursday, Mar 3   | Due: HW6. Out: HW7.                                                                             |
-| Tuesday, Mar 8    |                                                                                                 |
+| Thursday, Mar 3   |                                                                                                 |
+| Tuesday, Mar 8    | Due: HW6. Out: HW7.                                                                             |
 | Wednesday, Mar 9  | *Lab:*                                                                                          |
-| Thursday, Mar 10  | Due: HW7.                                                                                       |
+| Thursday, Mar 10  |                                                                                                 |
+| Friday, Mar 11    | Due: HW7.                                                                                       |
 | Tuesday, Mar 15   | **No class.** (Spring Recess)                                                                   |
 | Wednesday, Mar 16 | **No lab.** (Spring Recess)                                                                     |
 | Thursday, Mar 17  | **No class.** (Spring Recess)                                                                   |
 | Tuesday, Mar 22   | Out: HW8.                                                                                       |
 | Wednesday, Mar 23 | *Lab:*                                                                                          |
 | Thursday, Mar 24  |                                                                                                 |
-| Tuesday, Mar 29   |                                                                                                 |
+| Tuesday, Mar 29   | Due HW8. Out HW9.                                                                               |
 | Wednesday, Mar 30 | *Lab:*                                                                                          |
-| Thursday, Mar 31  | Due: HW8. Out HW9.                                                                              |
-| Tuesday, Apr 5    |                                                                                                 |
+| Thursday, Mar 31  |                                                                                                 |
+| Tuesday, Apr 5    | Due: HW9. Out: HW10.                                                                            |
 | Wednesday, Apr 6  | *Lab:*                                                                                          |
-| Thursday, Apr 7   | Due: HW9. Out: HW10.                                                                            |
-| Tuesday, Apr 12   |                                                                                                 |
+| Thursday, Apr 7   |                                                                                                 |
+| Tuesday, Apr 12   | Due: HW10. Out: HW11.                                                                           |
 | Wednesday, Apr 13 | *Lab:*                                                                                          |
-| Thursday, Apr 14  | Due: HW10. Out: HW11.                                                                           |
-| Tuesday, Apr 19   |                                                                                                 |
+| Thursday, Apr 14  | .                                                                                               |
+| Tuesday, Apr 19   | Due: HW11. Out: HW12.                                                                           |
 | Wednesday, Apr 20 | **No lab.** (Monday schedule)                                                                   |
-| Thursday, Apr 21  | Due: HW11. Out: HW12.                                                                           |
+| Thursday, Apr 21  |                                                                                                 |
 | Tuesday, Apr 26   |                                                                                                 |
-| Wednesday, Apr 27 | *Lab:* Homework help session.                                                                   |
+| Wednesday, Apr 27 | *Lab:*                                                                                          |
 | Friday, Apr 29    | **Not a class day.** Due: HW12.                                                                 |
 {: .table .table-striped :}
 
