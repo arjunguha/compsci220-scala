@@ -62,7 +62,56 @@ object GradeHW3 {
         SBTTesting.testWithSbt(scripting, dir, testBuilder, report) {  case root =>
           val compiles = root.thenCompile("Check that object Homework3 is defined", "()")
 
+          val yearIs = compiles.thenCompile(
+            "Does yearIs have the right type?",
+            """def foo(data: List[List[String]], bound: Int): List[List[String]] = yearIs(data, bound)""",
+            score = 0)
 
+          val yearGT = compiles.thenCompile(
+            "Does yearGT have the right type?",
+            """def foo(data: List[List[String]], bound: Int): List[List[String]] = yearGT(data, bound)""",
+            score = 0)
+
+          val yearLT = compiles.thenCompile(
+            "Does yearLT have the right type?",
+            """def foo(data: List[List[String]], bound: Int): List[List[String]] = yearLT(data, bound)""",
+            score = 0)
+
+          val onlyName = compiles.thenCompile(
+            "Does onlyName have the right type?",
+            """def foo(data: List[List[String]], name: String): List[List[String]] = onlyName(data, name)""",
+            score = 0)
+
+          val mostPopular = compiles.thenCompile(
+            "Does mostPopular have the right type?",
+            """def foo(data: List[List[String]]): (String, Int) = mostPopular(data)""",
+            score = 0)
+
+          val count = compiles.thenCompile(
+            "Does count have the right type?",
+            """def foo(data: List[List[String]]): Int = count(data)""",
+            score = 0)
+
+          val countGirlsAndBoys = compiles.thenCompile(
+            "Does countGirlsAndBoys have the right type?",
+            """def foo(data: List[List[String]]): (Int, Int) = countGirlsAndBoys(data)""",
+            score = 0)
+
+          val unisexNames = compiles.thenCompile(
+            "Does unisexNames have the right type?",
+            """def foo(data: List[List[String]]): Set[String] = unisexNames(data)""",
+            score = 0)
+
+          val expectedAlive = compiles.thenCompile(
+            "Does expectedAlive have the right type?",
+            """def foo(gender: String, birthYear: Int, currentYear: Int): Boolean = expectedAlive(gender, birthYear, currentYear)""",
+            score = 0)
+
+          val estimatePopulation = compiles.thenCompile(
+            "Does estimatePopulation have the right type?",
+            """def foo(data: List[List[String]], year: Int): Int = estimatePopulation(data, year)""",
+            score = 0)
+            
         }
       }
     })
