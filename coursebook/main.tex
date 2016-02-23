@@ -5095,7 +5095,7 @@ def hasPlayerWon(player: Player): Boolean = {
 
 This works because we make a master \scalainline{List[List[Option[Player]]]} of all possible $n$-consecutive cells, and then we ask: does any \scalainline{[List[Option[Player]]} exist whose entries are all \scalainline{player}?  If so, then \scalainline{player} won.
 
-Finally, we need to implement \scalainline{isEmpty}.  All cells must not contain \scalainline{None}:
+Finally, we need to implement \scalainline{isDraw}.  All cells must not contain \scalainline{None}:
 
 \begin{scalacode}
   def isDraw(): Boolean = {
