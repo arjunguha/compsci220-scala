@@ -59,7 +59,7 @@ object Main extends App {
       .text("Start a worker process on this machine (requires Docker locally)")
 
     cmd("start-worker")
-      .action((_, cfg) => cfg.copy(command = Worker))
+      .action((_, cfg) => cfg.copy(command = StartWorker))
       .text("Start workers on Google Compute Engine")
       .children(key("prefix"), key("controller"), int("n"))
 
