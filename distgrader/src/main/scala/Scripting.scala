@@ -46,8 +46,9 @@ object Scripting {
               println(s"No .metadata for $filename")
               FileUtils.deleteDirectory(dir.toFile)
             }
-
-            Files.setLastModifiedTime(dir, Files.getLastModifiedTime(submission))
+            else {
+              Files.setLastModifiedTime(dir, Files.getLastModifiedTime(submission))
+            }
             Files.delete(tgz)
           }
         }
