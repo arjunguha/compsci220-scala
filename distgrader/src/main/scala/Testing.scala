@@ -1,9 +1,7 @@
 package grading
 
 trait TestCase {
-
   def thenCompile(description: String, body: String, score: Int = 10): TestCase
-
   def thenRun(description: String,  body: String, score: Int = 10): TestCase
 }
 
@@ -123,19 +121,6 @@ object SBTTesting {
     }
 
   }
-
-  def testWithSbt(scripting: Scripting, dir: Path, builder: (ZipBuilder, String) => Unit, report: Rubric)(body: TestCase => Unit): Future[Rubric] = {
-
-    import scripting._
-    import scripting.system.dispatcher
-
-
-
-    val root = new RootTestCase(scripting, dir, builder)
-    body(root)
-    root.run(report.tests).map(x => Rubric(x))
-  }
-
 
   def distributedTesting(framework: TestFramework): Unit = {
     import framework._
