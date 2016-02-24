@@ -1,0 +1,13 @@
+student@vm:~$ sbt console
+[info] Loading global plugins from /Users/arjun/.sbt/0.13/plugins
+[info] Set current project to del (in build file:/Users/arjun/scratch/del/)
+[info] Updating {file:/Users/arjun/}arjun...
+[info] Resolving org.fusesource.jansi#jansi;1.4 ...
+[info] Done updating.
+[info] Starting scala interpreter...
+[info]
+Welcome to Scala version 2.11.7 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_60).
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala>

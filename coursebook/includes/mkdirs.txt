@@ -1,0 +1,5 @@
+student@vm:~/lecture1$ mkdir src
+student@vm:~/lecture1$ mkdir src/main
+student@vm:~/lecture1$ mkdir src/main/scala
+student@vm:~/lecture1$ mkdir src/test
+student@vm:~/lecture1$ mkdir src/test/scala

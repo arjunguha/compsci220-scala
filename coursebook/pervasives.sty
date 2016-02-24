@@ -21,15 +21,20 @@
 \lstdefinelanguage{console}{
   basicstyle=\ttfamily\footnotesize,
   mathescape=false,
-  breaklines=true
+  breaklines=true,
+  keywordstyle=\color{blue},
+  morekeywords={student@vm,scala>},
+  alsoletter={:~$},
+  morekeywords=[2]{student@vm:},
+  keywordstyle=[2]{\color{red}},
+  literate={\$}{{\textcolor{red}{\$}}}1
+           {:}{{\textcolor{red}{:}}}1
+           {~}{{\textcolor{red}{\textasciitilde}}}1,
 }
 
 \lstnewenvironment{console}{\lstset{language=console}}{}
 
-% \newcommand{consolefile}[1]{%
-% \lstset{lstconsole}%
-% \protect\lstinputlisting[fontsize=\footnotesize]{#1}%
-% }
+\newcommand{\consolefile}[1]{\lstinputlisting[language=console]{#1}}
 
 %\newtcblisting{console}{colback=red!5!white,notitle,listing style=lstconsole}
 
