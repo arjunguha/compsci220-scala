@@ -92,19 +92,15 @@ object Scripting {
 
 class Scripting(ip: String) {
 
-  import java.nio.file.{Paths, Files, Path, FileSystems}
+  import java.nio.file.{Path}
   import akka.actor.{Props, ActorSystem, Actor}
-  import akka.util.Timeout
   import scala.concurrent._
   import scala.concurrent.duration._
-  import akka.pattern._
   import Messages._
   import scala.collection.JavaConversions._
 
   val system = ActorSystem("controller", AkkaInit.remotingConfig(ip, 5000))
   private val controllerActor = system.actorOf(Props[ControllerActor], name="controller")
-
-  import system.dispatcher
 
   def run(timeout: Int, command: Seq[String], zip: Array[Byte], label: String = "No label"): Future[ContainerExit] = {
     val p = Promise[ContainerExit]()
@@ -112,8 +108,6 @@ class Scripting(ip: String) {
     controllerActor ! (label, p, run)
     p.future
   }
-
-
 
   implicit class RichPath(p: Path) {
 

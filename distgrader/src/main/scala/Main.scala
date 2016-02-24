@@ -2,14 +2,7 @@ package grading
 
 import java.net.InetAddress
 
-import grading.Messages.{Passed, ContainerExit}
-
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-
 object Main extends App {
-
-  import scala.collection.JavaConversions._
 
   val localhost = InetAddress.getLocalHost
 
@@ -28,7 +21,6 @@ object Main extends App {
   case object Summarize extends Command
   case object Forget extends Command
   case object UpdateCSV extends Command
-
 
   case class Config(command: Command, opts: Map[String, String], ints: Map[String, Int])
 

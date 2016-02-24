@@ -4,14 +4,10 @@ object GradeHW2 {
 
   import scala.concurrent._
   import scala.concurrent.duration._
-  import Messages._
-  import edu.umass.cs.zip._
-  import java.nio.file._
   import Scripting._
   def main(): Unit = {
 
     val scripting = new grading.Scripting("10.8.0.6")
-    import scripting._
     import scripting.system.dispatcher
 
     def testBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {

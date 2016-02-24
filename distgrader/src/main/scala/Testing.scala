@@ -59,6 +59,8 @@ object SBTTesting {
     def thenRun(description: String, body: String, score: Int = 10): TestCaseImpl = {
       thenFoo(description, score, body, "run")
     }
+
+    def size(): Int = 1 + children.map(_.size()).sum
   }
 
   class TestCaseImpl(val scripting: Scripting, val dir: Path, val builder: (ZipBuilder, String) => Unit,
