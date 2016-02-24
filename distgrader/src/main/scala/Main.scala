@@ -40,7 +40,7 @@ object Main extends App {
     cmd("grade")
       .action((_, cfg) => cfg.copy(command = Grade))
       .text("Grade an assignment")
-      .children(key("name"))
+      .children(key("name"), key("root"), key("controller"))
 
     cmd("extract")
       .action((_, cfg) => cfg.copy(command = Extract))
@@ -79,17 +79,21 @@ object Main extends App {
       val ints = config.ints
       config.command match {
         case Grade => {
-          opts("name") match {
-            case "hw1" => GradeHW1.main()
-            case "hw2" => GradeHW2.main()
-            case "hw3" => GradeHW3.main()
-            case "hw4" => GradeHW4.main()
-            case "discussion1" => GradeDiscussion1.main()
+          val root = opts("root")
+          val ip = opts("Controller")
+          val framework = opts("name") match {
+            case "hw1" => new HW1Grading(root, ip)
+            case "hw2" => new HW2Grading(root, ip)
+            case "hw3" => new HW3Grading(root, ip)
+            case "hw4" => new HW4Grading(root, ip)
+            case "discussion1" => new Discussion1Grading(root, ip)
             case _ => {
               println("Unknown assignment")
-              System.exit(1)
+              throw new Exception("Unknown assignment")
+
             }
           }
+          SBTTesting.distributedTesting(framework)
         }
         case Worker => {
           import akka.actor.{Props, ActorSystem}

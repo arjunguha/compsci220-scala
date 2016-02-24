@@ -1,5 +1,20 @@
 package grading
 
+trait TestCase {
+
+  def thenCompile(description: String, body: String, score: Int = 10): TestCase
+
+  def thenRun(description: String,  body: String, score: Int = 10): TestCase
+}
+
+trait TestFramework {
+  def zipBuilder(zip: edu.umass.cs.zip.ZipBuilder, content: String): Unit
+  def body(root: TestCase): Unit
+  val assignmentRoot: String
+  val selfIP: String
+  val gradingJson = "grading.json"
+}
+
 object SBTTesting {
 
   import scala.concurrent._
@@ -21,12 +36,6 @@ object SBTTesting {
     }).toMap
   }
 
-  trait TestCase {
-
-    def thenCompile(description: String, body: String, score: Int = 10): TestCase
-
-    def thenRun(description: String,  body: String, score: Int = 10): TestCase
-  }
 
   trait TestCaseLike extends TestCase {
 
@@ -125,6 +134,21 @@ object SBTTesting {
     val root = new RootTestCase(scripting, dir, builder)
     body(root)
     root.run(report.tests).map(x => Rubric(x))
+  }
+
+
+  def distributedTesting(framework: TestFramework): Unit = {
+    import framework._
+    val scripting = new grading.Scripting(selfIP)
+    import scripting.system.dispatcher
+    val lst = Scripting.assignments(assignmentRoot).map(dir => {
+      Scripting.updateState(dir.resolve(gradingJson)) { case report =>
+          val root = new RootTestCase(scripting, dir, zipBuilder)
+          body(root)
+          root.run(report.tests).map(results => Rubric(results))
+      }
+    })
+    Await.result(Future.sequence(lst), Duration.Inf)
   }
 
 }
