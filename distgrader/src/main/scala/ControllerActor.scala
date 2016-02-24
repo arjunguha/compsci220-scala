@@ -1,115 +1,123 @@
 package grading
 
+import akka.actor.PoisonPill
+
 import scala.concurrent.Promise
-import scala.util.{Success, Try}
 
+case class JobComplete(jobRef: akka.actor.ActorRef)
+case class Start(worker: akka.actor.ActorRef)
+case object EnqueueJob
 
-class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
+private class Job(label: String,
+                  command: Messages.Run,
+                  respondTo: scala.concurrent.Promise[Messages.ContainerExit],
+                  controller: akka.actor.ActorRef)
+  extends akka.actor.Actor with akka.actor.ActorLogging {
 
-  import akka.actor.{ActorRef, Terminated}
-  import java.nio.file.Paths
+  import akka.actor.{Terminated, ActorRef, Status}
   import Messages._
-  import scala.concurrent._
+  import java.time.Instant
   import scala.concurrent.duration._
-
-  import this.context._
+  import scala.concurrent._
+  import context.dispatcher
 
   private object Tick
 
-  private val availableWorkers = scala.collection.mutable.Set[ActorRef]()
-  private val busyWorkers = scala.collection.mutable.Map[ActorRef, Job]()
-  private val pendingJobs = scala.collection.mutable.Queue[Job]()
+  private val running = scala.collection.mutable.Map[ActorRef, Instant]()
 
-  private class Job(val label: String, val command: Run, val respondTo: ActorRef) {
-
-    import java.time.Instant
-
-    private val running = scala.collection.mutable.Map[ActorRef, Instant]()
-
-    def start(worker: ActorRef)(implicit ec: ExecutionContext): Unit = {
-        if (running.isEmpty == false) {
-          log.info(s"Retrying $label")
-        }
-        assert(running.contains(worker) == false)
-        val t = Instant.now()
-        worker ! command
-       running += (worker -> t)
-    }
-
-    def complete(result: Try[ContainerExit])(implicit ec: ExecutionContext): Unit = {
-      result match {
-        case scala.util.Failure(exn) => respondTo ! akka.actor.Status.Failure(exn)
-        case Success(x) => respondTo ! x
-      }
-      for (worker <- running.keys) {
-        busyWorkers -= worker
-        availableWorkers += worker
-      }
-      running.clear()
-    }
-
-    def isLate(): Boolean = {
-      val now = Instant.now()
-      running.forall { case (actorRef, startTime) =>
-        startTime.plusSeconds(command.timeout + 30).isBefore(now)
+  def retick(): Unit = {
+    akka.pattern.after(30.seconds, context.system.scheduler) {
+      Future {
+        self ! Tick
       }
     }
-
   }
 
+  def complete(): Unit = {
+    controller ! JobComplete(self)
+    for (w <- running.keys) {
+      controller ! WorkerReady(w)
+    }
+    running.clear()
+    log.info(s"Stopping job $label ($self)")
+    self ! PoisonPill
+  }
+
+  def receive = {
+    case Terminated => {
+      log.info(s"$sender terminated while running $label")
+      running -= sender
+      if (running.isEmpty) {
+        controller ! EnqueueJob
+      }
+    }
+    case Start(worker) => {
+      context.watch(worker)
+      log.info(s"${running.size} workers working on $self")
+      if (running.isEmpty) {
+        retick()
+      }
+      assert(running.contains(worker) == false)
+      val t = Instant.now()
+      worker ! command
+      running += (worker -> t)
+    }
+    case Status.Failure(exn) => {
+      respondTo.failure(exn)
+      complete()
+    }
+    case result: ContainerExit => {
+      log.info(s"Got ContainerExit from $sender to ($self)")
+      respondTo.success(result)
+      complete()
+    }
+    case Tick => {
+      val now = Instant.now()
+      val allLate = running.forall {
+        case (actorRef, startTime) =>
+          startTime.plusSeconds(command.timeout + 30).isBefore(now)
+      }
+
+      if (allLate) {
+        log.info(s"$label is taking a long time on ${running.keySet}")
+        controller ! EnqueueJob
+      }
+      retick()
+    }
+  }
+
+}
+
+class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
+
+  import akka.actor.{Props, ActorRef, Terminated}
+  import Messages._
+
+  private val availableWorkers = scala.collection.mutable.Set[ActorRef]()
+  private val runningJobs = scala.collection.mutable.Set[ActorRef]()
+  private val pendingJobs = scala.collection.mutable.Queue[ActorRef]()
 
 
   def startJobs(): Unit = {
-    if (availableWorkers.isEmpty || pendingJobs.isEmpty) {
-      log.info(s"${pendingJobs.length} jobs queued, ${busyWorkers.size} busy workers. ${availableWorkers.size} idle workers.")
-    }
-    else {
+    log.info(s"${pendingJobs.length} waiting / ${runningJobs.size} busy / ${availableWorkers.size} idle")
+    if (!availableWorkers.isEmpty && !pendingJobs.isEmpty) {
       val worker = availableWorkers.head
       availableWorkers -= worker
       val job = pendingJobs.dequeue
-      job.start(worker)
-      log.info(s"Sent a job to $worker (${job.label})")
-      busyWorkers += worker ->job
+      job ! Start(worker)
+      runningJobs += job
       startJobs()
-    }
-  }
-
-  akka.pattern.after(30.seconds, context.system.scheduler) {
-    Future {
-      self ! Tick
     }
   }
 
   override def receive = {
-    case Tick => {
-      for ((ref, job) <- busyWorkers) {
-        if (job.isLate() && !pendingJobs.contains(job)) {
-          println(s"${job.label} is taking a long time (on $ref)")
-        }
-        pendingJobs.enqueue(job)
-      }
-      startJobs()
-      akka.pattern.after(30.seconds, context.system.scheduler) {
-        Future {
-          self ! Tick
-        }
-      }
+    case JobComplete(job) => {
+      runningJobs -= job
     }
-    case akka.actor.Status.Failure(exn) => {
-      busyWorkers.get(sender) match {
-        case Some(job) => {
-          log.info(s"Failure from ${sender.path} $exn")
-          job.complete(scala.util.Failure(exn))
-          startJobs()
-        }
-        case None => {
-         log.warning(s"Stray failure from ${sender.path}")}
-        }
-    }
-    case WorkerReady(workerRef) => {
-      availableWorkers += workerRef
-      context.watch(workerRef)
-      log.info(s"New worker connected: ${workerRef.path}")
+    case WorkerReady(worker) => {
+      availableWorkers += worker
+      context.watch(worker)
+      log.info(s"New worker connected: $worker")
       startJobs()
     }
     case Terminated(actorRef) => {
@@ -117,32 +125,14 @@ class ControllerActor extends akka.actor.Actor with akka.actor.ActorLogging {
         availableWorkers -= actorRef
         log.info(s"Worker died: ${actorRef.path}")
       }
-      else {
-        busyWorkers.get(actorRef) match {
-          case Some(job) => {
-           log.warning(s"Worker ${actorRef.path} died running job")
-            pendingJobs.enqueue(job)
-            startJobs()
-          }
-          case None => log.warning(s"Received stray Terminated(${actorRef.path})")
-          }
-      }
     }
-    case exit : ContainerExit => {
-      busyWorkers.get(sender) match {
-        case Some(job) => {
-          job.complete(Success(exit))
-          log.info(s"Result from $sender (${job.label}")
-          startJobs()
-        }
-        case None => {
-         log.warning(s"Received stray ContainerExit")
-        }
-      }
+    case EnqueueJob => {
+      pendingJobs.enqueue(sender)
+      startJobs()
     }
-    case (label: String, run : Run) => {
-      val p = Promise[ContainerExit]()
-      pendingJobs.enqueue(new Job(label, run, sender))
+    case (label: String, p: Any, run : Run) => {
+      val job = context.actorOf(Props(new Job(label, run, p.asInstanceOf[Promise[ContainerExit]], self)))
+      pendingJobs.enqueue(job)
       startJobs()
     }
   }

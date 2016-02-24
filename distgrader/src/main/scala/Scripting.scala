@@ -2,6 +2,7 @@ package grading
 
 import java.util.zip.ZipOutputStream
 
+import akka.actor.ActorLogging
 import akka.util.Timeout
 import grading.Messages.ContainerExit
 import org.apache.commons.io.{FileUtils, IOUtils}
@@ -105,22 +106,10 @@ class Scripting(ip: String) {
 
   import system.dispatcher
 
-  class RunActor(promise: Promise[ContainerExit], run: (String, Run)) extends Actor {
-
-    controllerActor ! run
-
-    def receive = {
-      case exit: ContainerExit => {
-        promise.success(exit)
-        context.stop(self)
-      }
-    }
-
-  }
-
   def run(timeout: Int, command: Seq[String], zip: Array[Byte], label: String = "No label"): Future[ContainerExit] = {
     val p = Promise[ContainerExit]()
-    system.actorOf(Props(new RunActor(p,(label, Run("gcr.io/umass-cmpsci220/student", timeout, "/home/student/hw", command, Map("/home/student/hw" -> zip))) )))
+    val run = Run("gcr.io/umass-cmpsci220/student", timeout, "/home/student/hw", command, Map("/home/student/hw" -> zip))
+    controllerActor ! (label, p, run)
     p.future
   }
 
