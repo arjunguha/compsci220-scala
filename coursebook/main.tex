@@ -4996,7 +4996,272 @@ Although there a no values of type \scalainline{Nothing}, an empty list of
 of type \scalainline{List[A]} doesn't contain any values of type \scalainline{A}.
 Therefore, the \scalainline{Nil} object can be given the type \scalainline{List[Nothing]}.
 
-\newdiscussion{TODO -- ??? (Feb 24)}
+\newdiscussion{Generalized Tic Tac Toe (Feb 24)}
+
+Discussion notes for instructors.
+
+\section{Overview}
+
+This discussion will cover tasks 1 and 2 in homework 5.  Students are expected to have read the assignment beforehand, so you do not need to introduce the assignment at the beginning of class.  Furthermore, no new Scala concepts have been introduced, so you should not need to introduce language features.
+
+Discussion works like this: have students pair up and then ask them to start working on a task.  If a student reports that they have already completed the task, then ask them to pair up anyway to assist another student.  After 15 minutes, break, and then guide them briefly through the solution on the chalkboard.
+
+Note that the complete Tic Tac Toe template is appended to the end of these lecture notes.
+
+\section{Homework \#5 Programming Task \#1}
+
+This task is to implement the \scalainline{createGame} method.
+
+After 15 minutes, stop the class.
+
+There are a couple ways that this could be implemented.  A few things to note:
+
+\begin{enumerate}
+  \item Students themselves need to decide what fields to put in the \scalainline{Game} class constructor.
+  \item Nonetheless, \scalainline{Game} will eventually need to access a \scalainline{Matrix[A]} object, which comes with a variety of convenience methods.
+  \item They can either create the \scalainline{Matrix[A]} and then pass it to the \scalainline{Game} constructor, or simply to have the \scalainline{Game} constructor build the \scalainline{Matrix[A]} itself from the \scalainline{board}, which is a \scalainline{Map[(Int, Int), Player]}.  Our homework solution does the former.
+\end{enumerate}
+
+Our \scalainline{createGame} looks like:
+
+\begin{scalacode}
+  def createGame(turn: Player, dim: Int, board: Map[(Int, Int), Player]): Board = {
+      new Game(turn, Matrix.fromMap(dim, None, board.mapValues(p => Some(p))))
+  }
+\end{scalacode}
+
+Note that we use the \scalainline{Map[T,U].mapValues} method to create a \scalainline{Map[T,Option[U]]}.  Why do we do this?  The \scalainline{board} that is passed to the \scalainline{createGame} method only represents the filled-in moves in the game.  But at some point we will need to know \scalainline{nextBoards()}.  If we represent available cells with \scalainline{None}, then we can easily find all available next moves by simply enumerating all of the cells containing \scalainline{None}.  I suggest drawing two Tic Tac Toe boards on the chalkboard to demonstrate this concept (one containing just \scalainline{Player}s, and the other contain \scalainline{Option[Player]}s).
+
+The \scalainline{Game} constructor thus looks like:
+
+\begin{scalacode}
+  class Game(val turn: Player, matrix: Matrix[Option[Player]]) extends GameLike[Game] { ... }
+\end{scalacode}
+
+\section{Homework \#5 Programming Task \#2}
+
+This task is to implement the \scalainline{Game.isFinished()} method.
+
+After 15 minutes, stop the class.
+
+There are four cases for the state of any \scalainline{Game}:
+
+\begin{enumerate}
+  \item Player \scalainline{X} won.
+  \item Player \scalainline{O} won.
+  \item The game is a draw (i.e., all the entries are filled-in but neither player won).
+  \item The game is not finished.
+\end{enumerate}
+
+This translates into the very simple:
+
+\begin{scalacode}
+  def isFinished(): Boolean = {
+    hasPlayerWon(X) || hasPlayerWon(O) || isDraw()
+  }
+\end{scalacode}
+
+Of course, now we need to define a few more things.
+
+A player wins if there are $n$ consecutive player marks (remember, this is $n \times n$ Tic Tac Toe).  There are three cases:
+
+\begin{enumerate}
+  \item There are $n$ player marks in a row.
+  \item There are $n$ player marks in a column.
+  \item There are $n$ player marks in a diagonal.
+\end{enumerate}
+
+Conveniently, \scalainline{Matrix[Option[Player]]} has a few methods that return rows, columns, and diagonals.
+
+\begin{enumerate}
+  \item \scalainline{rows()} returns a \scalainline{List[List[Option[Player]]]}, i.e., a \scalainline{List} containing each row (\scalainline{List[Option[Player]]}).
+  \item \scalainline{cols()} returns a \scalainline{List[List[Option[Player]]]}, i.e., a \scalainline{List} containing each column (\scalainline{List[Option[Player]]}).
+  \item \scalainline{mainDiagonal()} and \scalainline{antiDiagonal()} each return a \scalainline{List[Option[Player]]}.
+\end{enumerate}
+
+So one implementation for \scalainline{hasPlayerWon} is:
+
+\begin{scalacode}
+def hasPlayerWon(player: Player): Boolean = {
+  val allPossibleWins =
+    boardMatrix.mainDiagonal() ::
+    boardMatrix.antiDiagonal() ::
+    boardMatrix.rows() :::
+    boardMatrix.cols()
+
+  allPossibleWins.exists { row => row.forall { cell => cell == Some(player) } }
+}
+\end{scalacode}
+
+This works because we make a master \scalainline{List[List[Option[Player]]]} of all possible $n$-consecutive cells, and then we ask: does any \scalainline{[List[Option[Player]]} exist whose entries are all \scalainline{player}?  If so, then \scalainline{player} won.
+
+Finally, we need to implement \scalainline{isDraw}.  All cells must not contain \scalainline{None}:
+
+\begin{scalacode}
+  def isDraw(): Boolean = {
+    matrix.rows.forall { row =>
+      row.forall { cell => !cell.isEmpty }
+    }
+  }
+\end{scalacode}
+
+You could alternately use \scalainline{Option[T].isDefined} and flip the condition in the lambda.
+
+\section{Templates}
+
+In \texttt{src/main/scala/Solution.scala} you will find:
+
+\begin{scalacode}
+class Game(/* add fields here */) extends GameLike[Game] {
+
+  def isFinished(): Boolean = ???
+
+  /* Assume that isFinished is true */
+  def getWinner(): Option[Player] = ???
+
+  def nextBoards(): List[Game] = ???
+}
+
+object Solution extends MinimaxLike {
+
+  type T = Game // T is an "abstract type member" of MinimaxLike
+
+  def createGame(turn: Player, dim: Int, board: Map[(Int, Int), Player]): Game = ???
+
+  def minimax(board: Game): Option[Player] = ???
+
+}
+\end{scalacode}
+
+In \texttt{src/main/scala/Provided.scala} you will find:
+
+\begin{scalacode}
+// You'll need to read and understand this file, but don't change its contents.
+// Do not change the contents of this file
+
+sealed trait Player
+case object X extends Player
+case object O extends Player
+
+trait GameLike[T <: GameLike[T]] {
+
+  def isFinished(): Boolean
+
+  /** Assume that isFinished} is true. */
+  def getWinner(): Option[Player]
+
+  def nextBoards(): List[T]
+}
+
+trait MinimaxLike {
+
+  type T <: GameLike[T]
+
+  def createGame(turn: Player, dim: Int, board: Map[(Int, Int), Player]): T
+
+  def minimax(board: T): Option[Player]
+
+}
+
+class Matrix[A] private(val dim: Int, default: A, values: Map[(Int, Int), A]) {
+
+  def set(x: Int, y: Int, value: A): Matrix[A] = {
+    require(x >= 0 && x < dim)
+    require(y >= 0 && y < dim)
+    new Matrix[A](dim, default, values + ((x, y) -> value))
+  }
+
+  def rows(): List[List[A]] = {
+    0.to(dim - 1).toList.map { row =>
+      0.to(dim - 1).toList.map { col =>
+        values.getOrElse((row, col), default)
+      }
+    }
+  }
+
+  def cols(): List[List[A]] = {
+    0.to(dim - 1).toList.map { col =>
+      0.to(dim - 1).toList.map { row =>
+        values.getOrElse((row, col), default)
+      }
+    }
+  }
+
+  def mainDiagonal(): List[A] = {
+    0.to(dim - 1).toList.map { n =>
+      values.getOrElse((n, n), default)
+    }
+  }
+
+  def antiDiagonal(): List[A] = {
+    0.to(dim - 1).toList.map { n =>
+      values.getOrElse((dim - n - 1, n), default)
+    }
+  }
+
+  def toList[B](f: (Int, Int, A) => B): List[B] = {
+    0.to(dim - 1).map { row =>
+      0.to(dim - 1).map { col =>
+        f(row, col, values.getOrElse((row, col), default))
+      }
+    }.flatten.toList
+  }
+
+  def toMap(): Map[(Int, Int), A] = values
+
+  def get(x: Int, y: Int): A = {
+    require(x >= 0 && x < dim)
+    require(y >= 0 && y < dim)
+    values.getOrElse((x, y), default)
+  }
+
+  override def toString(): String = {
+    val builder = new StringBuilder((dim + 1) * dim)
+    for (y <- 0.to(dim - 1)) {
+      for (x <- 0.to(dim - 1)) {
+        builder ++= values.getOrElse((x, y), default).toString
+      }
+      builder ++= "\n"
+    }
+    builder.toString
+  }
+
+  override def hashCode(): Int = {
+    (for (i <- 0.until(dim); j <- 0.until(dim)) yield {
+       this.get(i, j).hashCode
+     }).sum
+  }
+
+  override def equals(other: Any): Boolean = other match {
+    case other: Matrix[_] => {
+      other.isInstanceOf[Matrix[_]] &&
+      this.dim == other.dim &&
+      (for (i <- 0.until(dim); j <- 0.until(dim)) yield {
+        this.get(i, j) == other.get(i, j)
+       }).forall(identity)
+    }
+    case _ => false
+  }
+
+}
+
+object Matrix {
+
+  def apply[A](dim: Int, init: A): Matrix[A] = {
+    new Matrix(dim, init, Map.empty)
+  }
+
+  def fromMap[A](dim: Int, default: A, values: Map[(Int, Int), A]) = {
+    for (((x, y), _) <- values) {
+      require(x >= 0 && x < dim)
+      require(y >= 0 && y < dim)
+    }
+    new Matrix(dim, default, values)
+  }
+
+}
+
+\end{scalacode}
 
 \newlecture
 
@@ -5556,13 +5821,13 @@ quite annoying. We'll learn how to address this problem soon.
 \section{Bounded Quantification in the Java and Scala standard libraries}
 
 Bounded quantification is used extensively in libraries. For example,
-here is the signature of the \javacode{Integer} class in Java:
+here is the signature of the \javainline{Integer} class in Java:
 
 \begin{scalacode}
 public final class Integer extends Number implements Comparable<Integer>
 \end{scalacode}
 
-The standard \javacode{Comparable} interface is very similar to the one we
+The standard \javainline{Comparable} interface is very similar to the one we
 defined.
 
 
