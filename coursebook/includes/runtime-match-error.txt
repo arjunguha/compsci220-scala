@@ -1,0 +1,8 @@
+scala> getURL("hello")
+java.lang.RuntimeException: not a library item
+ at scala.sys.package$.error(package.scala:27)
+  at cmpsci220.package$$anonfun$1.apply(package.scala:13)
+  at cmpsci220.package$$anonfun$1.apply(package.scala:13)
+  at .getURL(<console>:38)
+  ... 33 elided
+

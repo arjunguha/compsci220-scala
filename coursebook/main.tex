@@ -1084,18 +1084,10 @@ def getURL(item: Any): String = item match {
 }
 \end{scalacode}
 
-This definition is unsatisfactory. \verb|getURL| takes values of \verb|Any|
+This definition is unsatisfactory. \verb|getURL| takes values of 
+\verb|Any|
 type. So, it is really easy to get a runtime error:
-
-\begin{console}
-scala> getURL("hello")
-java.lang.RuntimeException: not a library item
- at scala.sys.package$.error(package.scala:27)
-  at cmpsci220.package$$anonfun$1.apply(package.scala:13)
-  at cmpsci220.package$$anonfun$1.apply(package.scala:13)
-  at .getURL(<console>:38)
-  ... 33 elided
-\end{console}
+\consolefile{includes/runtime-match-error.txt}
 
 To eliminate this kind of error, we need an \verb|Item| type:
 
@@ -4280,7 +4272,7 @@ The right way to use \scalainline{headOption} is with your old friend, \emph{pat
 \begin{scalacode}
 val friends : List[String] = List("Anja", "Brent", "Ammar")
 val firstFriend : String = friends.headOption match {
-  case Some(friend) => s"My first friend is ${friend}."
+  case Some(friend) => "My first friend is " + friend + "."
   case None => "I have no friends!"
 }
 // firstFriend: String = My first friend is Anja.
