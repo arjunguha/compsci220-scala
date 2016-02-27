@@ -1,29 +1,19 @@
-package cmpsci220.hw.sudoku
+package hw.sudoku
 
 trait SudokuLike {
-
   type T <: BoardLike[T]
-
   def parse(board: String): T
-
   def peers(row: Int, col: Int): Iterable[(Int, Int)]
-
 }
 
 abstract class BoardLike[T <: BoardLike[T]] {
 
   def valueAt(row: Int, col: Int): Option[Int]
-
   def isSolved(): Boolean
-
   def availableValuesAt(row: Int, col: Int): Iterable[Int]
-
   def place(row: Int, col: Int, value: Int): T
-
   def isUnsolvable(): Boolean
-
   def nextStates(): Iterable[T]
-
   def solve(): Option[T]
 
   private def toStringUsingValueAt(): String = {
