@@ -31,15 +31,17 @@ trait ListLike[E, L] {
 
   /** Produces the head of this list.
    *
-   * @throws java.lang.IllegalArgumentException If this list is empty.
+   * @return [[scala.None]] if the list has no head and {@code Some x} if {@code x} is the
+   *                  head of the list.
    */
-  def head(): E
+  def head(): Option[E]
 
   /** Produces the tail of this list.
    *
-   * @throws java.lang.IllegalArgumentException If this list is empty.
+   * @return [[scala.None]] if the list has no tail and {@code Some x} if {@code x} is the
+   *                  tail of the list.
    */
-  def tail(): L
+  def tail(): Option[L]
 
   /** Produces a new list with {@code head} as the head and this object as
    *  the tail.
@@ -54,15 +56,15 @@ sealed trait MyList[A] extends ListLike[A, MyList[A]]
 
 case class Cons[A](hd: A, tl: MyList[A]) extends MyList[A] {
   def isEmpty(): Boolean = false
-  def head() = hd
-  def tail() = tl
+  def head() = Some(hd)
+  def tail() = Some(tl)
   def cons(newHd: A) = new Cons(newHd, this)
 }
 
 case class Empty[A]() extends MyList[A] {
   def isEmpty(): Boolean = true
-  def head() = throw new Exception("empty list")
-  def tail() = throw new Exception("empty list")
+  def head() = None
+  def tail() = None
   def cons(newHd: A) = new Cons(newHd, this)
 }
 

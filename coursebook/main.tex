@@ -5743,19 +5743,15 @@ is a typical list that implements the \scalainline{ListLike} trait.
   binary trees:
   \begin{scalacode}
   sealed trait BinTree[A]
-  case class Node(lhs: BinTree[A], value: A, rhs: BinTree[A]) extends BinTree[A]
+  case class Node[A](lhs: BinTree[A], value: A, rhs: BinTree[A]) extends BinTree[A]
   case class Leaf[A]() extends BinTree[A]	
   \end{scalacode}
   
   Furthermore, have \scalainline{BinTree} extend \scalainline{ListLike}.
-  
-  \begin{instructor}
-  Note that this can be done in two ways. The methods could be implemented
-  in \scalainline{BinTree} by pattern-matching, or written in an 
-  object-oriented style by implementing them in \scalainline{Node}
-  and \scalainline{Leaf}.
-  \end{instructor}
-  
+  The \emph{head} of a binary-tree is the value on the left-most node
+  and the \emph{tail} of a binary-tree is the tree with the left-most 
+  value removed.
+    
   \item In \texttt{Solution.scala}, create an object called \scalainline{ListFunctions} with the following functions:
   
     \begin{enumerate}
@@ -5799,7 +5795,7 @@ is a typical list that implements the \scalainline{ListLike} trait.
 \section{Extending Traits}
 
 The package \scalainline{hw.generics} defines three traits \scalainline{T1},
-\scalainline{T2}, \scalainline{T3}, and \scalainline{T4} 
+\scalainline{T2}, and \scalainline{T3}
 that define exactly the same
 set of methods, but have a different set of type-parameters.
 In \texttt{Solution.scala}, create the following classes:
@@ -5827,16 +5823,62 @@ class C3[A](x: A) {
 class C4[A](x: Int, y: C4[A]) {
   def f(a: Int, b: C4[A]): C4[A] = b
   def g(c: Int): C4[A] = y
-  def h(d: C4[A]): Int = d
+  def h(d: C4[A]): Int = x
 }	
 \end{scalacode}
 
 Moreover, have these classes extend as many of the traits 
-traits \scalainline{T1}, \scalainline{T2}, \scalainline{T3}, and
-\scalainline{T4} as possible. Some classes may be able to extend several
+traits \scalainline{T1}, \scalainline{T2}, and \scalainline{T3}
+as possible. Some classes may be able to extend several
 traits. \textbf{You should not modify the class bodies.}
 
 \input{handin}
+
+\section{Template}
+
+You can use the following template for \texttt{Solution.scala}:
+\begin{scalacode}
+import hw.generics._
+
+sealed trait BinTree[A]
+case class Node[A](lhs: BinTree[A], value: A, rhs: BinTree[A]) extends BinTree[A]
+case class Leaf[A]() extends BinTree[A]
+
+object ListFunctions {
+  // def filter(f, alist)
+  // def append(alist1, alist2)
+  def sort[A <: Ordered[A], C <: ListLike[A, C]](alist: C): C = ???
+}
+
+class C1 {
+  // Do not change the class body. Simply extend T1, T2, and/or T3.
+  def f(a: Int, b: Int): Int = 0
+  def g(c: String): String = ""
+  def h(d: String): Int = 0
+}
+
+class C2 {
+  // Do not change the class body. Simply extend T1, T2, and/or T3.
+  def f(a: Int, b: Int): Int = 0
+  def g(c: Int):  Int = 0
+  def h(d: Int): Int = 0
+}
+
+
+class C3[A](x: A) {
+  // Do not change the class body. Simply extend T1, T2, and/or T3.
+  def f(a: Int, b: A): Int = 0
+  def g(c: A): String = ""
+  def h(d: String): A = x
+}
+
+class C4[A](x: Int, y: C4[A]) {
+  // Do not change the class body. Simply extend T1, T2, and/or T3.
+  def f(a: Int, b: C4[A]): C4[A] = b
+  def g(c: Int): C4[A] = y
+  def h(d: C4[A]): Int = x
+}	
+\end{scalacode}
 
 \newlecture
 
@@ -6586,7 +6628,7 @@ Your \texttt{build.sbt} file must have exactly these lines:
 
 \begin{scalacode}
 resolvers += "PLASMA" at "https://dl.bintray.com/plasma-umass/maven"
-libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.0.0"
+libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.0.1"
 parallelExecution in Test := false
 fork in Test := true
 \end{scalacode}
