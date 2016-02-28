@@ -23,10 +23,10 @@ title: Schedule
 | Tuesday, Feb 23   | Due: [HW4]. [Lecture Notes](../reading/lecture9.pdf)                                            |
 | Wednesday, Feb 24 | *Lab:*  Steps 1 and 2 of [HW5]                                                                  |
 | Thursday, Feb 25  | [Lecture Notes](../reading/lecture10.pdf)                                                       |
-| Tuesday, Mar 1    | Due: [HW5]. Out: HW6.                                                                           |
-| Wednesday, Mar 2  | *Lab:*                                                                                          |
+| Tuesday, Mar 1    | Due: [HW5]. Out: HW6. [Lecture Notes](../reading/lecture11.pdf)                                 |
+| Wednesday, Mar 2  | *Lab:* Steps 1 and 2(a) of HW6.                                                                 |
 | Thursday, Mar 3   |                                                                                                 |
-| Tuesday, Mar 8    | Due: HW6. Out: HW7.                                                                             |
+| Tuesday, Mar 8    | Due: HW6. Out: HW7. [Lecture Notes](../reading/lecture13.pdf)                                   |
 | Wednesday, Mar 9  | *Lab:*                                                                                          |
 | Thursday, Mar 10  |                                                                                                 |
 | Friday, Mar 11    | Due: HW7.                                                                                       |
