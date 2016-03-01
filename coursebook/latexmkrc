@@ -2,4 +2,3 @@ $pdf_mode = 1;
 $postscript_mode = 0;
 $dvi_mode = 0;
 $bibtex_use = 2;
-$pdflatex = 'pdflatex --shell-escape %O %S';

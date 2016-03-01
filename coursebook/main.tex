@@ -1068,7 +1068,7 @@ def getURL(item: Any): String = item match {
 }
 \end{scalacode}
 
-This definition is unsatisfactory. \verb|getURL| takes values of 
+This definition is unsatisfactory. \verb|getURL| takes values of
 \verb|Any|
 type. So, it is really easy to get a runtime error:
 \consolefile{includes/runtime-match-error.txt}
@@ -2434,16 +2434,16 @@ Here is a more compact way of making the same argument:
 \begin{array}{l|l|l}
  & \textrm{Expression} & \textrm{Reasoning} \\
 \hline
-& \scalainline{val x = 20; def f(x: Int): Int = { x + 5 }; f(10) + x}
+& \lstinline[language=scala]|val x = 20; def f(x: Int): Int = { x + 5 }; f(10) + x|
 & \textrm{Original expression} \\
-= & \scalainline{def f(x: Int): Int = { x + 5 }; f(10) + 20}
-& \textrm{Substitute \scalainline{x} with \scalainline{20}} \\
-= & \scalainline{(10 + 5) + 20}
-& \textrm{Inline \scalainline{f} and substitute \scalainline{x} with \scalainline{10}} \\
-= & \scalainline{15 + 20}
-& \textrm{Evaluate \scalainline{10 + 5}} \\
-= & \scalainline{35}
-& \textrm{Evaluate \scalainline{15 + 20}}
+= & \lstinline[language=scala]|def f(x: Int): Int = { x + 5 }; f(10) + 20|
+& \textrm{Substitute \lstinline[language=scala]|x| with \lstinline[language=scala]|20|} \\
+= & \lstinline[language=scala]|(10 + 5) + 20|
+& \textrm{Inline \lstinline[language=scala]|f| and substitute \lstinline[language=scala]|x| with \lstinline[language=scala]|10|} \\
+= & \lstinline[language=scala]|15 + 20|
+& \textrm{Evaluate \lstinline[language=scala]|10 + 5|} \\
+= & \lstinline[language=scala]|35|
+& \textrm{Evaluate \lstinline[language=scala]|15 + 20|}
 \end{array}
 \]
 
@@ -2470,21 +2470,16 @@ definition of \scalainline{add10}:
 \begin{array}{l|l|l}
  & \textrm{Expression} & \textrm{Reasoning} \\
 \hline
-& \multicolumn{2}{l}{\scalainline{
-def makeAdder(x: Int): Int => Int = { def add(y): Int = { x + y }; add }; val add10 = makeAdder(10)}}  \\
-= & \scalainline{
-val add10 = { def add(y): Int = { x + 10 }; add }
-} & \textrm{Inline \scalainline{makeAdder} and substitute \scalainline{y} with
-\scalainline{10}} \\
-= & \scalainline{
-val add10 = { val add = ((y: Int) => { x + 10 }); add }
-} & \textrm{Rewrite \scalainline{add} using \scalainline{val} notation} \\
-= & \scalainline{
-val add10 = ((y: Int) => { x + 10 })
-} & \textrm{Substitute \scalainline{add} with its definition} \\
-= & \scalainline{
-def add10(y: Int) = x + 10
-} & \textrm{Rewrite \scalainline{add} using \scalainline{def} notation}
+& \multicolumn{2}{l}
+{\lstinline[language=scala]|def makeAdder(x: Int): Int => Int = { def add(y): Int = { x + y }; add }; val add10 = makeAdder(10)|}  \\
+= & \lstinline[language=scala]|val add10 = { def add(y): Int = { x + 10 }; add }|
+& \textrm{Inline \lstinline[language=scala]|makeAdder| and substitute \lstinline[language=scala]|y| with
+\lstinline[language=scala]|10|} \\
+= & \lstinline[language=scala]|val add10 = { val add = ((y: Int) => { x + 10 }); add }| & \textrm{Rewrite \lstinline[language=scala]|add| using \lstinline[language=scala]|val| notation} \\
+= & \lstinline[language=scala]|val add10 = ((y: Int) => { x + 10 })|
+& \textrm{Substitute \lstinline[language=scala]|add| with its definition} \\
+= & \lstinline[language=scala]|def add10(y: Int) = x + 10|
+& \textrm{Rewrite \lstinline[language=scala]|add| using \lstinline[language=scala]|def| notation}
 \end{array}
 \]
 
@@ -4788,7 +4783,7 @@ the body of the function is not re-examined.
 
 \begin{instructor}
 This is \emph{declaration-site variance}, as found in C\# and Scala. Java
-does \emph{use-site variance}. John Altidor's papers summarize the differences 
+does \emph{use-site variance}. John Altidor's papers summarize the differences
 better than most stuff on the Web.
 \end{instructor}
 
@@ -5695,7 +5690,7 @@ defined.
 
 \newhw{Generics}
 
-This assignment will exercise your knowledge of generic interfaces,covariance 
+This assignment will exercise your knowledge of generic interfaces,covariance
 and bounded quantification.
 
 \section{Preliminaries}
@@ -5739,55 +5734,55 @@ is a typical list that implements the \scalainline{ListLike} trait.
 
 \begin{enumerate}
 
-  \item In \texttt{Solution.scala}, create the following type for 
+  \item In \texttt{Solution.scala}, create the following type for
   binary trees:
   \begin{scalacode}
   sealed trait BinTree[A]
   case class Node[A](lhs: BinTree[A], value: A, rhs: BinTree[A]) extends BinTree[A]
-  case class Leaf[A]() extends BinTree[A]	
+  case class Leaf[A]() extends BinTree[A]
   \end{scalacode}
-  
+
   Furthermore, have \scalainline{BinTree} extend \scalainline{ListLike}.
   The \emph{head} of a binary-tree is the value on the left-most node
-  and the \emph{tail} of a binary-tree is the tree with the left-most 
+  and the \emph{tail} of a binary-tree is the tree with the left-most
   value removed.
-    
+
   \item In \texttt{Solution.scala}, create an object called \scalainline{ListFunctions} with the following functions:
-  
+
     \begin{enumerate}
-    
+
       \item Create a function \scalainline{filter(f, alist)}
       where \scalainline{alist} is a list-like collection and
       \scalainline{f} is a predicate that can be applied to elements in
       the list. The function should produce a new list-like collection
       with the same type as \scalainline{alist} that only contains the
       elements on which \scalainline{f} produces \scalainline{true}.
-      
+
       i.e., this filtering function should behave exactly the same
       as Scala's filtering function.
-      
+
       \item Create a function \scalainline{append(alist1, alist2)}, where
       \scalainline{alist1} and \scalainline{alist2} are two list-like
       collections of the same type. The result should be a new list-like
       collection (with the same type as \scalainline{alist1} and
       \scalainline{alist2}) that has the elements of \scalainline{alist1}
       followed by the elements of \scalainline{alist2} in order.
-      
+
       i.e., on linked lists, \scalainline{append(alist1, alist2)} should
       behave in a manner simlar to \scalainline{alist1 ++ alist2}. 
       \item Define a function that sorts in ascending order with the
       following name and type:
-      
+
       \begin{scalacode}
       def sort[A <: hw.generics.Ordered[A], C <: hw.generics.ListLike[A, C]](alist: C): C = {
         ...
-      }	
+      }
       \end{scalacode}
-    
+
     \end{enumerate}
-    
+
     You should test applying these functions to the provided
-    \scalainline{MyList} type and to the \scalainline{BinTree} type that 
+    \scalainline{MyList} type and to the \scalainline{BinTree} type that
     you defined. You should also be able to apply it any other new data
     structure that extends the \scalainline{ListLike} trait. 
 \end{enumerate}
@@ -5824,10 +5819,10 @@ class C4[A](x: Int, y: C4[A]) {
   def f(a: Int, b: C4[A]): C4[A] = b
   def g(c: Int): C4[A] = y
   def h(d: C4[A]): Int = x
-}	
+}
 \end{scalacode}
 
-Moreover, have these classes extend as many of the traits 
+Moreover, have these classes extend as many of the traits
 traits \scalainline{T1}, \scalainline{T2}, and \scalainline{T3}
 as possible. Some classes may be able to extend several
 traits. \textbf{You should not modify the class bodies.}
@@ -5877,7 +5872,7 @@ class C4[A](x: Int, y: C4[A]) {
   def f(a: Int, b: C4[A]): C4[A] = b
   def g(c: Int): C4[A] = y
   def h(d: C4[A]): Int = x
-}	
+}
 \end{scalacode}
 
 \newlecture
@@ -5893,7 +5888,7 @@ class C4[A](x: Int, y: C4[A]) {
 	\item \emph{Covariance}: If the class is annotated \scalainline{Container[+T]}, then the type-checker ensures we can't write to values of type \scalainline{T} within the class.
 	\item Traits can take type parameters too, just like classes. When we extend a trait, we need to supply the type parameters.
 	\item Bounded quantification: The type parameter\scalainline{C[A]} means that \scalainline{A} could be any type. We can write \scalainline{C[A <: B]} to restrict it to types that extend \scalainline{B}, which allows us to invoke \scalainline{B}-methods on values of type \scalainline{A}.
-\end{itemize}	
+\end{itemize}
 \end{instructor}
 
 \section{Variance and method arguments\classtime{20}}
@@ -5905,19 +5900,19 @@ it can store two values:
 class Two[+T](private val x: T, private val y: T) {
   def get1(): T = x
   def get2(): T = y
-}	
+}
 \end{scalacode}
 This container uses a covariance annotation, so when \scalainline{A <: B},
-we have \scalainline{Two[A] <: Two[B]}. Recall that the 
-intuition for subtyping is that \scalainline{Two[A]} can be used 
-wherever a \scalainline{Two[B]} is expected. Now, suppose we modify the class to 
+we have \scalainline{Two[A] <: Two[B]}. Recall that the
+intuition for subtyping is that \scalainline{Two[A]} can be used
+wherever a \scalainline{Two[B]} is expected. Now, suppose we modify the class to
 add functional update methods:
 \begin{scalacode}
 class Two[+T](private val x: T, private val y: T) {
   ...
   def update1(newX: T): Two[T] = new Two(newX, y)
   def update2(newY: T): Two[T] = new Two(x, newY)
-}	
+}
 \end{scalacode}
 This is a natural operation on containers and we should be able to write it.
 But, let's ensure that even with this operation, \scalainline{Two[A]} can
@@ -5935,7 +5930,7 @@ class Poodle extends Dog {
 \end{scalacode}
 
 We should be able to use a \scalainline{Two[Poodle]} in all contexts where
-a \scalainline{Two[Dog]} is expected. 
+a \scalainline{Two[Dog]} is expected.
 
 
 Consider the following function, which simply updates a container to
@@ -5943,7 +5938,7 @@ store a \scalainline{Dog}:
 \begin{scalacode}
 def store[A <: Two[Dog]](x: A): A = x.update1(new Dog)
 \end{scalacode}
-However, it uses bounded-quantification to any subtype of 
+However, it uses bounded-quantification to any subtype of
 \scalainline{Two[Dog]}. Therefore, we can apply it to a \scalainline{Poodle}
 container and know that the result is still a \scalainline{Poodle}
 container. Of course, this isn't true, since the function stores
@@ -5965,8 +5960,8 @@ a covariant type parameter as the type of a method argument.
 The problem with the code above is that when a \scalainline{Two[A]}
 is treated as a \scalainline{Two[B]}, we can update the container to
 store any \scalainline{B}-typed value, which then breaks code that expects
-\scalainline{A}-typed values. Instead, we need to ensure that we can only store 
-subtypes of \scalainline{A} in the container. We can express this constraint 
+\scalainline{A}-typed values. Instead, we need to ensure that we can only store
+subtypes of \scalainline{A} in the container. We can express this constraint
 using bounded-quantification:
 
 \begin{scalacode}
@@ -6026,17 +6021,17 @@ sealed trait List[A] {
 \end{figure}
 
 \begin{instructor}
-This section is quite rough. I'd start by getting students to derive the expression data-structure from examples.	
+This section is quite rough. I'd start by getting students to derive the expression data-structure from examples.
 \end{instructor}
 
 
-To understand generics, we've had to develop an intuition for how the Scala 
-type-checker works. A deep understanding of the Scala (or Java) type system is 
+To understand generics, we've had to develop an intuition for how the Scala
+type-checker works. A deep understanding of the Scala (or Java) type system is
 beyond the scope of this class. However, it is important to have a reasonably
 accurate mental model of type-checking to understand and debug type-errors.
 
 \Cref{scalafragment} is a data structure that represents a fragment of
-Scala expressions, including numbers, boolean, addition, the less-than operator, 
+Scala expressions, including numbers, boolean, addition, the less-than operator,
 if-expressions, and identifiers (bound with \scalainline{val}). Since
 the only values in this fragment are integers and booleans, we can represent
 types as follows:
@@ -6044,7 +6039,7 @@ types as follows:
 \begin{scalacode}
 sealed trait Type
 case object TInt extends Type
-case object TBool extends Type	
+case object TBool extends Type
 \end{scalacode}
 
 Ignoring identifiers, we can write a simple recursive function to type-check
@@ -6072,7 +6067,7 @@ object TypeChecker {
       case _ => throw TypeError
     }
   }
-}	
+}
 \end{scalacode}
 \caption{Type-checking, excluding identifiers}\label{simpletc}
 \end{figure}
@@ -6104,7 +6099,7 @@ object TypeChecker {
     case EVal(x, e1, e2) => tc(env + (x -> tc(env, e1)), e2)
     case EId(x) => env.getOrElse(x, throw TypeError)
   }
-}	
+}
 \end{scalacode}
 \caption{Type-checking identifiers.}\label{tcid}
 \end{figure}
@@ -6249,7 +6244,7 @@ def sameFringe[T](t1: BinTree[T], t2: BinTree[T]) = sameFringeRec(fringe(t1), fr
 \scalafile{includes/implicits/Vector2D.java}
 \caption{A simple vector library in Java.}
 \label{vector2d}
-\end{subfigure}	
+\end{subfigure}
 \quad\vrule\quad
 \begin{subfigure}{.45\textwidth}
 \begin{scalacode}
@@ -6257,11 +6252,11 @@ class Vector2D(x: Double, y: Double) {
   def +(other: Vector2D): Vector2D = {
     new Vector2D(this.x + other.x, this.y + other.y)
   }
-  
+
   def *(factor: Double): Vector2D = {
     new Vector2D(factor * x, factor * y)
   }
-  
+
   def unary_- = new Vector2D(-x, -y)
 }
 \end{scalacode}
@@ -6272,9 +6267,9 @@ class Vector2D(x: Double, y: Double) {
 
 
 A powerful feature of Scala is that can interoperate almost seamlessly with
-Java code. So, we can use any Java library from Scala. 
+Java code. So, we can use any Java library from Scala.
 
-Imagine we were using a Java library for vectors, such as the one shown in 
+Imagine we were using a Java library for vectors, such as the one shown in
 \cref{vector2d}. Although this is high-quality Java code, it can feel
 very cumbersome to use from Scala. Compares to the terse Scala programs
 we've been writing, we have to write lots of verbose method calls:
@@ -6300,7 +6295,7 @@ class VecAdaptor(vec: Vector2D) {
   def +(other: VecAdaptor)= new VecAdaptor(vec.add(other.vec))
   def *(factor: Double) = new VecAdaptor(vec.mul(factor))
   def unary_- = new VecAdaptor(vec.neg())
-}	
+}
 \end{scalacode}
 
 This is an example of the \emph{adaptor pattern}. Imagine that
@@ -6312,9 +6307,9 @@ very tiresome.
 
 \section{Implicit Classes}
 
-In principle, we want to take an existing class, \scalainline{Vector2D}, and add 
+In principle, we want to take an existing class, \scalainline{Vector2D}, and add
 the methods \scalainline{+}, \scalainline{*}, etc. to  it.
- However, classes cannot be modified after they are declared, so we need to 
+ However, classes cannot be modified after they are declared, so we need to
  create a wrapper. However, instead of explicitly wrapping the class,
  we can create an \emph{implicit class} as follows:
 \begin{scalacode}
@@ -6339,8 +6334,8 @@ Here is a simpler example:
 \begin{scalacode}
 (new Vector2D(50, 60)) * 30
 \end{scalacode}
-Normally, this expression would not type-check, since \scalainline{Vector2D} 
-does not have a method \scalainline{*} that accepts integers. However, there is 
+Normally, this expression would not type-check, since \scalainline{Vector2D}
+does not have a method \scalainline{*} that accepts integers. However, there is
 an implicit class that wraps \scalainline{Vector2D} that does accept
 integers, so the expression is transformed to:
 \begin{scalacode}
@@ -6348,7 +6343,7 @@ integers, so the expression is transformed to:
 \end{scalacode}
 
 
-The \scalainline{RichVector2D} implicit class lets us write 
+The \scalainline{RichVector2D} implicit class lets us write
 \scalainline{(new Vector2D(50, 60)) * 30}, but we can't write
 \scalainline{30 * (new Vector2D(50, 60))}, as it assumes that builtin
 integers have a \scalainline{*} method that accepts vectors. However,
@@ -6357,7 +6352,7 @@ we can create an implicit class that wraps built-in integers too:
 \begin{scalacode}
 implicit class RichInt(n: Int) {
   def *(v: Vector2D): Vector2D = v.mul(n)
-}	
+}
 \end{scalacode}
 
 Scala's type-checker rewrites \scalainline{3 * ...} to \scalainline{(new RichInt(3)) * ...}.
@@ -6388,28 +6383,28 @@ val v1: Vector2D = (2, 3)
 \begin{figure}
 \scalafile{includes/implicits/Implicits.scala}
 \caption{Implicits should be placed in their own object.}
-\label{vectorimplicits}	
+\label{vectorimplicits}
 \end{figure}
 
 
 Code that uses a lot of implicit conversions can become
 very unreadable very quickly. So, you should use them with case.
 Moreover, when there are several implicit classes available,
-it may be ambiguous which conversion is used. When there is 
+it may be ambiguous which conversion is used. When there is
 ambiguity, Scala will simply signal an error.
-When designing Scala APIs, it is considered good practice to place implicits in 
+When designing Scala APIs, it is considered good practice to place implicits in
 their own object, so that users have to opt-in to using them. For example,
 we may declare our implicit conversions for vectors as shown in
 \cref{vectorimplicits}. Now, to use these implicits, we would have to
 write:
 \begin{scalacode}
-import Implicits._	
+import Implicits._
 \end{scalacode}
 This is a signal to the reader that implicit conversions are being used.
 
 \begin{think}
-If you know an untyped language such as JavaScript or Python, think about what 
-it would take to do something similar to implicit classes. 	
+If you know an untyped language such as JavaScript or Python, think about what
+it would take to do something similar to implicit classes.
 \end{think}
 
 \section{Built-in Implicits in Scala}
@@ -6600,16 +6595,16 @@ use a 5MB stack. You can pass JVM options into SBT by prefixing them with \textt
 \newhw{Sudoku}
 
 For this assignment, you will write a Sudoku solver. To do so, you will
-(1) use Scala collections extensively, (2) implement a \emph{backtracking 
+(1) use Scala collections extensively, (2) implement a \emph{backtracking
 search} algorithm, and (3) implement \emph{constraint propagation}.
 
 
 \section{Preliminaries}
 
-We assume you know how to play Sudoku. If you don't, you should play a few 
+We assume you know how to play Sudoku. If you don't, you should play a few
 games by hand, before attempting this assignment.
 
-The support code for this assignment is in the \scalainline{hw.sudoku} 
+The support code for this assignment is in the \scalainline{hw.sudoku}
 package. You should create a directory-tree that looks like this:
 
 \dirtree{%
@@ -6641,13 +6636,13 @@ addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.1")
 
 \section{Overview}
 
-A Sudoku board is a 9-by-9 grid, where each cell is either blank or has a 
-value in the range 1--9. For this assignment, we'll use strings of length 
-81 to represent Sudoku boards, where each block of nine characters 
+A Sudoku board is a 9-by-9 grid, where each cell is either blank or has a
+value in the range 1--9. For this assignment, we'll use strings of length
+81 to represent Sudoku boards, where each block of nine characters
 represents a successive row. For example, the following string:
 
 \begin{scalacode}
-val puzzle = 
+val puzzle =
   "....8.3...6..7..84.3.5..2.9...1.54.8.........4.27.6...3.1..7.4.72..4..6...4.1...3"
 \end{scalacode}
 
@@ -6659,13 +6654,13 @@ Represents the following board:
   &   &   &   & 8 &   & 3 &    & \\
 \hline
   & 6 &   &   & 7 &   &   & 8 & 4 \\
-\hline  
+\hline
   & 3 &   & 5 &   &   & 2 &   & 9 \\
 \hline \hline
   &   &   & 1 &   & 5 & 4 &   & 8 \\
 \hline
   &   &   &   &   &   &   &   &   \\
-\hline  
+\hline
 4 &   & 2 & 7 &   & 6 &   &   &   \\
 \hline \hline
 3 &   & 1 &   &   & 7 &   & 4 &   \\
@@ -6692,7 +6687,7 @@ exactly 81 characters. This part of the assignment should be trivial.
 
 Solving Sudoku puzzles is much harder, but we'll walk you through it.
 
-\emph{Backtracking search} is a recursive algorithm that operates as 
+\emph{Backtracking search} is a recursive algorithm that operates as
 follows. Given a a Sudoku board, $B$:
 
 \begin{itemize}
@@ -6707,24 +6702,24 @@ follows. Given a a Sudoku board, $B$:
 \end{itemize}
 
 
-This approach will work in principle. But, in practice there are too many 
-boards to search: there are 81 squares, and each square can hold 10 values 
-(a digit or blank). Therefore, there are $10^{81}$ possible boards, which 
+This approach will work in principle. But, in practice there are too many
+boards to search: there are 81 squares, and each square can hold 10 values
+(a digit or blank). Therefore, there are $10^{81}$ possible boards, which
 exceeds the
 \href{http://en.wikipedia.org/wiki/Observable_universe#Matter_content_.E2.80.94_number_of_atoms}{number of atoms in the observable universe}.
 
-To actually solve Sudoku problems, we need to combine backtracking search 
-with \emph{constraint propogation}. When you play Sudoku yourself, every 
-time you fill a digit into a cell, you can eliminate that digit from 
-several other cells. For example, if you fill 2 into the top-left corner 
-of the board above, you can eliminate 2 from the first row, first column, 
-and first box. i.e., there is no point even trying to place 2 in those 
+To actually solve Sudoku problems, we need to combine backtracking search
+with \emph{constraint propogation}. When you play Sudoku yourself, every
+time you fill a digit into a cell, you can eliminate that digit from
+several other cells. For example, if you fill 2 into the top-left corner
+of the board above, you can eliminate 2 from the first row, first column,
+and first box. i.e., there is no point even trying to place 2 in those
 spots, since the 2 in the corner \emph{constrains} those cells.
 
 
 We'll augment backtracking search with constraint propagation, which
-implements this intuition. The key idea is to store not the value at a 
-cell, but the \emph{set of values} that may be placed in a cell. For 
+implements this intuition. The key idea is to store not the value at a
+cell, but the \emph{set of values} that may be placed in a cell. For
 example, on the empty board the values 1---9 may be placed at any cell:
 
 \[
@@ -6734,13 +6729,13 @@ example, on the empty board the values 1---9 may be placed at any cell:
 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
 \hline
 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
-\hline  
+\hline
 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
 \hline \hline
 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
 \hline
 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
-\hline  
+\hline
 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
 \hline \hline
 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
@@ -6752,10 +6747,10 @@ example, on the empty board the values 1---9 may be placed at any cell:
 \end{array}
 \]
 
-With this representation, when we place a value at a cell, we eliminate it 
+With this representation, when we place a value at a cell, we eliminate it
 from the other cells in the same row, column, and box (collectively known
 as the \emph{peers} of a cell). For example, if we place 5 at the top-
-left corner of the empty board, we can eliminate 5 from the peers of the 
+left corner of the empty board, we can eliminate 5 from the peers of the
 top-left corner:
 
 
@@ -6766,13 +6761,13 @@ top-left corner:
 5 & 1234~6789 & 1234~6789 & 1234~6789 & 1234~6789 & 1234~6789 & 1234~6789 & 1234~6789 & 1234~6789 \\
 \hline
 1234~6789 & 1234~6789 & 1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
-\hline  
+\hline
 1234~6789 & 1234~6789 & 1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
 \hline \hline
 1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
 \hline
 1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
-\hline  
+\hline
 1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
 \hline \hline
 1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
@@ -6784,7 +6779,7 @@ top-left corner:
 \end{array}
 \]
 
-This procedure will significantly reduce the number of boards that need to 
+This procedure will significantly reduce the number of boards that need to
 be visited.
 
 \section{Programming Task}
@@ -6845,20 +6840,20 @@ class Board(val available: Map[(Int, Int), List[Int]]) extends BoardLike[Board] 
   def solve(): Option[Board] = {
     throw new UnsupportedOperationException("not implemented")
   }
-}	
+}
 \end{scalacode}
-\caption{Template for Sudoku}\label{sudokutemplate}	
+\caption{Template for Sudoku}\label{sudokutemplate}
 \end{figure}
 
 
-Your task is to implement the \scalainline{SolutionLike} and 
-\scalainline{BoardLike} traits. You can use the template in 
+Your task is to implement the \scalainline{SolutionLike} and
+\scalainline{BoardLike} traits. You can use the template in
 \cref{sudokutemplate} to do so.
 
 We recommend proceeding in this order and testing as you go along:
 
 \begin{enumerate}
-	
+
 \item Implement \scalainline{Solution.peers}. \scalainline{peers(r, c)}  produces the coordinates of all cells in the same row as \scalainline{r}, same column as \scalainline{c}, and same block as \scalainline{(r,c)}.
 
    Do not include \scalainline{(r, c)} in the set of its peers. i.e.,  \scalainline{peers(r,c).contains((r, c)) == false}.
