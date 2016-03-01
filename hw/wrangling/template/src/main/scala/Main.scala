@@ -22,8 +22,13 @@ object Homework3 {
   /** Restrict the data to the name `name`. */
   def onlyName(data: List[List[String]], name: String): List[List[String]] = ???
 
-  /** Calculate the most popular name and the number of children born with
-      that name. */
+  /** Calculate the most popular name and the *total* number of children born
+      with that name.
+
+      Hint: It is likely that children are born with the same
+      name in several years. So, you should first calculate the total
+      number of childen with each name.
+   */
   def mostPopular(data: List[List[String]]): (String, Int) = ???
 
   /** Calculate the number of children born in the given dataset. */
