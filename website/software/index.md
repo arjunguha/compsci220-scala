@@ -52,52 +52,23 @@ a virtual machine, you can run Scala without a VM by following these directions:
 
 3. Install [Cygwin](http://www.cygwin.com).
 
-4. Start the Cygwin command-line (By default, the installer will create a shortcut on your
-   Desktop) and enter the following commands:
-
-       mkdir "/cygdrive/c/Users/$USERNAME/.sbt"
-       mkdir "/cygdrive/c/Users/$USERNAME/.sbt/0.13"
-       mkdir "/cygdrive/c/Users/$USERNAME/.sbt/0.13/plugins"
-       echo 'addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.1")' > "/cygdrive/c/Users/$USERNAME/.sbt/0.13/plugins/plugins.sbt"
-
-5. To verify that everything installed, type `sbt` to start SBT. You should see
-   output that looks like this:
-
-       [info] Loading global plugins from /Users/arjun/.sbt/0.13/plugins
-       [info] Updating {file:/Users/arjun/.sbt/0.13/plugins/}global-plugins...
-       [info] Resolving org.fusesource.jansi#jansi;1.4 ...
-       [info] downloading https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/edu.umass.cs/cmpsci220/scala_2.10/sbt_0.13/3.0.0/jars/cmpsci220.jar ...
-       [info]   [SUCCESSFUL ] edu.umass.cs#cmpsci220;3.0.0!cmpsci220.jar (1261ms)
-
+4. Verify that everything installed by typing `sbt` to start SBT from the
+   Cygwin terminal.
 
 ## Mac OS X
 
 
 1. Install [Homebrew](http://brew.sh) (follow the directions on the website).
 
-2. Install Java:
+2. Install Java from the Terminal:
 
        brew cask install java
 
-3. Install SBT:
+3. Install SBT from the Terminal:
 
        brew install sbt
 
-4. Install the SBT plugin:
-
-       mkdir ~/.sbt
-       mkdir ~/.sbt/0.13
-       mkdir ~/.sbt/0.13/plugins
-       echo 'addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.1")' > ~/.sbt/0.13/plugins/plugins.sbt
-
-5. To verify that everything installed, type `sbt` to start SBT. You should see
-   output that looks like this:
-
-       [info] Loading global plugins from /Users/arjun/.sbt/0.13/plugins
-       [info] Updating {file:/Users/arjun/.sbt/0.13/plugins/}global-plugins...
-       [info] Resolving org.fusesource.jansi#jansi;1.4 ...
-       [info] downloading https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/edu.umass.cs/cmpsci220/scala_2.10/sbt_0.13/3.0.0/jars/cmpsci220.jar ...
-       [info]   [SUCCESSFUL ] edu.umass.cs#cmpsci220;3.0.0!cmpsci220.jar (1261ms)
+5. To verify that everything installed, type `sbt` to start SBT.
 
 ## Linux (Ubuntu)
 
@@ -107,7 +78,6 @@ a virtual machine, you can run Scala without a VM by following these directions:
        apt-get update
        apt-get install -y oracle-java8-installer
 
-
 2. Install SBT:
 
        wget http://dl.bintray.com/sbt/debian/sbt-0.13.9.deb
@@ -115,23 +85,7 @@ a virtual machine, you can run Scala without a VM by following these directions:
        rm sbt-0.13.9.deb
        apt-get -f -y install
 
-
-3. Install the SBT plugin:
-
-       mkdir ~/.sbt
-       mkdir ~/.sbt/0.13
-       mkdir ~/.sbt/0.13/plugins
-       echo 'addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.1")' > ~/.sbt/0.13/plugins/plugins.sbt
-
-4. To verify that everything installed, type `sbt` to start SBT. You should see
-   output that looks like this:
-
-       [info] Loading global plugins from /Users/arjun/.sbt/0.13/plugins
-       [info] Updating {file:/Users/arjun/.sbt/0.13/plugins/}global-plugins...
-       [info] Resolving org.fusesource.jansi#jansi;1.4 ...
-       [info] downloading https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/edu.umass.cs/cmpsci220/scala_2.10/sbt_0.13/3.0.0/jars/cmpsci220.jar ...
-       [info]   [SUCCESSFUL ] edu.umass.cs#cmpsci220;3.0.0!cmpsci220.jar (1261ms)
-
+3. To verify that everything installed, type `sbt` to start SBT.
 
 [virtual machine]: http://en.wikipedia.org/wiki/Virtual_machine
 [VirtualBox]: https://www.virtualbox.org/wiki/Downloads
