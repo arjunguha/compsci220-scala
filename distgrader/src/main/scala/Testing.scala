@@ -52,7 +52,7 @@ object SBTTesting {
           .filterAdd(dir, "", p => p.filename.endsWith(".scala") && p.filename != "GradingMain.scala")
         builder(zipBuilder, body)
         val zip = zipBuilder.build()
-        scripting.run(45, Seq("sbt", verb), zip, label = s"$description for $dir").map(_.toResultByCode(score))
+        scripting.run(120, Seq("sbt", verb), zip, label = s"$description for $dir").map(_.toResultByCode(score))
       })
       children = test :: children
       test
@@ -134,6 +134,7 @@ object SBTTesting {
       }
     })
     Await.result(Future.sequence(lst), Duration.Inf)
+    Await.result(scripting.system.terminate(), Duration.Inf)
   }
 
 }

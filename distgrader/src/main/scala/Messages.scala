@@ -4,6 +4,8 @@ import java.text.DecimalFormat
 
 object Messages {
 
+  case class SerializedException(exn: String) extends Throwable
+
   case class WorkerReady(actor: akka.actor.ActorRef)
   case object AreYouReady
   case class Run(image: String, timeout: Int, workingDir: String, command: Seq[String], volumes: Map[String, Array[Byte]])

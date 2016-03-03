@@ -62,7 +62,14 @@ private class Job(label: String,
       worker ! command
       running += (worker -> t)
     }
+    case Status.Failure(exn : SerializedException) => {
+      log.error(s"Receivedfserializedailure from $sender: ${exn.exn}")
+      respondTo.failure(exn)
+      complete()
+    }
+
     case Status.Failure(exn) => {
+      log.error(s"Received failure from $sender: $exn")
       respondTo.failure(exn)
       complete()
     }
@@ -74,12 +81,16 @@ private class Job(label: String,
     case Tick => {
       val now = Instant.now()
       val allLate = running.forall {
-        case (actorRef, startTime) =>
-          startTime.plusSeconds(command.timeout + 30).isBefore(now)
+        case (actorRef, startTime) => {
+          val isLate = startTime.plusSeconds(command.timeout + 30).isBefore(now)
+          if (isLate) {
+            log.info(s"$label started on $actorRef at $startTime")
+          }
+          isLate
+        }
       }
 
-      if (allLate) {
-        log.info(s"$label is taking a long time on ${running.keySet}")
+      if (allLate && running.size < 3) {
         controller ! EnqueueJob
       }
       retick()

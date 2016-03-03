@@ -1,6 +1,7 @@
 package grading
 
-import java.io.ByteArrayInputStream
+import java.io.{ByteArrayOutputStream, OutputStream, ByteArrayInputStream}
+import scala.util.Try
 import java.util.zip.GZIPInputStream
 
 import com.spotify.docker.client.DockerClient.ExecStartParameter
@@ -74,22 +75,26 @@ object Worker {
 
       docker.startContainer(container.id)
 
-      try {
+      val result = try {
         Await.result(Future {
           val exit = docker.waitContainer(container.id).statusCode
           val stdout = loan(docker.logs(container.id, DockerClient.LogsParam.stdout))(_.readFully)
           val stderr = loan(docker.logs(container.id, DockerClient.LogsParam.stderr))(_.readFully)
-          docker.removeContainer(container.id, true)
-          ContainerExit(exit, stdout, stderr)
+          val maxLen = 1024 * 1024
+          ContainerExit(exit, stdout.take(maxLen), stderr.take(maxLen))
         }, timeoutSeconds.seconds)
       }
       catch {
         case exn: TimeoutException => {
-          docker.killContainer(container.id)
-          docker.removeContainer(container.id, true)
           ContainerExit(-1, s"Program did not terminate after $timeoutSeconds seconds", "")
         }
       }
+      if (docker.inspectContainer(container.id).state().running()) {
+        docker.killContainer(container.id)
+      }
+      docker.removeContainer(container.id, true)
+      result
+
     }
     finally {
       FileUtils.deleteDirectory(root.toFile)

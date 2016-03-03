@@ -46,6 +46,10 @@ object Main extends App {
       .action((_, cfg) => cfg.copy(command = Extract))
      .children(key("src"), key("dst"))
 
+    cmd("upload-worker")
+      .action((_, cfg) => cfg.copy(command = UploadWorker))
+
+
     cmd("worker")
       .action((_, cfg) => cfg.copy(command = Worker))
       .text("Start a worker process on this machine (requires Docker locally)")
@@ -80,7 +84,7 @@ object Main extends App {
       config.command match {
         case Grade => {
           val root = opts("root")
-          val ip = opts("Controller")
+          val ip = opts("controller")
           val framework = opts("name") match {
             case "hw1" => new HW1Grading(root, ip)
             case "hw2" => new HW2Grading(root, ip)
@@ -95,6 +99,7 @@ object Main extends App {
             }
           }
           SBTTesting.distributedTesting(framework)
+
         }
         case Worker => {
           import akka.actor.{Props, ActorSystem}

@@ -63,8 +63,8 @@ class WorkerActor extends akka.actor.Actor with  akka.actor.ActorLogging {
           sender ! result
         }
         case Failure(exn) => {
-          log.error(s"Docker job raised an exception\n$exn")
-          sender ! Status.Failure(exn)
+          log.error(s"Docker job raised an exception $exn")
+          sender ! Status.Failure(SerializedException(exn.toString))
         }
       }
     }

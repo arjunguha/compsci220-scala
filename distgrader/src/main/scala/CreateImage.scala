@@ -48,6 +48,7 @@ object CreateImage {
 
     val inst = SimpleInstance(name = name,
       sourceImage = "global/images/worker-template",
+      isPreemptible = true,
       metadata = Map("startup-script" -> script,
                      "controller-host" -> controllerHost,
                      "signature" -> upickle.default.write(sig)))
