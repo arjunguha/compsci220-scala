@@ -5714,7 +5714,7 @@ Your \texttt{build.sbt} file must have exactly these lines:
 
 \begin{scalacode}
 resolvers += "PLASMA" at "https://dl.bintray.com/plasma-umass/maven"
-libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.0.0"
+libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.0.1"
 \end{scalacode}
 
 The \texttt{project/plugins.sbt} file must have exactly this line:
@@ -6112,6 +6112,13 @@ this basic design.
 
 \section{The \emph{Same Fringe} Problem}
 
+\begin{instructor}
+These notes are not ready to release.
+
+Notice that the fringe generator looks a lot like the function that returns the fringe as a list!	
+\end{instructor}
+
+
 \begin{figure}
 \begin{scalacode}
 def fringe[A](t: BinTree[A]): List[A] = t match {
@@ -6235,9 +6242,6 @@ def sameFringe[T](t1: BinTree[T], t2: BinTree[T]) = sameFringeRec(fringe(t1), fr
 \label{sameFringeFun}
 \end{figure}
 
-
-\newdiscussion{TODO -- Dan (Mar 2)}
-
 \newlecture
 \begin{figure}
 \begin{subfigure}{.45\textwidth}
@@ -6250,11 +6254,13 @@ def sameFringe[T](t1: BinTree[T], t2: BinTree[T]) = sameFringeRec(fringe(t1), fr
 \begin{scalacode}
 class Vector2D(x: Double, y: Double) {
   def +(other: Vector2D): Vector2D = {
-    new Vector2D(this.x + other.x, this.y + other.y)
+    new Vector2D(this.x + other.x, 
+                 this.y + other.y)
   }
 
   def *(factor: Double): Vector2D = {
-    new Vector2D(factor * x, factor * y)
+    new Vector2D(factor * x, 
+                 factor * y)
   }
 
   def unary_- = new Vector2D(-x, -y)
@@ -6271,7 +6277,7 @@ Java code. So, we can use any Java library from Scala.
 
 Imagine we were using a Java library for vectors, such as the one shown in
 \cref{vector2d}. Although this is high-quality Java code, it can feel
-very cumbersome to use from Scala. Compares to the terse Scala programs
+very cumbersome to use from Scala. Compared to the terse Scala programs
 we've been writing, we have to write lots of verbose method calls:
 \begin{scalacode}
 val v1 = new Vector2D(2, 3)
@@ -6388,7 +6394,7 @@ val v1: Vector2D = (2, 3)
 
 
 Code that uses a lot of implicit conversions can become
-very unreadable very quickly. So, you should use them with case.
+very unreadable very quickly. So, you should use them with care.
 Moreover, when there are several implicit classes available,
 it may be ambiguous which conversion is used. When there is
 ambiguity, Scala will simply signal an error.
@@ -6421,14 +6427,9 @@ list of implicits that are available.
 Show the Process and Duration DSLs if there is time.
 \end{instructor}
 
-\newhw{Kitchen Sink: Pre-Spring Break Assignment}
-
-TODO
-
-Something that covers everything done so far. Due after Spring Break. Try to make students
-write at least 700 lines of code.
-
 \newlecture
+
+
 
 \newlecture
 

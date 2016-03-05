@@ -8,7 +8,8 @@ public class Vector2D {
   }
 
   public Vector2D mul(Double factor) {
-    return new Vector2D(factor * x, factor * y);
+    return new Vector2D(factor * x,
+                        factor * y);
   }
 
   public Vector2D add(Vector2D other) {
