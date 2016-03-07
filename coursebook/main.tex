@@ -6115,7 +6115,7 @@ this basic design.
 \begin{instructor}
 These notes are not ready to release.
 
-Notice that the fringe generator looks a lot like the function that returns the fringe as a list!	
+Notice that the fringe generator looks a lot like the function that returns the fringe as a list!
 \end{instructor}
 
 
@@ -6243,6 +6243,178 @@ def sameFringe[T](t1: BinTree[T], t2: BinTree[T]) = sameFringeRec(fringe(t1), fr
 \end{figure}
 
 \newlecture
+
+\section{The $n$-Queens Problem}
+
+The $n$-queens problem is to place $n$ queens on an $n \times n$ chessboard
+such that no queens threaten each other.
+If you aren't familiar with the
+rules of Chess: a queen is a chess piece that move horizontally, vertically,
+or diagonally across a chessboard, which is typically an $8 \times 8$ matrix.
+A queen can ``kill'' any piece that it can move to, so it is unsafe to be
+on the same horziontal, vertical, or diagonal line as a queen. The $n$-queens
+problem is to arrange $n$-queens on a generalized $n \times n$ chessboard,
+such that no pair of queens can kill each other.
+
+The $n$-queens problem is a canonical example of a constraint-satisfaction
+problem that can be solved by backtracking search. In this lecture, we'll
+begin with a naive implementation of backtracking search, and then refine
+it to use constraint-propagation, which will make it a lot faster.
+
+\section{A trait for chessboards}
+
+\begin{figure}
+\scalafile{includes/nqueens/src/main/scala/ChessBoardLike.scala}
+\caption{A trait for chessboards.}
+\label{ChessBoardLike}
+\end{figure}
+
+Since we are going to go through a few different representations of chessboards,
+it will help to factor out generic code that prints the representation of
+chessboards. The \scalainline{ChessBoardLike} trait in \cref{ChessBoardLike}
+defines a \scalainline{toString} method that prints a chessboard of queens,
+where each queen is printed as \texttt{Q} and each blank space appears as
+\texttt{.}. This printing method requires the implementing class to have
+a field that specifies that dimensions of the chessboard and set of coordinates
+that describe where the queens are placed.
+
+\section{Backtracking Search}
+
+\begin{figure}
+\scalafile{includes/nqueens/src/main/scala/NaiveQueens.scala}
+\caption{A naive solution to the $n$-queens problem.}
+\label{NaiveQueens}
+\end{figure}
+
+The core idea of any solution to the $n$-queens problem is to write a recursive
+function (called \scalainline{solve}) that places 1 new queen on the current
+board in a position where it does not threaten any existing queen and then
+recursively calls \scalainline{solve} to place the remaining queens. The
+function terminates sucessfully when $n$ queens have been placed on the board.
+The function terminates with an error if there are no positions where the next
+queen can be safely placed. In any application of \scalainline{solve}, there may
+be several positions where a queen can be safely placed. The key to backtracking
+is to try a new position if the recursive application produces an error.
+
+\Cref{NaiveQueens} shows a simple implementation of this idea. The key function
+is the \scalainline{canPlace} predicate which determines if a new queen
+maybe placed at coordinates $(x,y)$ by checking if there are any existing
+queens in the set \scalainline{solution} on the same row, column, diagonal,
+or antidiagonal.
+
+\begin{instructor}
+These notes could be expanded substantially in the future.
+\end{instructor}
+
+We can run the solver as follows:
+
+\begin{scalacode}
+(new NaiveQueens(n, Set())).solve()
+\end{scalacode}
+With $n = 11$, the solver produces a solution in less than a second on my
+laptop, with $n = 12$, it takes 55 seconds, and $n = 13$ would take much longer.
+
+\section{Constraint Propagation}
+
+\begin{figure}
+\scalafile{includes/nqueens/src/main/scala/OptQueens.scala}
+\caption{A constraint-propagating solution to the $n$-queens problem.}
+\label{OptQuuens}
+\end{figure}
+
+\Cref{OptQueens} shows a variant of the naive solver that is substantially
+faster. The key idea to store a set of locations where a queen can be placed
+without violating any constraints and then prune the set whenever a new queen
+is placed.
+
+
+
+\newlecture
+
+
+\section{Scheduling Exams}
+
+One of the many responsibilities of the university registrar
+is to come up with an exam schedule that works for all students.
+The university has nearly 30,000 students who approximately 4 courses
+from a menu of over 2,000 courses. During
+exam period, each class has to be assigned a unique date, time, and
+room, such that no student has to be in two places at the same
+time. Fortunately, we don't have a mid-term, but let's consider
+how to solve the exam scheduling problem. More generally,
+exam scheduling is an example of a constraint satisfaction
+problem, and we will first learn to solve it using
+\emph{backtracking search}.
+
+\section{Modeling Schedules}
+
+If we represent each student by their Spire ID and each course
+with its catalog number, we can represent a map from students
+to the set of courses that they take with the following
+types\footnote{If you're concerned about the runtime cost of allocating new objects, lookup \href{http://docs.scala-lang.org/overviews/core/value-classes.html}{value classes}.}:
+\begin{scalacode}
+case class Student(spireID: Int)
+case class Course(catalogID: Int)
+type StudentSchedule = Map[Student, Set[Course]]
+\end{scalacode}
+
+The university has several rooms, which we can represent
+using their name (e.g., ``CS140''). Moreover, each
+room has a finite capacity, which is very relevant for exam
+scheduling. We can use the following types to represent
+rooms and their capacities:
+\begin{scalacode}
+case class Room(name: String)
+type Capacities = Map[Room, Int]
+\end{scalacode}
+
+Let's say that there are $n$ time slots for each exam, so an
+exam schedule maps each room and time to a course:
+%
+\begin{scalacode}
+case class Time(n: Int)
+type ExamSchedule = Map[(Room, Time), Course]
+\end{scalacode}
+
+A schedule is \emph{valid} if every course is given exactly one
+exam:
+\begin{scalacode}
+def isValidExamSchedule(schedule: ExamSchedule, allCourses: List[Course]): Boolean = {
+  val scheduleList = schedule.toList
+  allCourses.forall { course =>
+    scheduleList.filter({ case (loc, c) => c == course }).length == 1
+  }
+}
+\end{scalacode}
+
+Moreover, a schedule is \emph{consistent} if no student has to be in two places
+at once:
+
+\begin{scalacode}
+def isConsistentExamSchedule(exams: ExamSchedule,
+                             students: StudentSchedule): Boolean = {
+  val invExams = exams.toList.map(pair => (pair._2, pair._1)).toMap
+  def hasDuplicateTimes(alist: List[(Room, Time)]): Boolean = {
+    alist.length == alist.toSet.size
+  }
+  students.map(p => p._2)
+    .toList
+    .forall(courses => hasDuplicateTimes(courses.map(c => invExams(c))))
+}
+\end{scalacode}
+
+Therefore, an exam schedule has to be valid and consistent to be acceptable
+to all students.
+
+\section{Finding a solution}
+
+We will use what is called a \emph{greedy algorithm} to pick an exam schedule.
+We write a recursive function that in each recursive call, assigns a class
+to a slot, verifies that the schedule is still consistent and valid and then
+recurs. If
+
+\newlecture
+
 \begin{figure}
 \begin{subfigure}{.45\textwidth}
 \scalafile{includes/implicits/Vector2D.java}
@@ -6254,12 +6426,12 @@ def sameFringe[T](t1: BinTree[T], t2: BinTree[T]) = sameFringeRec(fringe(t1), fr
 \begin{scalacode}
 class Vector2D(x: Double, y: Double) {
   def +(other: Vector2D): Vector2D = {
-    new Vector2D(this.x + other.x, 
+    new Vector2D(this.x + other.x,
                  this.y + other.y)
   }
 
   def *(factor: Double): Vector2D = {
-    new Vector2D(factor * x, 
+    new Vector2D(factor * x,
                  factor * y)
   }
 
@@ -6347,7 +6519,6 @@ integers, so the expression is transformed to:
 \begin{scalacode}
 (new RichVector2D(new Vector2D(50, 60))) * 30
 \end{scalacode}
-
 
 The \scalainline{RichVector2D} implicit class lets us write
 \scalainline{(new Vector2D(50, 60)) * 30}, but we can't write
