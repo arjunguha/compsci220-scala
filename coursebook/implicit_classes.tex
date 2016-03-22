@@ -1,0 +1,184 @@
+\newlecture
+
+\begin{figure}
+\begin{subfigure}{.45\textwidth}
+\scalafile{includes/implicits/Vector2D.java}
+\caption{A simple vector library in Java.}
+\label{vector2d}
+\end{subfigure}
+\quad\vrule\quad
+\begin{subfigure}{.45\textwidth}
+\begin{scalacode}
+class Vector2D(x: Double, y: Double) {
+  def +(other: Vector2D): Vector2D = {
+    new Vector2D(this.x + other.x,
+                 this.y + other.y)
+  }
+
+  def *(factor: Double): Vector2D = {
+    new Vector2D(factor * x,
+                 factor * y)
+  }
+
+  def unary_- = new Vector2D(-x, -y)
+}
+\end{scalacode}
+\caption{A similar library in Scala.}
+\label{vector2dscala}
+\end{subfigure}
+\end{figure}
+
+
+A powerful feature of Scala is that can interoperate almost seamlessly with
+Java code. So, we can use any Java library from Scala.
+
+Imagine we were using a Java library for vectors, such as the one shown in
+\cref{vector2d}. Although this is high-quality Java code, it can feel
+very cumbersome to use from Scala. Compared to the terse Scala programs
+we've been writing, we have to write lots of verbose method calls:
+\begin{scalacode}
+val v1 = new Vector2D(2, 3)
+val v2 = v1.add(v1).mul(3)
+\end{scalacode}
+If the library had been written in Scala, it may look more like the
+code in \cref{vector2dscala}, which would allow us to write the
+following code instead:
+\begin{scalacode}
+val v1 = new Vector2D(2, 3)
+val v2 = (v1 + v1) * 3
+\end{scalacode}
+Imagine that this is a large, full-featured, and well-tested library, so
+it would be foolish to rewrite the whole thing, just to get a nicer
+API.
+
+One solution is to ``wrap'' the Java API in Scala class, as shown below:
+
+\begin{scalacode}
+class VecAdaptor(vec: Vector2D) {
+  def +(other: VecAdaptor)= new VecAdaptor(vec.add(other.vec))
+  def *(factor: Double) = new VecAdaptor(vec.mul(factor))
+  def unary_- = new VecAdaptor(vec.neg())
+}
+\end{scalacode}
+
+This is an example of the \emph{adaptor pattern}. Imagine that
+the Java class had several other methods that we had not bothered
+to adapt. If we wanted to use them too, we'd have to either
+add adaptor methods for all them (which would be a lot of code),
+or we'd have to continuously wrap and un-wrap in Scala, which would
+very tiresome.
+
+\section{Implicit Classes}
+
+In principle, we want to take an existing class, \scalainline{Vector2D}, and add
+the methods \scalainline{+}, \scalainline{*}, etc. to  it.
+ However, classes cannot be modified after they are declared, so we need to
+ create a wrapper. However, instead of explicitly wrapping the class,
+ we can create an \emph{implicit class} as follows:
+\begin{scalacode}
+implicit class RichVector2D(vec: Vector2D) {
+  def +(other: Vector2D): Vector2D = vec.add(other)
+  def *(factor: Double): Vector2D = vec.mul(factor)
+  def unary_- = vec.neg()
+}
+\end{scalacode}
+Given this definition, when Scala sees the following code:
+\begin{scalacode}
+val v1 = new Vector2D(2, 3)
+val v2 = (v1 + v1) * 3
+\end{scalacode}
+It will automatically insert the wrapper and turn it into the following:
+\begin{scalacode}
+val v1 = new Vector2D(2, 3)
+val v2 = new RichVector2D(new RichVector2D(v1) + v1) * 3
+\end{scalacode}
+
+Here is a simpler example:
+\begin{scalacode}
+(new Vector2D(50, 60)) * 30
+\end{scalacode}
+Normally, this expression would not type-check, since \scalainline{Vector2D}
+does not have a method \scalainline{*} that accepts integers. However, there is
+an implicit class that wraps \scalainline{Vector2D} that does accept
+integers, so the expression is transformed to:
+\begin{scalacode}
+(new RichVector2D(new Vector2D(50, 60))) * 30
+\end{scalacode}
+
+The \scalainline{RichVector2D} implicit class lets us write
+\scalainline{(new Vector2D(50, 60)) * 30}, but we can't write
+\scalainline{30 * (new Vector2D(50, 60))}, as it assumes that builtin
+integers have a \scalainline{*} method that accepts vectors. However,
+we can create an implicit class that wraps built-in integers too:
+
+\begin{scalacode}
+implicit class RichInt(n: Int) {
+  def *(v: Vector2D): Vector2D = v.mul(n)
+}
+\end{scalacode}
+
+Scala's type-checker rewrites \scalainline{3 * ...} to \scalainline{(new RichInt(3)) * ...}.
+Notably, we didn't have to make any changes to the built-in \scalainline{Int}
+type. (Not that we could, since it is truly built in to Scala.)
+
+\section{Implicit Functions}
+
+Although we can use standard mathematical notation to manipulate
+vectors, we are still stuck creating constant vectors as follows:
+\begin{scalacode}
+val v1 = new Vector2D(2, 3)
+\end{scalacode}
+Suppose we wanted to just write \scalainline{(2, 3)} to denote a vector.
+However, we aren't invoking a method in above, implicit classes can't help.
+
+However, can use implicit functions:
+\begin{scalacode}
+implicit def pointToVector2D(pt: (Int, Int)): Vector2D = {
+  new Vector2D(pt._1, pt._2)
+}
+
+val v1: Vector2D = (2, 3)
+\end{scalacode}
+
+\section{Warning}
+
+\begin{figure}
+\scalafile{includes/implicits/Implicits.scala}
+\caption{Implicits should be placed in their own object.}
+\label{vectorimplicits}
+\end{figure}
+
+
+Code that uses a lot of implicit conversions can become
+very unreadable very quickly. So, you should use them with care.
+Moreover, when there are several implicit classes available,
+it may be ambiguous which conversion is used. When there is
+ambiguity, Scala will simply signal an error.
+When designing Scala APIs, it is considered good practice to place implicits in
+their own object, so that users have to opt-in to using them. For example,
+we may declare our implicit conversions for vectors as shown in
+\cref{vectorimplicits}. Now, to use these implicits, we would have to
+write:
+\begin{scalacode}
+import Implicits._
+\end{scalacode}
+This is a signal to the reader that implicit conversions are being used.
+
+\begin{think}
+If you know an untyped language such as JavaScript or Python, think about what
+it would take to do something similar to implicit classes.
+\end{think}
+
+\section{Built-in Implicits in Scala}
+
+Scala has several implicits that are available by default. Many of these
+implicits are used to add features to builtin Java classes that Scala
+also uses. For example, Scala arrays are just Java arrays. However,
+you can use methods such as \scalainline{.map} on arrays in Scala.
+This is achieved using implicits conversions.  From the Scala console,
+if you enter \lstinline[language=console]{:implicits -v}, you can see the complete
+list of implicits that are available.
+
+\begin{instructor}
+Show the Process and Duration DSLs if there is time.
+\end{instructor}

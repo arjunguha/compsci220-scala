@@ -23,34 +23,32 @@ title: Schedule
 | Tuesday, Feb 23   | Due: [HW4]. [Lecture Notes](../reading/lecture9.pdf)                                            |
 | Wednesday, Feb 24 | *Lab:*  Steps 1 and 2 of [HW5]                                                                  |
 | Thursday, Feb 25  | [Lecture Notes](../reading/lecture10.pdf)                                                       |
-| Tuesday, Mar 1    | Due: [HW5]. Out: HW6. [Lecture Notes](../reading/lecture11.pdf)                                 |
+| Tuesday, Mar 1    | Due: [HW5]. Out: [HW6]. [Lecture Notes](../reading/lecture11.pdf)                               |
 | Wednesday, Mar 2  | *Lab:* Steps 1 and 2(a) of HW6.                                                                 |
-| Thursday, Mar 3   |                                                                                                 |
-| Tuesday, Mar 8    | Due: HW6. Out: HW7. [Lecture Notes](../reading/lecture13.pdf)                                   |
-| Wednesday, Mar 9  | *Lab:*                                                                                          |
-| Thursday, Mar 10  |                                                                                                 |
-| Friday, Mar 11    | Due: HW7.                                                                                       |
+| Thursday, Mar 3   | [Lecture Notes](https://piazza.com/class/ihn69k9d3dh9n?cid=866)                                 |
+| Tuesday, Mar 8    | Due: [HW6]. [Lecture Notes](../reading/lecture13.pdf).                                          |
+| Wednesday, Mar 9  | **No Lab.** (No assignment due.)                                                                |
+| Thursday, Mar 10  | [Lecture Notes](https://piazza.com/class/ihn69k9d3dh9n?cid=957)                                 |
 | Tuesday, Mar 15   | **No class.** (Spring Recess)                                                                   |
 | Wednesday, Mar 16 | **No lab.** (Spring Recess)                                                                     |
 | Thursday, Mar 17  | **No class.** (Spring Recess)                                                                   |
-| Tuesday, Mar 22   | Out: HW8.                                                                                       |
-| Wednesday, Mar 23 | *Lab:*                                                                                          |
+| Tuesday, Mar 22   | Out: [HW7]. [Lecture Notes](../reading/lecture15.pdf)                                           |
+| Wednesday, Mar 23 | *Lab:* Step 1 of [HW7].                                                                         |
 | Thursday, Mar 24  |                                                                                                 |
-| Tuesday, Mar 29   | Due HW8. Out HW9.                                                                               |
-| Wednesday, Mar 30 | *Lab:*                                                                                          |
+| Tuesday, Mar 29   |                                                                                                 |
+| Wednesday, Mar 30 | **No lab.** (Continue working on Sudoku.)                                                       |
 | Thursday, Mar 31  |                                                                                                 |
-| Tuesday, Apr 5    | Due: HW9. Out: HW10.                                                                            |
+| Tuesday, Apr 5    | Due: [HW7]. Out: HW8.                                                                           |
 | Wednesday, Apr 6  | *Lab:*                                                                                          |
 | Thursday, Apr 7   |                                                                                                 |
-| Tuesday, Apr 12   | Due: HW10. Out: HW11.                                                                           |
+| Tuesday, Apr 12   | Due: HW8. Out: HW9.                                                                             |
 | Wednesday, Apr 13 | *Lab:*                                                                                          |
 | Thursday, Apr 14  | .                                                                                               |
-| Tuesday, Apr 19   | Due: HW11. Out: HW12.                                                                           |
+| Tuesday, Apr 19   | Due: HW9. Out: HW10.                                                                            |
 | Wednesday, Apr 20 | **No lab.** (Monday schedule)                                                                   |
 | Thursday, Apr 21  |                                                                                                 |
-| Tuesday, Apr 26   |                                                                                                 |
-| Wednesday, Apr 27 | *Lab:*                                                                                          |
-| Friday, Apr 29    | **Not a class day.** Due: HW12.                                                                 |
+| Tuesday, Apr 26   | Due: HW10.                                                                                      |
+| Wednesday, Apr 27 | **No lab.** (No assignment due.)                                                                |
 {: .table .table-striped :}
 
 [HW1]: ../hw/hw1.pdf
@@ -58,3 +56,5 @@ title: Schedule
 [HW3]: ../hw/hw3.pdf
 [HW4]: ../hw/hw4.pdf
 [HW5]: ../hw/hw5.pdf
+[HW6]: ../hw/hw6.pdf
+[HW7]: ../hw/hw7.pdf

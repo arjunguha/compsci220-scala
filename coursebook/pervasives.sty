@@ -1,6 +1,6 @@
 \usepackage{titlesec}
 \usepackage{fullpage}
-\usepackage{color}
+\usepackage[dvipsnames]{color}
 \usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage{comment}
@@ -13,6 +13,14 @@
 
 \definecolor{bg}{rgb}{0.95,0.95,0.95}
 
+\definecolor{kwcolor}{rgb}{0,0.4,0.2}
+\definecolor{commentcolor}{rgb}{0.0,0.3,0.6}
+
+\lstset{
+  showstringspaces=false,
+  keywordstyle=\color{kwcolor},
+  commentstyle=\color{commentcolor}
+}
 % If mathescape is on, then then $ from command prompt screws things up.
 \lstdefinestyle{lstconsole}{}
 
@@ -32,7 +40,6 @@
 
 \lstdefinelanguage{scala}{
   mathescape=false,
-  keywordstyle=\color{green},
   morekeywords={abstract,case,catch,class,def,%
     do,else,extends,false,final,finally,%
     for,if,implicit,import,match,mixin,%
@@ -55,7 +62,7 @@
 \lstnewenvironment{scalacode}{\lstset{language=scala,basicstyle=\ttfamily\footnotesize}}{}
 \lstnewenvironment{javacode}{\lstset{language=java,basicstyle=\ttfamily\footnotesize}}{}
 \newcommand{\scalafile}[1]{\lstinputlisting[language=scala,basicstyle=\ttfamily\footnotesize]{#1}}
-\newcommand{\scalainline}[1]{\lstinline[language=scala]{#1}}
+\newcommand{\scalainline}[1]{\lstinline[language=scala,basicstyle=\ttfamily]{#1}}
 
 % \newmintinline{scala}{}
 \newcommand{\javainline}[1]{\lstinline[language=java]{#1}}
@@ -104,7 +111,7 @@
 \stepcounter{hw_num}
 
 \newcommand{\newhw}[1]{%
-\chapter{\texorpdfstring{Homework \the\value{discussion_num}: #1}{file:hw/hw\the\value{hw_num}}}%
+\chapter{\texorpdfstring{Homework \the\value{hw_num}: #1}{file:hw/hw\the\value{hw_num}}}%
 \stepcounter{hw_num}%
 }
 

@@ -16,10 +16,10 @@ You must read the entire [Course Policy] document.
 </thead>
 <tbody>
 <tr><td>Lecture</td><td>Tuesday, 4:00PM--5:15PM</td><td>Morrill Science Center 1, Room N375</td></tr>
-<tr><td>Discussion C</td><td>Wednesday, 10:10AM--11:00AM</td><td>Engineering Lab, Room 323</td></tr>
-<tr><td>Discussion A</td><td>Wednesday, 11:15AM--12:05PM</td><td>Engineering Lab, Room 323</td></tr>
-<tr><td>Discussion B</td><td>Wednesday, 12:20PM--1:10PM</td><td>Engineering Lab, Room 303</td></tr>
-<tr><td>Discussion C</td><td>Wednesday, 1:25PM--2:15AM</td><td>Engineering Lab, Room 323</td></tr>
+<tr><td>Discussion</td><td>Wednesday, 10:10AM--11:00AM</td><td>Engineering Lab, Room 323</td></tr>
+<tr><td>Discussion</td><td>Wednesday, 11:15AM--12:05PM</td><td>Engineering Lab, Room 323</td></tr>
+<tr><td>Discussion</td><td>Wednesday, 12:20PM--1:10PM</td><td>Engineering Lab, Room 303</td></tr>
+<tr><td>Discussion</td><td>Wednesday, 1:25PM--2:15AM</td><td>Engineering Lab, Room 323</td></tr>
 <tr><td>Lecture</td><td>Thursday, 4:00PM--5:15PM</td><td>Morrill Science Center 1, Room N375</td></tr>
 </tbody>
 </table>
@@ -30,7 +30,7 @@ You must read the entire [Course Policy] document.
 |:---------------------------|--------------------------------------|-----------------------------------|
 | Monday, 11:00AM--12:00PM   | USpace (CS Building, Room 144)       | Rian Shambaugh and Tommy Nguyen   |
 | Tuesday, 11:45AM--12:45PM  | LGRT, Room 220                       | Brendan Murphy and Cassie Corey   |
-| Wednesdays, 2:00PM--3:00PM | CS Building, Room 230                | Arjun Guha                        |
+| Thursdays, 1:30PM--2:30PM  | CS Building, Room 230                | Arjun Guha                        |
 | Fridays, 12:00PM--1:00PM   | USpace (CS Building, Room 144)       | Josh Sherman and Aaron Weiss      |
 {: .table .table-striped :}
 

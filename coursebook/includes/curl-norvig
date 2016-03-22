@@ -1,1 +1,5 @@
-curl -s http://norvig.com/easy50.txt | tr '\n' ' ' | tr '0' '.' | sed 's/ //' | sed 's/ ======== /\'$'\n/g'
+curl -s http://norvig.com/easy50.txt | \
+  tr '\n' ' ' | \
+  tr '0' '.' | \
+  sed 's/ //' | \
+  sed 's/ ======== /\'$'\n/g'
