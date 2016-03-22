@@ -6756,7 +6756,131 @@ use a 5MB stack. You can pass JVM options into SBT by prefixing them with \textt
 
 \newlecture
 
-\newdiscussion{TODO -- ??? (Mar 23)}
+\newdiscussion{Sudoku (Mar 23)}
+
+Discussion notes for instructors.
+
+\section{Overview}
+
+This discussion will cover task 1 and 2 in homework 7.  Students are expected to have read the assignment beforehand, so you do not need to introduce the assignment at the beginning of class.  Furthermore, no new Scala concepts have been introduced, so you should not need to introduce language features.
+
+Discussion works like this: have students pair up and then ask them to start working on a task.  If a student reports that they have already completed the task, then ask them to pair up anyway to assist another student.  After 15 minutes, break, and then guide them briefly through the solution on the chalkboard.
+
+Note that the complete Sudoku template is appended to the end of these lecture notes.
+
+\section{Homework \#6 Programming Task}
+
+This task is to implement the \scalainline{peers} method.
+
+After 25 minutes, stop the class to discuss the solution. Use the remaining 25 minutes to
+discuss the solution (ours is below). If no one volunteers their own solution for discussion,
+you can lead them to ours. It may be useful to start with a list of integers from 0 to 8 and 
+have them get to \scalainline{rowPeers}.
+
+Note: 
+
+\begin{enumerate}
+  \item \scalainline{peers(r, c)} produces the coordinates of all cells in the same
+    row as \scalainline{r}, same column as \scalainline{c}, and same block as 
+    \scalainline{(r,c)}. 
+  \item Do not include \scalainline{(r, c)} in the set of its peers. i.e., 
+    \scalainline{peers(r,c).contains((r, c)) == false}
+\end{enumerate}
+
+Our \scalainline{peers} (and helper methods) look like:
+
+\begin{scalacode}
+  def calcPeers(row: Int, col: Int): List[(Int, Int)] = {
+    val rowPeers = 0.to(8).map { r => (r,col) }
+    val colPeers = 0.to(8).map { c => (row, c) }
+    val boxRow: Int = (row / 3) * 3
+    val boxCol: Int = (col / 3) * 3
+    val boxPeers = boxRow.to(boxRow + 2).flatMap { r =>
+      boxCol.to(boxCol + 2).map { c =>
+        (r, c)
+      }
+    }
+    (rowPeers ++ colPeers ++ boxPeers).filterNot {
+      case (r, c) => r == row && col == c
+    }.toList.distinct
+  }
+
+  val peersTbl = Map((0.to(8).flatMap { r =>
+    0.to(8).map { c =>
+      ((r, c) -> calcPeers(r, c))
+    }
+  }) :_*)
+
+  def peers(row: Int, col: Int): Seq[(Int, Int)] = peersTbl((row, col))
+\end{scalacode}
+
+\scalainline{peersTbl} is a table of all of the peers for each coordinate in the Sudoku grid.
+It is constructed using \scalainline{calcPeers}. The \scalainline{calcPeers} method creates 
+3 lists: \scalainline{rowPeers}, \scalainline{colPeers}, and \scalainline{boxPeers}, using 
+\scalainline{map} and \scalainline{flatMap}. For example, the integers from 0 to 8 are mapped
+to the 8 coordinates in the given row to calculate \scalainline{rowPeers}. Similar methods are used for the other 2 lists. The lists are combined, the given coordinate is filtered out, and duplicates are ignored.
+
+\section{Templates}
+
+In \texttt{src/main/scala/Solution.scala} you will find:
+
+\begin{scalacode}
+import hw.sudoku._
+
+object Solution extends SudokuLike {
+  type T = Board
+
+  def parse(str: String): Board = {
+    throw new UnsupportedOperationException("not implemented")
+  }
+
+  // You can use a Set instead of a List (or, any Iterable)
+  def peers(row: Int, col: Int): List[(Int, Int)] = {
+    throw new UnsupportedOperationException("not implemented")
+  }
+}
+
+// Top-left corner is (0,0). Bottom-right corner is (8,8). Feel free to
+// change the fields of this class.
+class Board(val available: Map[(Int, Int), List[Int]]) extends BoardLike[Board] {
+
+  def availableValuesAt(row: Int, col: Int): List[Int] = {
+    // Assumes that a missing value means all values are available. Feel
+    // free to change this.
+    available.getOrElse((row, col), 1.to(9).toList)
+  }
+
+  def valueAt(row: Int, col: Int): Option[Int] = {
+    throw new UnsupportedOperationException("not implemented")
+  }
+
+  def isSolved(): Boolean = {
+    throw new UnsupportedOperationException("not implemented")
+  }
+
+  def isUnsolvable(): Boolean = {
+    throw new UnsupportedOperationException("not implemented")
+  }
+
+  def place(row: Int, col: Int, value: Int): Board = {
+    require(availableValuesAt(row, col).contains(value))
+    throw new UnsupportedOperationException("not implemented")
+  }
+
+  // You can return any Iterable (e.g., Stream)
+  def nextStates(): List[Board] = {
+    if (isUnsolvable()) {
+      return List()
+    }
+
+    throw new UnsupportedOperationException("not implemented")
+  }
+
+  def solve(): Option[Board] = {
+    throw new UnsupportedOperationException("not implemented")
+  }
+}
+\end{scalacode}
 
 \newlecture
 
