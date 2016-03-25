@@ -1,0 +1,115 @@
+\newhw{Implicits}
+
+In this assignment, you'll first learn how to use two modern Java APIs on your own and then make them more ``Scala-like'' using implicits. Before you start directly working on the assignment, you will have to read the API documentation and online tutorials to learn how the APIs work. We encourage you to freely use any resource from the web for this assignment.
+
+\section{Preliminaries}
+
+You should create a directory-tree that looks like this:
+
+\dirtree{%
+.1 ./sudoku.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala\DTcomment{Yours tests go here}.
+}
+
+The \texttt{project/plugins.sbt} file must have exactly this line:
+
+\begin{scalacode}
+addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.1")
+\end{scalacode}
+
+\section{Java NIO}
+
+The \href{https://docs.oracle.com/javase/7/docs/api/java/nio/file/package-summary.html#package_description}{java.nio.file} classes are a new (since 2011) API for working with files and directories that is a lot easier to use than the legacy API, which dates back to the early days of Java. For example, the static methods \scalainline{Files.readAllBytes} and \scalainline{Files.write} let you read and write to files with just one line of code.
+
+Moreover, the \scalainline{java.nio.file.Paths} object is easier to use than \scalainline{java.io.File}. For example, to get a reference to the directory \texttt{"a/b/c"}, we can simply write:
+%
+\begin{scalacode}
+import java.nio.file.Paths
+Paths.get("a").resolve("b").resolve("c")
+\end{scalacode}
+%
+The ``method call chain'' above is lot easier to write and read than the nested constructors in the legacy code below:
+%
+\begin{scalacode}
+import java.io.File
+new File(new File("a", "b"), "c")
+\end{scalacode}
+
+However, we ought to be able to do better in Scala. It would be really convenient if we could simply create a \scalainline{java.nio.file.Path} object by writing:
+%
+\begin{scalacode}
+"a" / "b" / "c"	
+\end{scalacode}
+The expression above should be the same as \scalainline{Paths.get("a").resolve("b").resolve("c")}.
+The first part of this assignment is to ``Scala-ize'' the Java NIO file API in this manner.
+
+\subsection{Programming Task}
+
+Create an object called \scalainline{PathImplicits} (in \texttt{src/main/scala}). When a block of code begins with \scalainline{import PathImplicits._}, we should be able to write the following:
+
+\begin{enumerate}
+
+  \item We should be able to construct paths by using the slash-operator to separate strings. For example, the expression \scalainline{"usr" / "bin" / "scala"} should be equivalent to the expression \scalainline{Paths.get("usr", "bin", "scala")}. 
+  \item Similarly, given two paths, we should be able to join them using the slash-operator. For example, if \scalainline{p1} is \scalainline{"usr" / "local"} and \scalainline{p2} is \scalainline{"bin" / "scala"} then \scalainline{p1 / p2} should be equivalent to \scalainline{Paths.get("usr", "local", "bin", "scala")}. 
+  \item Paths should have a \scalainline{write} method to create files, where \scalainline{write} takes a string to write to the file. For example, the following program should create a file called \texttt{greeting.txt} with just the line \texttt{Hello, world}: %
+\begin{scalacode}
+val p = Paths.get("greeting.txt")
+p.write("Hello, world\n")
+\end{scalacode}	
+
+  \item Paths should also have a \scalainline{read} method that returns the contents of the file as a string. For example, after creating the file above, the expression \scalainline{p.read()} should produce \verb|"Hello, world\n"|.
+
+  \item Finally, paths should have an \scalainline{append} method that appends to the end of a file. For example, after evaluating  \scalainline{p.append("Hello, again")}, the file \texttt{greeting.txt} should contain:
+
+\begin{verbatim}
+Hello, world
+Hello, again
+\end{verbatim}
+
+    \textbf{For convenience, the append method should create a new file if no file exists.}
+
+\end{enumerate}
+
+\section{The Java 8 Time API}
+
+Java 8, which was released in 2014, introduced a new API for working with dates and times, which is much easier to use than the old \texttt{java.util.Calendar} API (from 1997) and the \texttt{java.util.Date} API (from 1996 and deprecated). Notably, the new \texttt{java.time} API uses immutable objects exclusively, unlike the older APIs, which are exemplars of bad imperative design. For this assignment, we are going to focus on the \href{https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html}{java.time.LocalDate} class, which just represents a date, without a timezone or time of day.
+
+For example, we can create a date that represents Jan 31 2016 as follows:
+\begin{scalacode}
+import java.time.LocalDate
+val date = LocalDate.of(2016, 1, 31)
+\end{scalacode}
+
+We can add days to a date as follows:
+\begin{scalacode}
+val feb2 = date.plusDays(2)
+\end{scalacode}
+
+Note that the expression above does not modify the original \scalainline{date} object, but produces a new object. In fact, the \scalainline{LocalDate} class is immutable and the API is designed in a functional way. However, we can make it even easier to use. It would be more convenient if we could write \scalainline{31 jan 2016} in Scala code to mean \scalainline{LocalDate.of(2016, 1, 31)} and \scalainline{(31 jan 2016) + 2.days} to mean \scalainline{2 feb 2016}, and so on.
+
+\subsection{Programming Task}
+
+Create an object called \scalainline{DateImplicits} (in \texttt{src/main/scala}). When a block of code begins with \scalainline{import DateImplicits._}, we should be able to write the following:
+
+\begin{enumerate}
+
+  \setcounter{enumi}{5}
+
+  \item We should be able to write \scalainline{15.jan}, \scalainline{4.feb}, \scalainline{20.dec}, and so on to create \scalainline{LocalDate} objects that represent dates in the current year. (i.e., the year in which the code is running.) \textbf{This kind of code should work for all months of the year, with the usual three-letter abbreviations of month names.}
+
+  \item To create \scalainline{LocalDate} objects that represent dates in other years, we should be able to write \scalainline{15.oct(1989)}. Note that this is the same as writing \scalainline{15 oct 1989}.
+
+  \item \textbf{(Tricky)}. If \scalainline{x} is a  \scalainline{LocalDate}, we should be able to add days, months, and years in the following way: \scalainline{x + 10.days}, \scalainline{x + 2.months}, and \scalainline{x + 5.years}.
+
+\end{enumerate}
+
+We should be able to combine both notations. For example, \scalainline{(1 jan 2016) + 2.days} should be equal to \scalainline{LocalDate.of(2016, 2, 2)}. Note that the parentheses around the date are necessary because \scalainline{(1 jan 2016) + 2.days} is interpreted as \scalainline{1 jan (2016 + 2.days)}. 
+
+
+\input{handin}

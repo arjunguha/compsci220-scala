@@ -1,0 +1,106 @@
+\newlecture
+
+\section{Streams}
+
+\begin{instructor}
+Apparently, Programming in Scala 2nd ed. doesn't mention streams at all.
+\end{instructor}
+
+
+A stream is like a list, but its tail is only evaluated ``on need''.
+
+A function to generate a list:
+
+\begin{scalacode}
+def fromTo(m: Int, n: Int): List[Int] = {
+  println(s"within fromTo($m, $n)")
+  if (m > n) {
+    List()
+  }
+  else {
+    m :: fromTo(m + 1, n)
+  }
+}
+
+val x = fromTo(0, 100)
+\end{scalacode}
+
+Running this code produces 100 lines of output, since the entire list is
+immediately created. We can make a small change to use a stream instead:
+
+\begin{scalacode}
+def fromTo(m: Int, n: Int): Stream[Int] = {
+  println(s"within fromTo($m, $n)")
+  if (m > n) {
+    List()
+  }
+  else {
+    m #:: fromTo(m + 1, n)
+  }
+}
+
+val x = fromTo(0, 100)
+\end{scalacode}
+
+We now get 1 line of output each time we run \scalainline{x.tail}, \scalainline{x.tail.tail}.
+But, running \scalainline{x.tail} a second time doesn't produce any output: Scala evaluates
+the tail ``on need'', but doesn't reevaluate the value.
+
+\section{Infinite streams}
+
+We can define an infinite stream of numbers:
+
+\begin{scalacode}
+def from(n: Int): Stream[Int] = n #:: from(n + 1)
+
+val positives = from(1)
+\end{scalacode}
+
+This cannot be done with lists! Morever, the Scala console shows exactly what has
+been evaluated:
+
+\begin{console}
+scala> positives.tail.tail.tail.tail
+res2: scala.collection.immutable.Stream[Int] = Stream(5, ?)
+scala> positives
+res3: Stream[Int] = Stream(1, 2, 3, 4, 5, ?)
+\end{console}
+
+You can work with infinite streams freely, so long as you don't try to access
+all the values (your program won't halt--there are inifinitely many values).
+E.g., `positives.length` does not terminate.
+
+\section{Fibonnaci numbers}
+
+\begin{scalacode}
+def nthFib(nPredPred: Stream[Int], nPred: Stream[Int]): Stream[Int] = {
+  (nPredPred.head + nPred.head) #:: nthFib(nPredPred.tail, nPred.tail)
+}
+
+val fibs: Stream[Int] = 0 #:: 1 #:: nthFib(fibs, fibs.tail)
+\end{scalacode}
+
+\section{Stream Combinators}
+
+- You can apply map, flatMap, filter, etc. to streams, work just like lists, but
+  lazily
+
+this code goes wrong:
+
+\begin{scalacode}
+def from(n: Int): Stream[Int] = n #:: from(n + 2)
+scala> val odds = from(1)
+odds: Stream[Int] = Stream(1, ?)
+
+scala> val evsns = odds.filter(_ % 2 == 0)
+\end{scalacode}
+
+\section{Generating All Elements from two infinite streams}
+
+\section{Generators as streams}
+
+\section{$n$-Queens with streams} 
+
+
+
+
