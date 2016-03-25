@@ -91,7 +91,7 @@ We can add days to a date as follows:
 val feb2 = date.plusDays(2)
 \end{scalacode}
 
-Note that the expression above does not modify the original \scalainline{date} object, but produces a new object. In fact, the \scalainline{LocalDate} class is immutable and the API is designed in a functional way. However, we can make it even easier to use. It would be more convenient if we could write \scalainline{31 jan 2016} in Scala code to mean \scalainline{LocalDate.of(2016, 1, 31)} and \scalainline{31 jan 2016 + 2.days} to mean \scalainline{2 feb 2016}, and so on.
+Note that the expression above does not modify the original \scalainline{date} object, but produces a new object. In fact, the \scalainline{LocalDate} class is immutable and the API is designed in a functional way. However, we can make it even easier to use. It would be more convenient if we could write \scalainline{31 jan 2016} in Scala code to mean \scalainline{LocalDate.of(2016, 1, 31)} and \scalainline{(31 jan 2016) + 2.days} to mean \scalainline{2 feb 2016}, and so on.
 
 \subsection{Programming Task}
 
@@ -109,7 +109,7 @@ Create an object called \scalainline{DateImplicits} (in \texttt{src/main/scala})
 
 \end{enumerate}
 
-We should be able to combine both notations. For example, \scalainline{(1 jan 2016) + 2.days} should be equal to \scalainline{LocalDate.of(2016, 2, 2)}. Note that the parentheses around the date are necessary because \scalainline{(1 jan 2016) + 2.days} is interpreted as \scalainline{1 jan (2016 + 2.days)}. 
+We should be able to combine both notations. For example, \scalainline{(1 jan 2016) + 2.days} should be equal to \scalainline{LocalDate.of(2016, 2, 2)}. Note that the parentheses around the date are necessary because \scalainline{1 jan 2016 + 2.days} is interpreted as \scalainline{1 jan (2016 + 2.days)}. 
 
 
 \input{handin}
