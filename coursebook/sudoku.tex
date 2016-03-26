@@ -27,18 +27,11 @@ package. You should create a directory-tree that looks like this:
 
 Your \texttt{build.sbt} file must have exactly these lines:
 
-\begin{scalacode}
-resolvers += "PLASMA" at "https://dl.bintray.com/plasma-umass/maven"
-libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.0.1"
-parallelExecution in Test := false
-fork in Test := true
-\end{scalacode}
+\scalafile{../hw/sudoku/template/build.sbt}
 
 The \texttt{project/plugins.sbt} file must have exactly this line:
 
-\begin{scalacode}
-addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.1")
-\end{scalacode}
+\scalafile{../hw/sudoku/template/project/plugins.sbt}
 
 \section{Overview}
 
@@ -191,63 +184,8 @@ be visited.
 \section{Programming Task}
 
 \begin{figure}
-\begin{scalacode}
-import hw.sudoku._
+\scalafile{../hw/sudoku/template/src/main/scala/Solution.scala}
 
-object Solution extends SudokuLike {
-  type T = Board
-
-  def parse(str: String): Board = {
-    throw new UnsupportedOperationException("not implemented")
-  }
-
-  // You can use a Set instead of a List (or, any Iterable)
-  def peers(row: Int, col: Int): List[(Int, Int)] = {
-    throw new UnsupportedOperationException("not implemented")
-  }
-}
-
-// Top-left corner is (0,0). Bottom-right corner is (8,8). Feel free to
-// change the fields of this class.
-class Board(val available: Map[(Int, Int), List[Int]]) extends BoardLike[Board] {
-
-  def availableValuesAt(row: Int, col: Int): List[Int] = {
-    // Assumes that a missing value means all values are available. Feel
-    // free to change this.
-    available.getOrElse((row, col), 1.to(9).toList)
-  }
-
-  def valueAt(row: Int, col: Int): Option[Int] = {
-    throw new UnsupportedOperationException("not implemented")
-  }
-
-  def isSolved(): Boolean = {
-    throw new UnsupportedOperationException("not implemented")
-  }
-
-  def isUnsolvable(): Boolean = {
-    throw new UnsupportedOperationException("not implemented")
-  }
-
-  def place(row: Int, col: Int, value: Int): Board = {
-    require(availableValuesAt(row, col).contains(value))
-    throw new UnsupportedOperationException("not implemented")
-  }
-
-  // You can return any Iterable (e.g., Stream)
-  def nextStates(): List[Board] = {
-    if (isUnsolvable()) {
-      return List()
-    }
-
-    throw new UnsupportedOperationException("not implemented")
-  }
-
-  def solve(): Option[Board] = {
-    throw new UnsupportedOperationException("not implemented")
-  }
-}
-\end{scalacode}
 \caption{Template for Sudoku}\label{sudokutemplate}
 \end{figure}
 
@@ -266,7 +204,7 @@ We recommend proceeding in this order and testing as you go along:
    the expression
    \scalainline{peers(r,c).contains((r, c))} should be \scalainline{false}.
 
-\item Implement \scalainline{Solution.parse} You  should assume that the input string is matches the regular expression \scalainline{"""(\.|[1-9]){81}""".r} and that each block of nine characters represents a row (i.e., row-major order).
+\item Implement \scalainline{Solution.parse} You  should assume that the input string has exactly 81 characters, where each character is a digit or a period. Each successively block of nine characters represents a row (i.e., row-major order).
 
    As the template suggests, you need to store the set of available values at
    each cell instead of the value at the cell. You'll need to define
@@ -339,14 +277,7 @@ You can use this terminal command to translate them into the format for this ass
 Here is a trivial test suite that simply checks to see if you've defined
 the \scalainline{Solution} object with the right type:
 
-\begin{scalacode}
-class TrivialTestSuite extends org.scalatest.FunSuite {
-
-  test("The solution object must be defined") {
-    val obj : hw.sudoku.SudokuLike = Solution
-  }
-}
-\end{scalacode}
+\scalafile{../hw/sudoku/template/src/test/scala/TrivialTestSuite.scala}
 
 You should place this test suite in \texttt{src/test/scala/TrivialTestSuite.scala}. This test suite must run as-is, or you may receive no credit for your solution.
 
