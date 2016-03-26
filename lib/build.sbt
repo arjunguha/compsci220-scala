@@ -6,7 +6,7 @@ licenses += ("BSD", url("https://opensource.org/licenses/BSD-3-Clause"))
 
 name := "compsci220"
 organization := "edu.umass.cs"
-version := "1.0.1"
+version := "1.1.0"
 scalaVersion := "2.11.7"
 autoAPIMappings := true
 
@@ -21,7 +21,8 @@ scalacOptions ++=
       "-Xfatal-warnings")
 
 libraryDependencies ++=
-  Seq("org.scalatest" %% "scalatest" % "2.2.6" % "test")
+  Seq("org.scalatest" %% "scalatest" % "2.2.6" % "test",
+      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4")
 
 target in Compile in doc := baseDirectory.value / ".." / "website" / "api"
 
