@@ -1,4 +1,4 @@
-import cmpsci220.hw.parsing._
+import hw.parsing._
 import org.scalatest._
 
 import ArithParser._

@@ -1,4 +1,4 @@
-import cmpsci220.hw.parsing._
+import hw.parsing._
 import scala.util.parsing.combinator._
 
 object ArithParser extends ArithParserLike {
