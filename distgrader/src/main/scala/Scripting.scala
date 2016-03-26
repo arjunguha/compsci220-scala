@@ -12,6 +12,7 @@ import scala.concurrent.{ExecutionContext, Future}
 object Scripting {
 
   import java.nio.file.{Paths, Files, Path, FileSystems}
+  import scala.util.{Try, Success, Failure}
   import scala.collection.JavaConversions._
   import Messages._
 
@@ -73,7 +74,13 @@ object Scripting {
       Rubric(Map())
     }
     else {
-      (new String(Files.readAllBytes(path))).parseJson.convertTo[Rubric]
+      Try(new String(Files.readAllBytes(path)).parseJson.convertTo[Rubric]) match {
+        case Success(json) => json
+        case Failure(exn) => {
+          println(s"Error parsing $path")
+          throw exn
+        }
+      }
     }
   }
 

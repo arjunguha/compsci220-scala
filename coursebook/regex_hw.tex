@@ -1,0 +1,72 @@
+\newhw{Regular Expressions}
+
+In this assignment, you'll write several handy regular expressions. The assignment concludes with some more challenging problems that illustrate the kind of computations that are possible with regular expressions.
+
+\section{Preliminaries}
+
+You should create a directory-tree that looks like this:
+
+\dirtree{%
+.1 ./regexes.
+.2 build.sbt.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala\DTcomment{Yours tests go here}.
+}
+
+Your \texttt{build.sbt} file must have exactly these lines:
+
+\scalafile{../hw/regex/template/build.sbt}
+
+The \texttt{project/plugins.sbt} file must have exactly this line:
+
+\scalafile{../hw/regex/template/project/plugins.sbt}
+
+\section{Programming Tasks}
+
+\begin{figure}
+\scalafile{../hw/regex/template/src/main/scala/Solution.scala}
+\caption{Template for the regular expressions.}
+\label{regex_template}
+\end{figure}
+
+You should use the template in \cref{regex_template} for your solution and fill in the regular expressions as follows:
+
+\begin{enumerate}
+
+  \item Define the regular expression \scalainline{notAlphanumeric}, which only matches strings that don't contain any letter or digit.
+
+  \item Define the regular expression \scalainline{time}, which only matches times written as five-character strings \texttt{HH:MM}, where the hours range from 00--23 and the minutes from 00--59.
+
+  \item Define the regular expression \scalainline{phone}, which only matches phone numbers in the format \texttt{(XXX) XXX-XXXX}, where the letter \texttt{X} is a placeholder for a digit.
+
+  \item Define the regular expression \scalainline{zip}, which matches either five-digit or nine-digit ZIP codes. i.e., strings in the format \texttt{XXXXX} or \texttt{XXXXX-XXXX}.
+
+  \item Define the regular expression \scalainline{comment}, which only matches strings that start with \texttt{/*} and end with \texttt{*/}.
+
+  \item Define the regular expression \scalainline{numberPhrase}, which only matches the strings \texttt{twenty}, \scalainline{twenty-one}, \scalainline{twenty-three}, $\cdots$, \scalainline{ninety-nine} (don't forget the hyphen).
+
+  \item Define the regular expression \scalainline{roman}, which only matches strings that represent the numbers 0---39 in roman numerals. i.e., the string may only contain the characters \texttt{I}, \texttt{V}, and \texttt{X}, with the usual constraints on roman numerals.
+
+
+  \item Define the regular expression \scalainline{date}, which only matches dates written as ten-character strings \texttt{YYYY-MM-DD}. For example, \texttt{2016-04-01} represents Apt 1 2016, whereas \texttt{2016-04-31} is not a valid date. You should account for leap years by assume that Feb 29th is valid if the year is evenly divisible by four. E.g., \texttt{2016-02-29} is a valid date but \texttt{2016-02-29} is invalid.
+
+  \item The \emph{parity} of a number is the sum of the digits of the number. For example, the parity of $203$ is $2 + 0 + 5 = 7$. Define the regular expression \scalainline{evenParity} that only matches numbers with even parity. You may find it convenient to accept numbers with leading zeroes.
+
+\end{enumerate}
+
+\section{Check Your Work}
+
+\begin{figure}
+\scalafile{../hw/regex/template/src/test/scala/TrivialTests.scala}
+\caption{Your solution must pass this test suite with no modifications.}
+\label{regex_trivial_tests}
+\end{figure}
+
+\Cref{regex_trivial_tests} is a trivial test suite that simply ensures that you've defined the right object.
+
+\input{handin.tex}

@@ -126,7 +126,7 @@ object SBTTesting {
     import framework._
     val scripting = new grading.Scripting(selfIP)
     import scripting.system.dispatcher
-    val lst = Scripting.assignments(assignmentRoot).map(dir => {
+    val lst =  Scripting.assignments(assignmentRoot).map(dir => {
       Scripting.updateState(dir.resolve(gradingJson)) { case report =>
           val root = new RootTestCase(scripting, dir, zipBuilder)
           body(root)
