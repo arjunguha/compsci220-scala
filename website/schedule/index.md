@@ -35,13 +35,13 @@ title: Schedule
 | Tuesday, Mar 22   | Out: [HW7]. [Lecture Notes](../reading/lecture15.pdf)                                           |
 | Wednesday, Mar 23 | *Lab:* Step 1 of [HW7].                                                                         |
 | Thursday, Mar 24  |                                                                                                 |
-| Tuesday, Mar 29   |                                                                                                 |
+| Tuesday, Mar 29   | Reading: [Enumerating the Rationals] ([in Scala](../reading/rationals.scala))                   |
 | Wednesday, Mar 30 | **No lab.** (Continue working on Sudoku.)                                                       |
-| Thursday, Mar 31  |                                                                                                 |
-| Tuesday, Apr 5    | Due: [HW7]. Out: HW8.                                                                           |
+| Thursday, Mar 31  | Reading: [Java Regular Expressions] and [Scala Regular Expressions]                             |
+| Tuesday, Apr 5    | Due: [HW7]. Out: [HW8].                                                                         |
 | Wednesday, Apr 6  | *Lab:*                                                                                          |
 | Thursday, Apr 7   |                                                                                                 |
-| Tuesday, Apr 12   | Due: HW8. Out: HW9.                                                                             |
+| Tuesday, Apr 12   | Due: [HW8]. Out: HW9.                                                                           |
 | Wednesday, Apr 13 | *Lab:*                                                                                          |
 | Thursday, Apr 14  | .                                                                                               |
 | Tuesday, Apr 19   | Due: HW9. Out: HW10.                                                                            |
@@ -58,3 +58,7 @@ title: Schedule
 [HW5]: ../hw/hw5.pdf
 [HW6]: ../hw/hw6.pdf
 [HW7]: ../hw/hw7.pdf
+[HW8]: ../hw/hw8.pdf
+[Enumerating the Rationals]: ../reading/rationals.pdf
+[Java Regular Expressions]: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
+[Scala Regular Expressions]: http://www.scala-lang.org/api/current/index.html#scala.util.matching.Regex
