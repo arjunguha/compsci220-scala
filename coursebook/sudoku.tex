@@ -237,7 +237,7 @@ We recommend proceeding in this order and testing as you go along:
    You should sort the returned list: ensure that boards with fewer available
    values occur earlier in the list.
 
-\item Implement \scalainline{solve}. If \scalainline{this.isSolution} is true, then return \scalainline{Some(this)}.
+\item Implement \scalainline{solve}. If \scalainline{this.isSolved} is true, then return \scalainline{Some(this)}.
    If not, iterate through the list of \scalainline{nextStates}, applying \scalainline{solve} to
    board. Return the first solution that you find. If no solution is found,
    return \scalainline{None}.
