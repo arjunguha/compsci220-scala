@@ -102,8 +102,28 @@ The following regular expression matches all even numbers:
 
 \verb|\d*(0|2|4|6|8)|
 
-\begin{instructor}
+\paragraph{Password Strength}
+%
+
+- E.g., at least one digit and one letter
+
+\section{Second lecture}
+
 \begin{itemize}
+
+\item Password strength: at least three letters
+
+\begin{verbatim}
+.*[A-Z].*[A-Z].*[A-Z].*
+\end{verbatim}
+
+At least two numbers:
+
+\begin{verbatim}
+.*[0-9].*[0-9].*
+\end{verbatim}
+
+Three letters and two numbers:
 
 \item Grouping (e.g., dates):
 
@@ -121,8 +141,13 @@ The following regular expression matches all even numbers:
 \end{scalacode}
 
 \item Reduce derived regular expressions to a core using identities
+
 \item Show regular expressions as an ADT
+
 \item Write a back-tracking matcher
+
 \item Write a string generator for regular expressions using streams
+
+\item An implementation of memoizing regular expression derivates in includes/regex-derivatives
+
 \end{itemize}
-\end{instructor}

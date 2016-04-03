@@ -40,7 +40,7 @@ title: Schedule
 | Thursday, Mar 31  | Reading: [Java Regular Expressions] and [Scala Regular Expressions]                             |
 | Tuesday, Apr 5    | Due: [HW7]. Out: [HW8].                                                                         |
 | Wednesday, Apr 6  | *Lab:*                                                                                          |
-| Thursday, Apr 7   |                                                                                                 |
+| Thursday, Apr 7   | Reading: Chapter 33 of Programming in Scala.                                                    |
 | Tuesday, Apr 12   | Due: [HW8]. Out: HW9.                                                                           |
 | Wednesday, Apr 13 | *Lab:*                                                                                          |
 | Thursday, Apr 14  | .                                                                                               |
