@@ -6601,7 +6601,7 @@ You can adjust the size of the stack to make it larger (or smaller), but there
 is always an upper-bound.\footnote{For example, use \texttt{java -Xss5m} to
 use a 5MB stack. You can pass JVM options into SBT by prefixing them with \texttt{-J}. E.g., \texttt{sbt -J-Xss5m}.}
 
-\newdiscussion{TODO -- Dan (Mar 9)}
+% \newdiscussion{TODO -- Dan (Mar 9)}
 
 \newlecture
 
@@ -6611,13 +6611,61 @@ use a 5MB stack. You can pass JVM options into SBT by prefixing them with \textt
 
 \newlecture
 
-\newdiscussion{TODO -- Dan (Mar 30)}
+% \newdiscussion{TODO -- Dan (Mar 30)}
 
 \newlecture
 
 \newlecture
 
-\newdiscussion{TODO -- ??? (Apr 6)}
+\newdiscussion{Implicits (Apr 6)}
+
+This discussion will cover the first two questions of Homework 8, which asks you to use Scala implicits to wrap ``ugly'' Java interfaces with ``pretty'' Scala interfaces.
+
+\section{What you need to do}
+
+We will be completing HW 8, programming tasks 1 and 2 in class.  These two assignments are reproduced below.
+
+\begin{enumerate}
+
+  \item We should be able to construct paths by using the slash-operator to separate strings. For example, the expression \scalainline{"usr" / "bin" / "scala"} should be equivalent to the expression \scalainline{Paths.get("usr", "bin", "scala")}. 
+  \item Similarly, given two paths, we should be able to join them using the slash-operator. For example, if \scalainline{p1} is \scalainline{"usr" / "local"} and \scalainline{p2} is \scalainline{"bin" / "scala"} then \scalainline{p1 / p2} should be equivalent to \scalainline{Paths.get("usr", "local", "bin", "scala")}. 
+\end{enumerate}
+
+\section{Hints}
+
+First hint: this assignment requires \emph{neither} Scala implicit functions to work \emph{nor} Scala implicit function parameters.  You \emph{only} need Scala implicit classes.  If you do not remember the difference between these sorts of implicits, I strongly suggest that you familiarize yourself with their definitions.
+
+Second hint: remember that Scala implicit classes require a few ingredients in order to work.  The most important ingredients are described here, but you can find the complete list of rules at: \url{https://www.artima.com/pins1ed/implicit-conversions-and-parameters.html#21.2}
+
+\begin{enumerate}
+  \item You must create a class and mark it as \scalainline{implicit}.
+  \item Implicit classes must be defined inside an \scalainline{object}, \scalainline{trait}, or \scalainline{class}.
+  \item The implicit class must be visible from the scope of the expression that you want rewritten.
+  \item The compiler \emph{will not} attempt to rewrite an expression to use an implicit class if it type-checks as-is.  In other words, the expression must fail to type check \emph{unless} the compiler can find an implicit class in scope that causes the type check to succeed.
+\end{enumerate}
+
+\begin{instructor}
+\section{Solutions}
+  
+Note that I have elided parts of the solution that are not directly related to the first two programming tasks.  The reason is that I want students to have to think about the rest of the solution on their own.
+
+\begin{scalacode}
+  import java.nio.file._
+
+  object PathImplicits {  
+    implicit class RichPath(p: Path) {
+      def /(p2: String) : Path = p.resolve(p2)
+      def /(p2: Path) : Path = p.resolve(p2)
+    }
+
+    implicit class RichString(s: String) {
+      def /(s2: String) : Path = Paths.get(s).resolve(s2)
+      def /(p2: Path) : Path = Paths.get(s).resolve(p2)
+    }
+  }
+\end{scalacode}
+  
+\end{instructor}
 
 \chapter{Homework 10: Parsing}
 
