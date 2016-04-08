@@ -1,15 +1,8 @@
 class MemoizingMatcher(regex: Regex) {
 
-  val derivs = scala.collection.mutable.Map[(Regex, Char), Regex]()
+  private val derivs = scala.collection.mutable.Map[(Regex, Char), Regex]()
 
-  def empty(re: Regex): Regex = re match {
-    case Character(_) => Zero
-    case Alt(re1, re2) => empty(re1) + empty(re2)
-    case Seq(re1, re2) => empty(re1) >> empty(re2)
-    case Star(_) => One
-    case One => One
-    case Zero => Zero
-  }
+  def size(): Int = derivs.size
 
   def deriv(regex: Regex, ch: Char): Regex = derivs.get((regex, ch)) match {
     case Some(dRegex) => dRegex
@@ -18,8 +11,9 @@ class MemoizingMatcher(regex: Regex) {
         case Character(ch_) => if (ch == ch_) One else Zero
         case One => Zero
         case Zero => Zero
-        case Alt(re1, re2) => deriv(re1, ch) + deriv(re2, ch)
-        case Seq(re1, re2) => (deriv(re1, ch) >> re2) + (empty(re1) >> deriv(re2, ch))
+        case Alt(re1, re2) => deriv(re1, ch) | deriv(re2, ch)
+        case Seq(re1, re2) =>
+          (deriv(re1, ch) >> re2) | (RegexDerivs.empty(re1) >> deriv(re2, ch))
         case Star(r) => deriv(r, ch) >> Star(r)
       }
       derivs += (regex, ch) -> dRegex
@@ -28,23 +22,13 @@ class MemoizingMatcher(regex: Regex) {
   }
 
   def reMatchRec(regex: Regex, str: List[Char]): Boolean = str match {
-    case Nil => empty(regex) == One
+    case Nil => RegexDerivs.empty(regex) == One
     case ch :: rest => reMatchRec(deriv(regex, ch), rest)
   }
 
-  def reMatch(str: String) = reMatchRec(regex, str.toList)
+  def contains(str: String) = reMatchRec(regex, str.toList)
 
-  // If time
-  def chars(re: Regex): Set[Char] =re match {
-    case Character(ch) => Set(ch)
-    case Alt(re1, re2) => chars(re1) union chars(re2)
-    case Seq(re1, re2) => chars(re1) union chars(re2)
-    case Star(r) => chars(r)
-    case One => Set()
-    case Zero => Set()
-  }
-
-def toDot(): String = {
+  def toDot(): String = {
     val builder = new StringBuilder()
     builder.append("digraph G {\n")
     val states = (derivs.keys.map(_._1) ++ derivs.values).toSet
@@ -67,6 +51,7 @@ def toDot(): String = {
     builder.toString
   }
 
+  /** Produces a file that can be viewed with GraphViz. */
   def saveDot(filename: String): Unit = {
     import java.nio.file._
     Files.write(Paths.get(filename), this.toDot().getBytes)

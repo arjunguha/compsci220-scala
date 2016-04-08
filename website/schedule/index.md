@@ -39,13 +39,13 @@ title: Schedule
 | Wednesday, Mar 30 | **No lab.** (Continue working on Sudoku.)                                                       |
 | Thursday, Mar 31  | Reading: [Java Regular Expressions] and [Scala Regular Expressions]                             |
 | Tuesday, Apr 5    | Due: [HW7]. Out: [HW8].                                                                         |
-| Wednesday, Apr 6  | *Lab:*                                                                                          |
-| Thursday, Apr 7   | Reading: Chapter 33 of Programming in Scala.                                                    |
-| Tuesday, Apr 12   | Due: [HW8]. Out: HW9.                                                                           |
+| Wednesday, Apr 6  | *Lab:* Steps 1 and 2 of [HW8].                                                                  |
+| Thursday, Apr 7   |                                                                                                 |
+| Tuesday, Apr 12   | Due: [HW8]. Out: HW9. Reading: Chapter 33 of Programming in Scala.                              |
 | Wednesday, Apr 13 | *Lab:*                                                                                          |
-| Thursday, Apr 14  | .                                                                                               |
+| Thursday, Apr 14  |                                                                                                 |
 | Tuesday, Apr 19   | Due: HW9. Out: HW10.                                                                            |
-| Wednesday, Apr 20 | **No lab.** (Monday schedule)                                                                   |
+| Wednesday, Apr 20 | **No lab.** (Monday schedule.)                                                                  |
 | Thursday, Apr 21  |                                                                                                 |
 | Tuesday, Apr 26   | Due: HW10.                                                                                      |
 | Wednesday, Apr 27 | **No lab.** (No assignment due.)                                                                |

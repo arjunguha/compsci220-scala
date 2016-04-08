@@ -8,7 +8,13 @@ sealed trait Regex {
     case (re1, re2) => Seq(re1, re2)
   }
 
-  def +(other: Regex): Regex = (this, other) match {
+  def >>(other: String): Regex = {
+    import Implicits._
+    this >> other.toRegex
+  }
+
+
+  def |(other: Regex): Regex = (this, other) match {
     case (Zero, re2) => re2
     case (re1, Zero) => re1
     case (re1, re2) => if (re1 == re2) re1 else Alt(re1, re2)
@@ -59,10 +65,34 @@ sealed trait Regex {
     b.toString
   }
 
+  def contains(str: String): Boolean = RegexDerivs.reMatch(this, str.toList)
+
 }
+
 case class Character(ch: Char) extends Regex
 case class Seq(re1: Regex, re2: Regex) extends Regex
 case class Alt(re1: Regex, re2: Regex) extends Regex
 case class Star(re: Regex) extends Regex
+/** Accepts no strings. */
 case object Zero extends Regex
+/** Accepts the empty string. */
 case object One extends Regex
+
+object Implicits {
+
+  implicit class RichString(str: String) {
+
+    def toRegex(): Regex = str.toList.foldRight[Regex](One) {
+      case (ch, re) => Character(ch) >> re
+    }
+
+    def >>(other: String): Regex = str.toRegex >> other.toRegex
+
+    def >>(other: Regex): Regex = str.toRegex >> other
+
+    def |(other: String): Regex = str.toRegex | other.toRegex
+
+    def star(): Regex = Star(this.toRegex)
+  }
+
+}
