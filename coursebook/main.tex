@@ -6675,13 +6675,15 @@ Note that I have elided parts of the solution that are not directly related to t
 
 \newdiscussion{Regular Expressions (Apr 13)}
 
-A \emph{regular expression}, also known as ``regex,'' is a powerful feature of most modern programming languages.  Regexes allow programmers to build sophisticated string-manipulating functions with relative ease.  They are built on a simple, elegant formalism called \emph{finite automata}.  You may encounter some ugly regular expressions in the real world, but if you keep in mind that they are simple machines, you will always be able to understand them.~\footnote{For example, here are some seriously ugly regular expression for validating URLs: \url{https://mathiasbynens.be/demo/url-regex}.}:
+A \emph{regular expression}, also known as ``regex,'' is a powerful feature of most modern programming languages.  Regexes allow programmers to build sophisticated string-manipulating functions with relative ease.  They are built on a simple, elegant formalism called \emph{finite automata}.  You may encounter some ugly regular expressions in the real world, but if you keep in mind that they are simple machines, you will always be able to understand them.~\footnote{For example, here are some seriously ugly regular expressions for validating URLs: \url{https://mathiasbynens.be/demo/url-regex}.}:
 
 \section{Regular Expression Primer}
 
 A regular expression is a sequence of text characters.  For example, the regular expression \texttt{aa} \emph{accepts} the string \scalainline{"aa"} and \emph{rejects} all other strings.  One way to think of \texttt{aa} is as a function that takes a \scalainline{String} as input and that returns a \texttt{Boolean} as output: \scalainline{true} if the string is \scalainline{"aa"} and \scalainline{false} otherwise.
 
-Regular expressions are equivalent to a class of \emph{state machine} called a \emph{nondeterministic finite automaton} or NFA.  It turns out that NFAs can be drawn as a simple kind of graph, and having this graph in your head helps understand what the regular expression algorithm does.  Here's the NFA for the regular expression \texttt{aa}:
+A regular expression is equivalent to a class of \emph{state machines} called a \emph{nondeterministic finite automaton}, or NFA.  NFAs can be drawn as a directed graph, and having this graph in your head helps understand what the regular expression algorithm does.  The rules are simple.  (1) Every possible change in the state of the machine (a ``transition'') is uniquely determined by the source state and input symbol.  (2) The machine ``accepts'' if and only if a sequence of input symbols results in the NFA ending in an ``accepting'' state (a circle with double lines).
+
+Here's the NFA for the regular expression \texttt{aa}:
 
 \begin{center}
   \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
@@ -6696,7 +6698,7 @@ Regular expressions are equivalent to a class of \emph{state machine} called a \
   \end{tikzpicture}
 \end{center}
 
-\subsection{Hunt the Wumpus}
+\subsection{Analogy: Hunt the Wumpus}
 
 Think of this graph as a maze\footnote{See \url{https://en.wikipedia.org/wiki/Hunt_the_Wumpus}}.  You start at $q_0$, the circle at the beginning of the maze.  Your goal is to get to $q_2$, the circle at the end of the maze (the one with double lines).  You can follow paths (arrows) in the direction that they point, but not the other way.  And unfortunately, this maze is filled with evil, dangerous creatures!  Now, you're no fool.  You brought a map!  If your map is right, you make it out alive.  If not, you meet your doom in the maze.  Is your map any good?
 
@@ -6706,9 +6708,25 @@ What if we had the map \scalainline{"bb"}?  We'd start at $q_0$ and go to $q_1$.
 
 \subsection{One Caveat (Among Many) to My Beautiful Analogy}
 
-Note that we assumed that our input strin (the map) and our regular expression (the maze) both started in the same place.  This means that our regular expression must match our \emph{entire input string}.  In practice, people often write regular expressions that simply search for a \emph{substring}.  In many regular expression implementations, you force the regex to match the entire string by prepending the regex with the \texttt{\^} character and appending it with the \texttt{\$} character.  For example, \texttt{aa} becomes \texttt{\^aa\$}.
+Note that my analogy assumes that our input string and our regular expression both start and end in the same place.  This fact would imply that a regular expression matches an \emph{entire input string}.  In practice, it is often useful to write regular expressions that match a \emph{substring}.  In many regular expression implementations, one denotes whole-string matches by prepending the regex with the \texttt{\^{}} character and appending it with the \texttt{\$} character.  For example, \texttt{aa} becomes \texttt{\^{}aa\$}.
 
-Scala's \scalainline{regex.pattern.matcher(str).matches()} (where \scalainline{regex} is a regex and \scalainline{str} is an input string) always tries to match the entire string, so that \texttt{\^} and \texttt{\$} are unnecessary.
+Scala's \scalainline{regex.pattern.matcher(str).matches()} (where \scalainline{regex} is a regex and \scalainline{str} is an input string) always matches the entire string, so \texttt{\^{}} and \texttt{\$} are unnecessary.  Other Scala regex methods do not work this way.  You should be careful that the function you use has the semantics that you want, so please check the Scala docs if you are unsure.
+
+\section{Discussion Programming Tasks}
+
+We are going to do programming tasks 2 and 5 in class.  They are:
+
+\begin{itemize}
+
+  \item Define the regular expression \scalainline{time}, which only matches times written as five-character strings \texttt{HH:MM}, where the hours range from 00--23 and the minutes from 00--59.
+ 
+  \item Define the regular expression \scalainline{comment}, which only matches strings that start with \texttt{/*} and end with \texttt{*/}.
+
+\end{itemize}
+
+\section{Homework Hint for the Parity-Checking Regular Expression}
+
+The last regex is a tricky one.  It helps if you know a certain arithmetical law~\footnote{Which is somewhere on this page: \url{https://en.wikipedia.org/wiki/Parity_(mathematics)}}.
 
 \newlecture
 
