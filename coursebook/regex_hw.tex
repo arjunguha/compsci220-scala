@@ -34,7 +34,7 @@ The \texttt{project/plugins.sbt} file must have exactly this line:
 \label{regex_template}
 \end{figure}
 
-You may assume that your regular expressions will only be used to match complete strings. Therefore, you don't need to use the \texttt{\^} and \texttt{\$} metacharacters.
+You may assume that your regular expressions will only be used to match complete strings. Therefore, you don't need to use the \texttt{\^} and \texttt{\$} metacharacters. A simple way to test if a regular expression \scalainline{regex} exactly matches a string \scalainline{str}, is to write \scalainline{regex.pattern.matcher(str).matches()}.
 
 You should use the template in \cref{regex_template} for your solution and fill in the regular expressions as follows:
 
@@ -55,7 +55,7 @@ You should use the template in \cref{regex_template} for your solution and fill 
   \item Define the regular expression \scalainline{roman}, which only matches strings that represent the numbers 0---39 in roman numerals. i.e., the string may only contain the characters \texttt{I}, \texttt{V}, and \texttt{X}, with the usual constraints on roman numerals.
 
 
-  \item Define the regular expression \scalainline{date}, which only matches dates written as ten-character strings \texttt{YYYY-MM-DD}. For example, \texttt{2016-04-01} represents April 1 2016, whereas \texttt{2016-04-31} is not a valid date. You should account for leap years by assume that Feb 29th is valid if the year is evenly divisible by four. E.g., \texttt{2016-02-29} is a valid date but \texttt{2016-02-29} is invalid.
+  \item Define the regular expression \scalainline{date}, which only matches dates written as ten-character strings \texttt{YYYY-MM-DD}. For example, \texttt{2016-04-01} represents April 1 2016, whereas \texttt{2016-04-31} is not a valid date. You should account for leap years by assume that Feb 29th is valid if the year is evenly divisible by four. E.g., \texttt{2016-02-29} is a valid date but \texttt{2017-02-29} is invalid.
 
   \item The \emph{parity} of a number is the sum of the digits of the number. For example, the parity of $203$ is $2 + 0 + 3 = 5$ (odd) and the parity of $307$ is $3 + 0 + 7 = 10$ (even). Define the regular expression \scalainline{evenParity} that only matches numbers with even parity. You may find it convenient to accept numbers with leading zeroes.
 

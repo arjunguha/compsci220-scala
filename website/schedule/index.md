@@ -40,11 +40,11 @@ title: Schedule
 | Thursday, Mar 31  | Reading: [Java Regular Expressions] and [Scala Regular Expressions]                             |
 | Tuesday, Apr 5    | Due: [HW7]. Out: [HW8].                                                                         |
 | Wednesday, Apr 6  | *Lab:* Steps 1 and 2 of [HW8].                                                                  |
-| Thursday, Apr 7   |                                                                                                 |
-| Tuesday, Apr 12   | Due: [HW8]. Out: HW9. Reading: Chapter 33 of Programming in Scala.                              |
-| Wednesday, Apr 13 | *Lab:*                                                                                          |
+| Thursday, Apr 7   | [Code from class](https://piazza.com/class/ihn69k9d3dh9n)                                       |
+| Tuesday, Apr 12   | Due: [HW8]. Out: [HW9]. Reading: Chapter 33 of Programming in Scala.                            |
+| Wednesday, Apr 13 | *Lab:* Tasks 2 and 5 of [HW9].                                                                  |
 | Thursday, Apr 14  |                                                                                                 |
-| Tuesday, Apr 19   | Due: HW9. Out: HW10.                                                                            |
+| Tuesday, Apr 19   | Due: [HW9]. Out: HW10.                                                                          |
 | Wednesday, Apr 20 | **No lab.** (Monday schedule.)                                                                  |
 | Thursday, Apr 21  |                                                                                                 |
 | Tuesday, Apr 26   | Due: HW10.                                                                                      |
@@ -59,6 +59,7 @@ title: Schedule
 [HW6]: ../hw/hw6.pdf
 [HW7]: ../hw/hw7.pdf
 [HW8]: ../hw/hw8.pdf
+[HW9]: ../hw/hw9.pdf
 [Enumerating the Rationals]: ../reading/rationals.pdf
 [Java Regular Expressions]: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
 [Scala Regular Expressions]: http://www.scala-lang.org/api/current/index.html#scala.util.matching.Regex
