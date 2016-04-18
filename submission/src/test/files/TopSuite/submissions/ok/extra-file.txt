@@ -1,1 +1,0 @@
-This is an extra file, but should not be copied to the sandbox.

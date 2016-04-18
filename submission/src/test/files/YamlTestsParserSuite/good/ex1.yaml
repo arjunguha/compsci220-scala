@@ -1,9 +1,0 @@
-memoryLimit: 100
-timeLimit: 20
-command: [ /usr/bin/scala, test.scala ]
-image: ubuntu:14.04
-tests:
-  - desc: Test 1
-    test: "test1"
-  - desc: Test 2
-    test: "test2"

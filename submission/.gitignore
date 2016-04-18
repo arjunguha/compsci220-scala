@@ -1,9 +1,0 @@
-target
-.vagrant
-[#]*
-[.#]*
-*~
-*.*~
-*.class
-.DS_Store
-classpath

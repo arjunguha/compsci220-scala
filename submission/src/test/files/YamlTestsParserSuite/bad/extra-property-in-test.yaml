@@ -1,5 +1,0 @@
-image: ubuntu:14.04
-tests:
-  - test: "test1"
-    extra: "hello"
-  - test: "test2"

@@ -1,1 +1,0 @@
-[[ `cat solution` = "hello\n" ]]

@@ -1,5 +1,0 @@
-#!/bin/bash
-DIR=`dirname $0`
-VERSION=$(grep 'version' $DIR/../../build.sbt | grep --color -o '\".*\"' | sed 's/\"//g')
-JAR=$DIR/../../target/scala-2.10/submission-assembly-$VERSION.jar
-SUBMISSION_CONF=$DIR/../assignments.conf java -jar $JAR $@

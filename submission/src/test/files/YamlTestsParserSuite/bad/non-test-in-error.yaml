@@ -1,4 +1,0 @@
-image: ubuntu:14.04
-tests:
-  - foo: "test1"
-  - test: "test2"
