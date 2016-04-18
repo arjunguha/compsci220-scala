@@ -44,10 +44,10 @@ title: Schedule
 | Tuesday, Apr 12   | Due: [HW8]. Out: [HW9]. Reading: Chapter 33 of Programming in Scala.                            |
 | Wednesday, Apr 13 | *Lab:* Tasks 2 and 5 of [HW9].                                                                  |
 | Thursday, Apr 14  |                                                                                                 |
-| Tuesday, Apr 19   | Due: [HW9]. Out: HW10.                                                                          |
+| Tuesday, Apr 19   | Due: [HW9]. Out: [HW10].                                                                        |
 | Wednesday, Apr 20 | **No lab.** (Monday schedule.)                                                                  |
 | Thursday, Apr 21  |                                                                                                 |
-| Tuesday, Apr 26   | Due: HW10.                                                                                      |
+| Tuesday, Apr 26   | Due: [HW10].                                                                                    |
 | Wednesday, Apr 27 | **No lab.** (No assignment due.)                                                                |
 {: .table .table-striped :}
 
