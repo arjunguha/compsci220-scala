@@ -1,0 +1,51 @@
+- Write the Scala wrapper for Java's array class
+
+  case class AnyArray[T](elts: Array[T])
+
+  Methods get, set, length, and foreach
+
+- Write the bitarray. These are the get and set methods
+
+    def get(index: Int): Boolean = elts(index >> 5) >> (index & 0x1F) == 1
+
+    def set(index: Int, value: Boolean) = {
+
+      if (value) {
+        elts(index >> 5) = elts(index >> 5) | (1 << (index & 0x1F))
+      }
+      else {
+        elts(index >> 5) = elts(index >> 5) & ~(1 << (index & 0x1F))
+      }
+
+- Lesson: any code that uses BitArray needs to change. e.g., we can't write
+  a generic foreach method
+
+-  Introduce the ArrayLike trait:
+
+  trait ArrayLike[T] extends Any {
+    def get(index: Int): T
+    def set(index: Int, value: T): Unit
+    def length(): Int
+  }
+
+- Natural to write:
+
+  case class BitArray[T](elts: Array[Int]) ArrayLike[T]
+
+- But, we can instead write:
+
+  case class BitArray(elts: Array[Int]) ArrayLike[Boolean]
+
+  We've specialized the type parameter, but that's ok. (It's like what we did
+  for List[Nothing].)
+
+- Further optimization: we are allocating an object that wraps the underlying
+  Java array. Fix: use AnyVal:
+
+  case class AnyArray[T](elts: Array[T]) extends AnyVal with CompactArray[T]
+  case class BitArray(elts: Array[Int]) extends AnyVal with CompactArray[Boolean]
+
+  Basically "sees through" the wrapper type
+
+- Lessons: low-level optimizations are necessary for very high-performance code.
+  Exposing low-level abstractions makes code un-reusable. GADTs can help.
