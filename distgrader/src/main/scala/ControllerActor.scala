@@ -23,22 +23,16 @@ private class Job(label: String,
 
   private object Tick
 
-  private val running = scala.collection.mutable.Map[ActorRef, Instant]()
-
-  def retick(): Unit = {
-    akka.pattern.after(30.seconds, context.system.scheduler) {
-      Future {
-        self ! Tick
-      }
-    }
-  }
+  private var tries = 0
+  private var activeWorker: Option[ActorRef] = None
 
   def complete(): Unit = {
     controller ! JobComplete(self)
-    for (w <- running.keys) {
-      controller ! WorkerReady(w)
+    activeWorker match {
+      case Some(w) => controller ! WorkerReady(w)
+      case None => ()
     }
-    running.clear()
+    activeWorker = None
     log.info(s"Stopping job $label ($self)")
     self ! PoisonPill
   }
@@ -46,28 +40,29 @@ private class Job(label: String,
   def receive = {
     case Terminated => {
       log.info(s"$sender terminated while running $label")
-      running -= sender
-      if (running.isEmpty) {
-        controller ! EnqueueJob
-      }
+      activeWorker = None
+      controller ! EnqueueJob
     }
     case Start(worker) => {
       context.watch(worker)
-      log.info(s"${running.size} workers working on $self")
-      if (running.isEmpty) {
-        retick()
+      activeWorker match {
+        case Some(_) => {
+          log.error("Job already running")
+          controller ! WorkerReady(worker)
+        }
+        case None => {
+          tries = tries + 1
+          activeWorker = Some(worker)
+          worker ! command
+          akka.pattern.after((command.timeout + 5).seconds, context.system.scheduler) { Future(self ! Tick) }
+        }
       }
-      assert(running.contains(worker) == false)
-      val t = Instant.now()
-      worker ! command
-      running += (worker -> t)
     }
     case Status.Failure(exn : SerializedException) => {
-      log.error(s"Receivedfserializedailure from $sender: ${exn.exn}")
+      log.error(s"Received serialized failure from $sender: ${exn.exn}")
       respondTo.failure(exn)
       complete()
     }
-
     case Status.Failure(exn) => {
       log.error(s"Received failure from $sender: $exn")
       respondTo.failure(exn)
@@ -79,21 +74,15 @@ private class Job(label: String,
       complete()
     }
     case Tick => {
-      val now = Instant.now()
-      val allLate = running.forall {
-        case (actorRef, startTime) => {
-          val isLate = startTime.plusSeconds(command.timeout + 30).isBefore(now)
-          if (isLate) {
-            log.info(s"$label started on $actorRef at $startTime")
-          }
-          isLate
-        }
+      if (tries == 2) {
+        respondTo.failure(throw new Exception("Test case failed"))
+        complete()
       }
-
-      if (allLate && running.size < 3) {
+      else {
+        log.warning(s"No response from client, retrying $tries")
+        activeWorker = None
         controller ! EnqueueJob
       }
-      retick()
     }
   }
 

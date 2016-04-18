@@ -93,6 +93,8 @@ object Main extends App {
             case "discussion1" => new Discussion1Grading(root, ip)
             case "tictactoe" => new GradingTicTacToe(root, ip)
             case "generics" => new GradeGenerics(root, ip)
+            case "sudoku" => new GradeSudoku(root, ip)
+            case "implicits" => new GradeImplicits(root, ip)
             case _ => {
               println("Unknown assignment")
               throw new Exception("Unknown assignment")

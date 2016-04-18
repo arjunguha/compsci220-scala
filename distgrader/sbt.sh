@@ -8,4 +8,6 @@ fi
 echo "Logging to ~/Library/Logs/$LOGFILE"
 
 sbt -J-Xmx4G -Dorg.slf4j.simpleLogger.defaultLogLevel=info \
+  -Dorg.slf4j.simpleLogger.showDateTime=true \
+  -Dorg.slf4j.simpleLogger.dateTimeFormat="H:m:s.S" \
   -Dorg.slf4j.simpleLogger.logFile=$LOGFILE

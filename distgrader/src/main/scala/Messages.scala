@@ -67,9 +67,19 @@ object Messages {
                     stderr: String,
                     exitCode: Int) extends Result {
 
+    def maybeTruncate(str: String): String = {
+      if (str.length > 5000) {
+        str.substring(0, 5000) + "\n(Output truncated)"
+      }
+      else {
+        str
+      }
+    }
+
     override def toString(): String = {
-      val fmtStdout = stdout.split("\n").map(str => "    " + str).mkString("\n")
-      val fmtStderr = stderr.split("\n").map(str => "    " + str).mkString("\n")
+      val fmtStdout = maybeTruncate(stdout.split("\n").map(str => "    " + str).mkString("\n"))
+      val fmtStderr = maybeTruncate(stderr.split("\n").map(str => "    " + str).mkString("\n"))
+
       s"failed (0/$maxScore points)\nStandard output:$fmtStdout\n\nStandard error:\n\n$fmtStderr\n\nExit code: $exitCode\n"
     }
 
