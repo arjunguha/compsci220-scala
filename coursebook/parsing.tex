@@ -1,0 +1,84 @@
+\newlecture
+
+\begin{instructor}
+These notes are not complete
+\end{instructor}
+
+
+Explain how to parse to a data structure
+
+\begin{scalacode}
+  sealed trait Regex
+  case class Character(ch: Char) extends Regex
+  case class Seq(e1: Regex, e2: Regex) extends Regex
+  case class Alt(e1: Regex, e2: Regex) extends Regex
+  case class Star(e: Regex) extends Regex
+  case object One extends Regex
+  case object Zero extends Regex
+\end{scalacode}
+
+- Explain how to dis-ambiguate a grammar
+
+\begin{verbatim}
+
+    char ::= "a" | "b" | "c" | ...
+
+    e ::= e1 e2
+        | e1 "|" e2
+        | e "*"
+        | char
+        | "(" e ")"
+\end{verbatim}
+
+Unambiguous Grammar:
+
+\begin{verbatim}
+    a ::= char
+        | a "|" a
+        | "(" e ")"
+
+    s ::= s s
+        | a
+
+    e ::= s
+\end{verbatim}
+
+Write a pretty-printer
+
+
+Write a generator (without using for .. yield):
+
+\begin{scalacode}
+  import org.scalacheck._
+  import Gen._
+  import Arbitrary.arbitrary
+
+  object GenExpr {
+
+    def genNum: Gen[Expr] = for {
+      n <- choose(-100, 100)
+    } yield Num(n)
+
+    def genAdd(size: Int): Gen[Expr] = for {
+      lhs <- genExpr(size / 2)
+      rhs <- genExpr(size / 2)
+    } yield (Add(lhs, rhs))
+
+    def genSub(size: Int): Gen[Expr] = for {
+      lhs <- genExpr(size / 2)
+      rhs <- genExpr(size / 2)
+    } yield (Sub(lhs, rhs))
+
+    def genExpr(size: Int): Gen[Expr] = {
+      if (size <= 1) {
+        genNum
+      }
+      else {
+        oneOf(genAdd(size), genSub(size), genNum)
+      }
+    }
+
+    def apply(): Gen[Expr] = sized(genExpr)
+
+  }
+\end{scalacode}

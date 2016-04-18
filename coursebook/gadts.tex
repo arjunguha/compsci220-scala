@@ -1,11 +1,20 @@
-- Write the Scala wrapper for Java's array class
+\newlecture
 
-  case class AnyArray[T](elts: Array[T])
+\begin{instructor}
+These notes are not complete.
+\end{instructor}
 
-  Methods get, set, length, and foreach
+Write the Scala wrapper for Java's array class
 
-- Write the bitarray. These are the get and set methods
+\begin{scalacode}
+case class AnyArray[T](elts: Array[T])
+\end{scalacode}
 
+Methods get, set, length, and foreach
+
+Write bitarray. These are the get and set methods
+
+\begin{scalacode}
     def get(index: Int): Boolean = elts(index >> 5) >> (index & 0x1F) == 1
 
     def set(index: Int, value: Boolean) = {
@@ -16,36 +25,43 @@
       else {
         elts(index >> 5) = elts(index >> 5) & ~(1 << (index & 0x1F))
       }
+\end{scalacode}
 
-- Lesson: any code that uses BitArray needs to change. e.g., we can't write
-  a generic foreach method
+Lesson: any code that uses BitArray needs to change. e.g., we can't write a generic foreach method
 
--  Introduce the ArrayLike trait:
+Introduce the ArrayLike trait:
 
+\begin{scalacode}
   trait ArrayLike[T] extends Any {
     def get(index: Int): T
     def set(index: Int, value: T): Unit
     def length(): Int
   }
+\end{scalacode}
 
-- Natural to write:
+Natural to write:
 
-  case class BitArray[T](elts: Array[Int]) ArrayLike[T]
+\begin{scalacode}
+case class BitArray[T](elts: Array[Int]) ArrayLike[T]
+\end{scalacode}
 
-- But, we can instead write:
+But, we can instead write:
 
+\begin{scalacode}
   case class BitArray(elts: Array[Int]) ArrayLike[Boolean]
+\end{scalacode}
 
   We've specialized the type parameter, but that's ok. (It's like what we did
-  for List[Nothing].)
+  for \scalainline{List[Nothing]}.)
 
-- Further optimization: we are allocating an object that wraps the underlying
+Further optimization: we are allocating an object that wraps the underlying
   Java array. Fix: use AnyVal:
 
+\begin{scalacode}
   case class AnyArray[T](elts: Array[T]) extends AnyVal with CompactArray[T]
   case class BitArray(elts: Array[Int]) extends AnyVal with CompactArray[Boolean]
+\end{scalacode}
 
-  Basically "sees through" the wrapper type
+Basically "sees through" the wrapper type.
 
-- Lessons: low-level optimizations are necessary for very high-performance code.
-  Exposing low-level abstractions makes code un-reusable. GADTs can help.
+Lessons: low-level optimizations are necessary for very high-performance code. Exposing low-level abstractions makes code un-reusable. GADTs can help.
