@@ -60,6 +60,7 @@ title: Schedule
 [HW7]: ../hw/hw7.pdf
 [HW8]: ../hw/hw8.pdf
 [HW9]: ../hw/hw9.pdf
+[HW10]: ../hw/hw10.pdf
 [Enumerating the Rationals]: ../reading/rationals.pdf
 [Java Regular Expressions]: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
 [Scala Regular Expressions]: http://www.scala-lang.org/api/current/index.html#scala.util.matching.Regex

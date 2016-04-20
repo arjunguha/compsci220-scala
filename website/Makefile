@@ -1,8 +1,5 @@
-all: lib
+all:
 	jekyll build
-
-lib: ../support-code/target/scala-2.11/api
-	rsync -avzr --delete ../support-code/target/scala-2.11/api lib
 
 publish:
 	rsync -avzr --delete _site/ arjun@people.cs.umass.edu:~/public_html/courses/cmpsci220-spring2016

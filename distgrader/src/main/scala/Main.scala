@@ -95,6 +95,7 @@ object Main extends App {
             case "generics" => new GradeGenerics(root, ip)
             case "sudoku" => new GradeSudoku(root, ip)
             case "implicits" => new GradeImplicits(root, ip)
+            case "regexes" => new GradeRegexes(root, ip)
             case _ => {
               println("Unknown assignment")
               throw new Exception("Unknown assignment")
