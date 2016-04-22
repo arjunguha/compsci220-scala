@@ -21,6 +21,7 @@ object Main extends App {
   case object Summarize extends Command
   case object Forget extends Command
   case object UpdateCSV extends Command
+  case object LateDays extends Command
 
   case class Config(command: Command, opts: Map[String, String], ints: Map[String, Int])
 
@@ -36,6 +37,7 @@ object Main extends App {
         .action((x, c)  => c.copy(ints = c.ints + (name -> x)))
     }
 
+    cmd("late").action((_, cfg) => cfg.copy(command = LateDays)).children(key("root"))
 
     cmd("grade")
       .action((_, cfg) => cfg.copy(command = Grade))
@@ -178,7 +180,9 @@ object Main extends App {
             println(s"$test\n  $passed passed, $failed failed, $didNotRun did not run (success rate: $rate%)")
           }
         }
-
+        case LateDays => {
+          grading.LateDays.fromDirectory(opts("root"))
+        }
       }
     }
   }

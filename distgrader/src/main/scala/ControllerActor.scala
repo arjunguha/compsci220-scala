@@ -74,7 +74,7 @@ private class Job(label: String,
       complete()
     }
     case Tick => {
-      if (tries == 2) {
+      if (tries == 4) {
         respondTo.failure(throw new Exception("Test case failed"))
         complete()
       }

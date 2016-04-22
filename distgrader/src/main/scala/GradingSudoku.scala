@@ -12,7 +12,7 @@ class GradeSudoku(val assignmentRoot: String, val selfIP: String) extends TestFr
       // Produces true if the board does not exclude the given solution
       private def canFindSolution(solutionStr: String) = {
         val sol = solutionStr.toArray
-        (board: Solution.T) => {
+        val forward = (board: Solution.T) => {
           allPositions.forall { case (r, c) =>
             sol(r * 9 + c) match {
               case '.' => true
@@ -23,6 +23,18 @@ class GradeSudoku(val assignmentRoot: String, val selfIP: String) extends TestFr
             }
           }
         }
+        val backward = (board: Solution.T) => {
+          allPositions.forall { case (r, c) =>
+            sol(r * 9 + c) match {
+              case '.' => true
+              case ch =>  board.valueAt(c, r) match {
+                case Some(v) => v == ch.toString.toInt
+                case None => board.availableValuesAt(c, r).toSet.contains(ch.toString.toInt)
+              }
+            }
+          }
+        }
+        (board: Solution.T) => forward(board) || backward(board)
       }
       """
 

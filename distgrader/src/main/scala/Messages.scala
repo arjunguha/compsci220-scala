@@ -68,8 +68,8 @@ object Messages {
                     exitCode: Int) extends Result {
 
     def maybeTruncate(str: String): String = {
-      if (str.length > 5000) {
-        str.substring(0, 5000) + "\n(Output truncated)"
+      if (str.length > 10000) {
+        str.substring(0, 10000) + "\n(Output truncated)"
       }
       else {
         str
