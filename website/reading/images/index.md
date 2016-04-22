@@ -103,5 +103,3 @@ show(manyCenteredRects(200))
 
 All these functions are are documented in the [Library Documentation].
 You should read the documentation and experiment with the functions.
-
-{% include links.md %}
