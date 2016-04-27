@@ -8,7 +8,7 @@ title: Policies
 # No Electronics
 
 You cannot use electronics of any kind in class. (i.e., no laptops, cell phones,
-tablets, Google Glasses, Apple Watches, etc.)
+tablets, Google Glasses, Apple Watches, Microsoft HoloLenses, etc.)
 
 <a name="accomadations"></a>
 
@@ -36,10 +36,10 @@ http://people.cs.umass.edu/~emery/plasma/emery/software-systems-cmpsci-291SP.htm
 {% endcomment %}
 
 **All projects in this course are to be done by you and you alone.** Violation
-will result in an immediate F grade and possible initiation of the formal
-procedures of the University. We use an automated program and manual checks to
-correlate projects with each other and with prior solutions. **If you cheat, we
-will catch you.*
+will result in an immediate F grade for the course and possible initiation of
+the formal procedures of the University. We use an automated program and manual
+checks to correlate projects with each other and with prior solutions. **If you
+cheat, we will catch you.*
 
 At the same time, we encourage students to help each other learn the course
 material. As in most courses, there is a boundary separating these two
@@ -120,9 +120,8 @@ approximately as follows:
   <div class="col-sm-3">
     <table class="table table-striped">
     <tbody>
-    <tr><td>Programming Assignments</td><td>70%</td></tr>
-    <tr><td>Quizzes</td><td>15%</td></tr>
-    <tr><td>Participation (online and in-person)</td><td>5%</td></tr>
+    <tr><td>Programming Assignments</td><td>80%</td></tr>
+    <tr><td>Discussions Assignments</td><td>10%</td></tr>
     <tr><td>Exams</td><td>10%</td></tr>
     </tbody>
     </table>
@@ -134,26 +133,32 @@ breakdown of percentages and final grades for this course are A (93-100), A-
 (90-92), B+ (87-89), B (83-86), B- (80-82), C+ (77-79), C (73-76), C- (70-72),
 D+ (67-69), D (60-66), F (0-59).
 
-Your current grades are always available on [Moodle]. You must track your own
+Your current grades are available on [Moodle]. You must track your own
 performance throughout the class.
 
 <a name="late"></a>
 
 # Late Homework
 
-You have four late days to use for any sort of emergency or party. Please
-do not tell us you're submitting things late. We know how to program
-computers to track this for us.
-
-After that, the following policy applies: **you lose 10% of your grade on an
-assignment for every 24 hours that an assignment is late**. This has two
-consequences:
+**You lose 10% of your grade on an assignment for every 24 hours that an
+assignment is late**. This has two consequences:
 
 1. You get 0 points after 10 days.
 
 2. There is no point staying up late at night after the assignment is due.
    If you realize you're going to be late, go to sleep, come to class in the
    morning, and finish the assignment after class.
+
+In addition, once an assignment is late, you lose certain privileges:
+
+1. You may not receive help from the course staff on Piazza or in person, since
+   they will be focusing on the next assignment.
+
+2. In certain exceptional situations, we will correct trivial mistakes in your
+   code (e.g., fixing names of required functions). Howvever, we will not apply
+   corrections to late assignments.
+
+So, we strongly recommend not submitting homework late.
 
 <a name="attendance"></a>
 
