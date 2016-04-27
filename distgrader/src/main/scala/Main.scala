@@ -22,6 +22,7 @@ object Main extends App {
   case object Forget extends Command
   case object UpdateCSV extends Command
   case object LateDays extends Command
+  case object Attendance extends Command
 
   case class Config(command: Command, opts: Map[String, String], ints: Map[String, Int])
 
@@ -38,6 +39,8 @@ object Main extends App {
     }
 
     cmd("late").action((_, cfg) => cfg.copy(command = LateDays)).children(key("root"))
+
+    cmd("attendance").action((_, cfg) => cfg.copy(command = Attendance)).children(key("root"))
 
     cmd("grade")
       .action((_, cfg) => cfg.copy(command = Grade))
@@ -98,6 +101,7 @@ object Main extends App {
             case "sudoku" => new GradeSudoku(root, ip)
             case "implicits" => new GradeImplicits(root, ip)
             case "regexes" => new GradeRegexes(root, ip)
+            case "parsing" => new GradeParsing(root, ip)
             case _ => {
               println("Unknown assignment")
               throw new Exception("Unknown assignment")
@@ -183,6 +187,10 @@ object Main extends App {
         case LateDays => {
           grading.LateDays.fromDirectory(opts("root"))
         }
+        case Attendance => {
+          grading.Attendance.fromDirectory(opts("root"))
+        }
+
       }
     }
   }

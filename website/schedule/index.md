@@ -37,7 +37,7 @@ title: Schedule
 | Thursday, Nov 10  | **TODO: Maybe more notes on regular expressions?**                                              |
 | Tuesday, Nov 15   | Due: [HW8]. **TODO: Notes on regular expression derivates?**                                    |
 | Wednesday, Nov 16 | **No lab.** (Friday schedule.)                                                                  |
-| Thursday, Nov 17  | Reading: Chapter 33 of Programming in Scala (parser combinators).                               |
+| Thursday, Nov 17  | Reading: [Parser Combinators].                                                                  |
 | Tuesday, Nov 22   | **No class.** (Thanksgiving Recess.)                                                            |
 | Wednesday, Nov 23 | **No lab.** (Thanksgiving Recess.)                                                              |
 | Thursday, Nov 24  | **No class.** (Thanksgiving Recess.)                                                            |
@@ -59,6 +59,10 @@ title: Schedule
 [HW6]: ../hw/hw6.pdf
 [HW7]: ../hw/hw7.pdf
 [HW8]: ../hw/hw8.pdf
+[HW9]: ../hw/hw9.pdf
+[HW10]: ../hw/hw10.pdf
+
 [Enumerating the Rationals]: ../reading/rationals.pdf
+[Parser Combinators]: http://www.artima.com/pins1ed/combinator-parsing.html
 [Java Regular Expressions]: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
 [Scala Regular Expressions]: http://www.scala-lang.org/api/current/index.html#scala.util.matching.Regex
