@@ -58,6 +58,7 @@ object LateDays {
 
   // Maps each student to the number of days late
   def processFile(cumulative: Map[String, Int], filename: Path): Map[String, Int] = {
+    println(s"Processing $filename")
     moodleGradingSheetRegex.findFirstMatchIn(filename.getFileName.toString) match {
       case None => throw new IllegalArgumentException(s"Cannot parse CSV filename: ${filename.getFileName.toString}")
       case Some(regexMatch) => {
@@ -95,6 +96,10 @@ object LateDays {
     }
   }
 
+  implicit val LocalDateTimeOrdering = new math.Ordering[LocalDateTime] {
+    def compare(x: LocalDateTime, y: LocalDateTime): Int = x.compareTo(y)
+  }
+
   def prepareEmail(late: Int, assignments: List[String]): String = {
     """
     |This email is about late homework submitted for COMPSCI220. Recall that the late policy is online:
@@ -108,10 +113,21 @@ object LateDays {
     assignments.mkString("\n")
   }
 
+  def filenameToDueDate(p: Path): LocalDateTime = {
+    val f = p.getFileName.toString
+    moodleGradingSheetRegex.findFirstMatchIn(f) match {
+      case None => throw new IllegalArgumentException(s"Cannot parse CSV filename: $f")
+      case Some(regexMatch) => {
+        val assignment = regexMatch.group("assignment")
+        dueDates(assignment)
+      }
+    }
+  }
+
   def fromDirectory(dir: String): Unit = {
     import scala.collection.JavaConversions._
     val stream = Files.newDirectoryStream(Paths.get(dir))
-    val csvs = stream.filter(p => p.getFileName.toString.endsWith(".csv")).toList
+    val csvs = stream.filter(p => p.getFileName.toString.endsWith(".csv")).toList.sortBy(filenameToDueDate)
     stream.close()
     val latePeriods = csvs.foldLeft(Map[String, Int]())(processFile)
   }
