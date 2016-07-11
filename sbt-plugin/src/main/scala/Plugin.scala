@@ -40,14 +40,17 @@ object Plugin extends sbt.AutoPlugin {
   override def projectSettings = super.projectSettings ++
     Seq(org.scalastyle.sbt.ScalastylePlugin.projectSettings :_*) ++
     Seq(
-      scalaVersion := "2.11.7",
+      scalaVersion := "2.11.8",
       scalacOptions ++= Seq(
         "-deprecation",
         "-unchecked",
         "-feature",
         "-Xfatal-warnings"
       ),
+      resolvers += "PLASMA" at "https://dl.bintray.com/plasma-umass/maven",
+      parallelExecution in Test := false,
       libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % "test",
+      libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.3.0",
       findMisplacedFiles := Tasks.findMisplacedFiles(streams.value.log),
       directoryWarnings := Tasks.directoryWarnings(streams.value.log),
       checkstyle := Tasks.checkstyle(
