@@ -1,10 +1,10 @@
 build:
 	vagrant up
-	VBoxManage controlvm cmpsci220-student-vm acpipowerbutton
+	VBoxManage controlvm compsci220-student-vm acpipowerbutton
 
 export:
-	VBoxManage export cmpsci220-student-vm cmpsci220.ova
+	VBoxManage export compsci220-student-vm -o compsci220.ova
 
 upload:
-	gsutil cp cmpsci220.ova gs://umass-cmpsci220-artifacts/cmpsci220.ova
-	gsutil acl ch -u AllUsers:R gs://umass-cmpsci220-artifacts/cmpsci220.ova
+	gsutil cp compsci220.ova gs://umass-compsci220/compsci220.ova
+	gsutil acl ch -u AllUsers:R gs://umass-compsci220/compsci220.ova

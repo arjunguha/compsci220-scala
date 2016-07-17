@@ -140,6 +140,23 @@ performance throughout the class.
 
 # Late Homework
 
+You have four late days to use for any sort of emergency or party. Please do not
+tell us you’re submitting things late. We know how to program computers to track
+this for us.
+
+After that, the following policy applies: **you lose 10% of your grade on an
+assignment for every 24 hours that an assignment is late.** This has two
+consequences:
+
+- You get 0 points after 10 days.
+
+- There is no point staying up late at night after the assignment is due. If you
+  realize you're going to be late, go to sleep, come to class in the morning,
+  and finish the assignment after class.
+
+
+
+
 **You lose 10% of your grade on an assignment for every 24 hours that an
 assignment is late**. This has two consequences:
 

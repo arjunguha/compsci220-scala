@@ -6,6 +6,7 @@
 - SBT
 - Pygments
 - LaTeX (at least TeXLive 2015)
+- Jekyll
 
 ## OLD DOCUMENTATION BELOW
 

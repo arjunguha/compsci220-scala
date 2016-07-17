@@ -1,7 +1,21 @@
 #!/bin/bash
 set -x
+set -e
+
+apt-get update -q
+apt-get install -y software-properties-common
+
+echo debconf shared/accepted-oracle-license-v1-1 select true | \
+  debconf-set-selections
+add-apt-repository -y ppa:webupd8team/java
+
+add-apt-repository -y ppa:webupd8team/sublime-text-3
+
+echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
 
 apt-get update
+
 apt-get upgrade -y
 
 # This script configures the student virtual machine for CS220.
@@ -12,11 +26,14 @@ apt-get install -y \
   curl \
   lxterminal \
   xdg-utils \
-  vim-gtk \
-  emacs24 \
-  software-properties-common
+  firefox \
+  sublime-text-installer \
+  oracle-java8-installer \
+  sbt
 
 # Allow sudo with password
+adduser --disabled-password --gecos "" student
+
 usermod -a -G sudo student
 cat << EOF > /etc/sudoers
 Defaults  env_reset
@@ -37,43 +54,6 @@ user-session=Lubuntu
 greeter-session=lightdm-gtk-greeter
 EOF
 
-# Install Chrome
-wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-if [ `arch` == "x86_64"]; then
-  CHROME_DEB_FILE=google-chrome-stable_current_amd64.deb
-else
-  CHROME_DEB_FILE=google-chrome-stable_current_i386.deb
-fi
- wget https://dl.google.com/linux/direct/$CHROME_DEB_FILE
-dpkg -i $CHROME_DEB_FILE
-rm $CHROME_DEB_FILE
-apt-get -f -y install
-
-# Install Sublime Text
-if [ `arch` == "x86_64" ]; then
-  SUBL_DEB_FILE=sublime-text_build-3083_amd64.deb
-else
-  SUBL_DEB_FILE=sublime-text_build-3083_i386.deb
-fi
-wget https://download.sublimetext.com/$SUBL_DEB_FILE
-dpkg -i $SUBL_DEB_FILE
-rm $SUBL_DEB_FILE
-
-# Install JDK
-echo debconf shared/accepted-oracle-license-v1-1 select true | \
-  debconf-set-selections
-add-apt-repository -y ppa:webupd8team/java
-apt-get update
-apt-get install -y oracle-java8-installer
-
-# Install SBT
-wget http://dl.bintray.com/sbt/debian/sbt-0.13.9.deb
-dpkg -i sbt-0.13.9.deb
-rm sbt-0.13.9.deb
-
-# Fix broken deps
-apt-get -f -y install
-
 # Setup unattended upgrades
 cat << EOF > /etc/apt/apt.conf.d/10periodic
 APT::Periodic::Unattended-Upgrade "1";
@@ -84,11 +64,6 @@ apt-get remove -y xterm
 rm -rf /home/student/Templates
 rm /var/cache/apt/archives/*.deb
 
-# Setup sbt
-mkdir -p /home/student/.sbt/plugins
-cat <<EOF > /home/student/.sbt/plugins/plugins.sbt
-addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.0")
-EOF
 
 # Zero free space
 cat /dev/zero > zero.fill; sync; sleep 1; sync; rm -f zero.fill

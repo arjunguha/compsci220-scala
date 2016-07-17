@@ -4,46 +4,13 @@ title: Course Software
 ---
 
 To do the homework and projects for this class, you'll need Scala and some
-course-specific software. There are few options for setting this up.
+course-specific software. We recommend installing Scala on your
+own machine. If you have a lot of trouble, you can use the *virtual machine*
+discussed below.
 
-## Virtual Machine
+## Windows
 
-If your computer runs Windows, you need to use a [virtual machine] that we've
-built for the course.
-
-1. Download and install [VirtualBox]
-
-2. Download [cmpsci220.ova] (1.51 GB)
-
-3. Double-click on the `cmpsci220.ova` file you downloaded above (or, select
-   *Import Appliance* from the File menu and select the file). When you do,
-   VirtualBox will start and display a prompt called *Appliance Settings*.
-   Do not change any settings. Just click the *Import* button. When importing
-   completes, the virtual machine will appear in VirtualBox, as shown below:
-
-   <img src="virtualbox.png">
-
-4. Select the CS220 virtual machine and click the *Start* button. If the
-   machine starts successfully, you will see the desktop shown below:
-
-   <img src="vm-desktop.png">
-
-5. To test that everything is working correctly, start Google Chrome within
-   the virtual machine and ensure you can browse the Web. You'll find a link
-   to Chrome within the start menu in the bottom-left corner:
-
-   <img src="vm-google-chrome.png">
-
-### More Information
-
-For the curious, this virtual machine is running [Lubuntu] Linux 14.04 (32-bit).
-
-## Windows (Alternative)
-
-We recommend using the virtual machine above. But, if you have trouble running
-a virtual machine, you can run Scala without a VM by following these directions:
-
-1. [Install Java]((http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).)
+1. [Install Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
 
    If you already have Java installed, you need to ensure that it is Java 8
    or higher.
@@ -57,7 +24,6 @@ a virtual machine, you can run Scala without a VM by following these directions:
 
 ## Mac OS X
 
-
 1. Install [Homebrew](http://brew.sh) (follow the directions on the website).
 
 2. Install Java from the Terminal:
@@ -70,7 +36,7 @@ a virtual machine, you can run Scala without a VM by following these directions:
 
 5. To verify that everything installed, type `sbt` to start SBT.
 
-## Linux (Ubuntu)
+## Linux (Ubuntu):
 
 1. Install Java 8:
 
@@ -80,14 +46,47 @@ a virtual machine, you can run Scala without a VM by following these directions:
 
 2. Install SBT:
 
-       wget http://dl.bintray.com/sbt/debian/sbt-0.13.9.deb
-       dpkg -i sbt-0.13.9.deb
-       rm sbt-0.13.9.deb
-       apt-get -f -y install
+       echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+       sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+       sudo apt-get update
+       sudo apt-get install sbt
 
 3. To verify that everything installed, type `sbt` to start SBT.
 
+## Virtual Machine
+
+To use the [virtual machine], you will need at least 4 GB of RAM and a modern
+processor.
+
+1. Download and install [VirtualBox]
+
+2. Download [compsci220.ova] (1.1 GB)
+
+3. Double-click on the `compsci220.ova` file you downloaded above (or, select
+   *Import Appliance* from the File menu and select the file). When you do,
+   VirtualBox will start and display a prompt called *Appliance Settings*.
+   Do not change any settings. Just click the *Import* button. When importing
+   completes, the virtual machine will appear in VirtualBox, as shown below:
+
+   <img src="virtualbox.png">
+
+4. Select the CS220 virtual machine and click the *Start* button. If the
+   machine starts successfully, you will see the desktop shown below:
+
+   <img src="vm-desktop.png">
+
+5. To test that everything is working correctly, start Firefox within
+   the virtual machine and ensure you can browse the Web. You'll find a link
+   to Firefox within the start menu in the bottom-left corner:
+
+   <img src="vm-google-chrome.png">
+
+### More Information
+
+For the curious, this virtual machine is running [Lubuntu] Linux 14.04 (32-bit).
+
+
 [virtual machine]: http://en.wikipedia.org/wiki/Virtual_machine
 [VirtualBox]: https://www.virtualbox.org/wiki/Downloads
-[cmpsci220.ova]: https://storage.googleapis.com/umass-cmpsci220-artifacts/cmpsci220.ova
+[compsci220.ova]: https://storage.googleapis.com/umass-compsci220/compsci220.ova
 [Lubuntu]: http://lubuntu.net
