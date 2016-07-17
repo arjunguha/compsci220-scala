@@ -1,6 +1,6 @@
 _minted-instructor
 _minted-student
-instructor.aux
+/*.aux
 instructor.fdb_latexmk
 instructor.fls
 instructor.log

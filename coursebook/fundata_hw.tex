@@ -1,0 +1,194 @@
+\newhw{Functional Data Structures}
+
+In this assignment, you'll build two data structures that use functional
+programming ideas in a unique way.
+\begin{instructor}
+Say something more motivating!
+\end{instructor}
+
+\section{Preliminaries}
+
+You should create a directory-tree that looks like this:
+
+\dirtree{%
+.1 ./fundata.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala\DTcomment{Yours tests go here}.
+}
+
+The \texttt{project/plugins.sbt} file must have exactly this line:
+
+\scalafile{../hw/fundata/template/project/plugins.sbt}
+
+You should implement your solution in a single file, within an object called
+\scalainline{FunctionalDataStructures}.
+
+\begin{figure}
+\scalafile{../hw/fundata/template/src/main/scala/Solution.scala}
+\caption{Solution template.}
+\end{figure}
+
+\section{Persistent Queues}
+
+Recall from earlier classes, that a \emph{queue} is a data structure that
+supports three operations:
+
+\begin{enumerate}
+
+\item \emph{Empty} constructs an empty queue,
+
+\item \emph{Enqueue} adds a new element to the back of the queue,
+
+\item \emph{Dequeue} removes an element from the front of the queue, if the queue is
+  not empty.
+
+\end{enumerate}
+
+In the following exercises, you will build a \emph{persistent queue}. A
+persistent queue has the operations defined. But, instead of having enqueue and
+dequeue update the queue, they leave the original queue unchanged and return a
+new queue.
+
+It is easy to implement a persistent queue using a list:
+
+\begin{scalacode}
+type SlowQueue[A] = List[A]
+
+def emptySlow[A](): SlowQueue[A] = Nil()
+
+def enqueueSlow[A](elt: A, q: SlowQueue[A]): SlowQueue[A] = q match {
+  case Nil => List(elt)
+  case head :: tail => head :: enqueueSlow(elt, tail)
+}
+
+def dequeueSlow[A](q: SlowQueue[A]): Option[(A, SlowQueue[A])] = q match {
+  case Nil => None()
+  case head :: tail => Some((head, tail))
+}
+\end{scalacode}
+
+Read the code above carefully. The \emph{enqueue} operation traverses the
+entire list each time (i.e., $O(n)$ running time). Your task is to implement
+the queue more efficiently.
+
+The trick is to represent the queue using two lists. The first list, called
+\emph{front}, has the elements at the front of the queue. The second list, called
+\emph{back}, has the elements at the back of the queue, \emph{in reverse order}.
+
+For example, if \emph{front} is \scalainline{List(1, 2, 3)} and \emph{back} is \scalainline{List(6, 5, 4)}, then
+the elements of the queue, in order, are 1, 2, 3, 4, 5, 6. With this
+representation:
+
+\begin{itemize}
+
+\item \emph{Enqueue} adds an element to \emph{back}, but doesn't need to
+  traverse the whole list.
+
+\item \emph{Dequeue} removes an element from \emph{front}, unless \emph{front}
+  is empty. If it is empty, it reverses \emph{back} and uses it as the front.
+
+\end{itemize}
+
+In your solution, use the following type to represent queues:
+
+\begin{scalacode}
+case class Queue[A](front: List[A], back: List[A])
+\end{scalacode}
+
+Then, implement the following functions:
+
+\begin{scalacode}
+def enqueue[A](elt: A, q: Queue[A]): Queue[A]
+
+def dequeue[A](q: Queue[A]): Option[(A, Queue[A])]
+\end{scalacode}
+
+\section{Join Lists}
+
+A \emph{join list} is a data structure that represents a list, but the
+elements are arranged into a tree, as follows:
+
+\begin{scalacode}
+sealed trait JoinList[A] { val size: Int }
+case class Empty[A]() extends JoinList[A] { val size = 0 }
+case class Singleton[A](elt: A) extends JoinList[A] { val size = 1 }
+case class Join[A](lst1: JoinList[A], lst2: JoinList[A], size: Int) extends JoinList[A]
+\end{scalacode}
+
+This tree-shape makes some operations,
+like list-concatenation very efficient.
+The type has three constructors:
+
+\begin{enumerate}
+
+\item \scalainline{Empty()} represents an empty list.
+
+\item \scalainline{Singleton(x)} represents a list with one element $x$.
+
+\item \scalainline{Join(lst1, lst2, length)} represents \scalainline{lst1} appended to
+       \scalainline{lst2}. The \scalainline{length} field is the total number of
+       elements in the list.
+
+\end{enumerate}
+
+It should be clear that it is very cheap to append two join lists: you simply
+use the \scalainline{Join} constructor. It is also cheap to calculate the length of a
+join list, since it is stored at each node.
+
+
+Finally, since join lists represent lists, it is easy to convert between
+join lists and normal lists.
+%
+\begin{itemize}
+
+\item \scalainline{toList[A](lst: JoinList[A]): List[A]} converts a join list into a Scala
+  list.  This
+  operation can be very expensive, but is useful for testing.
+
+\item \scalainline{fromList[A](lst: List[A]): JoinList[A]} converts a Scala list into a join
+  list by repeatedly splitting a list into two equal halves.
+
+\end{itemize}
+
+We've provided functions to do so in \cref{joinlist_tests}.
+You may use these functions in your test suites. You must not use them in your
+solution.
+
+\begin{figure}
+\scalafile{../hw/fundata/template/src/test/scala/Tests.scala}
+\caption{Helpers for writing tests.}
+\label{joinlist_tests}
+\end{figure}
+
+\paragraph{Programming Task}
+
+Your task is to write some typically list-processing functions for join lists.
+
+\begin{enumerate}
+
+\item \scalainline{max(lst, compare)} produces the maximum value in
+  \scalainline{lst}. The second argument is a comparator. If
+  \scalainline{compare(x, y) == true}, then \scalainline{x} is greater than
+  \scalainline{y}. If the list is empty, the function produces
+   \scalainline{None}.
+
+\item \scalainline{map(f, lst)} produces a new join list, which has exactly the same
+ shape as \scalainline{lst}, but with \scalainline{f} applied to every element.
+
+\item \scalainline{filter(pred, lst)} produces a new join list that has only
+  includes elements of \scalainline{lst} that satisfy the given predicate.
+  The order of elements should not change.
+
+\item \scalainline{first(lst)} and \scalainline{rest(lst)} produce the head and tail, respectively,
+   of \scalainline{lst} if it is non-empty.
+
+\item \scalainline{nth(lst, i)} produces the $n$th element of the list (the first element has index 0).
+
+\end{enumerate}
+
+\input{handin}

@@ -1,16 +1,24 @@
 object FunctionalDataStructures {
 
-  //
-  // Part 1. Persistent Queues
-  //
+  case class Queue[A](front: List[A], back: List[A])
 
   def enqueue[A](elt: A, q: Queue[A]): Queue[A] = ???
 
   def dequeue[A](q: Queue[A]): Option[(A, Queue[A])] = ???
 
-  //
-  // Part 2. Join Lists
-  //
+  sealed trait JoinList[A] {
+    val size: Int
+  }
+
+  case class Empty[A]() extends JoinList[A] {
+    val size = 0
+  }
+
+  case class Singleton[A](elt: A) extends JoinList[A] {
+    val size = 1
+  }
+
+  case class Join[A](lst1: JoinList[A], lst2: JoinList[A], size: Int) extends JoinList[A]
 
   def max[A](lst: JoinList[A], compare: (A, A) => Boolean): Option[A] = ???
 

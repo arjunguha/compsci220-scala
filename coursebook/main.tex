@@ -23,17 +23,18 @@ Before you start programming, you need to complete a few preliminary steps.
 
 \begin{enumerate}
 
-\item Download and start the course virtual machine. You will need it for all
-the assignments in this class.
+\item Follow the directions on the course website to install Scala and SBT.
+
 
 \item Using the command-line, create a directory for your assignment (e.g., the
   \verb|hw1| directory). Within this directory, create the directories
-  \verb|src/main/scala| and \verb|src/test/scala|. For example, you could use
+  \texttt{project}, \verb|src/main/scala| and \verb|src/test/scala|. For example, you could use
   the following commands:
   %
   \begin{console}
   mkdir hw1
   cd hw1
+  mkdir project
   mkdir src
   mkdir src/main
   mkdir src/main/scala
@@ -41,12 +42,17 @@ the assignments in this class.
   mkdir src/test/scala
   \end{console}
 
-   \item Using a text editor, create the file \verb|src/main/scala/Lecture1.scala|
+\item Using a text editor, create the file \texttt{project/plugins.sbt} with
+the following contents:
+
+\scalafile{../hw/lists/template/project/plugins.sbt}
+
+   \item Using a text editor, create the file \verb|src/main/scala/Lists.scala|
    with the following contents:
    %
-   \scalafile{../hw/lists/template/src/main/scala/Lecture1.scala}
+   \scalafile{../hw/lists/template/src/main/scala/Lists.scala}
 
-   \item Using a text editor, create the file \verb|src/test/scala/TestSuite.scala|
+   \item Using a text editor, create the file \verb|src/test/scala/Lists.scala|
    with the following contents:
    %
    \scalafile{../hw/lists/template/src/test/scala/TestSuite.scala}
@@ -1168,7 +1174,35 @@ You should also write any helper functions you think are necessary. You
 may also use functions you write for one part of the assignment to solve
 another part of the assignment.
 
+\section{Preliminaries}
+
+You should create a directory-tree that looks like this:
+
+\dirtree{%
+.1 ./hof.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala\DTcomment{Yours tests go here}.
+}
+
+The \texttt{project/plugins.sbt} file must have exactly this line:
+
+\scalafile{../hw/hof/template/project/plugins.sbt}
+
 \section{Exercises}
+
+\begin{figure}
+\scalafile{../hw/hof/template/src/main/scala/HOF.scala}
+\caption{Solution template.}
+\label{hof_template}
+\end{figure}
+
+Within an object called \texttt{HOF}, implement the following functions.
+(You may use the template in \cref{hof_template})
 
 \begin{enumerate}
 
@@ -2371,8 +2405,6 @@ assert(List(("X", 10), ("Y", 20)).toMap == Map("X" -> 10, "Y" -> 20))
 
 \newhw{Data Wrangling}
 
-\due{Thursday, Feb 11}
-
 The United States Social Security Administration releases data dating back to
 1880 on babies' first names, genders, and their
 popularity.\footnote{\url{https://www.ssa.gov/oact/babynames/limits.html}}
@@ -2393,11 +2425,45 @@ to write them quickly and compactly. Most of the functions only need
 In addition, you'll be working with CSV files (\emph{comma-separated values}),
 which is the format in which a lot of public data sets are released.
 
-\section{Template and Data}
+\section{Preliminaries}
 
-The template and data for this assignment are available here:
+You should create a directory-tree that looks like this:
 
-\url{https://www.cs.umass.edu/~arjun/courses/cmpsci220-spring2016/hw/wrangling.zip}
+\dirtree{%
+.1 ./wrangling.
+.2 build.sbt.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala\DTcomment{Yours tests go here}.
+}
+
+Your \texttt{build.sbt} file must have exactly these lines:
+
+\scalafile{../hw/wrangling/template/build.sbt}
+
+The \texttt{project/plugins.sbt} file must have exactly this line:
+
+\scalafile{../hw/wrangling/template/project/plugins.sbt}
+
+You'll also need to download two datasets:
+%
+\begin{itemize}
+
+  \item The CDC data on life expectancy:
+
+  \url{https://www.cs.umass.edu/~arjun/courses/compsci220/cdc-life-expectancy.csv}
+
+  \item The SSA data on baby names:
+
+  \url{https://www.cs.umass.edu/~arjun/courses/compsci220/ssa-births.csv}
+
+\end{itemize}
+
+You should place these files in the \texttt{wrangling} directory that you created above.
 
 \section{The Data}
 
@@ -2449,8 +2515,90 @@ List(
 
 \section{Programming Task}
 
-Your programming task is to implement the functions described
-in \texttt{src/main/scala/Main.scala}. You'll notice that many functions
+Your programming task is to implement the functions described below.
+You should place all functions within an object called \texttt{Wrangling}.
+
+\begin{enumerate}
+
+  \item Write a function that consumes a list of SSA records and only produces
+  those records from a given year:
+  \begin{scalacode}
+  def yearIs(data: List[List[String]], n: Int): List[List[String]]
+  \end{scalacode}
+
+
+  \item Write a function that consumes a list of SSA records and only produces
+  those records for years greater than the given bound:
+  \begin{scalacode}
+  def yearGT(data: List[List[String]], bound: Int): List[List[String]]
+  \end{scalacode}
+
+  \item Write a function that consumes a list of SSA records and only produces
+  those records for years lower than the given bound:
+  \begin{scalacode}
+  def yearLT(data: List[List[String]], bound: Int): List[List[String]]
+  \end{scalacode}
+
+  \item Write a function that consumes a list of SSA records and only produces
+  records with the given name:
+  \begin{scalacode}
+  def onlyName(data: List[List[String]], name: String): List[List[String]]
+  \end{scalacode}
+
+  \item Write a function to calculate the most popular name in the given dataset
+  and the \emph{total} number of children born with that name.
+
+  \textbf{Hint:} It is likely that children are born with the same
+      name in several years. So, you should first calculate the total
+      number of childen with each name.
+  
+  \begin{scalacode}
+  def mostPopular(data: List[List[String]]): (String, Int)
+  \end{scalacode}
+
+  \item Write a function to calculate the number of children born in the given dataset.
+  \begin{scalacode}
+  def count(data: List[List[String]]): Int = ???
+  \end{scalacode}
+
+  \item Write a function that produces a tuple with the number of girls and boys
+   respectively.
+  \begin{scalacode}
+  def countGirlsAndBoys(data: List[List[String]]): (Int, Int)
+  \end{scalacode}
+
+  \item Writen a function to calculate the set of names that are given to both girls and boys.
+  \begin{scalacode}
+  def genderNeutralNames(data: List[List[String]]): Set[String]
+  \end{scalacode}
+
+
+  \item Write a function to determine if a person with the specified \texttt{gender} and born in the
+  specified year (\texttt{birthYear}) is expected to be alive (in the year \texttt{currentYear}),
+  according to the CDC life-expectancy data.
+
+    If \texttt{currentYear} is the last year the person is estimated to be alive, be
+      optimistic and produce \texttt{true}.
+
+  The CDC data only ranges from 1930---2010. Therefore, assume that
+      \texttt{birthYear} is in this range too.
+
+  \begin{scalacode}
+  def expectedAlive(gender: String, birthYear: Int, currentYear: Int): Boolean 
+  \end{scalacode}
+
+  \item Write a function to estimate how many people from the given dataset
+  will be alive in a particular year:
+
+  \begin{scalacode}
+  def estimatePopulation(data: List[List[String]], year: Int): Int
+  \end{scalacode}
+
+\end{enumerate}
+
+
+
+You'll notice that many functions
 consume and produce a list of births. The key idea is that you can
 compose these functions together to pose complex queries. For example,
 suppose \scalainline{allBirths} holds the complete list of births:
@@ -2672,158 +2820,8 @@ This lecture actually uses a slide deck! These are not the lecture notes.
 see the file \texttt{/website/lectures/gc.pdf} for a copy of the slides.
 The original slides are on Notability on Arjun's iPad.
 
-\newhw{Functional Data Structures}
 
-In this assignment, you'll build two data structures that use functional
-programming ideas in a unique way.
-
-The template and data for this assignment are available here:
-
-\url{https://www.cs.umass.edu/~arjun/courses/cmpsci220-spring2016/hw/fundata.zip}
-
-\section{Persistent Queues}
-
-Recall from earlier classes, that a \emph{queue} is a data structure that
-supports three operations:
-
-\begin{enumerate}
-
-\item \emph{Empty} constructs an empty queue,
-
-\item \emph{Enqueue} adds a new element to the back of the queue,
-
-\item \emph{Dequeue} removes an element from the front of the queue, if the queue is
-  not empty.
-
-\end{enumerate}
-
-In the following exercises, you will build a \emph{persistent queue}. A
-persistent queue has the operations defined. But, instead of having enqueue and
-dequeue update the queue, they leave the original queue unchanged and return a
-new queue.
-
-It is easy to implement a persistent queue using a list:
-
-\begin{scalacode}
-type SlowQueue[A] = List[A]
-
-def emptySlow[A](): SlowQueue[A] = Nil()
-
-def enqueueSlow[A](elt: A, q: SlowQueue[A]): SlowQueue[A] = q match {
-  case Nil => List(elt)
-  case head :: tail => head :: enqueueSlow(elt, tail)
-}
-
-def dequeueSlow[A](q: SlowQueue[A]): Option[(A, SlowQueue[A])] = q match {
-  case Nil => None()
-  case head :: tail => Some((head, tail))
-}
-\end{scalacode}
-
-Read the code above carefully. The \emph{enqueue} operation traverses the
-entire list each time (i.e., $O(n)$ running time). Your task is to implement
-the queue more efficiently.
-
-The trick is to represent the queue using two lists. The first list, called
-\emph{front}, has the elements at the front of the queue. The second list, called
-\emph{back}, has the elements at the back of the queue, \emph{in reverse order}.
-
-For example, if \emph{front} is \scalainline{List(1, 2, 3)} and \emph{back} is \scalainline{List(6, 5, 4)}, then
-the elements of the queue, in order, are 1, 2, 3, 4, 5, 6. With this
-representation:
-
-\begin{itemize}
-
-\item \emph{Enqueue} adds an element to \emph{back}, but doesn't need to
-  traverse the whole list.
-
-\item \emph{Dequeue} removes an element from \emph{front}, unless \emph{front}
-  is empty. If it is empty, it reverses \emph{back} and uses it as the front.
-
-\end{itemize}
-
-In the assignment template, the file \texttt{src/main/scala/Types.scala}
-defines a type called \scalainline{Queue} that you should use to define
- define the following functions:
-
-\begin{scalacode}
-def enqueue[A](elt: A, q: Queue[A]): Queue[A]
-
-def dequeue[A](q: Queue[A]): Option[(A, Queue[A])]
-\end{scalacode}
-
-\section{Join Lists}
-
-A \emph{join list} is a data structure that represents a list, but the
-elements are arranged into a tree. This tree-shape makes some operations,
-like list-concatenation very efficient.
-You'll be working with the \scalainline{JoinList[A]} type, which is
-defined in \texttt{src/main/scala/Types.scala}.
- The type has three constructors:
-
-\begin{enumerate}
-
-\item \scalainline{Empty()} represents an empty list.
-
-\item \scalainline{Singleton(x)} represents a list with one element $x$.
-
-\item \scalainline{Join(lst1, lst2, length)} represents \scalainline{lst1} appended to
-       \scalainline{lst2}. The \scalainline{length} field is the total number of
-       elements in the list.
-
-\end{enumerate}
-
-It should be clear that it is very cheap to append two join lists: you simply
-use the \scalainline{Join} constructor. It is also cheap to calculate the length of a
-join list, since it is stored at each node.
-
-
-Finally, since join lists represent lists, we've provided two
-functions to convert between join lists and tests in the
-\scalainline{src/main/test/scala/Tests.scala} file:
-
-\begin{itemize}
-
-\item \scalainline{toList[A](lst: JoinList[A]): List[A]} converts a join list into a Scala
-  list.  This
-  operation can be very expensive, but is useful for testing.
-
-\item \scalainline{fromList[A](lst: List[A]): JoinList[A]} converts a Scala list into a join
-  list by repeatedly splitting a list into two equal halves.
-
-\end{itemize}
-
-These two fucntions are provided for testing only. You must not use them in your
-solution.
-
-\paragraph{Programming Task}
-
-Your task is to write some typically list-processing functions for join lists.
-
-\begin{enumerate}
-
-\item \scalainline{max(lst, compare)} produces the maximum value in
-  \scalainline{lst}. The second argument is a comparator. If
-  \scalainline{compare(x, y) == true}, then \scalainline{x} is greater than
-  \scalainline{y}. If the list is empty, the function produces
-   \scalainline{None}.
-
-\item \scalainline{map(f, lst)} produces a new join list, which has exactly the same
- shape as \scalainline{lst}, but with \scalainline{f} applied to every element.
-
-\item \scalainline{filter(pred, lst)} produces a new join list that has only
-  includes elements of \scalainline{lst} that satisfy the given predicate.
-  The order of elements should not change.
-
-\item \scalainline{first(lst)} and \scalainline{rest(lst)} produce the head and tail, respectively,
-   of \scalainline{lst} if it is non-empty.
-
-\item \scalainline{nth(lst, i)} produces the $n$th element of the list (the first element has index 0).
-
-\end{enumerate}
-
-\input{handin}
-
+\include{fundata_hw}
 \newlecture
 
 \section{Reading}
@@ -3565,238 +3563,7 @@ class ExerciseTests extends FunSuite {
 
 \input{handin}
 
-\newhw{Generalized Tic Tac Toe}
-
-For this assignment, you will write a program that given an $n \times n$ tic-tac-toe board,
-determines which player will win, or if the game will be a draw.
-You're going to make significant use of Scala collections and learn the the
-\emph{Minimax algorithm}, which is a form of \emph{backtracking search}.
-
-The template for this assignment is
-\href{https://www.cs.umass.edu/~arjun/courses/cmpsci220-spring2016/hw/tictactoe.zip}{available here}\footnote{\url{https://www.cs.umass.edu/~arjun/courses/cmpsci220-spring2016/hw/tictactoe.zip}}.
-
-
-\section{Representing a Tic Tac Toe Board}
-
-We assume you know how to play Tic Tac Toe. This section talks about
-the representation of tic-tac-toe boards that you will use. All
-the types mentioned below are in the file \texttt{src/main/scala/Provided.scala}
-in the template code.
-
-The \scalainline{sealed trait Player} has two constructors,
-\scalainline{O} and \scalainline{X}, that represent the
-two players.
-
-A typical $3 \times 3$ board can be thought of as a $3 \times 3$ matrix,
-where $(0, 0)$ is
-the coordinate of the top-left corner and $(2,2)$ is the coordinate of
-the bottom-right corner:
-
-\begin{tikzpicture}
-\draw[step=1cm,black,very thin] (0,0) grid (3,3);
-\node at (0.5,0.5) {$(0, 2)$};
-\node at (1.5,0.5) {$(1, 2)$};
-\node at (2.5,0.5) {$(2, 2)$};
-\node at (0.5,1.5) {$(0, 1)$};
-\node at (1.5,1.5) {$(1, 1)$};
-\node at (2.5,1.5) {$(2, 1)$};
-\node at (0.5,2.5) {$(0, 0)$};
-\node at (1.5,2.5) {$(1, 0)$};
-\node at (2.5,2.5) {$(2, 0)$};
-\end{tikzpicture}
-
-The \scalainline{Solution.createGame} function, which you need to implement,
-takes as input the player who makes the first move, the
-value $n$ that specifies the dimensions of the board, and a map from coordinates to \scalainline{Player}s
-that indicates where the pieces are.
-
-For example:
-
-\begin{itemize}
-
-  \item In generalized tic-tac-toe, either play may make the first move.
-  Therefore, given an empty board:
-
-  \begin{tikzpicture}
-  \draw[step=1cm,black,very thin] (0,0) grid (3,3);
-  \end{tikzpicture}
-
-  We can call the function in two ways:
-
-  \begin{scalacode}
-  Solution.createGame(O, 3, Map())
-  Solution.createGame(X, 3, Map())
-  \end{scalacode}
-
-\item This board:
-
-\begin{tikzpicture}
-\draw[step=1cm,black,very thin] (0,0) grid (3,3);
-\node (a) at (2.5,0.5) {\textsf{O}};
-\node (b) at (0.5,2.5) {\textsf{X}};
-\end{tikzpicture}
-
-Can be represented as:
-\begin{scalacode}
-Solution.createGame(X, 3, Map((0, 0) -> X, (2, 2) -> O))
-\end{scalacode}
-Alternatively, we could have O make the next move.
-
-\item This board:
-
-\begin{tikzpicture}
-\draw[step=1cm,black,very thin] (0,0) grid (3,3);
-\node (a) at (0.5,0.5) {\textsf{X}};
-\node (b) at (0.5,2.5) {\textsf{X}};
-\node (c) at (2.5,.5) {\textsf{O}};
-\end{tikzpicture}
-
-Can be represented as:
-\begin{scalacode}
-Solution.createGame(X, 3, Map((0, 0) -> X, (0, 2) -> X, (2, 2) -> O))
-\end{scalacode}
-Alternatively, we could have O make the next move.
-
-
-\item This board, which is $4 \times 4$:
-
-\begin{tikzpicture}
-\draw[step=1cm,black,very thin] (0,0) grid (4,4);
-\node (a) at (0.5,3.5) {\textsf{X}};
-\node (b) at (2.5,1.5) {\textsf{O}};
-\node (c) at (3.5, 0.5) {\textsf{X}};
-\end{tikzpicture}
-
-Can be represented as:
-\begin{scalacode}
-Solution.createGame(O, 4, Map((0, 0) -> X, (2, 2) -> O, (3, 3) -> X))
-\end{scalacode}
-Alternatively, we could have X start first too.
-
-\end{itemize}
-
-\section{The Minimax Algorithm}
-
-\emph{Minimax} is an algorithm to to determine who will win (or draw)
-a two-player game, if both players are playing perfectly. To do so, Minimax
-searches all possible game-states that are reachable from a given inital
-state. Here is an outline of a recursive implementation of Minimax:
-
-\begin{scalacode}
-def minimax(game: Game): Some[Player] = {
-
-  /*
-  If it is Xs turn:
-
-    1. If X has won the game, return Some(X).
-    2. If the game is a draw, return None. (If all squares are filled
-       and nobody has won, then the game is a draw. However, you are
-       free to detect a draw earlier, if you wish.)
-    3. Recursively apply minimax to all the successor states of game
-       - If any recursive call produces X, return Some(X)
-       - Or, if any recursive call produces None, return None
-       - Or, return Some(O)
-
-  The case for Os turn is similar.
-  */
-
-}
-\end{scalacode}
-
-You can find several other descriptions of Minimax on the Web. But, Minimax
- is a very straightforward function to write, if you follow the programming directions below
-and implement (and test) everything leading up to Minimax.
-
-\section{Programming Task}
-
-Your task is to implement a representation of boards, by implementing
-the \scalainline{GameLike} trait, provided in the template code.
-Your code must be able to implement arbitrary $n \times n$ boards for
-all $n > 2$. However, your implementation of the Minimax algorithm
-(the \scalainline{MinimaxLike} trait) only needs to be fast enough for
- $n \le 4$.\footnote{If you want to do better, lookup \emph{alpha-beta pruning} on the web.}
-
-I recommend proceeding in the following way, using
-\texttt{Solution.scala} as a template:
-
-\begin{enumerate}
-
-\item
-   Add fields to the \scalainline{Game} class to represent the state of the game and
-   fill in the body of the \scalainline{Solution.createGame(turn, dim, board)} function.
-   You may assume that \scalainline{dim >= 2} and that all the pieces described
-   in \scalainline{board} are within bounds. However, \emph{The board may be in an
-   arbitrary, even illegal state}. For example, the board may have seven Xs.
-   Similarly, the \scalainline{turn} could be either X or O.
-
-
-\item Implement the \scalainline{Game.isFinished} method. This method
-  should produce \scalainline{true} when there are three Xs or Os in a row
-  or the game ends in a draw.
-
-
-\item Implement the \scalainline{getWinner} method.
-
-   \texttt{Provided.scala} has a class called \scalainline{Matrix} that
-   has some useful methods. You may find it easier to use a matrix to represent
-   a board, instead of an arbitrary map or two-dimensional array.
-
-\item Implement the \scalainline{nextBoards} method, which returns a list of
-   boards that represent all the moves the next player could make.
-
-   For example, if the current board looks like this:
-
-\begin{tikzpicture}
-\draw[step=1cm,black,very thin] (0,0) grid (3,3);
-\node at (0.5,0.5) {\textsf{X}};
-\node at (1.5,0.5) {\textsf{O}};
-\node at (2.5,0.5) {\textsf{O}};
-\node at (1.5,1.5) {\textsf{O}};
-\node at (0.5,2.5) {\textsf{X}};
-\node at (1.5,2.5) {\textsf{X}};
-\end{tikzpicture}
-
-And if it is \emph{O}'s turn, then these are the three possible next boards:
-
-\begin{tikzpicture}
-\draw[step=1cm,black,very thin] (0,0) grid (3,3);
-\node at (0.5,0.5) {\textsf{X}};
-\node at (1.5,0.5) {\textsf{O}};
-\node at (2.5,0.5) {\textsf{O}};
-\node at (0.5,1.5) {\textsf{O}};
-\node at (1.5,1.5) {\textsf{O}};
-\node at (0.5,2.5) {\textsf{X}};
-\node at (1.5,2.5) {\textsf{X}};
-\end{tikzpicture}
-\quad
-\begin{tikzpicture}
-\draw[step=1cm,black,very thin] (0,0) grid (3,3);
-\node at (0.5,0.5) {\textsf{X}};
-\node at (1.5,0.5) {\textsf{O}};
-\node at (2.5,0.5) {\textsf{O}};
-\node at (1.5,1.5) {\textsf{O}};
-\node at (2.5,1.5) {\textsf{O}};
-\node at (0.5,2.5) {\textsf{X}};
-\node at (1.5,2.5) {\textsf{X}};
-\end{tikzpicture}
-\quad
-\begin{tikzpicture}
-\draw[step=1cm,black,very thin] (0,0) grid (3,3);
-\node at (0.5,0.5) {\textsf{X}};
-\node at (1.5,0.5) {\textsf{O}};
-\node at (2.5,0.5) {\textsf{O}};
-\node at (1.5,1.5) {\textsf{O}};
-\node at (0.5,2.5) {\textsf{X}};
-\node at (1.5,2.5) {\textsf{X}};
-\node at (2.5,2.5) {\textsf{O}};
-\end{tikzpicture}
-
-\end{enumerate}
-
-As you implement each successive step, you may need to revisit design
-decisisions you made earlier.
-
-\input{handin}
+\include{tictactoe_hw}
 
 \newlecture
 

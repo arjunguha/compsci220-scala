@@ -6,7 +6,7 @@ class HW3Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
 
     val prefix =
       """
-        import Homework3._
+        import Wrangling._
         val gradingBirths = edu.umass.cs.CSV.fromFile("ssa-births.csv")
       """
 
@@ -53,7 +53,7 @@ class HW3Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
     }
 
     def body(root: TestCase): Unit = {
-      val compiles = root.thenCompile("Check that object Homework3 is defined", "()")
+      val compiles = root.thenCompile("Check that object Wrangling is defined", "()")
 
       val yearIs = compiles.thenCompile(
         "Does yearIs have the right type?",
@@ -136,14 +136,14 @@ class HW3Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
         "Does countGirlsAndBoys work?",
         """assert(countGirlsAndBoys(gradingBirths) == (24140, 2460))""")
 
-      val unisexNames = compiles.thenCompile(
-        "Does unisexNames have the right type?",
-        """def foo(data: List[List[String]]): Set[String] = unisexNames(data)""",
+      val genderNeutralNames = compiles.thenCompile(
+        "Does genderNeutralNames have the right type?",
+        """def foo(data: List[List[String]]): Set[String] = genderNeutralNames(data)""",
         score = 0)
 
-      unisexNames.thenRun(
-        "Does unisexNames work?",
-        """assert(unisexNames(gradingBirths) == Set("Unisex A", "Unisex B"))""")
+      genderNeutralNames.thenRun(
+        "Does genderNeutralNames work?",
+        """assert(genderNeutralNames(gradingBirths) == Set("Unisex A", "Unisex B"))""")
 
       val expectedAlive = compiles.thenCompile(
         "Does expectedAlive have the right type?",

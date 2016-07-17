@@ -1,5 +1,3 @@
-// Do not change this file
-
 case class Queue[A](front: List[A], back: List[A])
 
 sealed trait JoinList[A] {
@@ -15,6 +13,3 @@ case class Singleton[A](elt: A) extends JoinList[A] {
 }
 
 case class Join[A](lst1: JoinList[A], lst2: JoinList[A], size: Int) extends JoinList[A]
-
-
-

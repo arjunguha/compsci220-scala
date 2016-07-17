@@ -11,7 +11,7 @@ class HW2Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
 
         def combine(x: A, y: B): C = C(x.x + y.y)
 
-        import Homework2._
+        import HOF._
         $body
       }
       """.getBytes,
@@ -19,7 +19,7 @@ class HW2Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
   }
 
   def body(root: TestCase): Unit = {
-    val compiles = root.thenCompile("Check that object Homework2 is defined", "()")
+    val compiles = root.thenCompile("Check that object HOF is defined", "()")
 
     val map2OK = compiles.thenCompile(
       "Does map2 have the right type?",

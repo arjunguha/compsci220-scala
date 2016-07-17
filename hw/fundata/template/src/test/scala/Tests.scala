@@ -1,5 +1,4 @@
 class Tests extends org.scalatest.FunSuite {
-
   import FunctionalDataStructures._
 
   def fromList[A](lst: List[A]): JoinList[A] = lst match {
@@ -17,5 +16,4 @@ class Tests extends org.scalatest.FunSuite {
     case Singleton(x) => List(x)
     case Join(lst1, lst2, _) => toList(lst1) ++ toList(lst2)
   }
-
 }

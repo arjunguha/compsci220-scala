@@ -1,4 +1,4 @@
-object Lecture1 {
+object Lists {
 
   val oddNumbers = 1 :: 3 :: 5 :: Nil
 
