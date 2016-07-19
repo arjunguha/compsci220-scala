@@ -51,11 +51,11 @@ More formally, the concrete syntax of the language is defined using the grammar 
 \mathit{exponent} & ::= & \mathit{atom} \\
                  & \mid & \mathit{exponent} \texttt{\textasciicircum} \mathit{atom} \\
 \mathit{mul} & ::= & \mathit{exponent} \\
-& \mid & \mathit{exponent} \texttt{*} \mathit{mul} \\
-& \mid & \mathit{exponent} \texttt{/} \mathit{mul} \\
+& \mid & \mathit{mul} \texttt{*} \mathit{exponent} \\
+& \mid & \mathit{mul} \texttt{/} \mathit{exponent} \\
 \mathit{add} & ::= & \mathit{mul} \\
-& \mid & \mathit{mul} \texttt{+} \mathit{add} \\
-& \mid & \mathit{mul} \texttt{-} \mathit{add} \\
+& \mid & \mathit{add} \texttt{+} \mathit{mul} \\
+& \mid & \mathit{add} \texttt{-} \mathit{mul} \\
 \mathit{expr} & ::= & \mathit{add}
 \end{array}
 \)
