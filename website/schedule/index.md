@@ -9,7 +9,7 @@ title: Schedule
 | Wednesday, Sep 7  | *Lab:* Help session for Homework 1.                                                             |
 | Thursday, Sep 8   | [Lecture Notes](../reading/lecture2.pdf).                                                       |
 | Tuesday, Sep 13   | Due: [HW1]. Out: [HW2]. [Lecture Notes](../reading/lecture3.pdf).                               |
-| Wednesday, Sep 14 | *Lab:*                                                                                          |
+| Wednesday, Sep 14 | *Lab:* Steps 1 and 2 of [HW2].                                                                  |
 | Thursday, Sep 15  | [Lecture Notes](../reading/lecture4.pdf).                                                       |
 | Tuesday, Sep 20   | Due: [HW2]. Out: [HW3]. [Lecture Notes](../reading/lecture5.pdf).                               |
 | Wednesday, Sep 21 | *Lab*:                                                                                          |

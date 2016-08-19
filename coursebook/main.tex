@@ -34,7 +34,7 @@
 
 \begin{figure}
 \begin{scalacode}
-def incrList(lst: List[Int]): List[Int] = lst match {
+def incrList(alist: List[Int]): List[Int] = alist match {
   case Nil => Nil
   case head :: tail => (head + 1) :: incrList(tail)
 }
@@ -467,7 +467,7 @@ case class ICons(head: Int, tail: IList) extends IList
 The following function adds $n$ to every number in a list:
 %
 \begin{scalacode}
-def add(n: Int, lst: IList): IList = lst match {
+def add(n: Int, lst: IList): IList = alist match {
   case INil() => INil()
   case ICons(head, tail) => ICons(head + n, add(n, tail))
 }
@@ -476,18 +476,18 @@ def add(n: Int, lst: IList): IList = lst match {
 A test suite should test the two cases in the function. Moreover, we can
 also test simple properties of this function alone.
 
-For example, for all \scalainline{m}, \scalainline{n}, and \scalainline{lst}:
+For example, for all \scalainline{m}, \scalainline{n}, and \scalainline{alist}:
 %
 \begin{scalacode}
-add(n, add(m, lst)) == add(m + n, lst)
+add(n, add(m, alist)) == add(m + n, alist)
 \end{scalacode}
 
 The following function appends two lists together:
 %
 \begin{scalacode}
-def append(lst1: IList, lst2: IList): IList = lst1 match {
-  case INil() => lst2
-  case ICons(head, tail) => ICons(head, append(tail, lst2))
+def append(alist1: IList, alist2: IList): IList = alist1 match {
+  case INil() => alist2
+  case ICons(head, tail) => ICons(head, append(tail, alist2))
 }
 \end{scalacode}
 
@@ -497,13 +497,13 @@ three lists together, the order in which we apply the function
 does not matter:
 %
 \begin{scalacode}
-append(lst1, append(lst2, lst3)) == append(append(lst1, lst2), lst3)
+append(alist1, append(alist2, alist3)) == append(append(alist1, alist2), alist3)
 \end{scalacode}
 i.e., \scalainline{append} is \emph{associative}.
 
 Here is another property of \scalainline{append}:
 \begin{scalacode}
-append(lst, INil()) == lst
+append(alist, INil()) == alist
 \end{scalacode}
 %
 Notice that this is \emph{not} a case of \scalainline{append}: the function
@@ -515,7 +515,7 @@ Finally, we can write properties that relate the \scalainline{add} and
 \scalainline{append} functions:
 %
 \begin{scalacode}
-append(add(n, lst1), add(n, lst2)) == add(n, append(lst1, lst2))
+append(add(n, alist1), add(n, alist2)) == add(n, append(alist1, alist2))
 \end{scalacode}
 
 \newdiscussion{Homework 1 Help Session (Jan 27)}
@@ -527,7 +527,7 @@ append(add(n, lst1), add(n, lst2)) == add(n, append(lst1, lst2))
 \begin{figure}
 \begin{minipage}{0.45\textwidth}
 \begin{scalacode}
-def ilength(lst : List[Int]): Int = lst match {
+def ilength(alist : List[Int]): Int = alist match {
   case Nil => 0
   case _ :: tail => 1 + ilength(tail)
 }
@@ -537,7 +537,7 @@ def ilength(lst : List[Int]): Int = lst match {
 \quad\vrule\quad
 \begin{minipage}{0.45\textwidth}
 \begin{scalacode}
-def slength(lst : List[String]): Int = lst match {
+def slength(alist : List[String]): Int = alist match {
   case Nil => 0
   case _ :: tail => 1 + slength(tail)
 }
@@ -555,14 +555,14 @@ element in the list. We can abstract away the differences by writing
 a \emph{generic} length function:
 %
 \begin{scalacode}
-def length[A](lst: List[A]): Int = lst match {
+def length[A](alist: List[A]): Int = alist match {
   case Nil => 0
   case _ :: tail => 1 + length(tail)
 }
 \end{scalacode}
 
 In the code above, \verb|A| is a \emph{type argument}. It truly is an argument
-to the function, just like \verb|lst|. i.e., when \scalainline{length} is
+to the function, just like \verb|alist|. i.e., when \scalainline{length} is
 invoked, we need to specify \verb|A|:
 %
 \begin{scalacode}
@@ -676,8 +676,8 @@ functions from the last lecture to work with generic binary trees.
 \begin{figure}
 \begin{subfigure}[b]{.45\textwidth}
 \begin{scalacode}
-def incrs(lst: List[Int]): List[Int] =
-  lst match {
+def incrs(alist: List[Int]): List[Int] =
+  alist match {
     case Nil => Nil
     case h :: t => h + 1 :: incrs(t)
   }
@@ -687,8 +687,8 @@ def incrs(lst: List[Int]): List[Int] =
 \quad\vrule\quad
 \begin{subfigure}[b]{.45\textwidth}
 \begin{scalacode}
-def lengths(lst: List[String]): List[Int] =
-  lst match {
+def lengths(alist: List[String]): List[Int] =
+  alist match {
   case Nil => Nil
   case h :: t => h.length :: lengths(t)
 }
@@ -699,8 +699,8 @@ def lengths(lst: List[String]): List[Int] =
 \vskip 1em \hrule \vskip 1em
 \begin{subfigure}[b]{.45\textwidth}
 \begin{scalacode}
-def doubles(lst: List[Int]): List[Int] =
-  lst match {
+def doubles(alist: List[Int]): List[Int] =
+  alist match {
     case Nil => Nil
     case h :: t => h * 2 :: doubles(t)
 }
@@ -710,8 +710,8 @@ def doubles(lst: List[Int]): List[Int] =
 \quad\vrule\quad
 \begin{subfigure}[b]{.45\textwidth}
 \begin{scalacode}
-def negates(lst: List[Int]): List[Int] =
-  lst match {
+def negates(alist: List[Int]): List[Int] =
+  alist match {
     case Nil => Nil
     case h :: t => -h :: negates(t)
 }
@@ -740,7 +740,7 @@ moving it into a separate function:
 \begin{scalacode}
 def f(n: Int): Int = n * 2
 
-def doubles(lst: List[Int]): List[Int] = lst match {
+def doubles(alist: List[Int]): List[Int] = alist match {
   case Nil => Nil
   case h :: t => f(h) :: doubles(t)
 }
@@ -758,7 +758,7 @@ Instead of writing three functions that are almost identical, we can
 write one function that takes $f$ as an argument:
 
 \begin{scalacode}
-def map(f: Int => Int, lst: List[Int]): List[Int] = lst match {
+def map(f: Int => Int, alist: List[Int]): List[Int] = alist match {
   case Nil => Nil
   case h :: t => f(h) :: map(f, t)
 }
@@ -767,19 +767,19 @@ def map(f: Int => Int, lst: List[Int]): List[Int] = lst match {
 With this function, we can make our examples much more succinct:
 
 \begin{scalacode}
-def doubles(lst: List[Int]) = {
+def doubles(alist: List[Int]) = {
   def f(n: Int): Int = n * 2
-  map(f, lst)
+  map(f, alist)
 }
 
-def incrs(lst: List[Int]) = {
+def incrs(alist: List[Int]) = {
   def f(n: Int): Int = n + 1
-  map(f, lst)
+  map(f, alist)
 }
 
-def lengths(lst: List[String]) = {
+def lengths(alist: List[String]) = {
   def f(str: String): Int = str.length
-  map(f, lst)
+  map(f, alist)
 }
 \end{scalacode}
 
@@ -790,12 +790,12 @@ type-check. Scala reports two type errors and they are both very informative:
 <console>:15: error: type mismatch;
  found   : String => Int
  required: Int => Int
-         map(f, lst)
+         map(f, alist)
              ^
 <console>:15: error: type mismatch;
  found   : List[String]
  required: List[Int]
-         map(f, lst)
+         map(f, alist)
                   ^
 \end{console}
 
@@ -805,19 +805,19 @@ look at the definition of \scalainline{map} closely, you'll see that all the
 can make the function even more generic by introducing two type-parameters:
 
 \begin{scalacode}
-def map[A,B](f: A => B, lst: List[A]): List[B] = lst match {
+def map[A,B](f: A => B, alist: List[A]): List[B] = alist match {
   case Nil => Nil
   case h :: t => f(h) :: map[A, B](f, t)
 }
 \end{scalacode}
 
 The type-parameter $A$ is the type of the elements in
-\emph{lst} and the type-parameter $B$ is the type elements in the produced list.
+\emph{alist} and the type-parameter $B$ is the type elements in the produced list.
 In the code above, we've make all the type-arguments explicit. But, as we've
 discussed before, we can rely on type-inference to fill them in:
 
 \begin{scalacode}
-def map[A,B](f: A => B, lst: List[A]): List[B] = lst match {
+def map[A,B](f: A => B, alist: List[A]): List[B] = alist match {
   case Nil => Nil
   case h :: t => f(h) :: map(f, t)
 }
@@ -830,7 +830,7 @@ that have some property. For example, here is a function that consumes a list,
 and produces a new list that only contains the even numbers:
 
 \begin{scalacode}
-def filterEven(lst: List[Int]): List[Int] = lst match {
+def filterEven(alist: List[Int]): List[Int] = alist match {
   case Nil => Nil
   case head :: tail =>
     (head % 2 == 0) match {
@@ -853,7 +853,7 @@ the \scalainline{head}-test into a function:
 \begin{scalacode}
 def f(n: Int): Boolean = head % 2
 
-def filterEven(lst: List[Int]): List[Int] = lst match {
+def filterEven(alist: List[Int]): List[Int] = alist match {
   case Nil => Nil
   case head :: tail =>
     f(head) match {
@@ -867,7 +867,7 @@ Now that the pattern is clearer, we generalize \scalainline{filterEven} to take 
 as an argument:
 
 \begin{scalacode}
-def filter(f: Int => Boolean, lst: List[Int]): List[Int] = lst match {
+def filter(f: Int => Boolean, alist: List[Int]): List[Int] = alist match {
   case Nil => Nil
   case head :: tail =>
     f(head) match {
@@ -876,9 +876,9 @@ def filter(f: Int => Boolean, lst: List[Int]): List[Int] = lst match {
     }
 }
 
-def filterEven(lst: List[Int]): List[Int] = {
+def filterEven(alist: List[Int]): List[Int] = {
   def f(n: Int): Boolean = head % 2
-  filter(f, lst)
+  filter(f, alist)
 }
 \end{scalacode}
 
@@ -886,7 +886,7 @@ Finally, just as we did for \scalainline{map}, we can generalize the type of \sc
 so that it can be applied to \scalainline{List[A]}:
 
 \begin{scalacode}
-def filter[A](f: A => Boolean, lst: List[A]): List[A] = lst match {
+def filter[A](f: A => Boolean, alist: List[A]): List[A] = alist match {
   case Nil => Nil
   case head :: tail =>
     f(head) match {
@@ -906,7 +906,7 @@ Cannot show find because it relies on Option
 % the following function finds the first even number in a list:
 
 % \begin{scalacode}
-% def findEven(lst: List[Int]): Option[Int] = lst match {
+% def findEven(alist: List[Int]): Option[Int] = alist match {
 %   case Empty() => None()
 %   case Cons(head, tail) => (head % 2 == 0) match {
 %     case true => Some(head)
@@ -920,7 +920,7 @@ Cannot show find because it relies on Option
 % functions, we can write the general \scalainline{find} function:
 
 % \begin{scalacode}
-% def find[A](f: A => Boolean, lst: List[A]): Option[A] = lst match {
+% def find[A](f: A => Boolean, alist: List[A]): Option[A] = alist match {
 %   case Empty() => None()
 %   case Cons(head, tail) => f(head) match {
 %     case true => Some(head)
@@ -936,7 +936,7 @@ order. But, the following higher-order function can be used to sort any
 lists of any type, given an arbitrary ``less than'' operator.
 
 \begin{scalacode}
-def insert[A](lessThan: (A, A) => Boolean, x: A, lst: List[A]): List[A] = lst match {
+def insert[A](lessThan: (A, A) => Boolean, x: A, alist: List[A]): List[A] = alist match {
   case Nil => List(x)
   case hd :: tl => {
     if (lessThan(x, hd)) {
@@ -948,24 +948,24 @@ def insert[A](lessThan: (A, A) => Boolean, x: A, lst: List[A]): List[A] = lst ma
   }
 }
 
-def sort[A](lessThan: (A, A) => Boolean, lst: List[A]) = lst match {
+def sort[A](lessThan: (A, A) => Boolean, alist: List[A]) = alist match {
   case Nil => Nil
   case hd :: tl => insert(lessThan, hd, sort(lessThan, tl))
 }
 
-def sortAscending(lst: List[Int]): Int = {
+def sortAscending(alist: List[Int]): Int = {
   def f(x: Int, y: Int): Boolean = x < y
-  sort(f, lst)
+  sort(f, alist)
 }
 
-def sortDescending(lst: List[Int]): Int = {
+def sortDescending(alist: List[Int]): Int = {
   def f(x: Int, y: Int): Boolean = x > y
-  sort(f, lst)
+  sort(f, alist)
 }
 
-def sortByLengthAscending(lst: List[String]): Int = {
+def sortByLengthAscending(alist: List[String]): Int = {
   def f(x: String, y: String): Boolean = x.length < y.length
-  sort(f, lst)
+  sort(f, alist)
 }
 \end{scalacode}
 
@@ -1008,13 +1008,13 @@ the documentation or the Scala console.
 
 \newhw{Higher-Order Functions}
 
-In this assignment, you'll write several higher-order functions over lists. You
-should place all the functions below within an object called
-\scalainline{Homework2}.
+In this assignment, you'll write several higher-order functions over lists.
 
-\textbf{Restrictions}: You must not use Scala's builtin methods. You
+\textbf{Restrictions}: You must not use Scala's builtin methods. In particular, you must not
+use any of the methods on Scala's lists. However, feel free to use any of the list-processing
+functions that we've written in class or the code you wrote for the previous assignment.
+You
 may not use imperative features, such as \scalainline{while} and \scalainline{var}.
-Feel free to reuse or modify any code your wrote for the previous assignment.
 You should also write any helper functions you think are necessary. You
 may also use functions you write for one part of the assignment to solve
 another part of the assignment.
@@ -1055,7 +1055,7 @@ Within an object called \texttt{HOF}, implement the following functions.
 Write the \scalainline{map2} function, which maps over two lists:
 
 \begin{scalacode}
-def map2[A,B,C](f: (A, B) => C, lst1: List[A], lst2: List[B]): List[C]
+def map2[A,B,C](f: (A, B) => C, alist1: List[A], alist2: List[B]): List[C]
 
 test("map2 with add") {
   def add(x: Int, y: Int): Int = x + y
@@ -1063,7 +1063,7 @@ test("map2 with add") {
 }
 \end{scalacode}
 
-You may assume that \scalainline{lst1} and \scalainline{lst2} have the same
+You may assume that \scalainline{alist1} and \scalainline{alist2} have the same
 length (i.e., do whatever you think is reasonable).
 
 \item
@@ -1083,7 +1083,7 @@ and \scalainline{xy._2} to access the first and second component respectively.
 Write the \scalainline{zip} function, which tuples corresponding elements in a list:
 
 \begin{scalacode}
-def zip[A,B](lst1: List[A], lst2: List[B]): List[(A, B)]
+def zip[A,B](alist1: List[A], alist2: List[B]): List[(A, B)]
 
 test("zip test 1") {
   assert(zip(List(1, 2, 3), List(4, 5, 6)) == List((1,4), (2, 5), (3, 6)))
@@ -1099,7 +1099,7 @@ test("zip test 2") {
 Write the function \scalainline{flatten}, which flattens a nested list:
 
 \begin{scalacode}
-def flatten[A](lst: List[List[A]]): List[A]
+def flatten[A](alist: List[List[A]]): List[A]
 
 test("flatten test") {
   assert(flatten(List(List(1, 2), List(3, 4))) == List(1, 2, 3, 4))
@@ -1110,7 +1110,7 @@ test("flatten test") {
 Write the \scalainline{flatten3} function, which flattens a triple-nested list:
 
 \begin{scalacode}
-def flatten3[A](lst: List[List[List[A]]]): List[A]
+def flatten3[A](alist: List[List[List[A]]]): List[A]
 \end{scalacode}
 
 \item
@@ -1131,7 +1131,7 @@ Write the \scalainline{mapList} function, which maps each element to a list and 
 the list of all results:
 
 \begin{scalacode}
-def mapList[A, B](lst: List[A], f: A => List[B]): List[B]
+def mapList[A, B](alist: List[A], f: A => List[B]): List[B]
 
 test("mapList test") {
   def f(n: Int): List[Int] = buildList(n, (_: Int) => n)
@@ -1140,17 +1140,17 @@ test("mapList test") {
 \end{scalacode}
 
 \item
-Write the \scalainline{partition(f, lst)} function, which splits a list into
-two sub-lists, where the first list has all the elements of \scalainline{lst}
+Write the \scalainline{partition(f, alist)} function, which splits a list into
+two sub-lists, where the first list has all the elements of \scalainline{alist}
 on which \scalainline{f} produces \scalainline{true} and the second
-list has all the elements of \scalainline{lst} on which \scalainline{f}
+list has all the elements of \scalainline{alist} on which \scalainline{f}
 produces \scalainline{false}.
 
 The ordering of elements in the two sub-lists should be the same
-as in \scalainline{lst}.
+as in \scalainline{alist}.
 
 \begin{scalacode}
-def partition[A](f: A => Boolean, lst: List[A]): (List[A], List[A])
+def partition[A](f: A => Boolean, alist: List[A]): (List[A], List[A])
 
 def isEven(x: Int): Boolean = n % 2 == 0
 
@@ -1165,6 +1165,36 @@ test("partition test 3") {
   assert(partition(isEven, List(1,3,5)) == (Nil, List(1,3,5)))
 }
 \end{scalacode}
+
+\item
+Write the \scalainline{merge(lessThan, alist1, alist2)} function, which merges
+the two elements of the two lists. You should assume that \scalainline{alist1}
+and \scalainline{alist2} are sorted by the ordering defined by \scalainline{lessThan}.
+the produced list should also be sorted by the same ordering.
+
+\begin{scalacode}
+def merge[A](lessThan: (A, A) => Boolean, alist1: List[A], alist2: List[A]): List[A]
+
+def lt(x: Int, y: Int): Boolean = x > y
+
+test("merge test 1") {
+  assert(merge(lt, List(5, 3, 1), List(10, 6, 0)) == List(10, 6, 5, 3, 1, 0))
+}
+\end{scalacode} 
+
+
+\item
+Write the \scalainline{sort(lessThan, alist)} function, which sorts \scalainline{alist} by the ordering
+defined by \scalainline{lessThan}.
+
+\begin{scalacode}
+def sort[A](lessThan: (A, A) => Boolean, alist: List[A]): List[A]
+
+
+test("osrt test 1") {
+  assert(sort(lt, List(5,1,2,3,4,5)) == List(5,5,4,3,2,1))
+}
+\end{scalacode} 
 
 \end{enumerate}
 
@@ -1198,7 +1228,7 @@ test("partition test 3") {
 \begin{figure}
 \begin{subfigure}{.45\textwidth}
 \begin{scalacode}
-def sum(lst: List[Int]): Int = lst match {
+def sum(alist: List[Int]): Int = alist match {
   case Nil => 0
   case hd :: tl => hd + sum tl
 }
@@ -1208,7 +1238,7 @@ def sum(lst: List[Int]): Int = lst match {
 \quad\vrule\quad
 \begin{subfigure}{.45\textwidth}
 \begin{scalacode}
-def product(lst: List[Int]): Int = lst match {
+def product(alist: List[Int]): Int = alist match {
   case Nil => 1
   case hd :: tl => hd + product tl
 }
@@ -1218,7 +1248,7 @@ def product(lst: List[Int]): Int = lst match {
 \vskip .5em \hrule \vskip .5em
 \begin{subfigure}{.45\textwidth}
 \begin{scalacode}
-def concat(lst: List[String]): String = lst match {
+def concat(alist: List[String]): String = alist match {
   case Nil => ""
   case hd :: tl => hd + concat tl
 }
@@ -1228,7 +1258,7 @@ def concat(lst: List[String]): String = lst match {
 \quad\vrule\quad
 \begin{subfigure}{.45\textwidth}
 \begin{scalacode}
-def totalLen(lst: List[String]): Int = lst match {
+def totalLen(alist: List[String]): Int = alist match {
   case Nil => 0
   case hd :: tl => hd.length + totalLen tl
 }
@@ -1285,7 +1315,7 @@ a two-argument function instead of a fixed binary operator, and (3) a
 value for the base-case, instead of a fixed base-case:
 %
 \begin{scalacode}
-def fold(baseCase: ???, binOp: (???, ???) => ???, lst: List[???]): ??? = lst match {
+def fold(baseCase: ???, binOp: (???, ???) => ???, alist: List[???]): ??? = alist match {
   case Nil => baseCase
   case head :: tail => binOp(head, fold(baseCase, binOp, tail))
 }
@@ -1295,14 +1325,14 @@ We can rewrite the functions in \cref{folding_prototypes} more
 succinctly as follows:
 %
 \begin{scalacode}
-def sum(lst : List[Int]) = fold(0, (x: Int, y: Int) => x + y, lst)
+def sum(alist : List[Int]) = fold(0, (x: Int, y: Int) => x + y, alist)
 
-def product(lst : List[Int]) = fold(1, (x: Int, y: Int) => x * y, lst)
+def product(alist : List[Int]) = fold(1, (x: Int, y: Int) => x * y, alist)
 
-def concat(lst : List[String]) = fold("", (x: String, y: String) => x + y, lst)
+def concat(alist : List[String]) = fold("", (x: String, y: String) => x + y, alist)
 
 // binOp was defined above
-def totalLen(lst : List[Int]) = fold(0, binOp, lst)
+def totalLen(alist : List[Int]) = fold(0, binOp, alist)
 \end{scalacode}
 
 Note that in \scalainline{binOp}, the types of the two arguments
@@ -1315,7 +1345,7 @@ list, and the second argument is an intermediate result.
 Therefore, we can fill in the types in \scalainline{fold} as follows:
 %
 \begin{scalacode}
-def fold[A,B](baseCase: B, binOp: (A, B) => B, lst: List[A]): B = lst match {
+def fold[A,B](baseCase: B, binOp: (A, B) => B, alist: List[A]): B = alist match {
   case Nil => baseCase
   case head :: tail => binOp(head, fold(baseCase, binOp, tail))
 }
@@ -1325,12 +1355,12 @@ def fold[A,B](baseCase: B, binOp: (A, B) => B, lst: List[A]): B = lst match {
 
 \paragraph{Functions can be passed as arguments to functions.}
 The last lecture introduced functions can be passed as arguments
-to other functions. For example, the function \scalainline{filter(f, lst)}
-produces a list of all the items of \scalainline{lst} for which \scalainline{f}
+to other functions. For example, the function \scalainline{filter(f, alist)}
+produces a list of all the items of \scalainline{alist} for which \scalainline{f}
 is \scalainline{true}:
 %
 \begin{scalacode}
-def filter[A](f: A => Boolean, lst: List[Int]): List[A] = lst match {
+def filter[A](f: A => Boolean, alist: List[Int]): List[A] = alist match {
   case Nil => Nil
   case Cons(head, tail) =>
     f(head) match {
@@ -1345,14 +1375,14 @@ This allowed us to write several functions very easily, for example:
 \begin{scalacode}
 def isEven(n: Int): Boolean = n % 2 == 0
 
-def onlyEvens(lst: List[Int]): List[Int] = {
-  filter(isEven, lst)
+def onlyEvens(alist: List[Int]): List[Int] = {
+  filter(isEven, alist)
 }
 
 def nonZero(n: Int): Boolean = n != 0
 
-def onlyNonZero(lst: List[Int]): List[Int] = {
-  filter(nonZero, lst)
+def onlyNonZero(alist: List[Int]): List[Int] = {
+  filter(nonZero, alist)
 }
 \end{scalacode}
 
@@ -1366,14 +1396,14 @@ when them simply exist as trivial helper functions.
 Functions can be nested within other functions:
 %
 \begin{scalacode}
-def onlyEvens(lst: List[Int]): List[Int] = {
+def onlyEvens(alist: List[Int]): List[Int] = {
   def isEven(n: Int): Boolean = n % 2 == 0
-  filter(isEven, lst)
+  filter(isEven, alist)
 }
 
-def onlyNonZero(lst: List[Int]): List[Int] = {
+def onlyNonZero(alist: List[Int]): List[Int] = {
   def nonZero(n: Int): Boolean = n != 0
-  filter(nonZero, lst)
+  filter(nonZero, alist)
 }
 \end{scalacode}
 %
@@ -1448,7 +1478,7 @@ every number in a list of numbers. Here is simple, one-line definition
 using an anonymous function as an argument to \scalainline{map}:
 
 \begin{scalacode}
-def doubleAll(lst: List[Int]) = map((n: Int) => n * 2, lst)
+def doubleAll(alist: List[Int]) = map((n: Int) => n * 2, alist)
 \end{scalacode}
 
 The anonymous function itself is extremely simple and the name of the enclosing
@@ -1458,7 +1488,7 @@ For another example, suppose we want to remove all the odd numbers
 in a list. We can do this using \scalainline{filter} and a short, anonymous function:
 
 \begin{scalacode}
-def removeOdds(lst: List[Int]) = filter((n: Int) => n % 2 == 0, lst)
+def removeOdds(alist: List[Int]) = filter((n: Int) => n % 2 == 0, alist)
 \end{scalacode}
 
 In these kinds of situations, anonymous functions can be very helpful.
@@ -1581,16 +1611,16 @@ Here is a more compact way of making the same argument:
 \begin{array}{l|l|l}
  & \textrm{Expression} & \textrm{Reasoning} \\
 \hline
-& \lstinline[language=scala]|val x = 20; def f(x: Int): Int = { x + 5 }; f(10) + x|
+& \alistinline[language=scala]|val x = 20; def f(x: Int): Int = { x + 5 }; f(10) + x|
 & \textrm{Original expression} \\
-= & \lstinline[language=scala]|def f(x: Int): Int = { x + 5 }; f(10) + 20|
-& \textrm{Substitute \lstinline[language=scala]|x| with \lstinline[language=scala]|20|} \\
-= & \lstinline[language=scala]|(10 + 5) + 20|
-& \textrm{Inline \lstinline[language=scala]|f| and substitute \lstinline[language=scala]|x| with \lstinline[language=scala]|10|} \\
-= & \lstinline[language=scala]|15 + 20|
-& \textrm{Evaluate \lstinline[language=scala]|10 + 5|} \\
-= & \lstinline[language=scala]|35|
-& \textrm{Evaluate \lstinline[language=scala]|15 + 20|}
+= & \alistinline[language=scala]|def f(x: Int): Int = { x + 5 }; f(10) + 20|
+& \textrm{Substitute \alistinline[language=scala]|x| with \alistinline[language=scala]|20|} \\
+= & \alistinline[language=scala]|(10 + 5) + 20|
+& \textrm{Inline \alistinline[language=scala]|f| and substitute \alistinline[language=scala]|x| with \alistinline[language=scala]|10|} \\
+= & \alistinline[language=scala]|15 + 20|
+& \textrm{Evaluate \alistinline[language=scala]|10 + 5|} \\
+= & \alistinline[language=scala]|35|
+& \textrm{Evaluate \alistinline[language=scala]|15 + 20|}
 \end{array}
 \]
 
@@ -1618,15 +1648,15 @@ definition of \scalainline{add10}:
  & \textrm{Expression} & \textrm{Reasoning} \\
 \hline
 & \multicolumn{2}{l}
-{\lstinline[language=scala]|def makeAdder(x: Int): Int => Int = { def add(y): Int = { x + y }; add }; val add10 = makeAdder(10)|}  \\
-= & \lstinline[language=scala]|val add10 = { def add(y): Int = { x + 10 }; add }|
-& \textrm{Inline \lstinline[language=scala]|makeAdder| and substitute \lstinline[language=scala]|y| with
-\lstinline[language=scala]|10|} \\
-= & \lstinline[language=scala]|val add10 = { val add = ((y: Int) => { x + 10 }); add }| & \textrm{Rewrite \lstinline[language=scala]|add| using \lstinline[language=scala]|val| notation} \\
-= & \lstinline[language=scala]|val add10 = ((y: Int) => { x + 10 })|
-& \textrm{Substitute \lstinline[language=scala]|add| with its definition} \\
-= & \lstinline[language=scala]|def add10(y: Int) = x + 10|
-& \textrm{Rewrite \lstinline[language=scala]|add| using \lstinline[language=scala]|def| notation}
+{\alistinline[language=scala]|def makeAdder(x: Int): Int => Int = { def add(y): Int = { x + y }; add }; val add10 = makeAdder(10)|}  \\
+= & \alistinline[language=scala]|val add10 = { def add(y): Int = { x + 10 }; add }|
+& \textrm{Inline \alistinline[language=scala]|makeAdder| and substitute \alistinline[language=scala]|y| with
+\alistinline[language=scala]|10|} \\
+= & \alistinline[language=scala]|val add10 = { val add = ((y: Int) => { x + 10 }); add }| & \textrm{Rewrite \alistinline[language=scala]|add| using \alistinline[language=scala]|val| notation} \\
+= & \alistinline[language=scala]|val add10 = ((y: Int) => { x + 10 })|
+& \textrm{Substitute \alistinline[language=scala]|add| with its definition} \\
+= & \alistinline[language=scala]|def add10(y: Int) = x + 10|
+& \textrm{Rewrite \alistinline[language=scala]|add| using \alistinline[language=scala]|def| notation}
 \end{array}
 \]
 
@@ -2053,15 +2083,15 @@ There are several other useful methods. For example:
 
 \begin{itemize}
 
-  \item \scalainline{lst.take(n)} produces a list with first \scalainline{n}
-  elements of \scalainline{lst}. Similarly, \scalainline{lst.drop(n)} produces
-  a list without the first \scalainline{n} elements of \scalainline{lst}.
+  \item \scalainline{alist.take(n)} produces a list with first \scalainline{n}
+  elements of \scalainline{alist}. Similarly, \scalainline{alist.drop(n)} produces
+  a list without the first \scalainline{n} elements of \scalainline{alist}.
   %
   \begin{scalacode}
-  val lst = List("X", "Y", "Z", "A", "B", "C")
-  assert(lst.take(3) == List("X", "Y", "Z"))
-  assert(lst.drop(3) == List("A", "B", "C"))
-  assert(lst.take(3) ::: lst.drop(3) == lst)
+  val alist = List("X", "Y", "Z", "A", "B", "C")
+  assert(alist.take(3) == List("X", "Y", "Z"))
+  assert(alist.drop(3) == List("A", "B", "C"))
+  assert(alist.take(3) ::: alist.drop(3) == alist)
   \end{scalacode}
 
   In the last line, the \scalainline{:::} operator (pronounced ``append'')
@@ -2073,7 +2103,7 @@ There are several other useful methods. For example:
   operator. We could append lists using conventional method-application
   syntax:
   \begin{scalacode}
-  assert(lst.:::(lst) == lst ::: lst)
+  assert(alist.:::(alist) == alist ::: alist)
   \end{scalacode}
   In fact, all operators on objects are actually ordinary methods. E.g.,
   we could write \scalainline{2.+(3.*(6))}, to do arithmetic using
@@ -2082,7 +2112,7 @@ There are several other useful methods. For example:
 
   \end{notation}
 
-  \item \scalainline{lst.exists(f)} produces \scalainline{true} if there
+  \item \scalainline{alist.exists(f)} produces \scalainline{true} if there
   exists any element in the list on which \scalainline{f} produces
   \scalainline{true}.
 
@@ -2091,7 +2121,7 @@ There are several other useful methods. For example:
   assert(List(1, 2, 3, 4).exists(n => n == 5) == false)
   \end{scalacode}
 
-  \item \scalainline{lst.forall(f)} checks that all elements in \scalainline{lst}
+  \item \scalainline{alist.forall(f)} checks that all elements in \scalainline{alist}
   satisfy \scalainline{f}:
   %
   \begin{scalacode}
@@ -3675,8 +3705,8 @@ def useAnimals(alist: List[Animal]) = {
   alist.map(animal => animal.sound()).mkString(", ")
 }
 
-val lst: List[Cat] = List(new Cat(), new Cat())
-useAnimals(lst)
+val alist: List[Cat] = List(new Cat(), new Cat())
+useAnimals(alist)
 \end{scalacode}
 
 The reason this works is because there are no methods on lists to update
@@ -4885,7 +4915,7 @@ method with the following type:
 
 \begin{scalacode}
 sealed trait List[A] {
-  def append[B :> A](other: List[B]): List[B] = lst match {
+  def append[B :> A](other: List[B]): List[B] = alist match {
     case Nil => Nil
     case hd :: tl => hd :: tl.append(other)
   }

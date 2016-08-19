@@ -7,5 +7,7 @@ object HOF {
   def buildList[A](length: Int, f: Int => A): List[A] = ???
   def mapList[A, B](lst: List[A], f: A => List[B]): List[B] = 
   def partition[A](f: A => Boolean, lst: List[A]): (List[A], List[A]) = ???
+  def merge[A](lessThan: (A, A) => Boolean, alist1: List[A], alist2: List[A]): List[A] = ???
+  def sort[A](lessThan: (A, A) => Boolean, alist: List[A]): List[A] = ???
 
 }

@@ -61,4 +61,10 @@ object Lecture2 {
     (filter(f, lst), filter((x: A) => !f(x), lst))
   }
 
+  def merge[A](lessThan: (A, A) => Boolean, alist1: List[A], alist2: List[A]): List[A] = (alist1, alist2) match {
+    case (_, Nil) => alist1
+    case (Nil, _) => alist2
+    case (x :: xs, y :: ys) => if (lessThan(x, y)) x :: merge(lessThan, xs, y :: ys) else y :: merge(lessThan, x :: xs, ys)
+  }
+
 }
