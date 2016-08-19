@@ -3,7 +3,7 @@ layout: default
 title: Home
 ---
 
-Welcome to the Fall 2016 offering of CMPSCI220 Programming Methodology!
+Welcome to the Fall 2016 offering of COMPSCI220 Programming Methodology!
 
 You must read the entire [Course Policy] document.
 

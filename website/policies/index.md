@@ -39,7 +39,7 @@ http://people.cs.umass.edu/~emery/plasma/emery/software-systems-cmpsci-291SP.htm
 will result in an immediate F grade for the course and possible initiation of
 the formal procedures of the University. We use an automated program and manual
 checks to correlate projects with each other and with prior solutions. **If you
-cheat, we will catch you.*
+cheat, we will catch you.**
 
 At the same time, we encourage students to help each other learn the course
 material. As in most courses, there is a boundary separating these two
@@ -60,7 +60,7 @@ reasonable precautions in protecting your own work. Don't let other students
 borrow your account or computer, don't leave your program in a publicly
 accessible directory, and take care when discarding printouts.
 
-In addition, you are subject to the university's [academic honesting policy]
+In addition, you are subject to the university's [academic honesty policy]
 and [guidelines for classroom civility]. You must read both of these.
 
 <a name="questions"></a>
@@ -193,7 +193,7 @@ this as your "attendance grade".
 
 
 
-[academic honestly policy]: http://www.umass.edu/dean_students/codeofconduct/acadhonesty/
+[academic honesty policy]: http://www.umass.edu/dean_students/codeofconduct/acadhonesty/
 
 [guidelines for classroom civility]: http://www.umass.edu/dean_students/codeofconduct/classroomcivility/
 
