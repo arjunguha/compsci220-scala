@@ -290,7 +290,7 @@ functions:
   values of \scalainline{gen1} and then the values of \scalainline{gen2}. Furthermore, to avoid generating values
   we don't need, the arguments are passed by-name:
 
-\begin[scalacode}
+\begin{scalacode}
 def append[T](gen1: => Generator[T], gen2: => Generator[T]): Generator[T] = new Generator[T] { 
   def next() = gen1.next match {
     case None => gen2.next

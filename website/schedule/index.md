@@ -23,7 +23,7 @@ title: Schedule
 | Tuesday, Oct 11   | **No class.** (Monday schedule.)                                                                |
 | Wednesday, Oct 12 | **No lab.** (Continue working on Tic Tac Toe.)                                                  |
 | Thursday, Oct 13  | [Lecture Notes](../reading/lecture11.pdf)                                                       |
-| Tuesday, Oct 18   | Due: [HW5]. Out: [HW6]. [Lecture Notes](https://piazza.com/class/ihn69k9d3dh9n?cid=866)         |
+| Tuesday, Oct 18   | Due: [HW5]. Out: [HW6]. [Lecture Notes](../reading/lecture12.pdf)                               |
 | Wednesday, Oct 19 | *Lab:* Steps 1 and 2(a) of HW6.                                                                 |
 | Thursday, Oct 20  | [Lecture Notes](../reading/lecture13.pdf)                                                       |
 | Tuesday, Oct 25   | Due: [HW6]. Out: [HW7]. [Lecture Notes](https://piazza.com/class/ihn69k9d3dh9n?cid=957)         |
