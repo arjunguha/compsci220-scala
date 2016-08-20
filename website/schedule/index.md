@@ -12,7 +12,7 @@ title: Schedule
 | Wednesday, Sep 14 | *Lab:* Steps 1 and 2 of [HW2].                                                                  |
 | Thursday, Sep 15  | [Lecture Notes](../reading/lecture4.pdf).                                                       |
 | Tuesday, Sep 20   | Due: [HW2]. Out: [HW3]. [Lecture Notes](../reading/lecture5.pdf).                               |
-| Wednesday, Sep 21 | *Lab*:                                                                                          |
+| Wednesday, Sep 21 | *Lab*: Steps 1 and 4 of [HW3].                                                                  |
 | Thursday, Sep 22  |                                                                                                 |
 | Tuesday, Sep 27   | Due: [HW3]. Out: [HW4]. [Lecture Notes](../reading/gc.pdf)                                      |
 | Wednesday, Sep 28 | *Lab*:                                                                                          |

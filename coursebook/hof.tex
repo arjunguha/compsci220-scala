@@ -1,0 +1,485 @@
+\newlecture
+
+\section{Generics and Type Inference\classtime{15}}
+
+\begin{figure}
+\begin{minipage}{0.45\textwidth}
+\begin{scalacode}
+def ilength(alist : List[Int]): Int = alist match {
+  case Nil => 0
+  case _ :: tail => 1 + ilength(tail)
+}
+\end{scalacode}
+\subcaption{Length of a list of integers.}
+\end{minipage}
+\quad\vrule\quad
+\begin{minipage}{0.45\textwidth}
+\begin{scalacode}
+def slength(alist : List[String]): Int = alist match {
+  case Nil => 0
+  case _ :: tail => 1 + slength(tail)
+}
+\end{scalacode}
+\subcaption{Length of a list of integers.}
+\end{minipage}
+\caption{Two very similar length functions.}
+\label{monolength}
+\end{figure}
+
+\Cref{monolength} shows two functions that calculate (1) the length of a list
+of integers and (2) the length of a list of strings. These two functions
+are almost identical. The only difference between them in the type of
+element in the list. We can abstract away the differences by writing
+a \emph{generic} length function:
+%
+\begin{scalacode}
+def length[A](alist: List[A]): Int = alist match {
+  case Nil => 0
+  case _ :: tail => 1 + length(tail)
+}
+\end{scalacode}
+
+In the code above, \verb|A| is a \emph{type argument}. It truly is an argument
+to the function, just like \verb|alist|. i.e., when \scalainline{length} is
+invoked, we need to specify \verb|A|:
+%
+\begin{scalacode}
+length[Int](List(1, 2, 3))
+length[String](List("A", "B", "C", "D"))
+\end{scalacode}
+%
+However, \verb|A| holds a type instead of a value.
+
+Scala lets you elide type arguments in most cases. So, we could also write:
+%
+\begin{scalacode}
+length(List(1, 2, 3))
+length(List("A", "B", "C", "D"))
+\end{scalacode}
+%
+But, it is important to note that under the hood, Scala figures out that we
+meant \scalainline{A} to be \scalainline{Int} on the first line and
+\scalainline{String} on the second line and inserts the type arguments for us.
+In fact, we relied on this in the definition of \scalainline{length}: Scala
+expands the recursive call \scalainline{length(tail)} to
+\scalainline{length[A](tail)}. Note that Scala isn't just ``guessing'' the
+right type. It uses the type of the value-arguments to infer the missing
+type argument.
+
+However, Scala's type inference is not perfect. It saves you typing, but don't
+expect it to figure out exactly what you mean. It can make mistakes.
+For example, if we write \scalainline{List(1, "2", 3)}, Scala infers
+that it has type \scalainline{List[Any]}. But, this is almost certainly
+not what we meant! We probably meant to construct a list of integers
+or strings. If we instead wrote \scalainline{List[Int](1, "2", 3)}, Scala
+would have signalled a type error.
+
+\subsection{Generic Data Structures}
+
+\begin{figure}
+
+\begin{minipage}{0.45\textwidth}
+\begin{scalacode}
+sealed trait IBinTree
+case class ILeaf() extends IBinTree
+case class INode(
+  lhs: IBinTree,
+  key: Int,
+  value: Int,
+  rhs: IBinTree)
+  extends IBinTree
+\end{scalacode}
+\caption{Values are integers.}
+\end{minipage}
+\quad\vrule\quad
+\begin{minipage}{0.45\textwidth}
+\begin{scalacode}
+sealed trait SBinTree
+case class SLeaf() extends IBinTree
+case class SNode(
+  lhs: SBinTree,
+  key: Int,
+  value: String,
+  rhs: SBinTree)
+  extends SBinTree
+\end{scalacode}
+\caption{Values are strings.}
+\end{minipage}
+\caption{Two non-generic binary trees.}
+\label{monobintrees}
+\end{figure}
+
+\Cref{monobintrees}
+In the last lecture, we build a data structure that represents binary
+search trees with strings for values. We can write a similar data structure
+with integer-values, as shown in \cref{monobintrees}. But, this will force
+us to redefine the functions we wrote earlier to proceed \scalainline{SBinTree}s.
+Instead, we can write a generic type for binary trees where the values have
+some unknown type \scalainline{A}:
+
+%
+\begin{scalacode}
+sealed trait BinTree[A]
+case class Leaf[A]() extends BinTree[A]
+case class Node[A](lhs: BinTree[A], key: Int, value: A, rhs: BinTree[A]) extends BinTree[A]
+\end{scalacode}
+
+Here are some examples of binary trees with values of different types:
+
+\begin{itemize}
+
+\item This binary tree has integer values:
+\begin{scalacode}
+Node(Leaf(), 10, 500, Leaf())
+\end{scalacode}
+
+\item This binary tree has string values:
+\begin{scalacode}
+Node(Leaf(), 10, "five hundred", Leaf())
+\end{scalacode}
+
+\item This binary tree has boolean values:
+\begin{scalacode}
+Node(Leaf(), 10, true, Leaf())
+\end{scalacode}
+
+\end{itemize}
+
+We can easily update the \scalainline{insert}, \scalainline{find}, and \scalainline{size}
+functions from the last lecture to work with generic binary trees.
+
+\section{Higher-Order Functions on Lists}
+
+
+\begin{figure}
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+def incrs(alist: List[Int]): List[Int] =
+  alist match {
+    case Nil => Nil
+    case h :: t => h + 1 :: incrs(t)
+  }
+\end{scalacode}
+\caption{A function that increments all numbers in a list.}
+\end{subfigure}
+\quad\vrule\quad
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+def lengths(alist: List[String]): List[Int] =
+  alist match {
+  case Nil => Nil
+  case h :: t => h.length :: lengths(t)
+}
+\end{scalacode}
+\caption{A function that calculates the lengths of all strings in a list.}
+\end{subfigure}
+\quad
+\vskip 1em \hrule \vskip 1em
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+def doubles(alist: List[Int]): List[Int] =
+  alist match {
+    case Nil => Nil
+    case h :: t => h * 2 :: doubles(t)
+}
+\end{scalacode}
+\caption{A function that doubles all numbers in a list.}
+\end{subfigure}
+\quad\vrule\quad
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+def negates(alist: List[Int]): List[Int] =
+  alist match {
+    case Nil => Nil
+    case h :: t => -h :: negates(t)
+}
+\end{scalacode}
+\caption{A function that negates all numbers in a list.}
+\end{subfigure}
+
+\caption{Four different functions that transform elements of a list.}
+\label{map_motivation}
+\end{figure}
+
+
+\subsection{The Map Function\classtime{15}}
+
+Study the four functions in \cref{map_motivation}. The function \verb|incrs|
+adds one to every element in a list of integers, the function \verb|lengths|
+calculates the length of every string in a list, the function \verb|doubles|
+doubles every number in a list, and the function \verb|negates| negates every
+number in a list. Hopefully, you've noticed that these four functions have a lot
+of in common. \emph{The only difference between them is the operation that they
+perform on the head of the list}.
+
+Here is a variant of \verb|doubles| that makes the operation explicit, by
+moving it into a separate function:
+%
+\begin{scalacode}
+def f(n: Int): Int = n * 2
+
+def doubles(alist: List[Int]): List[Int] = alist match {
+  case Nil => Nil
+  case h :: t => f(h) :: doubles(t)
+}
+\end{scalacode}
+
+In this version, we're simply applying a function $f$ to $h$, where $f$
+is the doubling function. \emph{You should apply the same refactoring to the other
+functions}. E.g.,  instead of directly writing \scalainline{head.length}, refactor
+the function so that this expression is in a helper function.
+
+Once we've re-written the operation as \scalainline{f(h)}, all three
+functions look identical: the only difference is that each refers to a
+different function.
+Instead of writing three functions that are almost identical, we can
+write one function that takes $f$ as an argument:
+
+\begin{scalacode}
+def map(f: Int => Int, alist: List[Int]): List[Int] = alist match {
+  case Nil => Nil
+  case h :: t => f(h) :: map(f, t)
+}
+\end{scalacode}
+
+With this function, we can make our examples much more succinct:
+
+\begin{scalacode}
+def doubles(alist: List[Int]) = {
+  def f(n: Int): Int = n * 2
+  map(f, alist)
+}
+
+def incrs(alist: List[Int]) = {
+  def f(n: Int): Int = n + 1
+  map(f, alist)
+}
+
+def lengths(alist: List[String]) = {
+  def f(str: String): Int = str.length
+  map(f, alist)
+}
+\end{scalacode}
+
+Unfortunately, the definition of \scalainline{lengths} above does not
+type-check. Scala reports two type errors and they are both very informative:
+
+\begin{console}
+<console>:15: error: type mismatch;
+ found   : String => Int
+ required: Int => Int
+         map(f, alist)
+             ^
+<console>:15: error: type mismatch;
+ found   : List[String]
+ required: List[Int]
+         map(f, alist)
+                  ^
+\end{console}
+
+The \scalainline{map} function only works of lists of integers. However, if you
+look at the definition of \scalainline{map} closely, you'll see that all the
+\scalainline{Int}-specific code has been factored out into \scalainline{f}. We
+can make the function even more generic by introducing two type-parameters:
+
+\begin{scalacode}
+def map[A,B](f: A => B, alist: List[A]): List[B] = alist match {
+  case Nil => Nil
+  case h :: t => f(h) :: map[A, B](f, t)
+}
+\end{scalacode}
+
+The type-parameter $A$ is the type of the elements in
+\emph{alist} and the type-parameter $B$ is the type elements in the produced list.
+In the code above, we've make all the type-arguments explicit. But, as we've
+discussed before, we can rely on type-inference to fill them in:
+
+\begin{scalacode}
+def map[A,B](f: A => B, alist: List[A]): List[B] = alist match {
+  case Nil => Nil
+  case h :: t => f(h) :: map(f, t)
+}
+\end{scalacode}
+
+\subsection{The Filter Function\classtime{10}}
+
+Another common pattern when programming with lists is to select certain elements
+that have some property. For example, here is a function that consumes a list,
+and produces a new list that only contains the even numbers:
+
+\begin{scalacode}
+def filterEven(alist: List[Int]): List[Int] = alist match {
+  case Nil => Nil
+  case head :: tail =>
+    (head % 2 == 0) match {
+      case true => head :: filterEven(tail)
+      case false => filterEven(tail)
+    }
+}
+\end{scalacode}
+
+This is a very common pattern too. For example, we could write a function to
+select the odd numbers or the prime numbers. If we had a list of strings, we
+could select all the strings with length 5 or all the strings that represent
+English-language words. All these functions have the same shape: they test
+the value of \scalainline{head} in some way. If the test succeeds, \scalainline{head} is added in
+the output list. But, if the test fails, it is excluded.
+
+Following the same strategy we used to derive \scalainline{map}, we first package
+the \scalainline{head}-test into a function:
+
+\begin{scalacode}
+def f(n: Int): Boolean = head % 2
+
+def filterEven(alist: List[Int]): List[Int] = alist match {
+  case Nil => Nil
+  case head :: tail =>
+    f(head) match {
+      case true => head :: filterEven(tail)
+      case false => filterEven(tail)
+    }
+}
+\end{scalacode}
+
+Now that the pattern is clearer, we generalize \scalainline{filterEven} to take \scalainline{f}
+as an argument:
+
+\begin{scalacode}
+def filter(f: Int => Boolean, alist: List[Int]): List[Int] = alist match {
+  case Nil => Nil
+  case head :: tail =>
+    f(head) match {
+      case true => head :: filter(f, tail)
+      case false => filter(f, tail)
+    }
+}
+
+def filterEven(alist: List[Int]): List[Int] = {
+  def f(n: Int): Boolean = head % 2
+  filter(f, alist)
+}
+\end{scalacode}
+
+Finally, just as we did for \scalainline{map}, we can generalize the type of \scalainline{filter}
+so that it can be applied to \scalainline{List[A]}:
+
+\begin{scalacode}
+def filter[A](f: A => Boolean, alist: List[A]): List[A] = alist match {
+  case Nil => Nil
+  case head :: tail =>
+    f(head) match {
+      case true => head :: filter(f, tail)
+      case false => filter(f, tail)
+    }
+}
+\end{scalacode}
+
+\begin{instructor}
+Cannot show find because it relies on Option
+\end{instructor}
+
+% \subsection{The Find Function\classtime{10}}
+
+% Another common operation on lists is to find an element. For example,
+% the following function finds the first even number in a list:
+
+% \begin{scalacode}
+% def findEven(alist: List[Int]): Option[Int] = alist match {
+%   case Empty() => None()
+%   case Cons(head, tail) => (head % 2 == 0) match {
+%     case true => Some(head)
+%     case false => findEven(tail)
+%   }
+% }
+% \end{scalacode}
+
+% If we change \scalainline{(head % 2 == 0)} to \scalainline{(head % 2 == 1)}, we'll have the
+% \scalainline{findOdd} function. Again, instead of defining two slightly different
+% functions, we can write the general \scalainline{find} function:
+
+% \begin{scalacode}
+% def find[A](f: A => Boolean, alist: List[A]): Option[A] = alist match {
+%   case Empty() => None()
+%   case Cons(head, tail) => f(head) match {
+%     case true => Some(head)
+%     case false => find(f, tail)
+%   }
+% }
+% \end{scalacode}
+
+\subsection{Sorting}
+
+You've written sorting functions that sort lists is ascending or descending
+order. But, the following higher-order function can be used to sort any
+lists of any type, given an arbitrary ``less than'' operator.
+
+\begin{scalacode}
+def insert[A](lessThan: (A, A) => Boolean, x: A, alist: List[A]): List[A] = alist match {
+  case Nil => List(x)
+  case hd :: tl => {
+    if (lessThan(x, hd)) {
+      x :: hd :: tl
+    }
+    else {
+      hd :: insert(lessThan, x tl)
+    }
+  }
+}
+
+def sort[A](lessThan: (A, A) => Boolean, alist: List[A]) = alist match {
+  case Nil => Nil
+  case hd :: tl => insert(lessThan, hd, sort(lessThan, tl))
+}
+
+def sortAscending(alist: List[Int]): Int = {
+  def f(x: Int, y: Int): Boolean = x < y
+  sort(f, alist)
+}
+
+def sortDescending(alist: List[Int]): Int = {
+  def f(x: Int, y: Int): Boolean = x > y
+  sort(f, alist)
+}
+
+def sortByLengthAscending(alist: List[String]): Int = {
+  def f(x: String, y: String): Boolean = x.length < y.length
+  sort(f, alist)
+}
+\end{scalacode}
+
+\section{Builtin Methods on Lists\classtime{5}}
+
+All the higher-order list-processing functions that we've defined are already
+built-in to Scala as methods on lists.
+
+\begin{itemize}
+
+\item
+We can map over a list using the \scalainline{map} method:
+
+\begin{scalacode}
+def f(n: Int): Int = n + 1
+
+assert(List(10, 20, 30).map(f) == List(11, 21, 22))
+\end{scalacode}
+
+\item We can filter a list using the \scalainline{filter} method:
+
+\begin{scalacode}
+def f(n: Int): Boolean = n % 2 == 0
+
+assert(List(0, 1, 2, 3, 4, 5).map(f) == List(0, 2, 4))
+\end{scalacode}
+
+\item We can sort a list using the \scalainline{sortWith} method:
+
+\begin{scalacode}
+def f(x: Int, y: Int): Boolean = x > Y
+
+assert(List(3, 7, 9, 11).sortWith(f) == List(11, 9, 7, 3))
+\end{scalacode}
+
+\end{itemize}
+
+There are several other higher-order functions that you can discover from
+the documentation or the Scala console.

@@ -1,0 +1,506 @@
+\newlecture
+
+\begin{instructor}
+
+\section{Lecture 1 Recap\classtime{15}}
+
+\begin{itemize}
+
+  \item Slowly talk through the command-line commands involved in creating,
+  changing to it, and starting \sbt{}.
+
+  \item Create a file with a simple list-processing function. E.g., the
+  \scalainline{incrList} function below.
+
+  \item Create a test-suite for the function and run it using \sbt{}.
+
+
+\end{itemize}
+
+\end{instructor}
+
+\begin{figure}
+\begin{scalacode}
+def incrList(alist: List[Int]): List[Int] = alist match {
+  case Nil => Nil
+  case head :: tail => (head + 1) :: incrList(tail)
+}
+\end{scalacode}
+
+\caption{A function that increments all numbers in a list.}
+\label{incrlist}
+\end{figure}
+
+\section{Immutability \classtime{10}}
+
+\begin{instructor}
+This really belongs in the previous lecture, but wasn't emphasized.
+There was extra time in the first lecture, so this can easily be
+placed there.
+\end{instructor}
+
+Consider the function \scalainline{incrList} in \cref{incrlist}, which
+increments all numbers in a list. We want to emphasize that \scalainline{incrList}
+\emph{produces a new list} and leaves the original list unchanged.
+
+You can observe this behavior in the Scala console:
+%
+\begin{console}
+scala> val original = List(10, 20, 30)
+original: List[Int] = List(10, 20, 30)
+
+scala> val result = incrList(original)
+result: List[Int] = List(11, 21, 31)
+
+scala> original
+res0: List[Int] = List(10, 20, 30)
+
+scala> result
+res1: List[Int] = List(11, 21, 31)
+\end{console}
+
+At no point did we change or \emph{mutate} the original list. In fact, lists in
+Scala are \emph{immutable} data structures. There is no way to update their
+head or tail. Programming with immutable data structures is a key part of
+\emph{functional programming}, which we will emphasize in the first half
+of this course.
+
+\begin{figure}
+\begin{subfigure}[b]{.45\textwidth}
+\begin{javacode}
+public class Point {
+
+  double x;
+  double y;
+
+  public Point(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
+
+}
+
+Point pt = new Point(1, 2)
+\end{javacode}
+\caption{A Java class that represents a point.}\label{javapoint}
+\end{subfigure}
+\quad\vrule\quad
+%
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+class Point(x : Double, y : Double)
+val pt = new Point(1, 2)
+\end{scalacode}
+\caption{A Scala class that represents a point.}\label{scalapoint}
+\end{subfigure}
+\caption{Scala code is usually much shorter and simpler than Java code.}
+\end{figure}
+
+\section{Case Classes\classtime{10}}
+
+Scala classes tend to be shorter than their
+Java counterparts. For example, \cref{javapoint} shows a \scalainline{Point} class
+in Java and \cref{scalapoint} shows the equivalent class in Scala, which
+is much shorter!
+If we start adding methods, you'll have to write
+more code in Scala too. But, simple classes tend to be very short.
+But, we are not going to use classes yet. Instead, we are going to use
+\emph{case classes}, which are unique to Scala.
+
+If you write \scalainline{case class}---
+%
+\begin{scalacode}
+case class Point(x: Double, y: Double)
+\end{scalacode}
+---instead of just \scalainline{class}, you get several conveniences.
+First, you can create values without writing \scalainline{new}:
+%
+\begin{scalacode}
+val pt = Point(1, 2)
+\end{scalacode}
+%
+Second, case classes have an automatically generated \scalainline{toString}
+method that prints the fields:
+%
+\begin{console}
+scala> pt
+pt: Point = Point(1.0,2.0)
+\end{console}
+%
+Finally, all fields are public by default, so you can easily write simple
+functions, such as this one, without writing getters:
+%
+\begin{scalacode}
+def magnitude(pt: Point) : Double = {
+  math.sqrt(pt.x * pt.x + pt.y * pt.y)
+}
+
+test("3-4-5 triangles") {
+  assert(magnitude(Point(3, 4)) == 5)
+}
+\end{scalacode}
+
+\section{Sealed Case Classes\classtime{20}}
+
+Imagine you're a new age librarian, tasked with cataloging information on the
+Internet. There are many types of information. Here are some significant ones:
+
+\begin{scalacode}
+case class Tweet(user: String, number: Long)
+case class Xkcd(number: Int)
+case class HackerNews(item: Int, points: Int)
+\end{scalacode}
+
+Here are some examples:
+
+\begin{scalacode}
+// https://twitter.com/PLT_Borat/status/248038616654299136
+val tweet = Tweet("PLT_Borat", 248038616654299136L)
+// http://xkcd.com/1316/
+val comic = Xkcd(1316)
+// https://news.ycombinator.com/item?id=8169367
+val news = HackerNews(8169367, 305)
+\end{scalacode}
+
+Let's write a function called \verb|getURL| that maps these items to their URLs,
+which is easy to do with pattern matching.
+
+\begin{scalacode}
+def getURL(item: Any): String = item match {
+  case Tweet(user, number) => "https://twitter.com/" + user + "/status/" + number
+  case Xkcd(number) => "http://xkcd.com/" + number
+  case HackerNews(item, _) => "http://news.ycombinator.com/item?id=" + item
+  case _ => sys.error("not a library item")
+}
+\end{scalacode}
+
+This definition is unsatisfactory. \verb|getURL| takes values of
+\verb|Any|
+type. So, it is really easy to get a runtime error:
+\consolefile{includes/runtime-match-error.txt}
+
+To eliminate this kind of error, we need an \verb|Item| type:
+
+\begin{scalacode}
+sealed trait Item
+case class Tweet(user: String, number: Long) extends Item
+case class Xkcd(number: Int) extends Item
+case class HackerNews(item: Int, points: Int) extends Item
+\end{scalacode}
+
+A \emph{trait} in Scala is like an \emph{interface}. They're also much more
+versatile than interfaces, but we'll get into that later.
+
+Now, we can rewrite \verb|getURL|, restricting the argument type:
+
+\begin{scalacode}
+def getURL(item: Item): String = item match {
+  case Tweet(user, number) => "https://twitter.com/" + user + "/status/" + number
+  case Xkcd(number) => "http://xkcd.com/" + number
+  case HackerNews(item, _) => "http://news.ycombinator.com/item?id=" + item
+}
+\end{scalacode}
+
+This time, applying \verb|getURL| to a non-item produces a type error as expected:
+
+\begin{console}
+scala> item("hello")
+<console>:43: error: type mismatch;
+ found   : String("hello")
+ required: Item
+              getURL("hello")
+\end{console}
+
+A really nice feature of \scalainline{match} is that it checks to ensure you've handled all
+cases. For example, suppose we forgot to write the HackerNews case. Scala
+prints the following error:
+
+\begin{console}
+<console>:18: warning: match may not be exhaustive.
+It would fail on the following input: HackerNews(_, _)
+       def getURL(item: Item): String = item match {
+                                        ^
+error: No warnings can be incurred under -Xfatal-warnings.
+\end{console}
+
+\paragraph{More Pattern Matching}
+
+You can use \scalainline{match} to also match concrete values. For example, here is
+variant of getURL that censors a particular tweet from PLT Borat:
+
+\begin{scalacode}
+def getURL(item: Item): String = item match {
+  case Tweet("PLT_Borat", 301113983723794432L) => "http://disney.com"
+  case Tweet(user, number) => "https://twitter.com/" + user + "/status/" + number
+  case Xkcd(number) => "http://xkcd.com/" + number
+  case HackerNews(item, _) => "http://news.ycombinator.com/item?id=" + item
+}
+\end{scalacode}
+
+Imagine you'd added the censoring line, but accidentally removed the line
+that handles all other Tweets. Again, Scala will catch the error:
+
+\begin{console}
+<console>:62: warning: match may not be exhaustive.
+It would fail on the following inputs:
+  Tweet("PLT_Borat", (x: Long forSome x not in 301113983723794432L)),
+  Tweet((x: String forSome x not in "PLT_Borat"), 301113983723794432L),
+  Tweet((x: String forSome x not in "PLT_Borat"), _),
+  Tweet(_, (x: Long forSome x not in 301113983723794432L))
+       def getURL(item: Item): String = item match {
+                                        ^
+error: No warnings can be incurred under -Xfatal-warnings.
+\end{console}
+
+It is a long error message. But, if you read it carefully, you'll see that it is
+very precisely describing exactly the cases that are missing.
+
+\section{Binary Search Trees\classtime{20}}
+
+\begin{figure}
+\begin{scalacode}
+sealed trait SBinTree
+case class SNode(lhs: BinTree, key: Int, value: String, rhs: BinTree) extends SBinTree
+case class SLeaf() extends SBinTree
+
+def find(k: Int, t: SBinTree): String = t match {
+  case SLeaf() => sys.error("not found")
+  case SNode(_, key, value, _) if (k == key) => value
+  case SNode(lhs, key, _, _) if (k < key) => find(k, lhs)
+  case SNode(_, key, _, rhs) => find(k, rhs)
+}
+
+def insert(k: Int, v: String, t: SBinTree): SBinTree = t match {
+  case SLeaf() => SNode(SLeaf(), k, v, SLeaf())
+  case SNode(lhs, key, _, rhs) if (k == key) => SNode(lhs, key, v, rhs)
+  case SNode(lhs, key, value, rhs) if (k <= key) =>  SNode(insert(k, v, lhs), key, value, rhs)
+  case SNode(lhs, key, value, rhs) => SNode(lhs, key, value, insert(k, v, rhs))
+}
+
+def size(t: BinTree): SBinTree = t match {
+  case SLeaf() => 1
+  case SNode(lhs, k, v, rhs) => size(lhs) + size(rhs) + 1
+}
+\end{scalacode}
+
+\caption{Binary search trees.}
+\label{bintree}
+\end{figure}
+
+\Cref{bintree} shows a type definition for binary search trees, where
+keys are integers and values are strings (which is why we call them
+\scalainline{SBinTree}s). There are two
+kinds of binary trees: (1) empty trees, or \scalainline{SLeaf()}s, and (2)
+non-empty trees, or \scalainline{SNode(..)}s, which have a left-subtree,
+a numeric key, a string value, and a right-subtree.
+Given this definition, we can write canonical functions such
+as \scalainline{size}, \scalainline{find}, and \scalainline{insert},
+as shown in the same figure.
+We emphasize that the \scalainline{insert} function does not modify the
+original tree, and instead produces a new binary tree with the element added.
+
+
+\subsection{Testing}
+
+There is a lot of code in \cref{bintree} that needs to be tested and there
+are two categories of tests that we can write. First, we should \emph{test all the
+cases} of a function. For example, the \scalainline{insert} function has
+four cases and the four tests below are chosen to exercise each case:
+\begin{scalacode}
+test("insert into empty tree") {
+  assert(insert(200, "A", SLeaf()) == SNode(SLeaf(), 200, "A", SLeaf()))
+}
+
+test("insert into left-subtree") {
+  assert(insert(200, "A", SNode(SLeaf(), 500, "B", SLeaf()))
+    == SNode(SNode(SLeaf(), 200, "A", SLeaf()), 500, "B", SLeaf()))
+}
+
+test("insert into right-subtree") {
+  assert(insert(700, "A", SNode(SLeaf(), 500, "B", SLeaf()))
+    == SNode(Leaf(), 500, "B", SNode(SLeaf(), 700, "A", SLeaf())))
+}
+
+test("insert and replace") {
+  assert(insert(200, "A", SNode(SLeaf(), 200, "B", SLeaf()))
+    == SNode(SLeaf(), 200, "A", SLeaf()))
+}
+\end{scalacode}
+
+A robust test suite should exercise \scalainline{insert} on larger examples, but
+it is important to understand exactly what each case is doing, which is what the
+descriptive string states.
+
+The second kind if test is to \emph{test properties that relate functions
+to each other}. There isn't a neat recipe for these kinds of tests. You have
+to think hard about what your code is actually doing. But, here
+are some properties for binary trees.
+
+\begin{property}
+After we insert a key-value into a tree, we should be able to
+find it again.
+\end{property}
+
+The following tests check that this property holds on examples
+where a key-value is inserted on the left, inserted on the right, or replaces
+the root:
+%
+\begin{scalacode}
+val t1 = SNode(SLeaf(), 200, "A", SLeaf())
+
+test("find after insert on right") {
+  assert(find(500, insert(500, "B", t1)) == "B")
+}
+
+test("find after insert on left") {
+  assert(find(100, insert(100, "B", t1)) == "B")
+}
+
+test("find after insert replaces") {
+  assert(find(200, insert(200, "B", t1)) == "B")
+}
+\end{scalacode}
+
+\begin{property}
+Inserting a key-value into a binary tree produces a tree with size one
+greater than the original tree.
+\end{property}
+
+The following tests check that this property holds for the three
+cases of \scalainline{insert}:
+%
+\begin{scalacode}
+val t1 = SNode(SLeaf(), 200, "A", SLeaf())
+
+test("insert increases size (rhs)")
+  assert(size(insert(500, "B", t1) == size(t1) + 1)
+}
+
+test("insert increases size (lhs)") {
+  assert(size(insert(100, "B", t1) == size(t1) + 1)
+}
+
+test("insert increases size (replacement)") {
+  assert(size(insert(200, "B", t1) == size(t1) + 1)
+}
+\end{scalacode}
+
+Unfortunately, the third test case fails because the property is wrong.
+When \scalainline{insert} replaces a value in the tree, the size of the tree
+does not change. Here is a revised version of this property that accounts
+for this corner-case:
+
+\begin{property}
+Inserting a key-value into a binary tree either (1) produces a tree with
+size one greater than the original tree or (2) the size of the produced
+tree is the same and the key was present in the original tree.
+\end{property}
+
+We can write a function to test this property for any given $k$, $v$, and $t$
+and use it to write our tests compactly:
+
+\begin{scalacode}
+def check(k: Int, v: String, t: SBinTree): Boolean = {
+  if (size(insert(k, v, t)) == size(t) + 1) {
+    true
+  }
+  else {
+    try {
+      val r = find(k, t)
+      true
+    }
+    catch {
+      case exn:Exception => false
+    }
+  }
+}
+
+val t1 = SNode(SLeaf(), 200, "A", SLeaf())
+
+test("insert increases size (rhs)")
+  assert(check(500, "B", t1))
+}
+
+test("insert increases size (lhs)") {
+  assert(check(100, "B", t1))
+}
+
+test("insert increases size (replacement)") {
+  assert(check(200, "B", t1))
+}
+\end{scalacode}
+
+There are other properties that we can test. For example:
+%
+\begin{scalacode}
+insert(k, v, insert(k, v, t)) == insert(k, v, t)
+\end{scalacode}
+
+Moreover, if we write more functions to process binary trees, the number of
+interesting properties will keep growing.
+
+\section{Lists\classtime{10}}
+
+Although we've used Scala's builtin lists, we can use case classes to write
+very similar types. For example, we can write a type for lists of integers
+as follows:
+%
+\begin{scalacode}
+sealed trait IList
+case class INil() extends IList
+case class ICons(head: Int, tail: IList) extends IList
+\end{scalacode}
+
+The following function adds $n$ to every number in a list:
+%
+\begin{scalacode}
+def add(n: Int, lst: IList): IList = alist match {
+  case INil() => INil()
+  case ICons(head, tail) => ICons(head + n, add(n, tail))
+}
+\end{scalacode}
+
+A test suite should test the two cases in the function. Moreover, we can
+also test simple properties of this function alone.
+
+For example, for all \scalainline{m}, \scalainline{n}, and \scalainline{alist}:
+%
+\begin{scalacode}
+add(n, add(m, alist)) == add(m + n, alist)
+\end{scalacode}
+
+The following function appends two lists together:
+%
+\begin{scalacode}
+def append(alist1: IList, alist2: IList): IList = alist1 match {
+  case INil() => alist2
+  case ICons(head, tail) => ICons(head, append(tail, alist2))
+}
+\end{scalacode}
+
+Again, we should test the two cases of this function. But, there are
+several other properties that we can test. For example, if we append
+three lists together, the order in which we apply the function
+does not matter:
+%
+\begin{scalacode}
+append(alist1, append(alist2, alist3)) == append(append(alist1, alist2), alist3)
+\end{scalacode}
+i.e., \scalainline{append} is \emph{associative}.
+
+Here is another property of \scalainline{append}:
+\begin{scalacode}
+append(alist, INil()) == alist
+\end{scalacode}
+%
+Notice that this is \emph{not} a case of \scalainline{append}: the function
+pattern-matches on the first argument. This property shows that both cases
+of \scalainline{append} behave in a similar way when the second argument is
+\scalainline{INil()}.
+
+Finally, we can write properties that relate the \scalainline{add} and
+\scalainline{append} functions:
+%
+\begin{scalacode}
+append(add(n, alist1), add(n, alist2)) == add(n, append(alist1, alist2))
+\end{scalacode}
