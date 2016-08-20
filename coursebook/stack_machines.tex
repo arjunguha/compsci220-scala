@@ -56,7 +56,7 @@ in three different languages, are trying to express the same thing:
 
 \item \verb|(+ 1 2)| parenthesized prefix syntax, from the Scheme language
 
-\item |1 2 +| postfix syntax, from the Forth language
+\item \verb|1 2 +| postfix syntax, from the Forth language
 
 \end{itemize}
 %
@@ -86,9 +86,9 @@ concrete representations (written in normal, mathematical notation):
 \begin{tabular}{l|l}
 Concrete Syntax & Abstract Syntax \\
 \hline
-\verb|1 + 2 + 3| & \lstinline[language=scala]{Add (Add (Num(1), Num(2)), Num(3))} \\
-\verb|1 + 2 * 3| & \lstinline[language=scala]{Add (Num(1), Mul (Num(2), Num(3)))} \\
-\verb|(1 + 2) / 3| & \lstinline[language=scala]{Div (Add (Num(1), Num(2)), Num(3))}
+\texttt{ + 2 + 3} & \lstinline[language=scala]|Add (Add (Num(1), Num(2)), Num(3))| \\
+\texttt{1 + 2 * 3} & \lstinline[language=scala]|Add (Num(1), Mul (Num(2), Num(3)))| \\
+\texttt{(1 + 2) / 3} & \lstinline[language=scala]|Div (Add (Num(1), Num(2)), Num(3))|
 \end{tabular}
 
 The Scala compiler uses a much larger and more complex type to represent Scala
@@ -248,12 +248,12 @@ instruction sequences
 \begin{tabular}{l|l|l}
 Concrete Syntax & Abstract Syntax & Instructions \\
 \hline
-\verb|1 + 2 + 3| & \lstinline[language=scala]{Add (Add (Num(1), Num(2)), Num(3))}
-& \lstinline{List(INum(1), INum(2), IAdd(), INum(3), IAdd())} \\
-\verb|1 + 2 * 3| & \lstinline[language=scala]{Add (Num(1), Mul (Num(2), Num(3)))}
-& \lstinline{List(INum(1), INum(2), INum(3), IMul(), IAdd())} \\
-\verb|(1 + 2) / 3| & \lstinline[language=scala]{Div (Add (Num(1), Num(2)), Num(3))}
-& \lstinline{List(INum(1), INum(2), IAdd(), INum(3), IDiv())}
+\verb|1 + 2 + 3| & \lstinline[language=scala]|Add (Add (Num(1), Num(2)), Num(3))|
+& \lstinline|List(INum(1), INum(2), IAdd(), INum(3), IAdd())| \\
+\verb|1 + 2 * 3| & \lstinline[language=scala]|Add (Num(1), Mul (Num(2), Num(3)))|
+& \lstinline|List(INum(1), INum(2), INum(3), IMul(), IAdd())| \\
+\verb|(1 + 2) / 3| & \lstinline[language=scala]|Div (Add (Num(1), Num(2)), Num(3))|
+& \lstinline|List(INum(1), INum(2), IAdd(), INum(3), IDiv())|
 \end{tabular}
 
 \begin{figure}
