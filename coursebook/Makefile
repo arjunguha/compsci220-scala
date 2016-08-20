@@ -1,5 +1,4 @@
 all: latex
-	sbt run
 
 latex:
 	latexmk instructor

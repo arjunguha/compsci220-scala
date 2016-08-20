@@ -12,7 +12,7 @@
 \include{lists_hw}
 \include{patterns}
 
-\newdiscussion{Homework 1 Help Session (Jan 27)}
+\newdiscussion{Homework 1 Help Session}
 
 \include{hof}
 \include{hof_hw}
@@ -1338,179 +1338,12 @@ val allBirths = CSV.fromFile("ssa-births.csv")
 
 \input{handin}
 
-\newlecture
-
-\begin{instructor}
-These are not complete
-\end{instructor}
-
-\section{Expressions as Trees}
-
-\begin{scalacode}
-sealed trait Expr
-case class Num(n: Int) extends Expr
-case class Add(e1: Expr, e2: Expr) extends Expr
-case class Sub(e1: Expr, e2: Expr) extends Expr
-case class Mul(e1: Expr, e2: Expr) extends Expr
-
-def eval(e: Expr): Int = ??? // fill this in
-\end{scalacode}
-
-\section{Stack-representation of programs}
-
-\begin{scalacode}
-sealed trait Instruction
-case class INum(n: Int) extends Instruction
-case class IAdd() extends Instruction
-case class IMul() extends Instruction
-case class ISub() extends Instruction
-
-def eval(e: Expr, stack: List[Int]): List[Int] = (e, stack) match {
-  case (Num(n), stack) => n :: stack
-  case (IAdd, n1 :: n2 :: stack) => n1 + n2 :: stack
-  ...
-}
-\end{scalacode}
-
-Do some hand-translations
-
-\section{Evaluation using a Stack Machine}
-
-Get the order of arguments right, eventually.
-
-\begin{scalacode}
-def compile(e: Expr): List[Instruction] = e match {
-  case Num(n) => List(INum(n))
-  case Add(e1, e2) => compile(e1) ++ compile(e2) ++ List(IAdd())
-  case Sub(e1, e2) => compile(e1) ++ compile(e2) ++ List(ISub())
-  case Mul(e1, e2) => compile(e1) ++ compile(e2) ++ List(IMul())
-}
-
-\end{scalacode}
-
-\section{Inside Java}
-
-Show javac on a simple class with factorial. Talk through what the code does.
-
-\begin{javacode}
-class Simple {
-
-  static int factorial(int n, int result) {
-    if (n == 0) {
-      return result;
-    }
-    else {
-      return factorial(n - 1, result * n);
-    }
-  }
-
-  public static void main(String[] args) {
-    System.out.println("Hello, world!");
-     System.out.println(factorial(5, 1));
-  }
-
-}
-\end{javacode}
-
-\begin{console}
-static int factorial(int, int);
-  Code:
-     0: iload_0
-     1: ifne          6
-     4: iload_1
-     5: ireturn
-     6: iload_0
-     7: iconst_1
-     8: isub
-     9: iload_1
-    10: iload_0
-    11: imul
-    12: invokestatic  #2
-    15: ireturn
-\end{console}
-
-\section{Scala}
-
-\begin{scalacode}
-class SimpleScala {
-
-  def factorial(n: Int, result: Int): Int = {
-    if (n == 0) {
-      result
-    }
-    else {
-      factorial(n - 1, result * n)
-    }
-  }
-
-}
-\end{scalacode}
-
-\begin{console}
-  public int factorial(int, int);
-    Code:
-       0: iload_1
-       1: iconst_0
-       2: if_icmpne     9
-       5: iload_2
-       6: goto          19
-       9: aload_0
-      10: iload_1
-      11: iconst_1
-      12: isub
-      13: iload_2
-      14: iload_1
-      15: imul
-      16: invokevirtual #12                 // Method factorial:(II)I
-      19: ireturn
-\end{console}
-
-\section{New}
-
-
-Functions can even be stored in data structures. For example, consider
-this simple, recursive evaluator for arithmetic expressions:
-
-
-Imagine extending this evaluator to support subtraction, division, etc.
-We could do so by adding more cases to \scalainline{Expr} and adding corresponding
-lines to \scalainline{eval}. But, this will quickly become tedious and repetitive.
-
-But, since we can store functions in data structures, we can replace
-\scalainline{Add}, \scalainline{Mul}, \scalainline{Div}, \scalainline{Sub}, \scalainline{Exp}, and all other binary operators with
-a single constructor for binary arithmetic expressions:
-
-\begin{scalacode}
-sealed trait Expr
-case class Num(n: Int) extends Expr
-case class BinOp(op: (Int, Int) => Int, e1: Expr, e2: Expr) extends Expr
-
-def eval(e: Expr): Expr = e match {
-  case Num(n) => n
-  case BinOp(op, e1, e2) => op(eval(e1), eval(e2))
-}
-\end{scalacode}
-
-With these definitions, we can represent any binary arithmetic expression
-we please:
-
-\begin{scalacode}
-def sub(x: Int, y: Int): Int = x - y
-
-test("subtraction test") {
-  assert(eval(BinOp(sub, 10, 3)) == 7)
-}
-\end{scalacode}
-
-\subsection{Anonymous Functions}
-
-In Scala, \emph{functions are values}, just like integers, strings, or any user-
-defined type. They can truly appear in all the contexts in which other values
-appear: as arguments, as results, as fields in a data-structure, and so on.
-
 \newdiscussion{Continuation of Previous Discussion (Feb 10)}
 
 The previous discussion is far too long! It spilled into this one.
+
+
+\include{stack_machines}
 
 \newlecture
 
@@ -2267,7 +2100,7 @@ class ExerciseTests extends FunSuite {
 
 \section{Reading}
 
-Programming in Scala, Chapters 12 and 19.
+Programming in Scala, Chapters 12 and 19.\footnote{\url{http://www.artima.com/pins1ed/}}
 
 \section{The Singleton Pattern}
 
@@ -2480,7 +2313,7 @@ c.get().bite()
 \end{figure}
 
 Subtyping becomes more complicated when we working with generics types, such
-as lists, sets, or any other kind of container. To illustrate, we'll work
+as lists, sets, or any other container type. To illustrate, we'll work
 with the following generic type, which is the simplest possible container:
 %
 \begin{scalacode}
@@ -3840,140 +3673,7 @@ object TypeChecker {
 The actual Scala type-checker is vastly more complicated. But, it follows
 this basic design.
 
-\newlecture
-
-
-\section{The \emph{Same Fringe} Problem}
-
-\begin{instructor}
-These notes are not ready to release.
-
-Notice that the fringe generator looks a lot like the function that returns the fringe as a list!
-\end{instructor}
-
-
-\begin{figure}
-\begin{scalacode}
-def fringe[A](t: BinTree[A]): List[A] = t match {
-  case Leaf(x) => List(x)
-  case Node(lhs, rhs) => fringe(lhs) ++ fringe(rhs)
-}
-\end{scalacode}
-\caption{Recursively calculating the fringe of a binary tree.}
-\label{fringeRec}
-\end{figure}
-
-Given a binary tree:
-
-\begin{scalacode}
-sealed trait BinTree[+A]
-case class Node[A](lhs: BinTree[A], rhs: BinTree[A]) extends BinTree[A]
-case class Leaf[A](x: A) extends BinTree[A]
-\end{scalacode}
-
-The \emph{fringe} of a binary tree are the values in left-to-right order. For
-example, the fringe of the following tree:
-\begin{scalacode}
-val t1 = Node(Leaf(10), Node(Leaf(20), Leaf(40)))
-\end{scalacode}
-is $10$, $20$, and $40$, in that order. The \emph{same-fringe problem} is to write
-a function to determine if two trees have the same fringe. For
-example the following tree:
-%
-\begin{scalacode}
-val t2 = Node(Node(Leaf(10), Leaf(20)), Leaf(40))
-\end{scalacode}
-Has the same fringe as \scalainline{t1}.
-
-We can write a simple recursive function to calculate the fringe of a tree,
-as shown in \cref{fringeRec}, so a simple solution to the same-fringe problem
-is:
-\begin{scalacode}
-fringe(t1) == fringe(t2)
-\end{scalacode}
-
-But, this is not a very efficient solution:
-\begin{itemize}
-
-  \item If the trees are very large, we'll spend a lot of time appending
-  lists, and
-
-  \item If the fringes are different, we'll generate the entire fringe instead
-  of terminating as soon as a difference is detected.
-
-\end{itemize}
-
-\section{An Imperative Solution}
-
-\begin{figure}
-\begin{scalacode}
-class FringeIterator[A](tree: BinTree[A]) extends Iterator[A] {
-  private val stack = collection.mutable.Stack(tree)
-  def hasNext = stack.isEmpty
-  def next() = {
-    val top = stack.pop()
-    top match {
-      case Leaf(x) => x
-      case Node(lhs, rhs) => { stack.push(rhs); stack.push(lhs); next() }
-    }
-  }
-}
-
-def sameFringe[A](t1: BinTree[A], t2: BinTree[A]): Boolean = {
-  val iter1 = new FringeIterator(t1)
-  val iter2 = new FringeIterator(t2)
-  while (iter1.hasNext && iter2.hasNext) {
-    val x = iter1.next
-    val y = iter2.next
-    if (x != y) {
-      return false
-    }
-  }
-  return !iter1.hasNext && !iter2.hasNext
-}
-\end{scalacode}
-\caption{An imperative solution.}
-\label{samefringe_imperative}
-\end{figure}
-
-- Describe the imperative solution
-- Seems to be fundamentally imperative: each call to .next returns a new value,
-  which means that iter1 must use mutable state internally
-- Consider writing list-equal for for JoinLists: very similar, but trickier
-  iterator
-
-
-\section{A Functional Solution}
-
-\begin{figure}
-\begin{scalacode}
-class Generator[T](val gen: () => Option[(T, Generator[T])]) { self =>
-  def andThen(rest: () => Generator[T]): Generator[T] = new Generator[T](() => self.gen() match {
-      case None => rest().gen()
-      case Some((x, lhsRest)) => Some((x, lhsRest.andThen(rest)))
-  })
-}
-
-object Generator {
-  def one[T](x: T) = new Generator[T](() => Some((x, new Generator[T](() => None))))
-}
-
-def fringe[T](t: BinTree[T]): Generator[T] = t match {
-  case Leaf(x) => Generator.one(x)
-  case Node(lhs, rhs) => fringe(lhs).andThen(() => fringe(rhs))
-}
-
-def sameFringeRec[T](t1: Generator[T], t2: Generator[T]): Boolean = (t1.gen(), t2.gen()) match {
-  case (None, None) => true
-  case (Some((x, t1Rest)), Some((y, t2Rest))) => x == y && sameFringeRec(t1Rest, t2Rest)
-  case _ => false
-}
-
-def sameFringe[T](t1: BinTree[T], t2: BinTree[T]) = sameFringeRec(fringe(t1), fringe(t2))
-\end{scalacode}
-\caption{A functional solution.}
-\label{sameFringeFun}
-\end{figure}
+\input{samefringe}
 
 \newlecture
 

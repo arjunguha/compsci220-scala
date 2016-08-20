@@ -1,0 +1,212 @@
+\newlecture
+
+\section{The \emph{Same Fringe} Problem}
+
+\begin{instructor}
+These notes are not ready to release.
+
+Notice that the fringe generator looks a lot like the function that returns the fringe as a list!
+\end{instructor}
+
+
+\begin{figure}
+\begin{scalacode}
+def fringe[A](t: BinTree[A]): List[A] = t match {
+  case Leaf(x) => List(x)
+  case Node(lhs, rhs) => fringe(lhs) ++ fringe(rhs)
+}
+\end{scalacode}
+\caption{Recursively calculating the fringe of a binary tree.}
+\label{fringeRec}
+\end{figure}
+
+Given a binary tree:
+
+\begin{scalacode}
+sealed trait BinTree[+A]
+case class Node[A](lhs: BinTree[A], rhs: BinTree[A]) extends BinTree[A]
+case class Leaf[A](x: A) extends BinTree[A]
+\end{scalacode}
+
+The \emph{fringe} of a binary tree are the values in left-to-right order. For
+example, the fringe of the following tree:
+\begin{scalacode}
+val t1 = Node(Leaf(10), Node(Leaf(20), Leaf(40)))
+\end{scalacode}
+is $10$, $20$, and $40$, in that order. The \emph{same-fringe problem} is to write
+a function to determine if two trees have the same fringe. For
+example the following tree:
+%
+\begin{scalacode}
+val t2 = Node(Node(Leaf(10), Leaf(20)), Leaf(40))
+\end{scalacode}
+Has the same fringe as \scalainline{t1}.
+
+We can write a simple recursive function to calculate the fringe of a tree,
+as shown in \cref{fringeRec}, so a simple solution to the same-fringe problem
+is:
+\begin{scalacode}
+fringe(t1) == fringe(t2)
+\end{scalacode}
+
+But, this is not a very efficient solution:
+\begin{itemize}
+
+  \item If the trees are very large, we'll spend a lot of time appending
+  lists, and
+
+  \item If the fringes are different, we'll generate the entire fringe instead
+  of terminating as soon as a difference is detected.
+
+\end{itemize}
+
+\section{An Imperative Solution}
+
+\begin{figure}
+\begin{scalacode}
+class FringeIterator[A](tree: BinTree[A]) extends Iterator[A] {
+  private val stack = collection.mutable.Stack(tree)
+  def hasNext = stack.isEmpty
+  def next() = {
+    val top = stack.pop()
+    top match {
+      case Leaf(x) => x
+      case Node(lhs, rhs) => { stack.push(rhs); stack.push(lhs); next() }
+    }
+  }
+}
+
+def sameFringe[A](t1: BinTree[A], t2: BinTree[A]): Boolean = {
+  val iter1 = new FringeIterator(t1)
+  val iter2 = new FringeIterator(t2)
+  while (iter1.hasNext && iter2.hasNext) {
+    val x = iter1.next
+    val y = iter2.next
+    if (x != y) {
+      return false
+    }
+  }
+  return !iter1.hasNext && !iter2.hasNext
+}
+\end{scalacode}
+\caption{An imperative solution.}
+\label{samefringe_imperative}
+\end{figure}
+
+A typical Java solution to this problem, which also straightforward to
+reproduce in Scala, is to use an iterator. You've seen simple
+iterators for lists and arrays before.  You can also write an iterator
+that iterators over the fringe of a tree.  The key idea is this:
+before we descend into the left-hand side of a node generate its
+fringe, we need to store the right-hand side of the node in a variable so that
+we don't forget to generate its fringe. Since the tree may be arbitrarily deep, we
+may need to remember a stack of nodes.
+
+\begin{think}
+What would happen if we used a queue of nodes?
+\end{think}
+
+An iterator that uses this idea is shown in \cref{samefringe_imperative} along with a
+solution to the same-fringe problem that doesn't have the two issues we identified
+above. An unusual feature of this solution is that it uses two iterators simultaneously
+in a single loop.
+
+What's interesting about this problem is that the solution seems to be fundamentally
+imperative. In particular, each invocaation of \verb|.next| returns the next value, which
+means that the iterators \emph{must} use mutable state internally. Is it possible to solve
+this problem without state?
+
+\begin{think}
+  Try to solve the problem before proceeding further.
+\end{think}
+
+\section{By-Name Arguments}
+
+\begin{figure}
+\begin{scalacode}
+def g(): Int = {
+  println("Evaluating g")
+  10
+}
+
+def f1(x: Int) = {
+  println("Evaluating f1")
+  x + 10
+}
+f1(g())
+\end{scalacode}
+\caption{Which line prints first?}
+\label{evalorder1}
+\end{figure}
+
+When you apply a function in Scala (and in most other programming languages), the argument
+of the function is first reduced to a value and then that value is passed to the function.
+For example, in \scalainline{f(2 + 3)}, the expression \scalainline{2 + 3} is first reduced
+to the value \scalainline{5} and then \scalainline{f(5)} is applied.
+
+\begin{think}
+  Is the statement above true? Can you think of a way to experimentally validate the
+  claim that arguments are reduced to values before they are passed to functions?
+ \end{think}
+
+Consider the two functions in \cref{evalorder1} and the expression
+\scalainline{f1(g())}.  If the argument is evaluated first, then
+``Evaluating g'' will print before ``evaluating f''. Conversely, if
+the expression \scalainline{g()} is passed to \scalainline{f1} unevaluated
+and only evaluated when it is needed, then we'd expect the lines to print in the opposite
+order. If you try this out, you'll find that the former is true, thus validating the
+claim.
+
+However, Scala allows you to change the order of evaluation.
+In the following function, the \scalainline{=>} annotation means that the argument
+is only evaluated when it is \emph{needed}:
+\begin{scalacode}
+def f2(x: => Int) = {
+  println("Evaluating f2")
+  x + 10
+}
+\end{scalacode}
+Therefore, the expression \scalainline{f2(g())} prints ``Evaluating f2'' before it prints
+``Evaluating g'', since the value of \scalainline{g()} is not needed until after
+``Evaluating f2'' is printed.
+
+The following function ignores its argument:
+\begin{scalacode}
+def f3(x: => Int) = {
+  println("Evaluating f3")
+  10
+}
+\end{scalacode}
+
+Therefore, \scalainline{f3(g())} does not evaluate \scalainline{g()}
+at all, so ``Evaluating g'' is not printed. In fact, you can even
+write \scalainline{f3(throw new Exception("bad"))} and the exception
+will not be thrown.
+
+By-name arguments have several applications and are used extensively in the
+Scala standard library. For example, Scala maps have a \scalainline{.get} method
+that optionally returns a value stored in a map:
+\begin{scalacode}
+val m = Map("X" -> 1 )
+val v = m.get(key) // produces Some(1) if key is "X", otherwise None
+val v2 = m.get("Z") // produces None
+\end{scalacode}
+Suppose we were using maps in a program and that we wanted to return a default value 0
+instead of \scalainline{None}. We could write:
+\begin{scalacode}
+m.get(key) match {
+  case Some(v) => v
+  case None => 0
+}
+\end{scalacode}
+Alternatively, we could simply write \scalainline{m.getOrElse(key, 0)}. It turns out
+that the second argument of this method is a by-name argument. Therefore, we can
+write \scalainline{m.getOrElse(key, f())} and be assured that \scalainline{f} will not
+be applied unless it is needed. It is safe to write, even if \scalainline{f()} is
+an expensive computation that should only be run if \scalainline{key} is not
+in the map. We could even write \scalainline{m.getOrElse(key, throw new Exception(...))}
+to throw a custom exception if \scalainline{key} is not found.
+
+\section{Functional Generators}
+
+- 

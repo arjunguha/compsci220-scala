@@ -13,7 +13,7 @@ title: Schedule
 | Thursday, Sep 15  | [Lecture Notes](../reading/lecture4.pdf).                                                       |
 | Tuesday, Sep 20   | Due: [HW2]. Out: [HW3]. [Lecture Notes](../reading/lecture5.pdf).                               |
 | Wednesday, Sep 21 | *Lab*: Steps 1 and 4 of [HW3].                                                                  |
-| Thursday, Sep 22  |                                                                                                 |
+| Thursday, Sep 22  | [Lecture Notes](../reading/lecture6.pdf).                                                       |
 | Tuesday, Sep 27   | Due: [HW3]. Out: [HW4]. [Lecture Notes](../reading/gc.pdf)                                      |
 | Wednesday, Sep 28 | *Lab*:                                                                                          |
 | Thursday, Sep 29  | [Lecture Notes](../reading/lecture8.pdf)                                                        |
@@ -29,25 +29,25 @@ title: Schedule
 | Tuesday, Oct 25   | Due: [HW6]. Out: [HW7]. [Lecture Notes](https://piazza.com/class/ihn69k9d3dh9n?cid=957)         |
 | Wednesday, Oct 26 | *Lab:* Step 1 of [HW7].                                                                         |
 | Thursday, Oct 27  | [Lecture Notes](../reading/lecture15.pdf)                                                       |
-| Tuesday, Nov 1    |   |
-| Wednesday, Nov 2  | **No lab.** (Continue working on Sudoku.)                                                       |
+| Tuesday, Nov 1    |                                                                                                 |
+    | Wednesday, Nov 2  | **No lab.** (Continue working on Sudoku.)                                                       |
 | Thursday, Nov 3   | Reading: [Enumerating the Rationals] ([in Scala](../reading/rationals.scala))                   |
 | Tuesday, Nov 8    | Due: [HW7]. Out: [HW8]. Reading: [Java Regular Expressions] and [Scala Regular Expressions].    |
 | Wednesday, Nov 9  | *Lab:* Steps 1 and 2 of [HW8].                                                                  |
-| Thursday, Nov 10  |   |
-| Tuesday, Nov 15   | Due: [HW8].   |
+| Thursday, Nov 10  |                                                                                                 |
+| Tuesday, Nov 15   | Due: [HW8].                                                                                     |
 | Wednesday, Nov 16 | **No lab.** (Friday schedule.)                                                                  |
 | Thursday, Nov 17  | Reading: [Parser Combinators].                                                                  |
 | Tuesday, Nov 22   | **No class.** (Thanksgiving Recess.)                                                            |
 | Wednesday, Nov 23 | **No lab.** (Thanksgiving Recess.)                                                              |
 | Thursday, Nov 24  | **No class.** (Thanksgiving Recess.)                                                            |
-| Tuesday, Nov 29   | Out: [HW9]. *   |
+| Tuesday, Nov 29   | Out: [HW9].                                                                                     |
 | Wednesday, Nov 30 | *Lab:* Steps 2 and 5 of [HW9].                                                                  |
-| Thursday, Dec 1   |    |
+| Thursday, Dec 1   |                                                                                                 |
 | Tuesday, Dec 6    | Due: [HW9]. Out: [HW10]. **TODO: ScalaCheck 2 (generators).**                                   |
-| Wednesday, Dec 7  | *Lab:*    |
+| Wednesday, Dec 7  | *Lab:*                                                                                          |
 | Thursday, Dec 8   |                                                                                                 |
-| Tuesday, Dec 13   |                                                                                                 |
+| Tuesday, Dec 13   | Due: [HW10].                                                                                    |
 | Wednesday, Dec 14 | **No lab.** (No assignment due.)                                                                |
 {: .table .table-striped :}
 

@@ -1,0 +1,289 @@
+\newlecture
+
+Over the next two lectures, we'll look under the hood and
+discuss some of the ideas used to build the Scala compiler and the Java virtual machine.
+Most of the time, you will not have to think about these kinds of low-level details.
+However, to write performance-critical code or to debug low-level
+errors, you will need to know this kind of work.
+
+
+\section{Programs as Trees}
+
+These are examples of arithmetic expressions:
+
+\begin{itemize}
+
+\item \verb|2 * 4|
+
+\item \verb|1 + 2 + 3|
+
+\item \verb|5 * 4 * 2|
+
+\item \verb|1 + 2 * 3|
+
+\end{itemize}
+%
+
+We all know how to evaluate these expressions in our heads. But, when we do,
+we resolve several ambiguities. For example, should we evaluate \verb|1 + 2 * 3|
+like this:
+
+\begin{tabular}{ll}
+& \verb|1 + 2 * 3| \\
+$=$ & \verb|(1 + 2) * 3| \\
+$=$ & \verb|3 * 3| \\
+$=$ & \verb|9|
+\end{tabular}
+
+\noindent or like this:
+
+\begin{tabular}{ll}
+& \verb|1 + 2 * 3| \\
+$=$ & \verb|1 + (2 * 3)| \\
+$=$ & \verb|1 + 6| \\
+$=$ & \verb|7|
+\end{tabular}
+
+The latter is the convention in mathematics, but it is an arbitrary choice.
+A programming language could adopt either convention or adopt a completely
+different notation. For example, the following three programs, written
+in three different languages, are trying to express the same thing:
+%
+\begin{itemize}
+
+\item \verb|1 + 2| infix syntax, in Scala, which (mostly) adopts the notation of
+   conventional mathematics
+
+\item \verb|(+ 1 2)| parenthesized prefix syntax, from the Scheme language
+
+\item |1 2 +| postfix syntax, from the Forth language
+
+\end{itemize}
+%
+These three \emph{concrete syntaxes} are very different, but all mean
+``the sum of the number three and the number four''.
+
+Concrete syntax is important, because it is the human-computer interface to a
+programming language. It is easy to find acrimonious debates on the Web about
+the virtues of Python's indentation-sensitive syntax, whether semicolons should
+be optional in JavaScript, how C code should be indented, and so on. However,
+we can think of expressions more abstractly as \emph{abstract syntax trees}.  
+
+Scala's case classes make it easy to define a type for abstract syntax trees
+of arithmetic expressions:
+%
+\begin{scalacode}
+sealed trait Expr
+case class Num(n: Int) extends Expr
+case class Add(e1: Expr, e2: Expr) extends Expr
+case class Sub(e1: Expr, e2: Expr) extends Expr
+case class Mul(e1: Expr, e2: Expr) extends Expr
+\end{scalacode}
+
+Here are some examples of abstract arithmetic expressions and their
+concrete representations (written in normal, mathematical notation):
+
+\begin{tabular}{l|l}
+Concrete Syntax & Abstract Syntax \\
+\hline
+\verb|1 + 2 + 3| & \lstinline[language=scala]{Add (Add (Num(1), Num(2)), Num(3))} \\
+\verb|1 + 2 * 3| & \lstinline[language=scala]{Add (Num(1), Mul (Num(2), Num(3)))} \\
+\verb|(1 + 2) / 3| & \lstinline[language=scala]{Div (Add (Num(1), Num(2)), Num(3))}
+\end{tabular}
+
+The Scala compiler uses a much larger and more complex type to represent Scala
+abstract syntax trees, but it follows the same principle described here. You can
+use some low-level Scala APIs to take a string and turn it into an abstract syntax
+tree and even evaluate the tree, as shown in \cref{scala_ast}.
+
+\begin{figure}
+  \consolefile{includes/reify.txt}
+  \caption{Printing a Scala abstract syntax tree.}
+  \label{scala_ast}
+  \end{figure}
+
+Back to our arithmetic expression trees, we can write a simple recursive
+function evaluate trees to values as follows:
+
+\begin{scalacode}
+def eval(e: Expr): Int = e match {
+  case Num(n) => n
+  case Add(e1, e2) => eval(e1) + eval(e2)
+  case Sub(e1, e2) => eval(e1) - eval(e2)
+  case Mul(e1, e2) => eval(e1) * eval(e2)
+  case Div(e1, e2) => eval(e1) / eval(e2)
+}
+\end{scalacode}
+
+You could evaluate Scala programs by writing a recursive evaluation
+function too. However, that's not what happens on your machines. To
+understand how Scala is run, it will help to first examine how Java
+programs are run.
+
+\section{Stacks of Instructions}
+
+\begin{figure}
+\begin{minipage}{0.45\textwidth}
+\begin{javacode}
+class Simple {
+
+  static int factorial(int n, int result) {
+    if (n == 0) {
+      return result;
+    }
+    else {
+      return factorial(n - 1, result * n);
+    }
+  }
+
+  public static void main(String[] args) {
+    System.out.println("Hello, world!");
+     System.out.println(factorial(5, 1));
+  }
+
+}
+\end{javacode}
+\caption{Java source code.}
+\label{simplejava}
+\end{minipage}
+~\vrule~
+\begin{minipage}{0.45\textwidth}
+\begin{console}
+class Simple {
+  Simple();
+    Code:
+       0: aload_0
+       1: invokespecial #1
+       4: return
+
+  static int factorial(int, int);
+    Code:
+       0: iload_0
+       1: ifne          6
+       4: iload_1
+       5: ireturn
+       6: iload_0
+       7: iconst_1
+       8: isub
+       9: iload_1
+      10: iload_0
+      11: imul
+      12: invokestatic  #2
+      15: ireturn
+
+  public static void main(java.lang.String[]);
+    Code:
+       0: getstatic     #3
+       3: ldc           #4
+       5: invokevirtual #5
+       8: getstatic     #3
+      11: iconst_5
+      12: iconst_1
+      13: invokestatic  #2
+      16: invokevirtual #6
+      19: return
+}
+\end{console}
+\caption{Java bytecode.}
+\label{javabytecode}
+\end{minipage}
+\caption{Disassembling Java.}
+\end{figure}
+
+Suppose you want to run the Java program in \cref{simplejava}. You
+can't simply run it directly. Instead, you need to first
+\emph{compile} it:
+\begin{console}
+javac Simple.java
+\end{console}
+which produces a file called \verb|Simple.class|. You can run this file by starting
+the \emph{Java Virtual Machine} (JVM):
+\begin{console}
+java Simple
+\end{console}
+The latter command only uses \verb|Simple.class|. You can delete \verb|Simple.java| and
+you'll still be able to run the program. Let's look into what the \verb|javac| and
+\verb|java| commands do, before we return to Scala. Even if you've never used \verb|java| and \verb|javac| directly, and you've
+only ever used Java within an IDE such as Eclipse or IDEA, you should know that these
+IDEs run these commands under the hood.
+
+The command \verb|javac| is a \emph{compiler} that translate Java source code to
+\emph{byte-code}, which is stored in \verb|.class| files. Byte-code is not designed
+to be human-readable, which is why \verb|.class| are in a binary format that will appear
+are gibberish in a text editor. However, you can \emph{disassemble} the byte-code
+and print it in a more human-readable format, by running \verb|javap -c Simple.class|.
+This command produces the output shown in \cref{javabytecode}.
+
+Observe that all variables in the original program
+have been erased. Instead of using variables, Java byte-code uses a stack of values
+and a list of instructions, where the instructions pop and push the values on the stack.
+
+\begin{figure}
+\begin{scalacode}
+sealed trait Instruction
+case class INum(n: Int) extends Instruction
+case class IAdd() extends Instruction
+case class IMul() extends Instruction
+case class ISub() extends Instruction
+
+def eval(e: Expr, stack: List[Int]): List[Int] = (e, stack) match {
+  case (INum(n), stack) => n :: stack
+  case (IAdd(), n1 :: n2 :: stack) => n1 + n2 :: stack
+  case (ISub(), n1 :: n2 :: stack) => n1 - n2 :: stack
+  ...
+}
+\end{scalacode}
+\caption{A stack-based evaluator for a list of arithmetic instructions.}
+\end{figure}
+
+Returning to arithmetic expressions, we can write a stack machine for arithmetic
+instructions as shown in
+\cref{stackmachine}. The command \verb|java Simple| runs
+a (very sophisticated) stack machine that is based on the same basic principle illustrated
+in this figure.
+
+The following table shows some arithmetic expressions and equivalent 
+instruction sequences
+
+\begin{tabular}{l|l|l}
+Concrete Syntax & Abstract Syntax & Instructions \\
+\hline
+\verb|1 + 2 + 3| & \lstinline[language=scala]{Add (Add (Num(1), Num(2)), Num(3))}
+& \lstinline{List(INum(1), INum(2), IAdd(), INum(3), IAdd())} \\
+\verb|1 + 2 * 3| & \lstinline[language=scala]{Add (Num(1), Mul (Num(2), Num(3)))}
+& \lstinline{List(INum(1), INum(2), INum(3), IMul(), IAdd())} \\
+\verb|(1 + 2) / 3| & \lstinline[language=scala]{Div (Add (Num(1), Num(2)), Num(3))}
+& \lstinline{List(INum(1), INum(2), IAdd(), INum(3), IDiv())}
+\end{tabular}
+
+\begin{figure}
+\begin{scalacode}
+def compile(e: Expr): List[Instruction] = e match {
+  case Num(n) => List(INum(n))
+  case Add(e1, e2) => compile(e1) ++ compile(e2) ++ List(IAdd())
+  case Sub(e1, e2) => compile(e1) ++ compile(e2) ++ List(ISub())
+  case Mul(e1, e2) => compile(e1) ++ compile(e2) ++ List(IMul())
+}
+\end{scalacode}
+\caption{A compiler from arithmetic expressions to arithmetic instructions.}
+\label{arithcompiler}
+\end{figure}
+
+The command \verb|javac Simple.java| performs the kinds of translations shown
+above automatically. The code in \cref{arithcompiler} compiles arithmetic expressions
+to instructions using the same principles that \verb|javac| uses.
+
+The Scala compiler translates Scala source code to byte-code for the Java Virtual Machine
+in a similar way. The compiler is more complicated, because Scala is actually much more
+complex than Java. However, once the \verb|.class| files have been generated, Scala
+programs run in the same manner at Java programs.
+
+Although we use \sbt{} in this course, it is also a simple frontend
+for the Scala compiler (\verb|scalac|). You can run \verb|scalac| on
+Scala source code to produce \verb|.class| files and then disassemble
+or run these files in exactly the same way as Java code. In your
+\sbt{} projects, there is a directory called
+\verb|target/scala-2.11/classes| that has all the class files
+generated from your program. \sbt{}, like any other IDE, puts
+\verb|.class| files in a separate directory so that they don't clutter
+your code.

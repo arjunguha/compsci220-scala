@@ -5,9 +5,11 @@
 \begin{figure}
 \begin{minipage}{0.45\textwidth}
 \begin{scalacode}
-def ilength(alist : List[Int]): Int = alist match {
+def ilength(alist : List[Int]): Int = {
+  alist match {
   case Nil => 0
   case _ :: tail => 1 + ilength(tail)
+  }
 }
 \end{scalacode}
 \subcaption{Length of a list of integers.}
@@ -15,9 +17,11 @@ def ilength(alist : List[Int]): Int = alist match {
 \quad\vrule\quad
 \begin{minipage}{0.45\textwidth}
 \begin{scalacode}
-def slength(alist : List[String]): Int = alist match {
-  case Nil => 0
-  case _ :: tail => 1 + slength(tail)
+def slength(alist : List[String]): Int = {
+  alist match {
+    case Nil => 0
+    case _ :: tail => 1 + slength(tail)
+  }
 }
 \end{scalacode}
 \subcaption{Length of a list of integers.}

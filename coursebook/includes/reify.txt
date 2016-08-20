@@ -1,0 +1,17 @@
+scala> import scala.tools.reflect.ToolBox
+import scala.tools.reflect.ToolBox
+
+scala> import scala.reflect.runtime.universe.runtimeMirror
+   def runtimeMirror(cl: ClassLoader): reflect.runtime.universe.Mirror
+
+scala> val tb = runtimeMirror(getClass.getClassLoader).mkToolBox()
+tb: scala.tools.reflect.ToolBox[reflect.runtime.universe.type] = scala.tools.reflect.ToolBoxFactory$ToolBoxImpl@4bef0fe3
+
+scala> val tree = tb.parse("""(x: Int, y: Int, z: Int) => x + y * z""")
+tree: tb.u.Tree = ((x: Int, y: Int, z: Int) => x.$plus(y.$times(z)))
+
+scala> tb.eval(tree)
+res0: Any = <function3>
+
+scala> res0.asInstanceOf[(Int, Int, Int) => Int](1, 2, 3)
+res2: Int = 7
