@@ -124,12 +124,26 @@ references and this course will help you decipher some of them.
 
 \section{The Command-Line\classtime{5}}
 
-The \emph{Linux command-line}\footnote{The command-line is also known as a
-\emph{terminal} or \emph{shell}.} is  a critical part of this course. If you're
+The \emph{\textsc{Unix} command-line}\footnote{The command-line is also known as a
+\emph{terminal} or \emph{shell}.} is  a critical part of this course:
+
+\begin{itemize}
+
+\item If you're
 using the course virtual-machine, you should use the program \textbf{LXTerminal}
 to start the command-line.
 
-Unless you're already familiar with the Linux command-line, you must read
+\item If you're using macOS, you you get to command line by running the
+launching the \textbf{Terminal} application, which is in the
+\textbf{Applications} $\blacktriangleright$ \textbf{Utilities} folder.
+
+\item If you're using Windows 10, you can use \textbf{Bash for Windows}.
+
+\item If you're using Windows, you can install and run \textbf{Cygwin}.
+
+\end{itemize}
+
+Unless you're already familiar with the command-line, you must read
 \href{http://learncodethehardway.org/cli/book/cli-crash-course.html}{Zed Shaw's Command Line Crash Course},
 up to and including the chapter ``Removing a File (rm)''. Zed likes to swear at
 his own readers, so we'd like to apologize in advance on his behalf. The rest
@@ -154,12 +168,12 @@ languages, \sbt{} has a \emph{REPL} (read-eval-print loop), which you can use to
 type in and run one-line programs immediately, without the bother of creating
 files, etc.
 
-To start the Scala REPL, open a terminal (LXTerminal on the course VM),
+To start the Scala REPL, open a terminal,
 type in \verb|sbt console| and press enter. Your screen will look like this:
 %
 \consolefile{includes/sbtconsole.txt}
 
-The \verb|scala>| prompt indicates that you can type in Scala expressions to evaluate.
+The \verb|scala>| prompt indicates that you can type in Scala expressions.
 
 \section{Scala Basics\classtime{15}}
 
@@ -211,7 +225,7 @@ You'll find that Scala programs are significantly shorter than their Java
 counterparts. A key feature of Scala that lets you write less code is \emph{type
 inference}. Notice in the variable definitions above, you did not have to write
 any types. Instead, Scala \emph{inferred} them for you. This feature is very helpful
-in larger programs, where types can become complex.
+in large programs, where types can become long and complicated.
 
 Type inference is not magic; later in the course, you'll learn more about how it
 works and when it doesn't. For now, here's a rule of thumb: Scala can infer the
@@ -223,16 +237,16 @@ function parameters.
 Here is a very simple Scala function:
 
 \begin{console}
-scala> def double(n: Int): Int = n + n
+scala> def twice(n: Int): Int = n + n
 double: (n: Int)Int
 \end{console}
 
-This code defines a function called \scalainline{double}, which takes an argument called
+This code defines a function called \scalainline{twice}, which takes an argument called
 \scalainline{n} of type \scalainline{Int} and returns a value of type \scalainline{Int}. We can apply the
 function as follows:
 
 \begin{console}
-scala> double(10)
+scala> twice(10)
 res3: Int = 20
 \end{console}
 
@@ -278,8 +292,9 @@ scala> def dist2(x: Double, y: Double): Double = {
 
 In principle, you can write a full-fleged program line-by-line in the Scala
 console. But, it makes a lot more sense to save large programs to files
-for a particular project. To do so, we will being by creating a new directory
-for your project.
+for a particular \emph{project}. To do so, we will being by creating a new directory
+for your project. Every time you create a new Scala program (e.g., for a homework
+assignment, you should create a new project.)
 
 First, exit the Scala console by typing \verb|:quit| and then exit \sbt{}
 by typing \verb|exit|. You should return to the command-line:
@@ -309,6 +324,8 @@ Notice that the name of the directory is displayed on the command-line.
 Your Scala projects will have two kinds of files: test cases and your implementation.
 \sbt{} requires you to organize your files into the following directory
 structure:
+
+\begin{minipage}{0.5\textwidth}
 \dirtree{%
 .1 ~/lecture1.
 .2 src.
@@ -317,6 +334,7 @@ structure:
 .3 main.
 .4 scala\DTcomment{Tests goes here}.
 }
+\end{minipage}
 
 You can create these directories by running the following commands:
 \consolefile{includes/mkdirs.txt}
@@ -393,9 +411,9 @@ testing with \verb|~test|.
 \section{Building and Pattern-Matching on Lists\classtime{25}}
 
 
-In this section, we will show how to write simple list-processing functions. We
-will cover basic \emph{functional programming} and introduce \emph{pattern
-matching}.
+In this section, we will show you how to write simple list-processing functions.
+We will cover basic \emph{functional programming} and introduce \emph{pattern
+matching}. You should try out all the code yourself using the \sbt{} console.
 
 \subsection{Constructing Lists}
 
@@ -451,8 +469,7 @@ val letters = "a" :: ("b" :: :: Nil)
 
 In our examples so far, we've used parenthesis to make the head and tail clear.
 However, you can simply write \scalainline{"a" :: "b" :: "c" :: Nil}. Intuitively,
-everything to the right of a \scalainline{::} is the tail. If you get confused
-up, write the parenthesis explicitly.
+everything to the right of a \scalainline{::} is the tail. If you get confused, write the parenthesis explicitly.
 
 It is usually easier to write lists in the following way:
 %
@@ -471,8 +488,7 @@ and \scalainline{Nil}, as we described above.
 
 \paragraph{Lists and Type Inference}
 
-You should try to type out the expressions above into the \sbt{} console.
-For example:
+Consider the following interaction, which you should try yourself:
 %
 \begin{console}
 scala> val lst = 1 :: 2 :: 3 :: Nil
@@ -560,9 +576,11 @@ recursive functions that construct new lists.
 \begin{figure}
 \begin{subfigure}[b]{0.45\textwidth}
 \begin{scalacode}
-def product(lst: List[Int]): Int = lst match {
-  case Nil => 1
-  case n :: rest => n * product(rest)
+def product(alist: List[Int]): Int = {
+  alist match {
+    case Nil => 1
+    case n :: tail => n * product(tail)
+  }
 }
 \end{scalacode}
 \caption{Calculate the product of a list of numbers.}
@@ -570,9 +588,11 @@ def product(lst: List[Int]): Int = lst match {
 \hskip 2em
 \begin{subfigure}[b]{0.45\textwidth}
 \begin{scalacode}
-def repeatTwice(lst: List[Int]): List[Int] = lst match {
-  case Nil => Nil
-  case n :: rest => n :: n :: repeatTwice(rest)
+def repeatTwice(alist: List[Int]): List[Int] = {
+  alist match {
+    case Nil => Nil
+    case n :: tail => n :: n :: repeatTwice(tail)
+  }
 }
 \end{scalacode}
 \caption{Repeats every element of a list twice.}
@@ -613,17 +633,15 @@ We can write \scalainline{sum} by using a powerful feature of
 Scala called \emph{pattern matching}.
 %
 \begin{scalacode}
-def sum(lst: List[Int]): Int = {
-  lst match {
-    case Nil => 0
-    case h :: t => h + sum(t)
-  }
+def sum(lst: List[Int]): Int = alist match {
+  case Nil => 0
+  case h :: t => h + sum(t)
 }
 \end{scalacode}
 %
-This code makes it clear that the function is inspecting \scalainline{lst}
-and considering two \emph{cases}. When \scalainline{lst} is \scalainline{Nil},
-it produces \scalainline{0} and when \lstinline{lst} is constructed with
+This code makes it clear that the function is inspecting \scalainline{alist}
+and considering two \emph{cases}. When \scalainline{alist} is \scalainline{Nil},
+it produces \scalainline{0} and when \lstinline{alist} is constructed with
 the \scalainline{::} operator, the function recurs on the tail and ands
 that result to the head. In this code,
 \scalainline{Nil} and \scalainline{h :: t} are called \emph{patterns}.
@@ -636,14 +654,14 @@ any variable to refer to the value of the head or the tail.
 \begin{figure}
 \begin{subfigure}[b]{0.45\textwidth}
 \begin{scalacode}
-def countOnes(lst: List[Int]): Int = lst match {
+def countOnes(alist: List[Int]): Int = alist match {
   case Nil => 0
-  case n :: rest => {
+  case n :: tail => {
     if (n == 1) {
-      1 + countOnes(rest)
+      1 + countOnes(tail)
     }
     else {
-      countOnes(rest)
+      countOnes(tail)
     }
   }
 }
@@ -654,11 +672,10 @@ def countOnes(lst: List[Int]): Int = lst match {
 \hskip 2em
 \begin{subfigure}[b]{0.45\textwidth}
 \begin{scalacode}
-def countOnes(lst: List[Int]): Int = lst match {
+def countOnes(alist: List[Int]): Int = alist match {
   case Nil => 0
-  case 1 :: rest => 1 + countOnes(rest)
-  case n :: rest => countOnes(rest)
-
+  case 1 :: tail => 1 + countOnes(tail)
+  case n :: tail => countOnes(tail)
 }
 \end{scalacode}
 \caption{Counting ones using a composite pattern.}
@@ -689,19 +706,19 @@ Here is another function that uses pattern matching to count the number
 of tens in a list:
 %
 \begin{scalacode}
-def countTens(lst: List[Int]): Int = lst match {
-  case 10 :: rest => 1 + countTens(rest)
-  case n :: rest => countTens(rest)
+def countTens(alist: List[Int]): Int = alist match {
+  case 10 :: tail => 1 + countTens(tail)
+  case n :: tail => countTens(tail)
 }
 \end{scalacode}
 
 However, this function had a bug. Do you see it? If you type this into
-a console, Scala prints the following:
+the console, Scala prints the following:
 %
 \begin{console}
 <console>:10: warning: match may not be exhaustive.
 It would fail on the following input: Nil
-       def countTens(lst: List[Int]): Int = lst match {
+       def countTens(alist: List[Int]): Int = alist match {
                                             ^
 \end{console}
 %
@@ -710,9 +727,9 @@ Scala ensures that your patterns are \emph{exhaustive}. Here is another
 buggy version of the function:
 %
 \begin{scalacode}
-def countTens(lst: List[Int]): Int = lst match {
-  case n :: rest => 1 + countTens(rest)
-  case n :: rest => countTens(rest)
+def countTens(alist: List[Int]): Int = alist match {
+  case n :: tail => 1 + countTens(tail)
+  case n :: tail => countTens(tail)
   case Nil => 0
 }
 \end{scalacode}
@@ -732,4 +749,29 @@ nested if-statements. Pattern matching is a very powerful tool that you can
 exploit to make your programs more robust. We will emphasize pattern-matching
 over conditionals in this course.
 
+\section{Immutability \classtime{10}}
 
+We want to emphasize that all that functions that we've written to produce
+lists  \emph{produces a new list} and leaves the original list unchanged.
+
+You can observe this behavior in the Scala console:
+%
+\begin{console}
+scala> val original = List(10, 20, 30)
+original: List[Int] = List(10, 20, 30)
+
+scala> val result = repeatTwice(original)
+result: List[Int] = List(10, 10, 20, 20, 30, 30)
+
+scala> original
+res0: List[Int] = List(10, 20, 30)
+
+scala> result
+res1: List[Int] = List(10, 10, 20, 20, 30, 30)
+\end{console}
+
+At no point did we change or \emph{mutate} the original list. In fact, lists in
+Scala are \emph{immutable} data structures. There is no way to update their
+head or tail. Programming with immutable data structures is a key part of
+\emph{functional programming}, which we will emphasize in the first half
+of this course.

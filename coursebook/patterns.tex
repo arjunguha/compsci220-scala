@@ -20,52 +20,6 @@
 \end{instructor}
 
 \begin{figure}
-\begin{scalacode}
-def incrList(alist: List[Int]): List[Int] = alist match {
-  case Nil => Nil
-  case head :: tail => (head + 1) :: incrList(tail)
-}
-\end{scalacode}
-
-\caption{A function that increments all numbers in a list.}
-\label{incrlist}
-\end{figure}
-
-\section{Immutability \classtime{10}}
-
-\begin{instructor}
-This really belongs in the previous lecture, but wasn't emphasized.
-There was extra time in the first lecture, so this can easily be
-placed there.
-\end{instructor}
-
-Consider the function \scalainline{incrList} in \cref{incrlist}, which
-increments all numbers in a list. We want to emphasize that \scalainline{incrList}
-\emph{produces a new list} and leaves the original list unchanged.
-
-You can observe this behavior in the Scala console:
-%
-\begin{console}
-scala> val original = List(10, 20, 30)
-original: List[Int] = List(10, 20, 30)
-
-scala> val result = incrList(original)
-result: List[Int] = List(11, 21, 31)
-
-scala> original
-res0: List[Int] = List(10, 20, 30)
-
-scala> result
-res1: List[Int] = List(11, 21, 31)
-\end{console}
-
-At no point did we change or \emph{mutate} the original list. In fact, lists in
-Scala are \emph{immutable} data structures. There is no way to update their
-head or tail. Programming with immutable data structures is a key part of
-\emph{functional programming}, which we will emphasize in the first half
-of this course.
-
-\begin{figure}
 \begin{subfigure}[b]{.45\textwidth}
 \begin{javacode}
 public class Point {
