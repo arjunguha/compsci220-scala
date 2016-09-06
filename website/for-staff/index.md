@@ -37,5 +37,5 @@ particularly productive.)
 
 ## Discussions
 
-- 9AM - Harsh and Kyle
-- 10AM - Jesse, Itamar, Aaron, and Jane
+- 9AM - Harsh and Itamar
+- 10AM - Jesse, Kyle, Aaron, and Jane
