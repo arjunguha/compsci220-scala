@@ -24,15 +24,17 @@ discussed below.
 
 ## Mac OS X
 
-1. Install [Homebrew](http://brew.sh) (follow the directions on the website).
+1. Install [Homebrew](http://brew.sh).
+
+      `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
 
 2. Install Java from the Terminal:
 
-       brew cask install java
+      `brew cask install java`
 
 3. Install SBT from the Terminal:
 
-       brew install sbt
+      `brew install sbt`
 
 5. To verify that everything installed, type `sbt` to start SBT.
 
