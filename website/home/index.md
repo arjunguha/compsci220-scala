@@ -23,13 +23,13 @@ You must read the entire [Course Policy] document.
 
 # Office Hours
 
-**To be announced.**
-
-| When                       | Where                                | Who                               |
-|:---------------------------|--------------------------------------|-----------------------------------|
-|   |       |  |
+| When                       | Where                                | Who                                        |
+|:---------------------------|--------------------------------------|--------------------------------------------|
+| Sunday, 11AM--noon         | USpace (CS Building, Room 144)       | Jane Tangen, Harsh Poddar, and Aaron Weiss |
+| Monday, 11AM--noon         | USpace (CS Building, Room 144)       | Jesse Bartola and John Geenty              |
+| Wednesday, 11AM--noon      | TBD                                  | Kyle Vedder and Itamar Levy-Or             |
+| Friday, 3PM--4PM           | CS Building, Room 230                | Arjun Guha                                 |
 {: .table .table-striped :}
-
 
 # Textbook
 
