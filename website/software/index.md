@@ -42,9 +42,9 @@ discussed below.
 
 1. Install Java 8:
 
-       add-apt-repository -y ppa:webupd8team/java
-       apt-get update
-       apt-get install -y oracle-java8-installer
+       sudo add-apt-repository -y ppa:webupd8team/java
+       sudo apt-get update
+       sudo apt-get install -y oracle-java8-installer
 
 2. Install SBT:
 
