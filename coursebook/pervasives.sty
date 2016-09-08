@@ -9,8 +9,19 @@
 \usepackage{subcaption}
 \usepackage{dirtree}
 \usepackage{tikz}
-\usepackage{amssymb}
+\usepackage{amssymb,etoolbox}
 \usetikzlibrary{arrows,automata}
+
+\expandafter\patchcmd\csname \string\lstinline\endcsname{%
+  \leavevmode
+  \bgroup
+}{%
+  \leavevmode
+  \ifmmode\hbox\fi
+  \bgroup
+}{}{%
+  \typeout{Patching of \string\lstinline\space failed!}%
+}
 
 \definecolor{bg}{rgb}{0.95,0.95,0.95}
 
@@ -40,6 +51,7 @@
 }
 
 \lstdefinelanguage{scala}{
+  basicstyle=\ttfamily\footnotesize,
   mathescape=false,
   morekeywords={abstract,case,catch,class,def,%
     do,else,extends,false,final,finally,%

@@ -654,14 +654,16 @@ any variable to refer to the value of the head or the tail.
 \begin{figure}
 \begin{subfigure}[b]{0.45\textwidth}
 \begin{scalacode}
-def countOnes(alist: List[Int]): Int = alist match {
-  case Nil => 0
-  case n :: tail => {
-    if (n == 1) {
-      1 + countOnes(tail)
-    }
-    else {
-      countOnes(tail)
+def countOnes(alist: List[Int]): Int = {
+  alist match {
+    case Nil => 0
+    case n :: tail => {
+      if (n == 1) {
+        1 + countOnes(tail)
+      }
+      else {
+        countOnes(tail)
+      }
     }
   }
 }
