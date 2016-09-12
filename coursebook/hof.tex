@@ -1,5 +1,59 @@
 \newlecture
 
+\lstset{language=scala}
+
+\begin{instructor}
+
+\section{Lecture Outline}
+
+\begin{enumerate}
+
+  \item \textbf{Print debugging:} show that printfs can be used in blocks at some point in the lecture.
+
+  \item Generic functions and type inference
+  
+  \begin{enumerate}
+
+  \item Two functions \lstinline|length(alist: List[String]): Int| and \lstinline|length(alist: List[Int]): Int|.
+
+  \item Introduce the \emph{type argument} \lstinline|length[A](alist: List[A]): Int|
+
+  \item Type inference figures out the type parameter: show explicit type argument passing.
+
+  \end{enumerate}
+
+  \item Generic data structures: binary trees and lists.
+
+  \item Higher-order functions (\lstinline|map|):
+
+  \begin{enumerate}
+
+    \item Introduce \lstinline|incrs(alist: List[Int]): List[Int]|,
+     \lstinline|doubles(alist: List[Int]): List[Int]|, and \lstinline|lengths(alist: List[String]): List[Int]|.
+
+    \item Refactor to use an externally defined function
+
+    \item Introduce \lstinline|map|
+
+    \item Show explicit type-parameter usage
+
+  \end{enumerate}
+
+  \item Show \lstinline|filter| with \lstinline|filterEven| and \lstinline|filterOdd|.
+
+  \item Show \lstinline|takeWhile|.
+
+  \item Show generic sorting by introducing insertion sort.
+
+  \item Show the builtin methods on lists.
+
+  
+
+\end{enumerate}
+
+\end{instructor}
+
+
 \section{Generics and Type Inference\classtime{15}}
 
 \begin{figure}
