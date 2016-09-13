@@ -5,7 +5,7 @@ else
   LOGFILE=grading.log
 fi
 
-echo "Logging to ~/Library/Logs/$LOGFILE"
+echo "Logging to $LOGFILE"
 
 sbt -J-Xmx4G -Dorg.slf4j.simpleLogger.defaultLogLevel=info \
   -Dorg.slf4j.simpleLogger.showDateTime=true \

@@ -29,7 +29,7 @@ libraryDependencies ++= Seq(
   "com.github.tototoshi" %% "scala-csv" % "1.0.0",
   "edu.umass.cs" %% "zip" % "1.2.1",
   "edu.umass.cs" %% "csv" % "1.1",
-  "edu.umass.cs" %% "extras" % "1.1.0",
+  "edu.umass.cs" %% "extras" % "1.3.0",
   "edu.umass.cs" %% "mail" % "2.0.0",
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "com.google.api-client" % "google-api-client" % "1.21.0",

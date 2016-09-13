@@ -40,7 +40,7 @@ object Scripting {
             Files.write(tgz, Files.readAllBytes(submission))
             Files.createDirectory(dir)
             import scala.sys.process._
-            if (Seq("/usr/bin/tar", "-xzf", tgz.toString, "--directory", dir.toString).! != 0) {
+            if (Seq("tar", "-xzf", tgz.toString, "--directory", dir.toString).! != 0) {
               println(s"Error extracting $filename")
               FileUtils.deleteDirectory(dir.toFile)
             }
@@ -111,7 +111,7 @@ class Scripting(ip: String) {
 
   def run(timeout: Int, command: Seq[String], zip: Array[Byte], label: String = "No label"): Future[ContainerExit] = {
     val p = Promise[ContainerExit]()
-    val run = Run("gcr.io/umass-cmpsci220/student", timeout, "/home/student/hw", command, Map("/home/student/hw" -> zip))
+    val run = Run("gcr.io/arjun-umass/grading-compsci220", timeout, "/home/student/hw", command, Map("/home/student/hw" -> zip))
     controllerActor ! (label, p, run)
     p.future
   }

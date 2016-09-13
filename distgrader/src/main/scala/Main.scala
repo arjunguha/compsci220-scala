@@ -53,8 +53,9 @@ object Main extends App {
 
     cmd("upload-worker")
       .action((_, cfg) => cfg.copy(command = UploadWorker))
-
-
+    cmd("init-image")
+      .action((_, cfg) => cfg.copy(command = InitImage))
+    
     cmd("worker")
       .action((_, cfg) => cfg.copy(command = Worker))
       .text("Start a worker process on this machine (requires Docker locally)")

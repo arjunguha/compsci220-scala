@@ -22,19 +22,18 @@ object CreateImage {
   import scala.collection.JavaConversions._
 
   val auth = SimpleAuth(Paths.get("cred.json"))
-
-  implicit val myCompute = SimpleCompute("umass-cmpsci220", "us-east1-b", auth)
-  implicit val storage = SimpleStorage("umass-cmpsci220", auth)
-
-  val projectId = "umass-cmpsci220"
+  
+  val projectId = Settings.projectId
   val zone = "us-east1-b"
+
+  implicit val myCompute = SimpleCompute(projectId, "us-east1-b", auth)
+  implicit val storage = SimpleStorage(projectId, auth)
 
   val compute = myCompute.compute
 
-
   import GCE.Implicits._
 
-  val bucket = "umass-cmpsci220-artifacts"
+  val bucket = "umass-compsci220"
 
   def workerSignature(): WorkerInstanceSignature = {
     WorkerInstanceSignature(DigestUtils.md5Hex(Files.readAllBytes(Paths.get("target/distgrader.jar"))),
@@ -61,8 +60,7 @@ object CreateImage {
     import com.google.api.services.storage.model.{Bucket, StorageObject}
 
     if (!storage.storage.buckets().list().exists(_.getName == bucket)) {
-      storage.storage.buckets().insert("umass-cmpsci220", new Bucket().setName(bucket)).execute
-
+      storage.storage.buckets().insert(bucket, new Bucket().setName(bucket)).execute
     }
 
     val jarPath = Paths.get("target/distgrader.jar")
@@ -114,8 +112,8 @@ object CreateImage {
       return
     }
 
-    println("Removing image...")
     if (compute.images().list().exists(_.getName == "worker-template")) {
+      println("Removing image...")
       Await.result(compute.images().delete("worker-template"), Duration.Inf)
     }
 
@@ -124,7 +122,7 @@ object CreateImage {
                               tags = Seq(),
                               metadata = Map("startup-script" -> startupScript))
     val r = Await.result(compute.instances().insert(inst), Duration.Inf)
-
+    println(s"Response is $r")
     while (compute.instances().getSerialPortOutput(projectId, zone, inst.name).execute()
              .getContents.contains("Finished running startup script /var/run/google.startup.script") == false) {
       Thread.sleep(10000)

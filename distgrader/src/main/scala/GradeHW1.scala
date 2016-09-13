@@ -3,7 +3,8 @@ package grading
 class HW1Grading(val assignmentRoot: String, val selfIP: String) extends TestFramework {
 
   def zipBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {
-    zip.add(s"object Grading extends App { import Lecture1._; $body }".getBytes, "src/main/scala/GradingMain.scala")
+    zip.add("""addSbtPlugin("edu.umass.cs" % "compsci220" % "1.0.0")""".getBytes, "project/plugins.sbt")
+    zip.add(s"object Grading extends App { import Lists._; $body }".getBytes, "src/main/scala/GradingMain.scala")
   }
 
 
@@ -12,7 +13,7 @@ class HW1Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
     val compiles = root.thenCompile("Does it compile", "")
 
     val removeZeroes = compiles.thenCompile("removeZeroes have the right type?",
-      "val x: List[Int] = Lecture1.removeZeroes(List[Int]())")
+      "val x: List[Int] = Lists.removeZeroes(List[Int]())")
 
     removeZeroes.thenRun("removeZeroes with only zeroes",
         """assert(removeZeroes(List(0, 0, 0, 0)) == Nil)""")
@@ -79,7 +80,7 @@ class HW1Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
     sort.thenRun("sort non-empty list", """assert(sort(List(5, 4, 1, 2, 3)) == List(1, 2, 3, 4, 5))""")
 
     val sumDouble = compiles.thenCompile("Does sumDouble have the right type?",
-       "val x:Int = Lecture1.sumDouble(List[Int]())")
+       "val x:Int = Lists.sumDouble(List[Int]())")
 
     sumDouble.thenRun("sumDouble(Nil)", "assert(sumDouble(Nil) == 0)")
     sumDouble.thenRun("sumDouble on a non-empty list",  "assert(sumDouble(List(2, 2, 3, 7)) == 28)")

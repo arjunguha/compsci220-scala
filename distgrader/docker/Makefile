@@ -1,4 +1,4 @@
 build:
 	docker build -t student .
-	docker tag -f student gcr.io/umass-cmpsci220/student
-	gcloud docker push gcr.io/umass-cmpsci220/student
+	docker tag -f student gcr.io/arjun-umass/grading-compsci220
+	gcloud docker push gcr.io/arjun-umass/grading-compsci220

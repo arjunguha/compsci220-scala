@@ -12,14 +12,14 @@ RUN apt-get update
 RUN apt-get install -yq oracle-java8-installer
 
 # Install SBT
-RUN wget http://dl.bintray.com/sbt/debian/sbt-0.13.9.deb
-RUN dpkg -i sbt-0.13.9.deb
-RUN rm sbt-0.13.9.deb
+RUN wget http://dl.bintray.com/sbt/debian/sbt-0.13.11.deb
+RUN dpkg -i sbt-0.13.11.deb
+RUN rm sbt-0.13.11.deb
 
 # Install Scala
-RUN wget http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.deb
-RUN dpkg -i scala-2.11.7.deb
-RUN rm scala-2.11.7.deb
+RUN wget http://downloads.typesafe.com/scala/2.11.8/scala-2.11.8.deb
+RUN dpkg -i scala-2.11.8.deb
+RUN rm scala-2.11.8.deb
 
 # Create user account
 RUN adduser --disabled-password --gecos "" student
@@ -29,12 +29,10 @@ WORKDIR /home/student
 # Needed to copy files in
 RUN mkdir hw
 
-# Install SBT plugin
-RUN mkdir -p /home/student/.sbt/0.13/plugins
-COPY plugins.sbt /home/student/.sbt/0.13/plugins/plugins.sbt
-
-# Pre-fetch typically dependencies
+# Pre-fetch typical dependencies
 RUN mkdir /home/student/scala-init
+RUN mkdir /home/student/scala-init/project
+COPY plugins.sbt /home/student/scala-init/project/plugins.sbt
 COPY Init.scala /home/student/scala-init/Init.scala
 COPY build.sbt /home/student/scala-init/build.sbt
 WORKDIR /home/student/scala-init
