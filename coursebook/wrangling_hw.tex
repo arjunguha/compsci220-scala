@@ -1,0 +1,236 @@
+\newhw{Data Wrangling}
+
+The United States Social Security Administration releases data dating back to
+1880 on babies' first names, genders, and their
+popularity.\footnote{\url{https://www.ssa.gov/oact/babynames/limits.html}}
+Similarly, the Centers for Disease Control releases data on life expectancy
+in the United States.\footnote{\url{http://www.cdc.gov/nchs/products/life_tables.htm}}.
+In this assignment, you'll be putting these two data sources together
+to answer vital questions such as ``What is the most popular baby name in 2007?'',
+``Approximately how many Emmas are alive today?'', and so on.
+
+To do so, you'll use Scala's built-in data
+structures (lists, sets, and maps) to write several data-processing functions
+that can be composed together to answer complicated queries.
+Although you can write all these functions directly using recursion,
+the point of the assignment is to sequence Scala's built-in methods together
+to write them quickly and compactly. Most of the functions only need
+1 line of code, if you exploit the right library features.
+
+In addition, you'll be working with CSV files (\emph{comma-separated values}),
+which is the format in which a lot of public data sets are released.
+
+\section{Preliminaries}
+
+You should create a directory-tree that looks like this:
+
+\dirtree{%
+.1 ./wrangling.
+.2 build.sbt.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala\DTcomment{Yours tests go here}.
+}
+
+Your \texttt{build.sbt} file must have exactly these lines:
+
+\scalafile{../hw/wrangling/template/build.sbt}
+
+The \texttt{project/plugins.sbt} file must have exactly this line:
+
+\scalafile{../hw/wrangling/template/project/plugins.sbt}
+
+You'll also need to download two datasets:
+%
+\begin{itemize}
+
+  \item The CDC data on life expectancy:
+
+  \url{https://www.cs.umass.edu/~arjun/courses/compsci220/cdc-life-expectancy.csv}
+
+  \item The SSA data on baby names:
+
+  \url{https://www.cs.umass.edu/~arjun/courses/compsci220/ssa-births.csv}
+
+\end{itemize}
+
+You should place these files in the \texttt{wrangling} directory that you created above.
+
+\section{The Data}
+
+In a CSV file, each line has a row of data, where each row
+has a sequence of columns, separated by a commas. For example, the
+first few rows of \texttt{ssa-births.csv} are:
+
+\begin{verbatim}
+1880,Mary,F,7065
+1880,Anna,F,2604
+1880,Emma,F,2003
+1880,Elizabeth,F,1939
+\end{verbatim}
+
+We can interpret this data as ``In the year 1880, 7065 female babies were born
+named Mary; in the year 1880, 2604 female babies were born named Anna'' and so on.
+In fact, the file has over 1.8 million lines of entries like this, with data
+as recent as 2014. \emph{If this file is too large for your computer to handle,
+you should delete some entries}.
+
+The file \texttt{cdc-life-expectancy.csv} is much shorter and has entries
+that look like this:
+
+\begin{verbatim}
+2010,76,81
+2009,75,80
+2008,75,80
+\end{verbatim}
+
+We can interpret this data as ``The average life expectancy of U.S. babies born
+in 2010 is 76 years for males and 81 years for females'', and so
+on.\footnote{The CDC releases more precise statistics. The numbers have been
+cleaned up to make the assignment a little easier.}
+
+The \texttt{build.sbt} file for this assignment is
+configured to load a library for reading CSV files. For example, the program:
+\begin{scalacode}
+import edu.umass.cs.CSV
+CSV.fromFile("cdc-life-expectancy.csv")
+\end{scalacode}
+Produces the value:
+\begin{scalacode}
+List(
+  List("2010", "76", "81"),
+  List("2009", "75", "80"),
+  List("2008", "75", "80"),
+  ...)
+\end{scalacode}
+
+\section{Programming Task}
+
+Your programming task is to implement the functions described below.
+You should place all functions within an object called \texttt{Wrangling}.
+
+\begin{enumerate}
+
+  \item Write a function that consumes a list of SSA records and only produces
+  those records from a given year:
+  \begin{scalacode}
+  def yearIs(data: List[List[String]], n: Int): List[List[String]]
+  \end{scalacode}
+
+
+  \item Write a function that consumes a list of SSA records and only produces
+  those records for years greater than the given bound:
+  \begin{scalacode}
+  def yearGT(data: List[List[String]], bound: Int): List[List[String]]
+  \end{scalacode}
+
+  \item Write a function that consumes a list of SSA records and only produces
+  those records for years lower than the given bound:
+  \begin{scalacode}
+  def yearLT(data: List[List[String]], bound: Int): List[List[String]]
+  \end{scalacode}
+
+  \item Write a function that consumes a list of SSA records and only produces
+  records with the given name:
+  \begin{scalacode}
+  def onlyName(data: List[List[String]], name: String): List[List[String]]
+  \end{scalacode}
+
+  \item Write a function to calculate the most popular name in the given dataset
+  and the \emph{total} number of children born with that name.
+
+  \textbf{Hint:} It is likely that children are born with the same
+      name in several years. So, you should first calculate the total
+      number of childen with each name.
+  
+  \begin{scalacode}
+  def mostPopular(data: List[List[String]]): (String, Int)
+  \end{scalacode}
+
+  \item Write a function to calculate the number of children born in the given dataset.
+  \begin{scalacode}
+  def count(data: List[List[String]]): Int = ???
+  \end{scalacode}
+
+  \item Write a function that produces a tuple with the number of girls and boys
+   respectively.
+  \begin{scalacode}
+  def countGirlsAndBoys(data: List[List[String]]): (Int, Int)
+  \end{scalacode}
+
+  \item Writen a function to calculate the set of names that are given to both girls and boys.
+  \begin{scalacode}
+  def genderNeutralNames(data: List[List[String]]): Set[String]
+  \end{scalacode}
+
+
+  \item Write a function to determine if a person with the specified \texttt{gender} and born in the
+  specified year (\texttt{birthYear}) is expected to be alive (in the year \texttt{currentYear}),
+  according to the CDC life-expectancy data.
+
+    If \texttt{currentYear} is the last year the person is estimated to be alive, be
+      optimistic and produce \texttt{true}.
+
+  The CDC data only ranges from 1930---2010. Therefore, assume that
+      \texttt{birthYear} is in this range too.
+
+  \begin{scalacode}
+  def expectedAlive(gender: String, birthYear: Int, currentYear: Int): Boolean 
+  \end{scalacode}
+
+  \item Write a function to estimate how many people from the given dataset
+  will be alive in a particular year:
+
+  \begin{scalacode}
+  def estimatePopulation(data: List[List[String]], year: Int): Int
+  \end{scalacode}
+
+\end{enumerate}
+
+
+
+You'll notice that many functions
+consume and produce a list of births. The key idea is that you can
+compose these functions together to pose complex queries. For example,
+suppose \scalainline{allBirths} holds the complete list of births:
+
+\begin{scalacode}
+val allBirths = CSV.fromFile("ssa-births.csv")
+\end{scalacode}
+
+\begin{itemize}
+
+  \item The following query calculates how many girls and boys were born between 1990
+  and 2000:
+
+  \begin{scalacode}
+  countGirlsAndBoys(yearGT(yearLT(allBirths, 2001), 1989))
+  \end{scalacode}
+
+  \item The following query tells is if there were more Emma's born in 2010 than
+  in 2009:
+
+  \begin{scalacode}
+  count(onlyName(yearIs(2010, allBirths), "Emma")) > count(onlyName(yearIs(2010, allBirths), "Emma"))
+  \end{scalacode}
+
+  \item The following query reports the most popular name of 2013:
+
+  \begin{scalacode}
+  mostPopular(yearIs(2013, allBirths))
+  \end{scalacode}
+
+  \item The following query estimates the number of John's alive today who
+  were born after 1980:
+
+  \begin{scalacode}
+  estimatePopulation(yearGT(allBirths, 1980), 2015)
+  \end{scalacode}
+
+\end{itemize}
+
+\input{handin}
