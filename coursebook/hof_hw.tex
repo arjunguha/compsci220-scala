@@ -167,7 +167,7 @@ the produced list should also be sorted by the same ordering.
 \begin{scalacode}
 def merge[A](lessThan: (A, A) => Boolean, alist1: List[A], alist2: List[A]): List[A]
 
-def lt(x: Int, y: Int): Boolean = x > y
+def lt(x: Int, y: Int): Boolean = x < y
 
 test("merge test 1") {
   assert(merge(lt, List(5, 3, 1), List(10, 6, 0)) == List(10, 6, 5, 3, 1, 0))
@@ -183,7 +183,7 @@ defined by \scalainline{lessThan}.
 def sort[A](lessThan: (A, A) => Boolean, alist: List[A]): List[A]
 
 
-test("osrt test 1") {
+test("sort test 1") {
   assert(sort(lt, List(5,1,2,3,4,5)) == List(5,5,4,3,2,1))
 }
 \end{scalacode} 
