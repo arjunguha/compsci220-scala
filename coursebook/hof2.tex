@@ -1,0 +1,566 @@
+\newlecture
+
+\begin{instructor}
+\section*{Lecture Outline}
+
+\begin{itemize}
+
+\item Example functions: \lstinline|sum|, \lstinline|product|, \lstinline|concat|. Abstract their differences. 
+
+\item Write \lstinline|fold| without annotations, then reason through the types.
+
+\item Functions can be passed as arguments to other functions (already seen examples).
+
+\item Functions can be nested within other functions (e.g., nest the little helper functions).
+
+\item Functions can produce functions (\lstinline|makeAdder|).
+
+\item Functions do not need to be named. \lstinline|def| is sugar for
+  \lstinline|val|. Refactor \lstinline|makeAdder| and show anonymous
+  functions used with higher-order functions.
+
+\item Functions can be stored in data structures:
+  \lstinline|case class Foo(m1: Int => Int, m2: Int => Int)|.
+
+\item Define \emph{higher-order function} and \emph{first-class function}.
+
+\item Example of scope:
+
+  \begin{scalacode}
+  def f(x: Int): Int = {
+    val y = x + 10
+    y
+  }
+  f(11)
+  y
+  \end{scalacode}
+
+\item Example of shadowing: reason through it by
+  substitution. \emph{Every line is a Scala program}
+
+\item Object-oriented programming:
+
+\begin{scalacode}
+case class Point(
+  getX: () => Double,
+  getY: () => Double,
+  mag: () => Double,
+  add => Point => Point)
+
+def makePoint(x: Double, y: Double): Point = ...
+\end{scalacode}    
+
+\end{itemize}
+
+\end{instructor}
+
+\begin{figure}
+\begin{subfigure}{.45\textwidth}
+\begin{scalacode}
+def sum(alist: List[Int]): Int = alist match {
+  case Nil => 0
+  case hd :: tl => hd + sum tl
+}
+\end{scalacode}
+\caption{Add all numbers in a list}
+\end{subfigure}%
+\quad\vrule\quad
+\begin{subfigure}{.45\textwidth}
+\begin{scalacode}
+def product(alist: List[Int]): Int = alist match {
+  case Nil => 1
+  case hd :: tl => hd + product tl
+}
+\end{scalacode}
+\caption{Multiply all numbers in a list}
+\end{subfigure}
+\vskip .5em \hrule \vskip .5em
+\begin{subfigure}{.45\textwidth}
+\begin{scalacode}
+def concat(alist: List[String]): String = {
+  alist match {
+    case Nil => ""
+    case hd :: tl => hd + concat tl
+  }
+}
+\end{scalacode}
+\caption{Concatenate all strings in a list}
+\end{subfigure}%
+\quad\vrule\quad
+\begin{subfigure}{.45\textwidth}
+\begin{scalacode}
+def totalLen(alist: List[String]): Int = {
+  alist match {
+    case Nil => 0
+    case hd :: tl => hd.length + totalLen tl
+  }
+}
+\end{scalacode}
+\caption{Sum the lengths of all strings in a list}
+\end{subfigure}
+\caption{Several functions that \emph{fold} over a list.}
+\label{folding_prototypes}
+\end{figure}
+
+\section{Folding\classtime{20}}
+%
+The four functions in \cref{folding_prototypes} are examples of
+\emph{folding functions}. A folding function ``collapses'' a list into
+a single value. A fold is characterized by a binary operation used to
+combine values and a base case for the empty list.
+
+\begin{itemize}
+
+\item In \scalainline{sum}, the binary operation is \scalainline{+}
+and the base value is \scalainline{0}:
+\begin{scalacode}
+sum(List(10, 20, 30)) = 10 + (20 + (30 + 0))
+\end{scalacode}
+
+\item In \scalainline{product}, the binary operation is \scalainline{*}
+and the base value is \scalainline{1}:
+\begin{scalacode}
+product(List(2, 3, 4)) = 2 * (3 + (4 * 1))
+\end{scalacode}
+
+\item In \scalainline{concat}, the binary operation is \scalainline{+} (string
+concatenation) and the base value is \scalainline{""}:
+\begin{scalacode}
+concat(List("X", "Y", "Z")) = "X" + ("Y" + ("Z" + ""))
+\end{scalacode}
+
+\item In \scalainline{totalLen}, the binary operation is the following
+function:
+\begin{scalacode}
+def binop (hd : String, tailLen : Int) : int = hd.length + tailLen
+\end{scalacode}
+and the base value is \scalainline{0}:
+\begin{scalacode}
+totalLen(List("hi", "cs220", "student")) = binop("hi", binop("cs220", binop("student" 0)))
+\end{scalacode}
+
+\end{itemize}
+
+Now that we've seen the common pattern, it's clear that we abstract
+these functions to a higher-order
+function that takes three arguments (1) the original list, (2)
+a two-argument function instead of a fixed binary operator, and (3) a
+value for the base-case, instead of a fixed base-case:
+%
+\begin{scalacode}
+def fold(baseCase: ???, binOp: (???, ???) => ???, alist: List[???]): ??? = alist match {
+  case Nil => baseCase
+  case head :: tail => binOp(head, fold(baseCase, binOp, tail))
+}
+\end{scalacode}
+
+We can rewrite the functions in \cref{folding_prototypes} more
+succinctly as follows:
+%
+\begin{scalacode}
+def sum(alist : List[Int]) = fold(0, (x: Int, y: Int) => x + y, alist)
+
+def product(alist : List[Int]) = fold(1, (x: Int, y: Int) => x * y, alist)
+
+def concat(alist : List[String]) = fold("", (x: String, y: String) => x + y, alist)
+
+// binOp was defined above
+def totalLen(alist : List[Int]) = fold(0, binOp, alist)
+\end{scalacode}
+
+Note that in \scalainline{binOp}, the types of the two arguments
+are different. The type of the first argument is the same as the
+type of the elements in the list. The type of the second argument
+is the same as the type of the result of the function. This is because
+when \scalainline{binOp} is applied (internally within \scalainline{fold}),
+the first argument to  \scalainline{binOp} is an element of the
+list, and the second argument is an intermediate result.
+Therefore, we can fill in the types in \scalainline{fold} as follows:
+%
+\begin{scalacode}
+def fold[A,B](baseCase: B, binOp: (A, B) => B, alist: List[A]): B = alist match {
+  case Nil => baseCase
+  case head :: tail => binOp(head, fold(baseCase, binOp, tail))
+}
+\end{scalacode}
+
+\section{Functions are Values\classtime{10}}
+
+\paragraph{Functions can be passed as arguments to functions.}
+The last lecture introduced functions can be passed as arguments
+to other functions. For example, the function \scalainline{filter(f, alist)}
+produces a list of all the items of \scalainline{alist} for which \scalainline{f}
+is \scalainline{true}:
+%
+\begin{scalacode}
+def filter[A](f: A => Boolean, alist: List[Int]): List[A] = alist match {
+  case Nil => Nil
+  case Cons(head, tail) =>
+    f(head) match {
+      case true => head :: filter(f, tail)
+      case false => filter(f, tail)
+    }
+}
+\end{scalacode}
+
+This allowed us to write several functions very easily, for example:
+%
+\begin{scalacode}
+def isEven(n: Int): Boolean = n % 2 == 0
+
+def onlyEvens(alist: List[Int]): List[Int] = {
+  filter(isEven, alist)
+}
+
+def nonZero(n: Int): Boolean = n != 0
+
+def onlyNonZero(alist: List[Int]): List[Int] = {
+  filter(nonZero, alist)
+}
+\end{scalacode}
+
+\paragraph{Functions can be nested within other functions.}
+
+If our goal was to write the list-processing functions, then the
+functions \scalainline{isEven} and \scalainline{nonZero}, are
+cluttering our code. Another programmer may think that they are signficant,
+although they simply exist as trivial helper functions.
+
+Functions can be nested within other functions:
+%
+\begin{scalacode}
+def onlyEvens(alist: List[Int]): List[Int] = {
+  def isEven(n: Int): Boolean = n % 2 == 0
+  filter(isEven, alist)
+}
+
+def onlyNonZero(alist: List[Int]): List[Int] = {
+  def nonZero(n: Int): Boolean = n != 0
+  filter(nonZero, alist)
+}
+\end{scalacode}
+%
+In particular, the names \scalainline{isEven} and \scalainline{nonZero}
+are \emph{not defined} outside their respective functions.
+
+\paragraph{Functions can produce functions.}
+
+Functions can also produce other functions. For example:
+%
+\begin{scalacode}
+def makeAdder(x: Int): Int => Int = {
+  def addX(y: Int): Int = x + y
+  addX(x)
+}
+
+val addThree = makeAdder(3)
+test("add3 test") {
+  assert(addThree(10) == 13)
+}
+\end{scalacode}
+
+\paragraph{Functions do not need to be named.}
+
+Unlike other values, functions seem to have the following special property:
+every function has a name, but the other kinds of values do not.
+For example, we can simply write \scalainline{1 :: 2 :: 3 :: Nil}
+and don't need to give this list a name. So far, all of the functions we've seen
+start with \scalainline{def functionName}.
+
+It turns out that this is just a convention. As with other values,
+functions don't need names. For example, here is a function that adds two
+numbers:
+
+\begin{scalacode}
+((x: Int, y: Int) => x + y)
+\end{scalacode}
+
+This function does not have a name, but it can be applied just like
+any other function:
+
+\begin{scalacode}
+((x: Int, y: Int) => x + y)(10, 20)
+\end{scalacode}
+
+The code above is not easy to read. It will be a lot clearer of we give the
+function a name. You already know how to name a function using \scalainline{def}. But, all
+other values are named using \scalainline{val}. In fact, we can use \scalainline{val} to name functions
+too, just like any other type of value:
+
+\begin{scalacode}
+val adder = ((x: Int, y: Int) => x + y)
+
+adder(10, 20)
+\end{scalacode}
+
+You should think of \scalainline{def} as a convenient shorthand for naming functions.
+That is, these two definitions are equivalent:
+
+\begin{scalacode}
+val adder = ((x: Int, y: Int) => x + y)
+
+def adder(x: Int, y: Int) = x + y
+\end{scalacode}
+
+In general, it is a good idea to name your functions. But, there are
+certain situations where a short, anonymous function can make your code
+easier to read and write.
+
+For example, we earlier defined the \scalainline{doubleAll} function, which doubles
+every number in a list of numbers. Here is simple, one-line definition
+using an anonymous function as an argument to \scalainline{map}:
+
+\begin{scalacode}
+def doubleAll(alist: List[Int]) = map((n: Int) => n * 2, alist)
+\end{scalacode}
+
+The anonymous function itself is extremely simple and the name of the enclosing
+function, \scalainline{doubleAll}, really makes it clear what it does.
+
+For another example, suppose we want to remove all the odd numbers
+in a list. We can do this using \scalainline{filter} and a short, anonymous function:
+
+\begin{scalacode}
+def removeOdds(alist: List[Int]) = filter((n: Int) => n % 2 == 0, alist)
+\end{scalacode}
+
+In these kinds of situations, anonymous functions can be very helpful.
+
+\paragraph{Functions can be stored in data structures.}
+
+The following datatype can stores two functions inside it:
+%
+\begin{scalacode}
+case class Foo(m1: Int => Int, m2: Int => Int)
+\end{scalacode}
+
+We can create values of type \scalainline{Foo} in the following way:
+%
+\begin{scalacode}
+val myFoo = Foo((x: Int) => x + 1, (y: Int) => y * 20)
+
+assert(myFoo.m1(10) == 11)
+assert(myFoo.m2(10) == 200)
+\end{scalacode}
+%
+Admittedly, this isn't very useful, but notice that the function applications
+look a lot like method calls.
+
+\subsection{Some Definitions}
+
+Here are some terminology that gets thrown around when comparing programming
+languages and programming techniques.
+
+\begin{itemize}
+
+  \item \emph{Higher-order functions} are functions that consume or return other
+  functions as values. You can tell if a function is higher-order by inspecting
+  its type. Does it have any nested uses of \scalainline{=>} in the type? If so, it is a higher-order
+  function.
+
+  \item \emph{First-class functions} is a property of a programming language. For
+  a programming language to have first-class functions, it must treat functions
+  as values, with all the rights and privileges that other values have. You must
+  be able to use functions as arguments, produce functions as results, and store
+  functions in data-structures.
+
+\end{itemize}
+
+\section{Scope and Substitution\classtime{20}}
+
+\paragraph{Global vs. Local Variables}
+
+Why does the following program raise an error?
+
+%
+\begin{scalacode}
+def f(x: Int) = {
+  val y = x + 10
+  y
+}
+f(11)
+y
+\end{scalacode}
+
+Although the program defines a variable called \scalainline{y}, the
+\emph{scope} of the variable is limited to the function \scalainline{f}.
+Therefore, we cannot refer to the variable outside the function, which
+is why we get an error.
+
+\paragraph{Substitution}
+
+What does the following program produce?
+%
+\begin{scalacode}
+val x = 20
+def f(x: Int): Int = {
+  x + 5
+}
+f(10) + x
+\end{scalacode}
+
+The result is \scalainline{35}. Within the body of \scalainline{f}, the
+the name \scalainline{x} refers to the argument to the function, which
+\emph{shadows} the global variable \scalainline{val x = 20}. Therefore,
+\scalainline{f(10) == 15}. However, outside the function \scalainline{x}
+refers to the global variable \scalainline{x == 20}, and
+\scalainline{15 + 20 == 35}.
+
+We can make this argument more precise by \emph{substituting} variables
+with their values:
+
+\begin{itemize}
+
+\item Given the orignal program above, we first substitute
+the global \scalainline{x} with its value \scalainline{20}, to get
+the following program:
+\begin{scalacode}
+def f(x: Int): Int = {
+  x + 5
+}
+f(10) + 20
+\end{scalacode}
+%
+Notice that we substituted the \scalainline{x} on the last line with \scalainline{20},
+but left the \scalainline{x} within \scalainline{f} unchanged, since it referred
+to the argument \scalainline{x}.
+
+\item Next, we can apply the function \scalainline{f} by substituting
+its argument \scalainline{x} with the value \scalainline{10}:
+%
+\begin{scalacode}
+(10 + 5) + 20
+\end{scalacode}
+
+\item Finally, we are left with a simple arithmetic expression that is
+trivial to evaluate.
+
+\end{itemize}
+
+Here is a more compact way of making the same argument:
+%
+\[
+\small
+\begin{array}{l|l|l}
+ & \textrm{Expression} & \textrm{Reasoning} \\
+\hline
+& \lstinline[language=scala]|val x = 20; def f(x: Int): Int = { x + 5 }; f(10) + x|
+& \textrm{Original expression} \\
+= & \lstinline[language=scala]|def f(x: Int): Int = { x + 5 }; f(10) + 20|
+& \textrm{Substitute \lstinline[language=scala]|x| with \lstinline[language=scala]|20|} \\
+= & \lstinline[language=scala]|(10 + 5) + 20|
+& \textrm{Inline \lstinline[language=scala]|f| and substitute \lstinline[language=scala]|x| with \lstinline[language=scala]|10|} \\
+= & \lstinline[language=scala]|15 + 20|
+& \textrm{Evaluate \lstinline[language=scala]|10 + 5|} \\
+= & \lstinline[language=scala]|35|
+& \textrm{Evaluate \lstinline[language=scala]|15 + 20|}
+\end{array}
+\]
+
+\paragraph{Nested Functions}
+Scope can appear tricker when working with higher-order functions. But, we can
+use the same substitution principle to reason about nested functions.
+
+For example, we wrote the \scalainline{makeAdder} higher-order function before
+and used it to create the \scalainline{add10} function:
+\begin{scalacode}
+def makeAdder(x: Int): Int => Int = {
+  def add(y): Int = { x + y }
+  add
+}
+
+val add10 = makeAdder(10)
+\end{scalacode}
+
+The following calculate starts with the definition above (written in a single
+line for brevity) and shows that it is equivalent to the more obvious
+definition of \scalainline{add10}:
+\[
+\small
+\begin{array}{l|l|l}
+ & \textrm{Expression} & \textrm{Reasoning} \\
+\hline
+& \multicolumn{2}{l}
+{\lstinline[language=scala]|def makeAdder(x: Int): Int => Int = { def add(y): Int = { x + y }; add }; val add10 = makeAdder(10)|}  \\
+= & \lstinline[language=scala]|val add10 = { def add(y): Int = { x + 10 }; add }|
+& \textrm{Inline \lstinline[language=scala]|makeAdder| and substitute \lstinline[language=scala]|y| with
+\lstinline[language=scala]|10|} \\
+= & \lstinline[language=scala]|val add10 = { val add = ((y: Int) => { x + 10 }); add }| & \textrm{Rewrite \lstinline[language=scala]|add| using \lstinline[language=scala]|val| notation} \\
+= & \lstinline[language=scala]|val add10 = ((y: Int) => { x + 10 })|
+& \textrm{Substitute \lstinline[language=scala]|add| with its definition} \\
+= & \lstinline[language=scala]|def add10(y: Int) = x + 10|
+& \textrm{Rewrite \lstinline[language=scala]|add| using \lstinline[language=scala]|def| notation}
+\end{array}
+\]
+
+In fact, every line in this calculation is a valid Scala program (which you
+should check!) and all the lines are truly equivalent to each other.
+
+It is always possible to perform these kinds of calculations to simplify
+expressions with higher-order functions. For large programs, a detailed
+calculation may be infeasibly wrong. But, if you understand how these
+calculuations work in detail on small programs, you'll be able to reason
+carefully about larger programs without needing to actually do the calculuates
+in detail.
+
+\section{Storing Functions in Data Structures\classtime{25}}
+
+Although we've seen that functions can be stored in data structures,
+we haven't seen any good examples that suggest why we may want to do so.
+For example, here is yet another type that stores functions in its
+fields:
+\begin{scalacode}
+case class Point(
+  getX: () => Double,
+  getY: () => Double,
+  magnitude: () => Double,
+  add: Point => Point)
+\end{scalacode}
+
+Above, \scalainline{getX}, \scalainline{getY}, and \scalainline{magnitude}
+are fields that store functions that consume zero arguments and produce
+\scalainline{Double}s.
+
+Consider the following higher-order function, which consumes two coordinates
+and produces a point:
+\begin{scalacode}
+def makePoint(x: Double, y: Double): Point = {
+  def getX(): Double = x
+  def getY(): Double = y
+  def magnitude(): Double = math.sqrt(x * x + y * y)
+  def add(other: Point): Point = makePoint(x + other.getX(), y + other.getY())
+  Point(getX, getY, magnitude, add)
+}
+\end{scalacode}
+
+We can now construct points using \scalainline{makePoint}
+and invoke the functions that it defines. For example:
+%
+\begin{scalacode}
+val pt1 = makePoint(3.0, 4.0)
+assert(pt1.magnitude() == 5.0)
+val pt2 = pt1.add(makePoint(10.0, 10.0))
+assert(pt2.getX() == 13.0)
+assert(pt1.getY() == 4.0)
+\end{scalacode}
+
+Note that this looks an awful lot like vanilla object-oriented programming.
+In fact, you could say that \scalainline{makePoint} is a \emph{constructor}
+that produces object that have the \emph{interface} \scalainline{Point}
+and that \scalainline{getX}, \scalainline{getY}, etc. are \emph{methods} that the
+interface defines.
+Furthermore, \scalainline{x} and \scalainline{y} are \emph{private fields},
+since they are not in scope outside the \scalainline{makePoint}
+function.\footnote{However, \scalainline{x} and \scalainline{y} are in scope
+for the methods, since they are local to \scalainline{makePoint}.}
+
+This example shows that you can encode object-oriented programs using
+higher-order functions. In fact, this example makes essential use of
+scope, functions stored in data structures, functions that return
+functions (stored in data structures), and all the other characteristics
+of first-class functions. With just a little more effort, other object-oriented
+ideas like inheritence can be encoded using higher-order functions too.
+Conversely, it turns out that higher-order functions can be encoded using
+objects, which we will see later in the course. The point of this exercise
+is that functional programming and object-oriented programming are two sides
+of the same coin.

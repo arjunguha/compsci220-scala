@@ -74,7 +74,8 @@
 \newcommand{\consolefile}[1]{\lstinputlisting[language=console]{#1}}
 \lstnewenvironment{scalacode}{\lstset{language=scala,basicstyle=\ttfamily\footnotesize}}{}
 \lstnewenvironment{javacode}{\lstset{language=java,basicstyle=\ttfamily\footnotesize}}{}
-\newcommand{\scalafile}[1]{\lstinputlisting[language=scala,basicstyle=\ttfamily\footnotesize]{#1}}
+\newcommand{\scalafile}[1]{%
+  \begin{samepage}\lstinputlisting[language=scala,basicstyle=\ttfamily\footnotesize]{#1}\end{samepage}}
 \newcommand{\scalainline}[1]{\lstinline[language=scala,basicstyle=\ttfamily]{#1}}
 
 % \newmintinline{scala}{}
