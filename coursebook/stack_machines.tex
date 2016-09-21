@@ -1,5 +1,73 @@
 \newlecture
 
+\begin{instructor}
+
+\section*{Lecture Outline}
+
+\begin{enumerate}
+
+  \item Introduction: Over the next two lectures, we'll look under the
+hood and discuss some of the ideas used to build the Scala compiler
+and the Java virtual machine.  Most of the time, you will not have to
+think about these kinds of low-level details.  However, to write
+performance-critical code or to debug low-level errors, you will need
+to know this kind of work.
+
+  \item Ambiguity in parsing arithmetic expressions
+
+  \item In Scala \lstinline|1 + 2| and \lstinline|1.+(2)| mean the same thing
+
+  \item Concrete vs. abstract syntax: draw the abstract syntax trees for arithmetic expressions
+
+  \item Define the \lstinline|Expr| datatype. (Include subtraction!)
+
+  \item A \emph{parser} takes a concrete syntax string and turns it into an abstract syntax tree
+
+  \item Scala AST example:
+
+\begin{lstlisting}
+import scala.tools.reflect._
+import runtime.universe._
+val tb = runtimeMirror(getClass.getClassLoader).mkToolBox()
+val tree = tb.parse("""(x: Int, y: Int, z: Int) => x + y * z""")
+tb.eval(tree)
+res0.asInstanceOf[(Int, Int, Int) => Int](1, 2, 3)
+\end{lstlisting}
+
+  \item Write recursive evaluator \lstinline|def eval(e: Expr): Int|, but this is not how Scala is evaluated
+
+  \item Show Java compilation process:
+   and show that \lstinline|javac| produces the .class file
+  and that \lstinline|java|. TalEclipse, etc. do this under the hood.
+
+  \item 
+
+  \begin{enumerate}
+
+    \item Write a class with static main  and factorial method
+
+    \item Show that \texttt{javac} produces the class file
+
+    \item Show that \texttt{java} runs the class file and it works even if the source code is deleted
+
+    \item An IDE uses this stuff under the hood
+
+    \item Disassemble the classfile using \texttt{javap -c Simple.class} and show the instruction stack
+
+    \item Show the class files that Scala generates
+
+  \end{enumerate}
+
+  \item Define instructions and write
+  \lstinline|eval(code: List[Instruction], stack: List[Int]): List[Int]|
+  and \lstinline|compile(e: Expr): List[Instruction]|
+  
+
+
+\end{enumerate}
+
+\end{instructor}
+
 Over the next two lectures, we'll look under the hood and
 discuss some of the ideas used to build the Scala compiler and the Java virtual machine.
 Most of the time, you will not have to think about these kinds of low-level details.
@@ -86,7 +154,7 @@ concrete representations (written in normal, mathematical notation):
 \begin{tabular}{l|l}
 Concrete Syntax & Abstract Syntax \\
 \hline
-\texttt{ + 2 + 3} & \lstinline[language=scala]|Add (Add (Num(1), Num(2)), Num(3))| \\
+\texttt{1 + 2 + 3} & \lstinline[language=scala]|Add (Add (Num(1), Num(2)), Num(3))| \\
 \texttt{1 + 2 * 3} & \lstinline[language=scala]|Add (Num(1), Mul (Num(2), Num(3)))| \\
 \texttt{(1 + 2) / 3} & \lstinline[language=scala]|Div (Add (Num(1), Num(2)), Num(3))|
 \end{tabular}
@@ -226,7 +294,7 @@ case class IAdd() extends Instruction
 case class IMul() extends Instruction
 case class ISub() extends Instruction
 
-def eval(e: Expr, stack: List[Int]): List[Int] = (e, stack) match {
+def eval(code: List[Instruction], stack: List[Int]): List[Int] = (e, stack) match {
   case (INum(n), stack) => n :: stack
   case (IAdd(), n1 :: n2 :: stack) => n1 + n2 :: stack
   case (ISub(), n1 :: n2 :: stack) => n1 - n2 :: stack
