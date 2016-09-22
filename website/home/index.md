@@ -35,39 +35,39 @@ You must read the entire [Course Policy] document.
 
 <div id="staff-pics">
   <div class="row">
-  	<div class="col-xs-12 col-sm-6 col-md-3">
-      <img src="../img/arjun.jpeg" alt="Arjun" width="250" height="250" />
-  	  <br/>
+  	<div class="col-xs-12 col-sm-6 col-md-3 mugshot">
+      <img src="../img/arjun.jpeg" class="mugshot-inner" alt="Arjun" width="250" height="250" />
+      <h4 style="font-weight: bold;">Arjun Guha</h4>
   	</div>
-    <div class="col-xs-12 col-sm-6 col-md-3">
-      <img src="../img/jane.jpg" alt="Jane" width="250" height="250" />
-      <br/>
+    <div class="col-xs-12 col-sm-6 col-md-3 mugshot">
+      <img src="../img/jane.jpg" class="mugshot-inner" alt="Jane" width="250" height="250" />
+      <h4 style="font-weight: bold;">Jane Tangen</h4>
     </div>
-    <div class="col-xs-12 col-sm-6 col-md-3">
-      <img src="../img/jesse.jpg" alt="Jesse" width="250" height="250" />
-      <br/>
+    <div class="col-xs-12 col-sm-6 col-md-3 mugshot">
+      <img src="../img/jesse.jpg" class="mugshot-inner" alt="Jesse" width="250" height="250" />
+      <h4 style="font-weight: bold;">Jesse Bartola</h4>
     </div>
-    <div class="col-xs-12 col-sm-6 col-md-3">
-      <img src="../img/aaron.jpeg" alt="Aaron" width="250" height="250" />
-      <br/>
+    <div class="col-xs-12 col-sm-6 col-md-3 mugshot">
+      <img src="../img/aaron.jpeg" class="mugshot-inner" alt="Aaron" width="250" height="250" />
+      <h4 style="font-weight: bold;">Aaron Weiss</h4>
     </div>
   </div>
   <div class="row">
-  	<div class="col-xs-12 col-sm-6 col-md-3">
-      <img src="../img/john.png" alt="John" width="250" height="250" />
-      <br/>
+  	<div class="col-xs-12 col-sm-6 col-md-3 mugshot">
+      <img src="../img/john.png" class="mugshot-inner" alt="John" width="250" height="250" />
+      <h4 style="font-weight: bold;">John Geenty</h4>
   	</div>
-  	<div class="col-xs-12 col-sm-6 col-md-3">
-      <img src="../img/harsh.jpeg" alt="Harsh" width="250" height="250" />
-      <br/>
+  	<div class="col-xs-12 col-sm-6 col-md-3 mugshot">
+      <img src="../img/harsh.jpeg" class="mugshot-inner" alt="Harsh" width="250" height="250" />
+      <h4 style="font-weight: bold;">Harsh Poddar</h4>
   	</div>
-    <div class="col-xs-12 col-sm-6 col-md-3">
-      <img src="../img/kyle.jpeg" alt="Kyle" width="250" height="250" />
-      <br/>
+    <div class="col-xs-12 col-sm-6 col-md-3 mugshot">
+      <img src="../img/kyle.jpeg" class="mugshot-inner" alt="Kyle" width="250" height="250" />
+      <h4 style="font-weight: bold;">Kyle Vedder</h4>
     </div>
-    <div class="col-xs-12 col-sm-6 col-md-3">
-      <img src="../img/itamar.jpeg" alt="Itamar" width="250" height="250" />
-      <br/>
+    <div class="col-xs-12 col-sm-6 col-md-3 mugshot">
+      <img src="../img/itamar.jpeg" class="mugshot-inner" alt="Itamar" width="250" height="250" />
+      <h4 style="font-weight: bold;">Itamar Levy-Or</h4>
     </div>
   </div>
 </div>

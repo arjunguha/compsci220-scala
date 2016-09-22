@@ -45,3 +45,12 @@ body {
 .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover {
  background-color: #fbd668
 }
+
+.mugshot {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.mugshot-inner {
+  margin-bottom: 15px;
+}
