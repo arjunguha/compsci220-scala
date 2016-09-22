@@ -35,31 +35,39 @@ You must read the entire [Course Policy] document.
 
 <div id="staff-pics">
   <div class="row">
-  	<div class="col-xs-12 col-md-3">
+  	<div class="col-xs-12 col-sm-6 col-md-3">
       <img src="../img/arjun.jpeg" alt="Arjun" width="250" height="250" />
+  	  <br/>
   	</div>
-    <div class="col-xs-12 col-md-3">
-      <img src="../img/jane.jpeg" alt="Jane" width="405" height="250" />
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <img src="../img/jane.jpg" alt="Jane" width="405" height="250" />
+      <br/>
     </div>
-    <div class="col-xs-12 col-md-3">
-      <img src="../img/jesse.jpeg" alt="Jesse" width="269" height="237" />
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <img src="../img/jesse.jpg" alt="Jesse" width="250" height="250" />
+      <br/>
     </div>
-    <div class="col-xs-12 col-md-3">
+    <div class="col-xs-12 col-sm-6 col-md-3">
       <img src="../img/aaron.jpeg" alt="Aaron" width="250" height="250" />
+      <br/>
     </div>
   </div>
   <div class="row">
-  	<div class="col-xs-12 col-md-3">
+  	<div class="col-xs-12 col-sm-6 col-md-3">
       <img src="../img/john.png" alt="John" width="250" height="250" />
+      <br/>
   	</div>
-  	<div class="col-xs-12 col-md-3">
+  	<div class="col-xs-12 col-sm-6 col-md-3">
       <img src="../img/harsh.jpeg" alt="Harsh" width="250" height="250" />
+      <br/>
   	</div>
-    <div class="col-xs-12 col-md-3">
+    <div class="col-xs-12 col-sm-6 col-md-3">
       <img src="../img/kyle.jpeg" alt="Kyle" width="250" height="250" />
+      <br/>
     </div>
-    <div class="col-xs-12 col-md-3">
+    <div class="col-xs-12 col-sm-6 col-md-3">
       <img src="../img/itamar.jpeg" alt="Itamar" width="250" height="250" />
+      <br/>
     </div>
   </div>
 </div>
