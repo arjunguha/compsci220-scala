@@ -1,5 +1,72 @@
 \newlecture
 
+\begin{instructor}
+
+\section*{Lecture Outline}
+
+\begin{enumerate}
+
+  
+
+   \item Create a project called \lstinline|fshapes| and give it a
+     name, organization, and version number \lstinline|build.sbt|.
+     
+   \item Define the \lstinline{fshapes} library, with
+     \lstinline|Circle(radius)| and \lstinline|Square(side)| as case
+     classes and a function \lstinline|inShape(s: Shape, x: Double, y: Double)| that
+     uses pattern matching.
+
+   \item Show \lstinline|publishLocal|.
+
+   \item Create a project called \lstinline|jshapes| and fill \lstinline|build.sbt|
+    as before.
+
+    \item Show a Point class (not a case class). Show how to make fields
+     public, show how to define methods and derived fields.
+
+   \item Show that the entire body of the class can be thought of as a
+     constructor, by putting a println in the body.
+
+   \item Delete \lstinline|Point| and create two classes (not case-classes) that
+     implement the \lstinline|Shape| trait.
+
+   \item Translate the \lstinline|inShape| function into a method in \lstinline|Shape|
+     that uses \lstinline|.isInstanceOf| and \lstinline|.asInstanceOf| instead of
+     pattern matching. Say this is terrible.
+
+   \item Rewrite \lstinline|inShape| using dynamic dispatch: note that
+     the method bodies are exactly the same as the cases in the
+     functional version! \textbf{Make the fields private.}
+
+   \item Recipe: a function that pattern matches, turns into a method on the interface
+     and each case becomes an implementation in the corresponding class.
+
+   \item Exhaustivity check: Scala gives you an exhaustivity check in
+     the functional code, but we don't have the exhaustivity check.
+
+   \item Using libraries: suppose we found \lstinline|fshapes| and \lstinline|jshapes|
+     on the Web. Which should we use? Is it just a matter of style, or are there objective
+     criteria for preferring one over the other?
+
+   \item A library is rarely ``complete''. We typically need to extend it. Suppose we
+     don't want to edit the source code (or cannot do so).
+
+   \item Add a new \emph{feature} to both libraries: the ability to
+     double a shape in size. It is easy in the functional case. In the
+     object-oriented case, we need to write a \lstinline|growShape|
+     function using type-tests. \textbf{But, this fails because the
+       fields are private.} We need to write a wrapper instead. Lots of extra code!
+
+   \item Add anew \emph{data type} to both libraries: easy in the object-oriented
+     case. It can't be done in the functional case without a wrapper. Lots of extra code!
+
+   \item Which library should you pick? The one that supports the extensions that you
+     anticipate needing to make. What if you want to do both? You're screwed!
+
+\end{enumerate}
+
+\end{instructor}
+
 \section{Reading}
 
 Programming in Scala, Chapter 6.1---6.11.\footnote{\url{http://www.artima.com/pins1ed/}}
