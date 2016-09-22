@@ -40,7 +40,7 @@ You must read the entire [Course Policy] document.
   	  <br/>
   	</div>
     <div class="col-xs-12 col-sm-6 col-md-3">
-      <img src="../img/jane.jpg" alt="Jane" width="405" height="250" />
+      <img src="../img/jane.jpg" alt="Jane" width="250" height="250" />
       <br/>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-3">
