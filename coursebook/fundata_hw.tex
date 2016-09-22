@@ -35,7 +35,7 @@ You should implement your solution in a single file, within an object called
 
 \section{Persistent Queues}
 
-Recall from earlier classes, that a \emph{queue} is a data structure that
+Recall from earlier courses that a \emph{queue} is a data structure that
 supports three operations:
 
 \begin{enumerate}
@@ -49,10 +49,10 @@ supports three operations:
 
 \end{enumerate}
 
-In the following exercises, you will build a \emph{persistent queue}. A
-persistent queue has the operations defined. But, instead of having enqueue and
-dequeue update the queue, they leave the original queue unchanged and return a
-new queue.
+In the following exercises, you will build a \emph{persistent
+queue}. A persistent queue has the operations defined above. But,
+instead of having enqueue and dequeue update the queue, they leave the
+original queue unchanged and return a new queue.
 
 It is easy to implement a persistent queue using a list:
 
@@ -117,12 +117,11 @@ elements are arranged into a tree, as follows:
 sealed trait JoinList[A] { val size: Int }
 case class Empty[A]() extends JoinList[A] { val size = 0 }
 case class Singleton[A](elt: A) extends JoinList[A] { val size = 1 }
-case class Join[A](lst1: JoinList[A], lst2: JoinList[A], size: Int) extends JoinList[A]
+case class Join[A](alist: JoinList[A], blist: JoinList[A], size: Int) extends JoinList[A]
 \end{scalacode}
 
-This tree-shape makes some operations,
-like list-concatenation very efficient.
-The type has three constructors:
+This tree shape makes some operations, like list-concatenation, very
+efficient.  The type has three constructors:
 
 \begin{enumerate}
 
@@ -130,9 +129,9 @@ The type has three constructors:
 
 \item \scalainline{Singleton(x)} represents a list with one element $x$.
 
-\item \scalainline{Join(lst1, lst2, length)} represents \scalainline{lst1} appended to
-       \scalainline{lst2}. The \scalainline{length} field is the total number of
-       elements in the list.
+\item \scalainline{Join(alist, blist, length)} represents \scalainline{alist} appended to
+       \scalainline{blist}. The \scalainline{length} field is the total
+       number of elements in the list.
 
 \end{enumerate}
 
@@ -146,11 +145,11 @@ join lists and normal lists.
 %
 \begin{itemize}
 
-\item \scalainline{toList[A](lst: JoinList[A]): List[A]} converts a join list into a Scala
-  list.  This
-  operation can be very expensive, but is useful for testing.
+\item \scalainline{toList[A](alist: JoinList[A]): List[A]} converts a join list into a Scala
+  list.  This operation can be very expensive, but is useful for
+  testing.
 
-\item \scalainline{fromList[A](lst: List[A]): JoinList[A]} converts a Scala list into a join
+\item \scalainline{fromList[A](alist: List[A]): JoinList[A]} converts a Scala list into a join
   list by repeatedly splitting a list into two equal halves.
 
 \end{itemize}
@@ -167,27 +166,28 @@ solution.
 
 \paragraph{Programming Task}
 
-Your task is to write some typically list-processing functions for join lists.
+Your task is to write some typical list-processing functions for join lists.
 
 \begin{enumerate}
 
-\item \scalainline{max(lst, compare)} produces the maximum value in
-  \scalainline{lst}. The second argument is a comparator. If
+\item \scalainline{max(alist, compare)} produces the maximum value in
+  \scalainline{alist}. The second argument is a comparator. If
   \scalainline{compare(x, y) == true}, then \scalainline{x} is greater than
   \scalainline{y}. If the list is empty, the function produces
    \scalainline{None}.
 
-\item \scalainline{map(f, lst)} produces a new join list, which has exactly the same
- shape as \scalainline{lst}, but with \scalainline{f} applied to every element.
+\item \scalainline{map(f, alist)} produces a new join list, which has exactly the same
+ shape as \scalainline{alist}, but with \scalainline{f} applied to every element.
 
-\item \scalainline{filter(pred, lst)} produces a new join list that has only
-  includes elements of \scalainline{lst} that satisfy the given predicate.
+\item \scalainline{filter(pred, alist)} produces a new join list that has only
+  includes elements of \scalainline{alist} that satisfy the given predicate.
   The order of elements should not change.
 
-\item \scalainline{first(lst)} and \scalainline{rest(lst)} produce the head and tail, respectively,
-   of \scalainline{lst} if it is non-empty.
+\item \scalainline{first(alist)} and \scalainline{rest(alist)} produce the head and tail,
+  respectively, of \scalainline{alist} if it is non-empty.
 
-\item \scalainline{nth(lst, i)} produces the $n$th element of the list (the first element has index 0).
+\item \scalainline{nth(alist, i)} produces the $n$th element of the list (the first
+  element has index 0).
 
 \end{enumerate}
 
