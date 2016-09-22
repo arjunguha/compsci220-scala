@@ -1,2 +1,3 @@
 markdown:    kramdown
+keep_files: [.git, hw/*.pdf, reading/*.pdf,api]
 
