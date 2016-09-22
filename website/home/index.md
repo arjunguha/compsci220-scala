@@ -31,6 +31,36 @@ You must read the entire [Course Policy] document.
 | Friday, 3PM--4PM           | CS Building, Room 230                | Arjun Guha                                 |
 {: .table .table-striped :}
 
+# Meet the Staff
+
+<div id="staff-pics">
+  <div class="row">
+  	<div class="col-xs-12 col-md-3">
+      <img src="../img/arjun.jpeg" alt="Arjun" />
+  	</div>
+    <div class="col-xs-12 col-md-3">
+      <img src="../img/jane.jpeg" alt="Jane" />
+    </div>
+    <div class="col-xs-12 col-md-3">
+      <img src="../img/jesse.jpeg" alt="Jesse" />
+    </div>
+    <div class="col-xs-12 col-md-3">
+      <img src="../img/aaron.jpeg" alt="Aaron" />
+    </div>
+  </div>
+  <div class="row">
+  	<div class="col-xs-12 col-md-4">
+      <img src="../img/john.png" alt="John" />
+  	</div>
+    <div class="col-xs-12 col-md-4">
+      <img src="../img/kyle.jpeg" alt="Kyle" />
+    </div>
+    <div class="col-xs-12 col-md-4">
+      <img src="../img/itamar.jpeg" alt="Itamar" />
+    </div>
+  </div>
+</div>
+
 # Textbook
 
 There is no required textbook. Instead, you must read the lecture notes posted on the
