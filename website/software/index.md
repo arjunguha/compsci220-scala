@@ -22,6 +22,18 @@ discussed below.
 4. Verify that everything installed by typing `sbt` to start SBT from the
    Cygwin terminal.
 
+### Known Issues:
+
+* `sbt command not found`
+
+    _Known Fix:_ Restart the computer
+
+* Backspace not working
+
+    _Known Fix:_ Left-Click on the top left corner of the Cygwin window (the Cygwin icon), then click on Options > Keys. Check the "Back arrow sends ^H"
+
+    <img src="cygwin_backspace_fix.png">
+
 ## Mac OS X
 
 1. Install [Homebrew](http://brew.sh).
