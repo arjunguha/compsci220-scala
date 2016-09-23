@@ -215,7 +215,7 @@ val allBirths = CSV.fromFile("ssa-births.csv")
   in 2009:
 
   \begin{scalacode}
-  count(onlyName(yearIs(2010, allBirths), "Emma")) > count(onlyName(yearIs(2010, allBirths), "Emma"))
+  count(onlyName(yearIs(2010, allBirths), "Emma")) > count(onlyName(yearIs(2009, allBirths), "Emma"))
   \end{scalacode}
 
   \item The following query reports the most popular name of 2013:
