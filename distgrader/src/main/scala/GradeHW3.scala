@@ -10,7 +10,8 @@ class HW3Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
         val gradingBirths = edu.umass.cs.CSV.fromFile("ssa-births.csv")
       """
 
-    def zipBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {
+  def zipBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {
+      zip.add("""addSbtPlugin("edu.umass.cs" % "compsci220" % "1.0.0")""".getBytes, "project/plugins.sbt")  
       zip.add("""
            libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.0"
            """.getBytes,
