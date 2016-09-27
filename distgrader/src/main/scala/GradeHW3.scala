@@ -12,26 +12,16 @@ class HW3Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
 
   def zipBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {
       zip.add("""addSbtPlugin("edu.umass.cs" % "compsci220" % "1.0.0")""".getBytes, "project/plugins.sbt")  
-      zip.add("""
-           libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.0"
-           """.getBytes,
-        "build.sbt")
       zip.add(Paths.get("cdc-life-expectancy.csv"), "cdc-life-expectancy.csv")
       zip.add(Paths.get("ssa-births.csv"), "ssa-births.csv")
       zip.add("""
            package edu.umass.cs {
              object CSV {
                import java.nio.file._
-               import com.github.tototoshi.csv._
-
+               import scala.collection.JavaConversions._
+               
                def fromFileReal(path: Path): List[List[String]] = {
-                 val reader = CSVReader.open(path.toFile)
-                 try {
-                   reader.all()
-                 }
-                 finally {
-                   reader.close()
-                 }
+                 Files.readAllLines(path).map(row => row.split(",").toList).toList
                }
 
                def fromFile(path: String): List[List[String]] = {
