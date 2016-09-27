@@ -1,9 +1,5 @@
 #!/bin/bash
-if [[ `uname` -eq "Darwin" ]]; then
-  LOGFILE=~/Library/Logs/grading.log
-else
-  LOGFILE=grading.log
-fi
+LOGFILE=grading.log
 
 echo "Logging to $LOGFILE"
 
