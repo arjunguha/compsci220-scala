@@ -110,7 +110,6 @@ object Main extends App {
             }
           }
           SBTTesting.distributedTesting(framework)
-
         }
         case Worker => {
           import akka.actor.{Props, ActorSystem}

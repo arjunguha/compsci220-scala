@@ -3,6 +3,7 @@ package grading
 class HW2Grading(val assignmentRoot: String, val selfIP: String) extends TestFramework {
 
   def zipBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {
+    zip.add("""addSbtPlugin("edu.umass.cs" % "compsci220" % "1.0.0")""".getBytes, "project/plugins.sbt")
     zip.add(s"""
       object GradingMain extends App {
         case class A(x: Int)
@@ -10,6 +11,7 @@ class HW2Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
         case class C(z: Int)
 
         def combine(x: A, y: B): C = C(x.x + y.y)
+        def aLT(x: A, y: A): Boolean = x.x < y.x
 
         import HOF._
         $body
@@ -108,5 +110,64 @@ class HW2Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
     partitionOK.thenRun(
       "Does partition work on non-empty lists?",
       """assert(partition((x: Int) => x % 2 == 0, List(0, 1, 2, 3)) == (List(0, 2), List(1, 3)))""")
+
+    val mergeOK = compiles.thenCompile(
+      "Does merge have the right type?",
+      """def foo[A](lt: (A, A) => Boolean, alist1: List[A], alist2: List[A]): List[A] = merge(lt, alist1, alist2)""")
+
+    mergeOK.thenRun(
+      "Does merge work when lhs is Nil?",
+      """val actual = merge(aLT, Nil, List(A(1), A(2), A(3)))
+         val expected = List(A(1), A(2), A(3))
+         assert(actual == expected || actual == expected.reverse)""")
+    
+    mergeOK.thenRun(
+      "Does merge work when rhs is Nil?",
+      """val actual = merge(aLT, List(A(1), A(2), A(3)), Nil)
+         val expected = List(A(1), A(2), A(3))
+         assert(actual == expected || actual == expected.reverse)""")
+    
+    mergeOK.thenRun(
+      "Does merge interleave non-empty lists correctly?",
+      """
+         val expected = List(A(1), A(2), A(3), A(4), A(5), A(6))
+         val r = try {
+           val actual = merge(aLT, List(A(1), A(3), A(5)), List(A(2), A(4), A(6)))
+           actual == expected || actual == expected.reverse
+         }
+         catch {
+           case exn: Throwable => false
+         }
+         if (r == false) {
+           val actual = merge(aLT, List(A(5), A(3), A(1)), List(A(6), A(4), A(2)))
+           assert(actual == expected || actual == expected.reverse)
+         }""")
+    
+    val sortOK = compiles.thenCompile(
+      "Does sort have the right type?",
+      """def foo[A](lt: (A, A) => Boolean, alist: List[A]): List[A] = sort(lt, alist)""")
+    
+    sortOK.thenRun(
+      "Does sort work on Nil?",
+      """assert(sort(aLT, Nil) == Nil)""")
+    
+    sortOK.thenRun(
+      "Does sort work on an already sorted list?",
+      """val actual = sort(aLT, List(A(1), A(2), A(3), A(4), A(5)))
+         val expected = List(A(1), A(2), A(3), A(4), A(5))
+         assert(actual == expected || actual == expected.reverse)""")
+    
+    sortOK.thenRun(
+      "Does sort work on a reverse-sorted list?",
+      """val actual = sort(aLT, List(A(5), A(4), A(3), A(2), A(1)))
+         val expected = List(A(5), A(4), A(3), A(2), A(1))
+         assert(actual == expected || actual == expected.reverse)""")
+    
+    sortOK.thenRun(
+      "Does sort work on an unsorted list?",
+      """val actual = sort(aLT, List(A(1), A(3), A(2), A(5), A(4)))
+         val expected = List(A(5), A(4), A(3), A(2), A(1))
+         assert(actual == expected || actual == expected.reverse)""")
+    
   }
 }
