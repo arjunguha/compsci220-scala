@@ -32,6 +32,7 @@ class HW4Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
     """
 
   def zipBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {
+    zip.add("""addSbtPlugin("edu.umass.cs" % "compsci220" % "1.0.0")""".getBytes, "project/plugins.sbt")  
     zip.add(
       s"object GradingMain extends App { $prefix; $body }".getBytes,
       "src/main/scala/GradingMain.scala")
@@ -46,7 +47,6 @@ class HW4Grading(val assignmentRoot: String, val selfIP: String) extends TestFra
 
     val dequeue = compiles.thenCompile("Does dequeue have the right type?",
       """def foo[A](q: Queue[A]): Option[(A, Queue[A])] = dequeue(q)""", score = 0)
-
 
     enqueue.thenRun("Does enqueue add to the back?",
       """assert(enqueue(1, enqueue(2, enqueue(3, emptyQueue))) == Queue(Nil, List(1, 2, 3)))""")
