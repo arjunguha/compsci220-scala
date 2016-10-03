@@ -1,0 +1,623 @@
+\newlecture
+
+\begin{instructor}
+
+  \section*{Lecture Outline}
+
+  \begin{itemize}
+
+  \item Show a \lstinline|sort| function that takes a \lstinline|toInt| projection.
+
+  \item Show how to project a \lstinline|Person(name, age)| case class to age to sort.
+
+  \item Add a \lstinline|toInt| method to \lstinline|Person| and try to call it from sort: it fails.
+
+  \item Add an \lstinline|IntLike| trait and modify \lstinline|sort| to use it. Unfortunately, return
+    type is not useful.
+
+  \item Use bounded quantification: \lstinline|def sort[A <: IntLike](alist: List[A]): List[A]|.
+
+  \item Scala traits can take type parameters:
+
+    \begin{scalacode}
+trait T[X,Y,Z] {
+  def f(x: X): Y
+  def g(z: Z): Z
+}
+
+class C1 extends T[???, ???, ???] {
+  def f(x: Int): String = x.toString
+  def g(z: Boolean): Boolean = !z
+}
+
+class C2 extends T[???, ???, ???] {
+  def f(x: Int): String = x.toString
+  def g(z: Boolean): Int = 42
+}
+
+class C3(head: Int, tail: C3) extends T[???, ???, ???] {
+  def f(x: Int): C3 = new C3(x, this)
+  def g(z: C3): C3 = z
+}
+
+class C4[A](head: A, tail: C4[A]) extends T[???, ???, ???] {
+  def f(x: A): C4[A] = new C4[A](x, this)
+  def g(z: C4[A]): C4[A] = z
+}
+\end{scalacode}
+
+
+\item Recursive bounded quantification: let's add a \lstinline|lessThan| method to \lstinline|Person|
+  and a \lstinline|Time|.
+
+\item Abstract their differences into a \lstinline|Comparable| interface.
+
+\item Show bounded quantification in Java and Scala standard libraries.
+
+\end{itemize}
+  
+\end{instructor}
+
+\section{Bounded Quantification}
+
+\begin{figure}
+\begin{scalacode}
+def insert[A](toInt: A => Int, x: A, alist: List[A]): List[A] = alist match {
+  case hd :: tl => if (toInt(x) <= toInt(hd)) { x :: hd :: tl } else { hd :: insert(toInt, x tl) }
+  case Nil => List(x)
+}
+
+def sort[A](toInt: A => Int, alist: List[A]): List[A] = alist match {
+  case Nil => Nil
+  case hd :: tl => insert(toInt, hd, sort(toInt, tl))
+}
+\end{scalacode}
+\caption{Sorting by mapping values to integers.}
+\label{sortToIntHOF}
+\end{figure}
+
+We've used higher-order functions to write generic sorting functions.
+\Cref{sortToIntHOF} is small variation of the kind of function we've
+seen before: instead of taking a comparator function as an argument, it takes a
+\scalainline{toInt} function that maps
+\scalainline{A}-values to integers, then sorts by the natural ordering
+on integers.
+
+For example, given this type:
+\begin{scalacode}
+case class Person(name: String, age: Int)
+\end{scalacode}
+We can sort people in ascending order by age:
+\begin{scalacode}
+val personList: List[Person] = ...
+sort((p: Person) => p.age, personList)
+\end{scalacode}
+
+However, it can be annoying to pass the \scalainline{toInt} function around,
+especially since there is a natural ordering for \scalainline{Person}s.
+We can address this issue by adding a \scalainline{toInt} method
+to \scalainline{Person} and modifying \scalainline{insert} to invoke this
+method instead:
+\begin{scalacode}
+def insert[A](x: A, alist: List[A]): List[A] = alist match {
+  case hd :: tl => if (x.toInt <= hd.toInt) ...
+  case Nil => ...
+}
+\end{scalacode}
+Unfortunately, this code does not type-check: \scalainline{x} and \scalainline{hd} both have type \scalainline{A},
+would could be \emph{any} type. There is no guarantee that \scalainline{A}-values have a \scalainline{toInt}
+method.
+
+\begin{figure}
+\begin{scalacode}
+trait IntLike {
+  def toInt(): Int
+}
+
+case class Person(name: String, age: Int) extends IntLike {
+  def toInt(): Int = age
+}
+
+def insert(x: IntLike, alist: List[IntLike]): List[IntLike] = alist match {
+  case Nil => List(x)
+  case hd :: tl => if (x.toInt <= hd.toInt) { x :: hd :: tl } else { hd :: insert(x, tl) }
+}
+
+def sort(alist: List[IntLike]): List[IntLike] = alist match {
+  case Nil => Nil
+  case hd :: tl => insert(hd, sort(tl))
+}
+\end{scalacode}
+\caption{This code type-checks, but the types lose too much information.}
+\label{sorting_fail}
+\end{figure}
+
+We can address this problem by introducing a trait for objects that have a
+\scalainline{ToInt} method and modify \scalainline{Person} to extend this trait.
+We could then rewrite the sorting function, as shown in \cref{sorting_fail}.
+Unfortunately, the type of \scalainline{sort} is not helpful. When we apply
+it to a \scalainline{List[Person]}, we get back a list \scalainline{List[IntLike]},
+and loose track of the fact that we were working with \scalainline{Person}s:
+\begin{scalacode}
+val alist = List(Person("Alice", 12), Person("Bob", 7), Person("Carol", 3))
+val sortedList = sort(alist)
+sortedList.head.age // type error, since head has type IntLike
+\end{scalacode}
+
+We need to know that the type of the argument and the type of the result
+of \scalainline{sort} are the same, which is what generics did for us:
+%
+\begin{scalacode}
+def sort[A](alist: List[A]): List[A]
+\end{scalacode}
+However, the problem with this generic type was that \scalainline{A} could
+be any type, and not necessary a type with a \scalainline{toInt} method,
+which is what this type ensured:
+\begin{scalacode}
+def sort(alist: List[IntLike]): List[IntLike]
+\end{scalacode}
+We need to
+ensure that \scalainline{alist} and the result have the same type \emph{and}
+that they implement \scalainline{IntLike}. We can do this by using
+\emph{bounded quantification}:
+\begin{scalacode}
+def sort[A <: IntLike](alist: List[A]): List[A]
+\end{scalacode}
+You should read this as ``sort consumes and produces lists of $A$, where $A$
+is a subtype of IntLike''. \Cref{sort_bq} shows a complete version of this code.
+Note that none of this is Scala-specific. \Cref{sorting_java_omg} converts
+this code into Java.
+
+Finally, note that when we write:
+\begin{scalacode}
+def sort[A](alist: List[A]): List[A]
+\end{scalacode}
+What we're really saying is that \scalainline{A} can be any type, or:
+%
+\begin{scalacode}
+def sort[A <: Any](alist: List[A]): List[A]
+\end{scalacode}
+%
+The bound \scalainline{Any} is implicit. Using bounded quantification, we're restricting \scalainline{A} to be any
+type that implements \scalainline{IntLike}.
+
+\begin{figure}
+\begin{scalacode}
+def insert[A <: IntLike](x: A, alist: List[A]): List[A] = alist match {
+  case Nil => List(x)
+  case hd :: tl => if (x.toInt <= hd.toInt) { x :: hd :: tl } else { hd :: insert(x, tl) }
+}
+
+def sort[A <: IntLike](alist: List[A]): List[A] = alist match {
+  case Nil => Nil
+  case hd :: tl => insert(hd, sort(tl))
+}
+\end{scalacode}
+\caption{A well-typed sort using bounded quantification.}
+\label{sort_bq}
+\end{figure}
+
+\begin{figure}
+\begin{javacode}
+interface IntLike {
+  int toInt();
+}
+
+class Person implements IntLike {
+  String name;
+  int age;
+  Person(String name, int age) { this.name = name; this.age = age; }
+  public int toInt() { return age; }
+}
+
+interface List<T>  { }
+class Empty<T> implements List<T> { }
+class Cons<T> implements List<T> {
+  public final T head;
+  public final List<T> tail;
+  public Cons(T head, List<T> tail) {
+    this.head = head;
+    this.tail = tail;
+  }
+}
+
+class Sorting {
+
+  static <T extends IntLike> List<T> insert(T x, List<T> alist) {
+    if (alist instanceof Empty) {
+      return new Cons<T>(x, new Empty<T>());
+    }
+    else {
+      T hd = ((Cons<T>)alist).head;
+      List<T> tl = ((Cons<T>)alist).tail;
+      if (x.toInt() < hd.toInt()) {
+        return new Cons<T>(x, new Cons<T>(hd, tl));
+      }
+      else {
+        return new Cons<T>(hd, insert(x, tl));
+      }
+    }
+  }
+
+  static <T extends IntLike> List<T> sort(List<T> alist) {
+    if (alist instanceof Empty) {
+      return alist;
+    }
+    else {
+      T hd = ((Cons<T>)alist).head;
+      List<T> tl = ((Cons<T>)alist).tail;
+      return insert(hd, sort(tl));
+    }
+  }
+
+}
+\end{javacode}
+\caption{\Cref{sort_bq} converted into Java (with lists and person too).}
+\label{sorting_java_omg}
+\end{figure}
+
+\section{Type Parameters to Traits}
+
+Traits in Scala (and interfaces in Java) can take type arguments.
+For example, the following trait T takes three type arguments:
+\begin{scalacode}
+trait T[X,Y,Z] {
+  def f(x: X): Y
+  def g(z: Z): Z
+}
+\end{scalacode}
+Therefore, when a class extends the trait, it needs to supply type-arguments:
+\begin{scalacode}
+class C1 extends T[???, ???, ???] {
+  def f(x: Int): String = x.toString
+  def g(z: Boolean): Boolean = !z
+}
+\end{scalacode}
+We can infer the arguments by examining the body of the
+class.\footnote{Surprisingly, Scala's type-inference cannot infer these arguments for us.}
+\begin{itemize}
+  \item The class states that the argument of \scalainline{f} is an \scalainline{Int}
+  and the trait states that the argument of \scalainline{f} is an \scalainline{X}.
+  Therefore, \scalainline{X = Int}.
+
+  \item The class states that the result of \scalainline{f} is a \scalainline{String}
+  and the trait states that the result of \scalainline{f} is a \scalainline{Y}.
+  Therefore, \scalainline{Y = String}.
+
+  \item The class states that the argument and result of \scalainline{g} are both \scalainline{Boolean}
+  and the trait states that the argument and result of \scalainline{g} are both \scalainline{Z}.
+  Therefore, \scalainline{Z = Int}.
+\end{itemize}
+Therefore, the class can extend the trait as follows:
+\begin{scalacode}
+class C1 extends T[Int, String, Boolean] {
+  def f(x: Int): String = x.toString
+  def g(z: Boolean): Boolean = !z
+}
+\end{scalacode}
+
+Consider the following class that is trying to extend the same trait:
+\begin{scalacode}
+class C2 extends T[Int, String, ???] {
+  def f(x: Int): String = x.toString
+  def g(z: Boolean): Int = 42
+}
+\end{scalacode}
+This extension is impossible, since it would imply that \scalainline{Boolean = Int}, which
+is a contradiction.
+
+Consider the following class:
+\begin{scalacode}
+class C3(head: Int, tail: C3) extends T[???, ???, ???] {
+  def f(x: Int): C3 = new C3(x, this)
+  def g(z: C3): C3 = z
+}
+\end{scalacode}
+We can reason through the type parameters in exactly the same way as before:
+\begin{itemize}
+  \item The class states that the argument of \scalainline{f} is an \scalainline{Int}
+  and the trait states that the argument of \scalainline{f} is an \scalainline{X}.
+  Therefore, \scalainline{X = Int}.
+
+  \item The class states that the result of \scalainline{f} is a \scalainline{C3}
+  and the trait states that the result of \scalainline{f} is a \scalainline{Y}.
+  Therefore, \scalainline{Y = C3}.
+
+  \item The class states that the argument and result of \scalainline{g} are both \scalainline{C3}
+  and the trait states that the argument and result of \scalainline{g} are both \scalainline{Z}.
+  Therefore, \scalainline{Z = C3}.
+\end{itemize}
+Here is the complete definition:
+\begin{scalacode}
+class C3(head: Int, tail: C3) extends T[Int, C3, C3] {
+  def f(x: Int): C3 = new C3(x, this)
+  def g(z: C3): C3 = z
+}
+\end{scalacode}
+
+Consider the following generalization:
+\begin{scalacode}
+class C4[A](head: A, tail: C4[A]) extends T[???, ???, ???] {
+  def f(x: A): C4[A] = new C4[A](x, this)
+  def g(z: C4[A]): C4[A] = z
+}
+\end{scalacode}
+
+We can apply the same reasoning to get:
+\begin{scalacode}
+class C4[A](head: A, tail: C4[A]) extends T[Int, C4[A], C4[A]] { ... }
+\end{scalacode}
+
+\begin{instructor}
+Note that we have not covered covariant/contravariant type-arguments to traits.
+\end{instructor}
+
+\section{Leveraging Recursive Bounded Quantification}
+
+It is cumbersome to sort values by explicitly mapping them to integers,
+which is what we did before.
+E.g., if we wanted to people sort by name, it would be very annoying to convert
+all names to unique integers. Alternative, if we want to sort a list of time
+objects, it would be annoying (and needless) to convert them all to seconds
+from some fixed date.\footnote{Most computers store the current time as the number of seconds elapsed since Jan 1, 1970.}
+
+A better approach would be to give sortable classes a \scalainline{lessThan} method
+and then have them inherit from a common trait:
+\begin{scalacode}
+case class Person(name: String, age: Int) extends Comparable = {
+  def lessThan(other: Person): Boolean = this.name < other.name
+}
+case class Time(h: Int, m: Int, s: Int) extends Comparable = {
+  def lessThan(o: Time): Boolean = this.h < o.h || (this.h == o.h && this.m < o.min || (this.m == o.min && this.s < o.s))
+}
+\end{scalacode}
+But, defining \scalainline{Comparable} is tricky:
+\begin{scalacode}
+trait Comparable {
+  def lessThan(other: ???): Boolean
+}
+\end{scalacode}
+The problem is that \scalainline{Person} requires the type of the argument
+to be \scalainline{Person}, whereas \scalainline{Time} requires it to be \scalainline{Time}.
+However, \scalainline{Comparable} should be a generic trait that any type can extend.
+When a type in a trait must vary, we can simply turn it into a type variable,
+\begin{scalacode}
+trait Comparable[T] {
+  def lessThan(other: T): Boolean
+}
+\end{scalacode}
+However, the definitions of \scalainline{Person} and \scalainline{Time}
+above are now incomplete, since they extend \scalainline{Comparable}, which
+takes a type argument:
+\begin{scalacode}
+case class Person(name: String, age: Int) extends Comparable[???] = {
+  def lessThan(other: Person): Boolean = ...
+}
+case class Time(h: Int, m: Int, s: Int) extends Comparable[???] = {
+  def lessThan(o: Time): Boolean = ...
+}
+\end{scalacode}
+We can reason about the types in exactly the way we did before.
+For example, \scalainline{Person} states that the argument of \scalainline{lessThan}
+is \scalainline{Person}, whereas the trait states that it is \scalainline{T}.
+Therefore, \scalainline{T = Person}:
+\begin{scalacode}
+case class Person(name: String, age: Int) extends Comparable[Person] = ...
+\end{scalacode}
+We can make a similar argument for \scalainline{Time}:
+\begin{scalacode}
+case class Time(h: Int, m: Int, s: Int) extends ComparableTime = ...
+\end{scalacode}
+
+Now that both classes extend the \scalainline{Comparable[T]} trait, let's
+update \scalainline{insert} to use it. Here is our first attempt, which
+uses generics to constrain the type of the argument and result:
+%
+\begin{scalacode}
+def insert[A](x: A, alist: List[A]): List[A] = alist match {
+  case Nil => List(x)
+  case head :: tail => if (x.lessThan(head)) { x :: head :: tail } else { head :: insert(x, tail) }
+}
+\end{scalacode}
+As before, this code will not type-check, since \scalainline{A} could be any
+type, whereas the body requires \scalainline{A}-typed objects to have a \scalainline{lessThan}
+method. Fortunately, we have a trait for these kinds of objects:
+\begin{scalacode}
+def insert[A <: Comparable](x: A, alist: List[A]): List[A] = ...
+\end{scalacode}
+However, this will not type-check either, because \scalainline{Comparable} needs
+a type argument. So, we really need to write something like this:
+\begin{scalacode}
+def insert[A <: Comparable[???]](x: A, alist: List[A]): List[A] = ...
+\end{scalacode}
+
+Let's reason through this systematically again:
+%
+\begin{itemize}
+
+  \item \scalainline{x} has type \scalainline{A <: Comparable[???]},
+
+  \item \scalainline{x.lessThan} takes an argument of type \scalainline{???},
+
+  \item \scalainline{x.lessThan} is applied to \scalainline{head}, which has
+  type \scalainline{A},
+
+  \item Therefore, \scalainline{??? = A}.
+
+\end{itemize}
+
+\Cref{sort_sortable_complete} shows a complete version of sorting using
+the \scalainline{Comparable} trait.
+
+\begin{figure}
+\begin{scalacode}
+trait Comparable[T] {
+  def lessThan(other: T): Boolean
+}
+
+def insert[A <: Comparable[A]](x: A, alist: List[A]): List[A] = alist match {
+  case Nil => List(x)
+  case head :: tail => if (x.lessThan(head)) { x :: head :: tail } else { head :: insert(x, tail) }
+}
+
+def sort[A <: Comparable[A]](alist: List[A]): List[A] = alist match {
+  case Nil => Nil
+  case head :: tail => insert(x, sort(tail))
+}
+\end{scalacode}
+\caption{Sorting with a recursive bound.}
+\label{sort_sortable_complete}
+\end{figure}
+
+\section{Expression Evaluator}
+
+
+\begin{figure}
+\begin{minipage}{0.45\textwidth}
+\begin{scalacode}
+sealed trait Expr
+case class Const(n: Int) extends Expr
+case class Add(e1: Expr, e2: Expr) extends Expr
+case class Mul(e1: Expr, e2: Expr) extends Expr
+case class Sub(e1: Expr, e2: Expr) extends Expr
+case class Div(e1: Expr, e2: Expr) extends Expr
+
+def eval(expr: Expr): Int = expr match {
+  case Const(n) => n
+  case Add(e1, e2) => eval(e1) + eval(e2)
+  case Mul(e1, e2) => eval(e1) * eval(e2)
+  case Sub(e1, e2) => eval(e1) - eval(e2)
+  case Div(e1, e2) => eval(e1) / eval(e2)
+}
+\end{scalacode}
+\caption{Evaluation with \scalainline{Int}s.}
+\label{intEval}
+\end{minipage}
+\quad\vrule\quad
+\begin{minipage}{0.45\textwidth}
+\begin{scalacode}
+sealed trait Expr
+case class Const(n: Float) extends Expr
+case class Add(e1: Expr, e2: Expr) extends Expr
+case class Mul(e1: Expr, e2: Expr) extends Expr
+case class Sub(e1: Expr, e2: Expr) extends Expr
+case class Div(e1: Expr, e2: Expr) extends Expr
+
+def eval(expr: Expr): Float = expr match {
+  case Const(n) => n
+  case Add(e1, e2) => eval(e1) + eval(e2)
+  case Mul(e1, e2) => eval(e1) * eval(e2)
+  case Sub(e1, e2) => eval(e1) - eval(e2)
+  case Div(e1, e2) => eval(e1) / eval(e2)
+}
+\end{scalacode}
+\caption{Evaluation with \scalainline{Double}s.}
+\label{doubleEval}
+\end{minipage}
+\caption{Two very similar evaluators.}\label{twoevals}
+\end{figure}
+
+
+We've seen that we can use case-classes to represent arithmetic expressions
+and how to write a simple, recursive evaluator. Consider the two evaluators
+in \cref{twoevals}. The only difference between them is that \cref{intEval}
+evaluators integer-valued expressions whereas \cref{doubleEval} evaluates
+float-valued expressions. We should be able to abstract away their commonalities
+by creating a generic type:
+
+\begin{scalacode}
+sealed trait Expr[A]
+case class Const[A](n: A) extends Expr[A]
+case class Add[A](e1: Expr[A], e2: Expr[A]) extends Expr[A]
+case class Mul[A](e1: Expr[A], e2: Expr[A]) extends Expr[A]
+case class Sub[A](e1: Expr[A], e2: Expr[A]) extends Expr[A]
+case class Div[A](e1: Expr[A], e2: Expr[A]) extends Expr[A]
+\end{scalacode}
+
+With this type, we can write integer-valued expressions:
+\begin{scalacode}
+val e1: Expr[Int] = Add(Const(12), Const(3))
+\end{scalacode}
+and float-valued expressions too:
+\begin{scalacode}
+val e1: Expr[Double] = Div(Const(12), Const(5))
+\end{scalacode}
+
+The obvious way to generalize \scalainline{eval} is as follows:
+
+\begin{scalacode}
+def eval[A](expr: Expr[A]): A = expr match {
+  case Const(n) => n
+  case Add(e1, e2) => eval(e1) + eval(e2)
+  ...
+}
+\end{scalacode}
+
+Unfortunately, this doesn't work. The problem is that \scalainline{eval(e1)}
+and \scalainline{eval(e2)} produce values of type \scalainline{A}, which could
+be \emph{any} type. There is no guarantee that values of this type can
+be added, multiplied, and so on. For example, we could have written:
+
+\begin{scalacode}
+val e1: Expr[String] = Div(Const("Hello"), Const("Goodbye"))
+\end{scalacode}
+
+The problem is that the type of \scalainline{eval} is too generic: it should
+only be applicable to a type with addition, division, etc. defined appropriately.
+We can define a trait that defines these operations:
+
+\begin{scalacode}
+trait NumLike[A] {
+  def add(other: A): A
+  def mul(other: A): A
+  def sub(other: A): A
+  def div(other: A): A
+}
+\end{scalacode}
+
+We can create a wrapper for \scalainline{Int} and \scalainline{Double}
+that implements this trait:
+
+\begin{scalacode}
+case class N(n: Int) extends NumLike[N] {
+  def add(other: N): N = N(n + other.n)
+  def mul(other: N): N = N(n * other.n)
+  def sub(other: N): N = N(n - other.n)
+  def div(other: N): N = N(n / other.n)
+}
+
+case class F(x: Double) extends NumLike[F] {
+  def add(other: F): N = F(f + other.f)
+  def mul(other: F): N = F(f * other.f)
+  def sub(other: F): N = F(f - other.f)
+  def div(other: F): N = F(f / other.f)
+}
+\end{scalacode}
+
+We can now define the evaluator as follows:
+
+\begin{scalacode}
+def eval[T <: NumLike[T]](expr: Expr[T]): T = expr match {
+  case Const(n) => n
+  case Add(e1, e2) => eval(e1).add(eval(e2))
+  case Mul(e1, e2) => eval(e1).mul(eval(e2))
+  case Sub(e1, e2) => eval(e1).sub(eval(e2))
+  case Div(e1, e2) => eval(e1).div(eval(e2))
+}
+\end{scalacode}
+
+Although we've managed to reuse a lot of code in our evaluator,
+we had to wrap \scalainline{Int}s and \scalainline{Double}s, which was
+quite annoying. We'll learn how to address this problem soon.
+
+\section{Bounded Quantification in the Java and Scala standard libraries}
+
+Bounded quantification is used extensively in libraries. For example,
+here is the signature of the \javainline{Integer} class in Java:
+
+\begin{scalacode}
+public final class Integer extends Number implements Comparable<Integer>
+\end{scalacode}
+
+The standard \javainline{Comparable} interface is very similar to the one we
+defined.
