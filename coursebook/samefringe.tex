@@ -1,20 +1,45 @@
 \newlecture
 
+\begin{instructor}
+
+\section*{Lecture Outline}
+
+\begin{enumerate}
+
+\item Define \lstinline|BinTree[+A]|.
+
+\item Define \lstinline|def fringe[A](atree: BinTree[A]): List[A]| and write \lstinline|sameFringe| naively. Explain what's wrong with it.
+
+\item Define \lstinline|class FringeIterator[A](atree: BinTree[A] extends Iterator[A]| and write \lstinline|sameFringe| efficiently.
+
+\item The problem seems fundamentally imperative, isn't it?
+
+\item Introduce by-name arguments, using \lstinline|println| to observe the order of operations.
+
+\item Define \lstinline|Generator[T]| with \lstinline|hasNext| and \lstinline|next| methods. Refactor \lstinline|next| to produce \lstinline|Option[(T, Generator[T])]|.
+
+\item Write a generator of three values manually.
+
+\item Introduce the functions \lstinline|zero|, \lstinline|one|, and \lstinline|append| (using by-name arguments).
+
+\item Add the \lstinline|++| method to \lstinline|Generator[T]|.
+
+\item Write the fringe-generator.
+
+\item Notice that the fringe generator looks a lot like the function that returns the fringe as a list!
+
+\end{enumerate}
+
+\end{instructor}
+
 \section{The \emph{Same Fringe} Problem}
 
-\begin{instructor}
-These notes are not ready to release.
-
-Notice that the fringe generator looks a lot like the function that returns the fringe as a list!
-\end{instructor}
 
 
 \begin{figure}
 \begin{scalacode}
-def fringe[A](t: BinTree[A]): List[A] = t match {
-  case Leaf(x) => List(x)
-  case Node(lhs, rhs) => fringe(lhs) ++ fringe(rhs)
-}
+def fringe[A](t: BinTree[A]): List[A] = t match { case Leaf(x) =>
+  List(x) case Node(lhs, rhs) => fringe(lhs) ++ fringe(rhs) }
 \end{scalacode}
 \caption{Recursively calculating the fringe of a binary tree.}
 \label{fringeRec}
@@ -93,11 +118,11 @@ def sameFringe[A](t1: BinTree[A], t2: BinTree[A]): Boolean = {
 \label{samefringe_imperative}
 \end{figure}
 
-A typical Java solution to this problem, which also straightforward to
+A typical Java solution to this problem, which is straightforward to
 reproduce in Scala, is to use an iterator. You've seen simple
 iterators for lists and arrays before.  You can also write an iterator
-that iterators over the fringe of a tree.  The key idea is this:
-before we descend into the left-hand side of a node generate its
+that iterates over the fringe of a tree.  The key idea is this:
+before we descend into the left-hand side of a node to generate its
 fringe, we need to store the right-hand side of the node in a variable so that
 we don't forget to generate its fringe. Since the tree may be arbitrarily deep, we
 may need to remember a stack of nodes.

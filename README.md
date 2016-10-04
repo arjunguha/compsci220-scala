@@ -1,4 +1,4 @@
-# CMPSCI220 Course Materials
+# COMPSCI220 Course Materials
 
 
 # Requirements
