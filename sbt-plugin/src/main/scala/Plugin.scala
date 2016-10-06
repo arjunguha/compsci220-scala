@@ -50,7 +50,7 @@ object Plugin extends sbt.AutoPlugin {
       resolvers += "PLASMA" at "https://dl.bintray.com/plasma-umass/maven",
       parallelExecution in Test := false,
       libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % "test",
-      libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.3.0",
+      libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.3.1",
       findMisplacedFiles := Tasks.findMisplacedFiles(streams.value.log),
       directoryWarnings := Tasks.directoryWarnings(streams.value.log),
       checkstyle := Tasks.checkstyle(
