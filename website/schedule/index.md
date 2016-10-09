@@ -29,13 +29,13 @@ title: Schedule
 | Tuesday, Oct 25   | Due: [HW6]. Out: [HW7]. [Lecture Notes](../reading/lecture14.pdf)                               |
 | Wednesday, Oct 26 | *Lab:*                                                                                          |
 | Thursday, Oct 27  | [Lecture Notes](../reading/lecture15.pdf)                                                       |
-| Tuesday, Nov 1    |                                                                                                 |
+| Tuesday, Nov 1    | [Lecture Notes](../reading/lecture16.pdf)                                                       |
 | Wednesday, Nov 2  | **No lab.** (Continue working on Sudoku.)                                                       |
-| Thursday, Nov 3   | Reading: [Enumerating the Rationals] ([in Scala](../reading/rationals.scala))                   |
-| Tuesday, Nov 8    | Due: [HW7]. Out: [HW8]. [Lecture Notes](../reading/lecture18.pdf).   |
+| Thursday, Nov 3   | [Lecture Notes](../reading/lecture17.pdf)                                                       |
+| Tuesday, Nov 8    | Due: [HW7]. Out: [HW8]. [Lecture Notes](../reading/lecture18.pdf).                              |
 | Wednesday, Nov 9  | *Lab:*                                                                                          |
-| Thursday, Nov 10  |                                                                                                 |
-| Tuesday, Nov 15   | Due: [HW8].                                                                                     |
+| Thursday, Nov 10  | [Lecture Notes](../reading/lecture19.pdf)                                                       |
+| Tuesday, Nov 15   | Due: [HW8]. [Lecture Notes](../reading/lecture20.pdf)                                           |
 | Wednesday, Nov 16 | **No lab.** (Friday schedule.)                                                                  |
 | Thursday, Nov 17  | Reading: [Parser Combinators].                                                                  |
 | Tuesday, Nov 22   | **No class.** (Thanksgiving Recess.)                                                            |
@@ -62,7 +62,6 @@ title: Schedule
 [HW9]: ../hw/hw9.pdf
 [HW10]: ../hw/hw10.pdf
 
-[Enumerating the Rationals]: ../reading/rationals.pdf
 [Parser Combinators]: http://www.artima.com/pins1ed/combinator-parsing.html
 [Java Regular Expressions]: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
 [Scala Regular Expressions]: http://www.scala-lang.org/api/current/index.html#scala.util.matching.Regex
