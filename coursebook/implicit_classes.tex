@@ -1,5 +1,41 @@
 \newlecture
 
+\begin{instructor}
+\section*{Lecture Outline}
+
+\begin{enumerate}
+
+\item Create a Java file with  a \lstinline|Vector2D| class that has
+  \lstinline|add| and \lstinline|mul| methods.
+
+\item Show that we can use the Java class in Scala code, but it doesn't feel very
+  Scala-like. 9Show the Scala version.)
+
+\item One solution: write an an \emph{adaptor}. Problem: we'd have to wrap
+  every single method (and there could be many, many methods).
+
+\item In principle, we want to modify the existing class, but classes cannot
+  be modified after they are defined.
+
+\item Show the implicit class \lstinline|RichVector2D|.
+
+\item Show how a simple expression with vectors is elaborated.
+
+\item However, we can write \lstinline|vec * 3|, but not \lstinline|3 * vec|.
+Fix this by introducing \lstinline|RichInt|.
+
+\item Show an implicit function that converts int-tuples to vectors. Warn that 
+  this is a bad idea.
+
+\item Explain that implicits should be in their own object.
+
+\item Show the \lstinline|process| and \lstinline|duration| DSLs.
+
+\end{enumerate}
+
+\end{instructor}
+
+
 \begin{figure}
 \begin{subfigure}{.45\textwidth}
 \scalafile{includes/implicits/Vector2D.java}
@@ -178,7 +214,3 @@ you can use methods such as \scalainline{.map} on arrays in Scala.
 This is achieved using implicits conversions.  From the Scala console,
 if you enter \lstinline[language=console]{:implicits -v}, you can see the complete
 list of implicits that are available.
-
-\begin{instructor}
-Show the Process and Duration DSLs if there is time.
-\end{instructor}

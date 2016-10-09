@@ -1,7 +1,34 @@
 \newlecture
 
 \begin{instructor}
-These notes are not complete. They give
+\section*{Lecture Outline}
+
+\begin{enumerate}
+
+  \item Text processing and regexes are everywhere: web page validation, regex
+  based search and replace in IDEs, to clean data, in virus scanners.
+
+  \item A regex can be read as a pattern that matches strings. Show some
+  examples with constants, the wildcard, and repetition.
+
+  \item Introduce triple-quoted strings.
+
+  \item Introduce \emph{literal characters}, \emph{metacharacters}, and
+  escaping.
+
+  \item Introduce the wildcard, character ranges, range complements, alternation,
+  and iteration (both \texttt{*} and \texttt{+}).
+
+  \item Examples: match undergraduate CS class numbers, credit card numbers,
+  even numbers.
+
+  \item Example of something that can't be matched: palindrome.
+
+  \item Challenge problem: check password strength---at least one letter
+  and one digit.
+
+\end{enumerate}
+
 \end{instructor}
 
 \section{Required Reading}
@@ -18,7 +45,7 @@ These notes are not complete. They give
 
 Many programs need to do some form of text processing and \emph{regular expressions} are the most fundamental and pervasive text processing tools. Average web pages use regular expressions to validate emails, phone numbers, URLs, and so on; IDEs and programmers' text editors support regular-expression based search and replace; regular expressions are often used to ``clean'' data; and regular expressions are also used in virus scanners, network intrusion detection systems, and other computer security products.
 
-You can think of a regular expression as a pattern that describes a set of strings. For example, the regular expression \texttt{a.*z} describes all strings that start with \scalainline{'a'} and end with \scalainline{'z'}. In a regular expression, the character \texttt{.} means ``any character'' and the symbol \texttt{*} means ``zero or more repetitions. Therefore, we can read \texttt{a.*z} as ```a', followed by zero or more repetitions of any character, followed by `z'''.
+You can think of a regular expression as a pattern that describes a set of strings. For example, the regular expression \texttt{a.*z} describes all strings that start with \scalainline{'a'} and end with \scalainline{'z'}. In a regular expression, the character \texttt{.} means ``any character'' and the symbol \texttt{*} means ``zero or more repetitions''. Therefore, we can read \texttt{a.*z} as ``a, followed by zero or more repetitions of any character, followed by `z'''.
 
 In Scala, you can construct a regular expression by written it as a string and invoking the \scalainline{.r} method. For example:
 \begin{scalacode}
@@ -70,84 +97,47 @@ A regular expression can be built in several ways:
 \texttt{COMPSCI[1-4].*}
 
 \paragraph{Credit Card Numbers}
-A Visa or MasterCard has 16 digits, so the simplest regular expression to match then would be \verb|\d{16}|. However, people tend to format credit card numbers by grouping them into blocks of four digits and separating the blocks with spaces:
+A Visa or MasterCard has 16 digits, so the simplest regular expression to match then would be \texttt{\d{16}}. However, people tend to format credit card numbers by grouping them into blocks of four digits and separating the blocks with spaces:
 
-\verb|\d{4} \d{4} \d{4} \d{4}|
+\begin{verbatim}
+\d{4} \d{4} \d{4} \d{4}
+\end{verbatim}
 
 ---or with hyphens---
 
-\verb|\d{4}-\d{4}-\d{4}-\d{4}|
+\begin{verbatim}
+\d{4}-\d{4}-\d{4}-\d{4}
+\end{verbatim}
 
 We can make both regular expressions more compact by rewriting them as \verb|\d{4}( \d{4}){3}| and \verb|\d{4}(-\d{4}){3}| respectively.
 
 We can also make accept both formats by writing:
 
-\verb|(\d{4} \d{4} \d{4} \d{4})|(\d{4}-\d{4}-\d{4}-\d{4})|
+\begin{verbatim}
+(\d{4} \d{4} \d{4} \d{4})|(\d{4}-\d{4}-\d{4}-\d{4})
+\end{verbatim}
 
 ---or, using the more compact representation, we could write:
-
-\verb|(\d{4}( \d{4}){3})|(\d{4}(-\d{4}){3})|
+\begin{verbatim}
+(\d{4}( \d{4}){3})|(\d{4}(-\d{4}){3})
+\end{verbatim}
 
 
 \begin{think}
 
 What does the following regular expression match?
 
-\verb|\d{4}([ -]\d{4}){3}|
+\begin{verbatim}
+\d{4}([ -]\d{4}){3}
+\end{verbatim}
 \end{think}
 
 \paragraph{Even Numbers}
 
 The following regular expression matches all even numbers:
 
-\verb|\d*(0|2|4|6|8)|
-
-\paragraph{Password Strength}
-%
-
-- E.g., at least one digit and one letter
-
-\section{Second lecture}
-
-\begin{itemize}
-
-\item Password strength: at least three letters
-
 \begin{verbatim}
-.*[A-Z].*[A-Z].*[A-Z].*
+\d*(0|2|4|6|8)
 \end{verbatim}
 
-At least two numbers:
 
-\begin{verbatim}
-.*[0-9].*[0-9].*
-\end{verbatim}
-
-Three letters and two numbers:
-
-\item Grouping (e.g., dates):
-
-\begin{scalacode}
-    val date = """(\d\d\d\d)-(\d\d)-(\d\d)""".r
-    "2004-01-20" match {
-      case date(year, month, day) => year + " was a good year for PLs."
-    }
-\end{scalacode}
-
-\item Replacement:
-
-\begin{scalacode}
-"Jan|January".r.replaceAllIn(str, "01")
-\end{scalacode}
-
-\item Reduce derived regular expressions to a core using identities
-
-\item Show regular expressions as an ADT
-
-\item Write a back-tracking matcher
-
-\item Write a string generator for regular expressions using streams
-
-\item An implementation of memoizing regular expression derivates in includes/regex-derivatives
-
-\end{itemize}

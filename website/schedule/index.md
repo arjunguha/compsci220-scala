@@ -32,7 +32,7 @@ title: Schedule
 | Tuesday, Nov 1    |                                                                                                 |
 | Wednesday, Nov 2  | **No lab.** (Continue working on Sudoku.)                                                       |
 | Thursday, Nov 3   | Reading: [Enumerating the Rationals] ([in Scala](../reading/rationals.scala))                   |
-| Tuesday, Nov 8    | Due: [HW7]. Out: [HW8]. Reading: [Java Regular Expressions] and [Scala Regular Expressions].    |
+| Tuesday, Nov 8    | Due: [HW7]. Out: [HW8]. [Lecture Notes](../reading/lecture18.pdf).   |
 | Wednesday, Nov 9  | *Lab:*                                                                                          |
 | Thursday, Nov 10  |                                                                                                 |
 | Tuesday, Nov 15   | Due: [HW8].                                                                                     |
