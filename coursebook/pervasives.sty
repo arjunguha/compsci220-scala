@@ -107,6 +107,11 @@
 \newcounter{lecture_num}
 \stepcounter{lecture_num}
 
+\newcommand{\startlecture}{%
+\pdfbookmark[0]{file:reading/lecture\the\value{lecture_num}}{file:reading/lecture\the\value{lecture_num}}%
+\stepcounter{lecture_num}%
+}
+
 \newcommand{\newlecture}{%
 \chapter{\texorpdfstring{Lecture \the\value{lecture_num}}{file:reading/lecture\the\value{lecture_num}}}%
 \stepcounter{lecture_num}%

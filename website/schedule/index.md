@@ -26,7 +26,7 @@ title: Schedule
 | Tuesday, Oct 18   | Due: [HW5]. Out: [HW6]. [Lecture Notes](../reading/lecture12.pdf)                               |
 | Wednesday, Oct 19 | *Lab:*                                                                                          |
 | Thursday, Oct 20  | [Lecture Notes](../reading/lecture13.pdf)                                                       |
-| Tuesday, Oct 25   | Due: [HW6]. Out: [HW7]. [Lecture Notes](https://piazza.com/class/ihn69k9d3dh9n?cid=957)         |
+| Tuesday, Oct 25   | Due: [HW6]. Out: [HW7]. [Lecture Notes](../reading/lecture14.pdf)                               |
 | Wednesday, Oct 26 | *Lab:*                                                                                          |
 | Thursday, Oct 27  | [Lecture Notes](../reading/lecture15.pdf)                                                       |
 | Tuesday, Nov 1    |                                                                                                 |
