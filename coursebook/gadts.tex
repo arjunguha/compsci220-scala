@@ -1,10 +1,12 @@
 \newlecture
 
 \begin{instructor}
-These notes are not complete.
-\end{instructor}
 
-Write the Scala wrapper for Java's array class
+\section*{Lecture Outline}
+
+\begin{enumerate}
+
+\item Write the Scala wrapper for Java's array class
 
 \begin{scalacode}
 case class AnyArray[T](elts: Array[T])
@@ -12,7 +14,7 @@ case class AnyArray[T](elts: Array[T])
 
 Methods get, set, length, and foreach
 
-Write bitarray. These are the get and set methods
+\item Write bitarray. These are the get and set methods
 
 \begin{scalacode}
     def get(index: Int): Boolean = elts(index >> 5) >> (index & 0x1F) == 1
@@ -29,7 +31,7 @@ Write bitarray. These are the get and set methods
 
 Lesson: any code that uses BitArray needs to change. e.g., we can't write a generic foreach method
 
-Introduce the ArrayLike trait:
+\item Introduce the ArrayLike trait:
 
 \begin{scalacode}
   trait ArrayLike[T] extends Any {
@@ -39,7 +41,7 @@ Introduce the ArrayLike trait:
   }
 \end{scalacode}
 
-Natural to write:
+\item Natural to write:
 
 \begin{scalacode}
 case class BitArray[T](elts: Array[Int]) ArrayLike[T]
@@ -48,13 +50,13 @@ case class BitArray[T](elts: Array[Int]) ArrayLike[T]
 But, we can instead write:
 
 \begin{scalacode}
-  case class BitArray(elts: Array[Int]) ArrayLike[Boolean]
+case class BitArray(elts: Array[Int]) ArrayLike[Boolean]
 \end{scalacode}
 
-  We've specialized the type parameter, but that's ok. (It's like what we did
+\item We've specialized the type parameter, but that's ok. (It's like what we did
   for \scalainline{List[Nothing]}.)
 
-Further optimization: we are allocating an object that wraps the underlying
+\item Further optimization: we are allocating an object that wraps the underlying
   Java array. Fix: use AnyVal:
 
 \begin{scalacode}
@@ -62,6 +64,15 @@ Further optimization: we are allocating an object that wraps the underlying
   case class BitArray(elts: Array[Int]) extends AnyVal with CompactArray[Boolean]
 \end{scalacode}
 
-Basically "sees through" the wrapper type.
+Basically, Scala can ``see through'' the wrapper type.
 
 Lessons: low-level optimizations are necessary for very high-performance code. Exposing low-level abstractions makes code un-reusable. GADTs can help.
+
+\end{enumerate}
+
+\end{instructor}
+
+\begin{figure}
+\scalafile{code/Gadts.scala}
+\caption{Using generics to abstract complex representations.}
+\end{figure}
