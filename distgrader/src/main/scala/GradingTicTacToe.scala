@@ -34,6 +34,7 @@ class GradingTicTacToe(val assignmentRoot: String, val selfIP: String) extends T
     """
 
   def zipBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {
+    zip.add("""addSbtPlugin("edu.umass.cs" % "compsci220" % "1.0.2")""".getBytes, "project/plugins.sbt")  
     zip.add(s"object GradingMain extends App { $prefix $body }".getBytes,
       "src/main/scala/GradingMain.scala")
   }

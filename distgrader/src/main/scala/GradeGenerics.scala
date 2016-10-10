@@ -33,11 +33,7 @@ class GradeGenerics(val assignmentRoot: String, val selfIP: String) extends Test
   """
 
   def zipBuilder(zip: edu.umass.cs.zip.ZipBuilder, body: String): Unit = {
-      zip.add("""
-        resolvers += "PLASMA" at "https://dl.bintray.com/plasma-umass/maven"
-        libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.0.1"
-        """.getBytes,
-        "build.sbt")
+    zip.add("""addSbtPlugin("edu.umass.cs" % "compsci220" % "1.0.2")""".getBytes, "project/plugins.sbt")  
     zip.add(s"object GradingMain extends App { $prefix\n$body }".getBytes,
       "src/main/scala/GradingMain.scala")
   }
