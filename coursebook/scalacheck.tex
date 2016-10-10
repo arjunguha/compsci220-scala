@@ -8,7 +8,9 @@
 \begin{enumerate}
 
 \item  Sometimes, writing individual test cases isn't enough or isn't desirable.
-It can help to think of properties instead of test cases.
+  It can help to think of properties instead of test cases.
+
+\item Work through the split and join example.
 
 \item Write some list processing functions: reverse, concat, map
 
@@ -26,6 +28,45 @@ are equivalent.
 \end{enumerate}
 
 \end{instructor}
+
+%% Sometimes, testing individual functions is not enough or isn't desirable. In these
+%% situations, it helps to come up with \emph{properties} of functions or groups of
+%% related functions.
+
+
+%% \begin{figure}
+%% \begin{lstlisting}
+%% def split(sep: Char, astring: String): List[String] = {
+%%   def splitRec(chars: List[Char]): List[String] = {
+%%     val prefix = chars.takeWhile(ch => ch != sep).mkString
+%%     chars.dropWhile(ch => ch != sep) match {
+%%       case Nil => Nil
+%%       case _ :: suffix => prefix :: splitRec(suffix)
+%%     }
+%%   }
+%%   splitRec(astring.toList)
+%% }
+
+%% def join(sep: Char, strings: List[String]): String = strings match {
+%%   case Nil => ""
+%%   case List(x) => x
+%%   case x1 :: x2 :: xs => x1 + sep + join(sep, x2 :: xs)
+%% }
+%% \end{lstlisting}
+%% \caption{Splitting a string on a separator.}\label{split_buggy}
+%% \end{figure}
+
+%% For example, consider the function in \cref{split_buggy} that splits strings on a
+%% separator character. Therefore, \lstinline|split(',', "Hello, world!")| should
+%% produce \lstinline|List("Hello", " world!")|.
+%% How would we check that the implementation is correct? The standard approach is to write
+%% individual test cases. The key to good tests is to think of examples that exercise
+%% the corner cases of a function. An alternative approach to testing is to think of
+%% properties that the function should exhibit. A basic property of the
+%% result of \lstinline|split| is that we should be able to reassemble the original
+%% string by interspersing the separator with the output list.
+
+
 
 \begin{figure}
   \scalafile{code/scalacheck/src/test/scala/ListTestSuite.scala}

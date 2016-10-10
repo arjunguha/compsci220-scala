@@ -4,6 +4,23 @@ import org.scalacheck._
 
 class ListTestSuite extends FunSuite with GeneratorDrivenPropertyChecks {
 
+  def split(sep: Char, astring: String): List[String] = {
+    def splitRec(chars: List[Char]): List[String] = {
+      val prefix = chars.takeWhile(ch => ch != sep).mkString
+      chars.dropWhile(ch => ch != sep) match {
+        case Nil => Nil
+        case _ :: suffix => prefix :: splitRec(suffix)
+      }
+    }
+    splitRec(astring.toList)
+  }
+
+  def join(sep: Char, strings: List[String]): String = strings match {
+    case Nil => ""
+    case List(x) => x
+    case x1 :: x2 :: xs => x1 + sep + join(sep, x2 :: xs)
+  }
+
   test("reverse-reverse") {
     forAll { (alist: List[Int]) =>
       assert(alist.reverse.reverse == alist)
@@ -24,7 +41,7 @@ class ListTestSuite extends FunSuite with GeneratorDrivenPropertyChecks {
     }
   }
 
-    def qsort(lst: List[Int]): List[Int] = {
+  def qsort(lst: List[Int]): List[Int] = {
     lst match {
       case Nil => Nil
       case pivot :: rest => {
