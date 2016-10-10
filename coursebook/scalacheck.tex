@@ -3,8 +3,6 @@
 
 \begin{instructor}
 
-\textbf{Old notes are on the website incorporate them somehow.}
-
 \section*{Lecture Outline}
 
 \begin{enumerate}
@@ -15,13 +13,33 @@ It can help to think of properties instead of test cases.
 \item Write some list processing functions: reverse, concat, map
 
 \item Some properties of list processing functions: reverse and concat,
-concat distributes over map, reverse reverse is identity
+  concat distributes over map, reverse reverse is identity. \emph{Write these
+    as functions}.
+
+\item Show ScalaCheck. Show the generators generating things.
 
 \item Write a tail recursive fibonnaci and check that the two implementations
-are equivalent
+are equivalent.
 
-\item Write properties of join lists
+\item Write properties of join lists.
 
 \end{enumerate}
 
 \end{instructor}
+
+\begin{figure}
+  \scalafile{code/scalacheck/src/test/scala/ListTestSuite.scala}
+  \caption{Checking properties of simple list processing functions.}
+\end{figure}
+
+\begin{figure}
+  \scalafile{code/scalacheck/src/test/scala/FibTestSuite.scala}
+  \caption{Checking that an optimized implementation of the fibonacci
+    function is equivalent to the naive implementation.}
+  
+\end{figure}
+
+\begin{figure}
+  \scalafile{code/scalacheck/src/test/scala/JoinListSuite.scala}
+  \caption{Checking properties of join lists.}
+\end{figure}

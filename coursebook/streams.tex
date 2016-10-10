@@ -2,10 +2,33 @@
 \startlecture
 
 \begin{instructor}
-These notes are not complete. (Note that we don't have any assignment that requires streams.)
 
-This is a two-part lecture.
-Apparently, Programming in Scala 2nd ed. doesn't mention streams at all. 
+ Note that we don't have any assignment that requires
+ streams. Apparently, Programming in Scala 2nd ed. doesn't mention
+ streams at all.
+
+ \section*{Lecture Outline}
+
+ \begin{enumerate}
+
+ \item Show the function \lstinline|def fromTo(m: Int, n: Int): Stream[Int]|
+   with \lstinline|println|s in the body to show that the body is only evaluated
+   on need. Constrast to \lstinline|def fromTo(m: Int, n: Int): List[Int]|.
+
+ \item Show the function \lstinline|def from(n: Int): Stream[Int]| and use
+   it to define a stream of positive numbers.
+
+ \item Define \lstinline|def nthFib(nPredPred: Stream[Int], nPred: Stream[Int]): Stream[Int]|.
+
+ \item Show stream combinators, such as map, filter, etc.
+
+ \item Show that filter can produce an infinite loop if nothing in the stream
+   matches the predicate.
+
+ \item Generate all elements from an infinite stream by interleaving.
+
+ \end{enumerate}
+ 
 \end{instructor}
 
 A stream is like a list, but its tail is only evaluated ``on need''.
@@ -101,9 +124,4 @@ scala> val evsns = odds.filter(_ % 2 == 0)
 \section{Generators as streams}
 
 \section{$n$-Queens with streams} 
-
-\section{Enumerating the rationals}
-
-See includes/rationals for the code.
-
 
