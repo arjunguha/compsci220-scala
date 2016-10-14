@@ -140,7 +140,7 @@ searches all possible game-states that are reachable from a given inital
 state. Here is an outline of a recursive implementation of Minimax:
 
 \begin{scalacode}
-def minimax(game: Game): Some[Player] = {
+def minimax(game: Game): Option[Player] = {
 
   /*
   If it is Xs turn:
