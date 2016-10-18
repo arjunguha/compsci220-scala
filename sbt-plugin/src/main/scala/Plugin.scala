@@ -10,7 +10,7 @@ object Plugin extends sbt.AutoPlugin {
   import java.nio.file._
 
   override def trigger = allRequirements
-
+  override def requires = plugins.JvmPlugin
 
   object autoImport {
     lazy val submit = TaskKey[Unit]("submit")

@@ -4,7 +4,7 @@ sbtPlugin := true
 scalaVersion := "2.10.4" // necessary for SBT 0.13.5
 name := "compsci220"
 organization := "edu.umass.cs"
-version := "1.0.2"
+version := "1.0.3"
 scalacOptions += "-feature"
 
 libraryDependencies ++= Seq(
