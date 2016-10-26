@@ -28,7 +28,7 @@ title: Schedule
 | Thursday, Oct 20  | [Lecture Notes](../reading/lecture13.pdf)                                                       |
 | Tuesday, Oct 25   | Due: [HW6]. Out: [HW7]. [Lecture Notes](../reading/lecture14.pdf)                               |
 | Wednesday, Oct 26 | *Lab:*                                                                                          |
-| Thursday, Oct 27  | [Lecture Notes](../reading/lecture15.pdf)                                                       |
+| Thursday, Oct 27  | **Class cancelled. Friday office hours cancelled.**                                             |
 | Tuesday, Nov 1    | [Lecture Notes](../reading/lecture16.pdf)                                                       |
 | Wednesday, Nov 2  | **No lab.** (Continue working on Sudoku.)                                                       |
 | Thursday, Nov 3   | [Lecture Notes](../reading/lecture17.pdf)                                                       |
