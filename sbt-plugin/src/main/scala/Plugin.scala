@@ -58,20 +58,21 @@ object Plugin extends sbt.AutoPlugin {
         streams.value,
         target.value,
         org.scalastyle.sbt.ScalastylePlugin.scalastyleTarget.value),
-      compile := {
-        val result = (compile in Compile).value
-        checkstyle.value
-        result
-      },
-      compile <<= compile.dependsOn(findMisplacedFiles, directoryWarnings),
+      // Run ScalaStyle after compilation succeeds. ScalaStyle displays
+      // terrible error messages when files have syntax errors. By running
+      // it after compilation, we get better messages from scalac. However,
+      // this means that the program builds successfully even if it doesn't
+      // pass the style checker.
+      checkstyle <<= checkstyle.triggeredBy(compile in Compile),
+      // Print warnings about misplaced files and non-existent directories
+      // before compilation.
+      (compile in Compile) <<= (compile in Compile)
+        .dependsOn(findMisplacedFiles, directoryWarnings),
       submit := {
         submitTask
       },
-      test := {
-        val result = (test in Test).value
-        checkstyle.value
-        result
-      },
-      submit <<= submit.dependsOn(compile)
+      // We refuse to create a submittable .tgz if the program doesn't
+      // compile and pass ScalaStyle.
+      submit <<= submit.dependsOn(compile in Compile, checkstyle)
     )
 }
