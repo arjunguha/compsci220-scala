@@ -45,7 +45,7 @@ object Main extends App {
     cmd("grade")
       .action((_, cfg) => cfg.copy(command = Grade))
       .text("Grade an assignment")
-      .children(key("name"), key("root"), key("controller"))
+      .children(key("name"), key("root"))
 
     cmd("extract")
       .action((_, cfg) => cfg.copy(command = Extract))
@@ -63,7 +63,7 @@ object Main extends App {
     cmd("start-worker")
       .action((_, cfg) => cfg.copy(command = StartWorker))
       .text("Start workers on Google Compute Engine")
-      .children(key("prefix"), key("controller"), int("n"))
+      .children(key("prefix"), int("n"))
 
     cmd("summarize")
       .action((_, cfg) => cfg.copy(command = Summarize))
@@ -90,7 +90,7 @@ object Main extends App {
       config.command match {
         case Grade => {
           val root = opts("root")
-          val ip = opts("controller")
+          val ip = Settings.controllerIP
           val framework = opts("name") match {
             case "hw1" => new HW1Grading(root, ip)
             case "hw2" => new HW2Grading(root, ip)
@@ -121,15 +121,14 @@ object Main extends App {
         case InitImage => CreateImage.init()
         case UploadWorker => CreateImage.uploadWorker()
         case StartController => {
-          val system = ActorSystem("controller", AkkaInit.remotingConfig(opts("ip"), 5000))
+          val system = ActorSystem("controller", AkkaInit.remotingConfig(Settings.controllerIP, 5000))
           val controllerActor = system.actorOf(Props[ControllerActor], name="controller")
         }
         case StartWorker => {
           import ExecutionContext.Implicits.global
           val name = opts("prefix")
-          val controllerHost = opts("controller")
           val n = ints("n")
-          val lst = 0.until(n).map(n => CreateImage.createWorker(s"$name-$n", controllerHost))
+          val lst = 0.until(n).map(n => CreateImage.createWorker(s"$name-$n", Settings.controllerIP))
           Await.result(Future.sequence(lst), Duration.Inf)
         }
         case Extract => {
