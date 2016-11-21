@@ -53,7 +53,8 @@ class GradeSudoku(val assignmentRoot: String, val selfIP: String) extends TestFr
       for (r <- 0.to(8); c <- 0.to(8)) {
         str(r * 9 + c) match {
           case '.' => ()
-          case ch => assert(b.valueAt(r, c) == Some(ch.toString.toInt))
+          case ch => assert(b.valueAt(r, c) == Some(ch.toString.toInt) || 
+                            b.valueAt(c, r) == Some(ch.toString.toInt))
         }
       }
     """)

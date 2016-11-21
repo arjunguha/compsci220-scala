@@ -4,6 +4,7 @@ class GradingTicTacToe(val assignmentRoot: String, val selfIP: String) extends T
 
   val prefix =
     """
+    import hw.tictactoe._
     import Solution._
 
     // for tic tac toe, these are whitespace characters that are ignored. They
