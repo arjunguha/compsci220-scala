@@ -1,0 +1,112 @@
+\newlecture
+
+\textbf{Course Description}: Development of individual skills necessary for
+designing, implementing, testing and modifying larger programs, including: use
+of integrated design environments, design strategies and patterns, testing,
+working with large code bases and libraries, code refactoring, and use of
+debuggers and tools for version control.
+
+\section{OK, but Why?}
+
+Good style is very important. It makes code more uniform and readable, and thus
+easier to debug by others, as well as avoids programming patterns that are error
+prone.
+\par
+You may not always agree with every point in this style guide or any other style
+guide; however, the ability to write code to match an arbitrary style guide is
+an important skill that you are expected to have in the real world (and, yes, even
+in research settings).
+
+\section{Formatting}
+
+\begin{itemize}
+		\item \textbf{Whitespace}\\
+		  Indent with two spaces. Lines should be no longer than 100 characters. Use one
+      blank line between method, class, and object definitions. Please, please,
+      please follow this, it makes code far easier to debug for everyone.
+		\item \textbf{Naming}
+		\begin{itemize}
+			\item \textit{Use short names for small scopes}\\
+			  It's all but expected that single character variable names will be used
+        inside of simple lambda functions. Feel free to use longer variable names
+        if you'd prefer, but it is not required.
+			\item \textit{Use longer names for larger scopes}\\
+			  Use descriptive names when providing methods such as external APIs. Don't write
+        a sentence, but your method name ought not be a combination of random
+        characters corresponding to the first letter of words either (e.g. the C standard
+        library).
+			\par
+			In addition, please don't just increment function names. Naming \texttt{myFunction}
+      and \texttt{myFunction2} obfuscates both the differences between functions as well
+      as hides the actual behavior of the functions.
+			\item \textit{Use descriptive names for methods that return values}\\
+			Use names like \texttt{src.isDefined} not \texttt{src.defined}.		
+		\end{itemize}
+		\item \textbf{Braces}\\
+		  Unlike Java, where you ought to always use curly braces for every statement, you
+      can and should drop the braces for simple expressions.\\\textit{Example:} \\
+    \scalafile{code/style_guide_good_braces.scala}
+		not
+    \scalafile{code/style_guide_bad_braces.scala}
+		However, braces should continue to be used for more complex expressions.
+	\end{itemize}
+
+\section{Types and Generics}
+
+Types are amazing. They allow you to explicitly define what data types should be in
+what variables and allow you to catch many, many bugs at compile time. That said,
+explicitly specifying types can also be redundant, especially in cases where types
+are explicitly clear.
+\par
+As a result, types should be used judiciously; find the right balance between using
+them everywhere and using them nowhere. If in doubt, include them.
+\par
+Being clever with types can lead to hard-to-debug issues. Scala is invariant by
+default, and avoid using covariance unless explicitly asked to use it in an
+assignment.
+
+\section{Standard Library}
+
+Don't use standard functions that you don't fully understand. We would much rather
+see you re-implement a function that exists than see you chaining together several
+standard functions in which you don't understand how they operate.
+\par
+That said, unless explicitly told otherwise, we would like you to try and use
+the standard library. There are many standard library functions that students do end
+up re-implementing. While this serves as a great learning experience, we also
+\textit{highly} encourage you to go back and refactor your code to utilize standard
+library functions. It will be educational and lead to terser code in the future.
+
+\section{Control Flow}
+
+Scala isn't Java; however, regardless of language, large blocks of control flow
+are hard to grok and far more likely to be sources of logic bugs.
+\par
+If you have large chunks of logic, you ought to reconsider your approach. For the
+most part, none of the methods we expect you to write ought to be more than four
+or five lines of code. If you find yourself with 20+ lines, you ought to reconsider
+your approach.
+	\begin{itemize}
+		\item \textit{Recursion}\\
+		  Phrasing your code in terms of recursion often makes it terser. In addition,
+      tail recursion in Scala often makes this approach just as performant as
+      writing the code iteratively.
+		\item \textit{Loops}\\
+		  You can't use 'em and you don't need them. Simple as that. Recursion should
+      replace the need to iteratively access elements in lists.
+	\end{itemize}
+
+\section{Function Declarations}
+Don't declare functions inside other functions. It will lead to scoping bugs that
+are very difficult to debug.
+	
+\section{Error Handling}
+Unlike CS187, and much like real life, we do not explicitly tell you how to handle corner
+cases. Write code in such a way to minimize corner cases, and then handle the cases
+in a sane manner. We are not going to try to nail you on corner cases in your code,
+but don't do something crazy.
+		
+\section{Test Driven Development}
+Write tests often, they will help with problems. If you see erroneous behavior,
+write a test case to replicate it. We will tell you throughout this course if
+you come to us with broken code, you should write unit tests to debug it.
