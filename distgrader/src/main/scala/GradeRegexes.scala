@@ -164,8 +164,5 @@ class GradeRegexes(val assignmentRoot: String, val selfIP: String) extends TestF
       assert(check(evenParity, "9991") == true)
       """)
 
-
-
-
   }
 }

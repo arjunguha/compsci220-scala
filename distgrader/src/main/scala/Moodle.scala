@@ -6,8 +6,15 @@ import com.github.tototoshi.csv._
 /** For scripting Moodle grade sheets. Assumes "Simple directed grading"
   * with a maximum grade of 100 and Feedback comments enabled".
   */
-class MoodleSheet private (rows: List[List[String]], path: String) {
+class MoodleSheet private (val rows: List[List[String]], path: String) {
   import MoodleSheet._
+
+  val (course, term, assignment) = moodleGradingSheetRegex
+    .findFirstMatchIn(Paths.get(path).getFileName.toString) match {
+      case Some(regexMatch) =>
+        (Some(regexMatch.group("course")), Some(regexMatch.group("term")), Some(regexMatch.group("assignment")))
+      case None => (None, None, None)
+    }
 
   require(rows.length > 0 &&
     rows.head == expectedHeader,
@@ -82,10 +89,15 @@ object MoodleSheet {
     "Last modified (grade)",
     "Feedback comments")
 
+  private val moodleGradingSheetRegex = new scala.util.matching.Regex(
+    """^Grades-COMPSCI(\d+)-SEC\d+ ((?:FA|SP)\d+)-(.*)-\d+-\d{8}_\d{4}-comma_separated\.csv$""",
+    "course", "term", "assignment")
+
 
   def apply(path: String): MoodleSheet = MoodleSheet(Paths.get(path))
 
   def apply(path: Path): MoodleSheet = {
+
     new MoodleSheet(CSVReader.open(path.toFile).all(), path.toString)
   }
 

@@ -5,31 +5,80 @@ object LateDays {
 
   import edu.umass.cs.extras.Implicits._
   import edu.umass.cs.CSV
-  import edu.umass.cs.mail.sendEmail
+  import edu.umass.cs.mail.Message
   import edu.umass.cs.mail.Implicits._
   import java.time.format.DateTimeFormatter
+  import java.time.temporal.TemporalAmount
   import java.time.{LocalDateTime, LocalDate}
   import java.nio.file.{Paths, Files, Path}
   import java.time.temporal.ChronoUnit
 
+  val accomodations = Map(
+    "Lily Zhu" -> 2,
+    "Kevin Hall" -> 2,
+    "Russell Phelan" -> 2,
+    "Vlad Emelyanov" -> 2,
+    "Em Chiu" -> 4)
+
+  val assignmentRegex = """^HW(\d+).*$""".r
+
+  case class LateSubmission(assignment: String, daysLate: Int, penalty: Int) {
+    override def toString(): String = {
+      s"- Submitted $assignment $daysLate day(s) late (penalty: $penalty)"
+    }
+  }
+
+  case class Submission(assignment: String, submitterName: String, submitterEmail: String,
+    lateness: Int) {
+
+    val assignmentNumber = assignmentRegex.findFirstMatchIn(assignment).get.group(1).toInt
+
+  }
+
+
+
+  val lateRegex = new scala.util.matching.Regex(
+    """(?:(\d+) day(?:s)?)?(?: (\d+) hour(?:s)?)?(?: \d+ min(?:s)?)?(?: \d+ sec(?:s)?)? late""",
+    "days", "hours")
+
+  object Submission {
+
+    def parse(assignment: String, row: List[String]): Option[Submission] = {
+      val status = row(3)
+      if (status.startsWith("No submission")) {
+        None
+      }
+      else if (status == "Submitted for grading - Graded") {
+        None
+      }
+      else if (status.startsWith("Submitted for grading - Graded - Extension granted until:")) {
+        None
+      }
+      else {
+        val lateDays_ = lateRegex.findFirstMatchIn(status) match {
+          case Some(regexMatch) => {
+            (regexMatch.group("days"), regexMatch.group("hours")) match {
+              case (null, null) => 0
+              case (null, _) => 1
+              case (days, "") => days.toInt
+              case (days, _) => days.toInt + 1
+            }
+          }
+          case None => throw new IllegalArgumentException(s"Could not parse $status")
+        }
+        val fullName = row(1)
+        val emailAddress = row(2)
+        val lateDays = math.max(0, lateDays_ - accomodations.getOrElse(fullName, 0))
+        if (lateDays == 0) None
+        else Some(Submission(assignment, fullName, emailAddress, lateDays))
+      }
+    }
+  }
+
+/*
   val moodleDateTime = java.time.format.DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy, h:mm a")
   val myDtFormat = DateTimeFormatter.ofPattern("MMM d yyyy, h a")
 
-  val dueDates =
-    Map("hw3" -> LocalDateTime.parse("Feb 11 2016, 1 AM", myDtFormat),
-        "hw4" -> LocalDateTime.parse("Feb 23 2016, 1 AM", myDtFormat),
-        "hw5" -> LocalDateTime.parse("Mar 1 2016, 1 AM", myDtFormat),
-        "hw6" -> LocalDateTime.parse("Mar 8 2016, 1 AM", myDtFormat),
-        "hw7" -> LocalDateTime.parse("Apr 5 2016, 1 AM", myDtFormat),
-        "hw8" -> LocalDateTime.parse("Apr 12 2016, 1 AM", myDtFormat),
-        "hw9" -> LocalDateTime.parse("Apr 19 2016, 1 AM", myDtFormat),
-        "hw10" -> LocalDateTime.parse("Apr 26 2016, 1 AM", myDtFormat))
-
-  val moodleGradingSheetRegex = new scala.util.matching.Regex(
-    """^Grades-COMPSCI(\d+)-SEC\d+ (FA|SP\d+)-([a-z0-9 ]*)-\d{6}-\d{8}_\d{4}-comma_separated\.csv$""",
-    "course", "term", "assignment")
-
-  val lateRegex = new scala.util.matching.Regex("""(?:(\d+) day(?:s)?)?(?: (\d+) hour(?:s)?)?(?: \d+ min(?:s)?)?(?: \d+ sec(?:s)?)? late""", "days", "hours")
 
   def getLatePeriod(row: List[String]): (String, Int) = {
     val cell = row(3)
@@ -100,36 +149,75 @@ object LateDays {
     def compare(x: LocalDateTime, y: LocalDateTime): Int = x.compareTo(y)
   }
 
-  def prepareEmail(late: Int, assignments: List[String]): String = {
+
+  */
+
+  def prepareEmail(email: String, assignments: List[LateSubmission]): Unit = {
+    val body = """
+      |This email is about late homework submitted for COMPSCI220. Recall that the late policy is online:
+      |
+      | https://people.cs.umass.edu/~arjun/courses/compsci220-fall2016/policies/#late
+      |
+      |According to Moodle, you have used up the four late days allowed in the following way:
+      |""".stripMargin +
+    assignments.mkString("\n") +
     """
-    |This email is about late homework submitted for COMPSCI220. Recall that the late policy is online:
-    |
-    |https://people.cs.umass.edu/~arjun/courses/cmpsci220-spring2016/policies/#late
-    |
-    |According to Moodle, you have used """.stripMargin + late.toString +
-    """ late days, which exceeds the four late days you're allowed, so your grade will be affected.
-      |If you believe this is an error, please let us know (using Piazza). According to Moodle, you used:
-    """.stripMargin  + "\n" +
-    assignments.mkString("\n")
+      |If you believe this is an error, please let us by Friday.
+      |""".stripMargin
+
+      val msg = Message(from = "arjun@cs.umass.edu", to = email, subj = "COMPSCI220 - late assignments", msg = body)
+      // println(msg.send())
+      println(email)
+      println(body)
   }
 
-  def filenameToDueDate(p: Path): LocalDateTime = {
-    val f = p.getFileName.toString
-    moodleGradingSheetRegex.findFirstMatchIn(f) match {
-      case None => throw new IllegalArgumentException(s"Cannot parse CSV filename: $f")
-      case Some(regexMatch) => {
-        val assignment = regexMatch.group("assignment")
-        dueDates(assignment)
+  def processSheet(sheet: MoodleSheet): Seq[Submission] = {
+    sheet.rows.tail.map(row => Submission.parse(sheet.assignment.get, row)).flatten
+  }
+
+  def lateReport(submissions: List[Submission]): List[LateSubmission] = {
+
+    def process(cumulative: Int, submissions: List[Submission]): List[LateSubmission] = submissions match {
+      case Nil => Nil
+      case sub :: rest => {
+        val thisSub = if (cumulative > 4) {
+          LateSubmission(sub.assignment, sub.lateness, sub.lateness * -10)
+        }
+        else if (cumulative + sub.lateness > 4) {
+          // cum + late = x where x > 4
+          // penalty = (cum + late) - 4
+          val penalty = (cumulative + sub.lateness) - 4
+          LateSubmission(sub.assignment, sub.lateness, penalty * -10)
+        }
+        else {
+          LateSubmission(sub.assignment, sub.lateness, 0)
+        }
+        thisSub :: process(cumulative + sub.lateness, rest)
       }
     }
+    process(0, submissions)
   }
 
   def fromDirectory(dir: String): Unit = {
     import scala.collection.JavaConversions._
+
     val stream = Files.newDirectoryStream(Paths.get(dir))
-    val csvs = stream.filter(p => p.getFileName.toString.endsWith(".csv")).toList.sortBy(filenameToDueDate)
-    stream.close()
-    val latePeriods = csvs.foldLeft(Map[String, Int]())(processFile)
+    val csvs = stream.filter(_.getFileName.toString.endsWith(".csv"))
+
+    val lateSubmissions = csvs.map(MoodleSheet.apply).flatMap(processSheet)
+      .groupBy(_.submitterEmail)
+      .mapValues(_.toList.sortBy(_.assignmentNumber))
+      .filter { case (_, submissions) => submissions.map(_.lateness).sum > 4 }
+      .map({ case (name, subs) => (name, lateReport(subs)) })
+
+    for ((email, assignments) <- lateSubmissions) {
+      prepareEmail(email, assignments)
+    }
+
+//    val csvs = stream.filter(p => p.getFileName.toString.endsWith(".csv")).toList.sortBy(filenameToDueDate)
+//    stream.close()
+//    val latePeriods = csvs.foldLeft(Map[String, Int]())(processFile)
   }
 
 }
+
