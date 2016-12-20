@@ -1,5 +1,7 @@
 package grading
 
+import com.github.tototoshi.csv.CSVWriter
+
 
 object LateDays {
 
@@ -22,14 +24,14 @@ object LateDays {
 
   val assignmentRegex = """^HW(\d+).*$""".r
 
-  case class LateSubmission(assignment: String, daysLate: Int, penalty: Int) {
+  case class LateSubmission(assignment: String, daysLate: Int, penalty: Int, path: Path, submitterEmail: String) {
     override def toString(): String = {
       s"- Submitted $assignment $daysLate day(s) late (penalty: $penalty)"
     }
   }
 
   case class Submission(assignment: String, submitterName: String, submitterEmail: String,
-    lateness: Int) {
+    lateness: Int, path: Path) {
 
     val assignmentNumber = assignmentRegex.findFirstMatchIn(assignment).get.group(1).toInt
 
@@ -43,7 +45,7 @@ object LateDays {
 
   object Submission {
 
-    def parse(assignment: String, row: List[String]): Option[Submission] = {
+    def parse(filename: Path, assignment: String, row: List[String]): Option[Submission] = {
       val status = row(3)
       if (status.startsWith("No submission")) {
         None
@@ -51,6 +53,9 @@ object LateDays {
       else if (status == "Submitted for grading - Graded") {
         None
       }
+      else if (status.startsWith("Submitted for grading - Extension granted until:")) {
+        None
+        }
       else if (status.startsWith("Submitted for grading - Graded - Extension granted until:")) {
         None
       }
@@ -70,9 +75,22 @@ object LateDays {
         val emailAddress = row(2)
         val lateDays = math.max(0, lateDays_ - accomodations.getOrElse(fullName, 0))
         if (lateDays == 0) None
-        else Some(Submission(assignment, fullName, emailAddress, lateDays))
+        else Some(Submission(assignment, fullName, emailAddress, lateDays, filename))
       }
     }
+  }
+
+  def applyLatePenalty(late: LateSubmission): Unit = {
+    val csv = CSV.fromFile(late.path).map(row =>
+      if (row(2) == late.submitterEmail) {
+        row.updated(4, math.max(0, row(4).toDouble + late.penalty).toString)
+      }
+      else {
+        row
+      })
+    val w = CSVWriter.open(late.path.toString)
+    w.writeAll(csv)
+    w.close()
   }
 
 /*
@@ -172,7 +190,7 @@ object LateDays {
   }
 
   def processSheet(sheet: MoodleSheet): Seq[Submission] = {
-    sheet.rows.tail.map(row => Submission.parse(sheet.assignment.get, row)).flatten
+    sheet.rows.tail.map(row => Submission.parse(Paths.get(sheet.path), sheet.assignment.get, row)).flatten
   }
 
   def lateReport(submissions: List[Submission]): List[LateSubmission] = {
@@ -181,16 +199,16 @@ object LateDays {
       case Nil => Nil
       case sub :: rest => {
         val thisSub = if (cumulative > 4) {
-          LateSubmission(sub.assignment, sub.lateness, sub.lateness * -10)
+          LateSubmission(sub.assignment, sub.lateness, sub.lateness * -10, sub.path, sub.submitterEmail)
         }
         else if (cumulative + sub.lateness > 4) {
           // cum + late = x where x > 4
           // penalty = (cum + late) - 4
           val penalty = (cumulative + sub.lateness) - 4
-          LateSubmission(sub.assignment, sub.lateness, penalty * -10)
+          LateSubmission(sub.assignment, sub.lateness, penalty * -10, sub.path, sub.submitterEmail)
         }
         else {
-          LateSubmission(sub.assignment, sub.lateness, 0)
+          LateSubmission(sub.assignment, sub.lateness, 0, sub.path, sub.submitterEmail)
         }
         thisSub :: process(cumulative + sub.lateness, rest)
       }
@@ -210,14 +228,19 @@ object LateDays {
       .filter { case (_, submissions) => submissions.map(_.lateness).sum > 4 }
       .map({ case (name, subs) => (name, lateReport(subs)) })
 
-    for ((email, assignments) <- lateSubmissions) {
-      prepareEmail(email, assignments)
-    }
+//   This code sends email
+//    for ((email, assignments) <- lateSubmissions) {
+//      prepareEmail(email, assignments)
+//    }
 
-//    val csvs = stream.filter(p => p.getFileName.toString.endsWith(".csv")).toList.sortBy(filenameToDueDate)
-//    stream.close()
-//    val latePeriods = csvs.foldLeft(Map[String, Int]())(processFile)
+// This code updates grades
+    for ((_, assignments) <- lateSubmissions) {
+  for (x <- assignments) {
+  applyLatePenalty(x)
   }
+}
+
+ }
 
 }
 

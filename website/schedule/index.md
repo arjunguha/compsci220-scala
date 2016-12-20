@@ -37,11 +37,11 @@ title: Schedule
 | Thursday, Nov 10  | [Lecture Notes](../reading/lecture19.pdf)                                                       |
 | Tuesday, Nov 15   | Due: [HW8]. [Lecture Notes](../reading/lecture20.pdf)                                           |
 | Wednesday, Nov 16 | **No lab.** (Friday schedule.)                                                                  |
-| Thursday, Nov 17  | Reading: [Parser Combinators].                                                                  |
+| Thursday, Nov 17  |                                                                                                 |
 | Tuesday, Nov 22   | **No class.** (Thanksgiving Recess.)                                                            |
 | Wednesday, Nov 23 | **No lab.** (Thanksgiving Recess.)                                                              |
 | Thursday, Nov 24  | **No class.** (Thanksgiving Recess.)                                                            |
-| Tuesday, Nov 29   | Out: [HW9].                                                                                     |
+| Tuesday, Nov 29   | Reading: [Parser Combinators]. Out: [HW9].                                                      |
 | Wednesday, Nov 30 | *Lab:*                                                                                          |
 | Thursday, Dec 1   |                                                                                                 |
 | Tuesday, Dec 6    | Due: [HW9]. Out: [HW10].                                                                        |

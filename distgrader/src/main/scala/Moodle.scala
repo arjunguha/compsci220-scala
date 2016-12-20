@@ -6,7 +6,7 @@ import com.github.tototoshi.csv._
 /** For scripting Moodle grade sheets. Assumes "Simple directed grading"
   * with a maximum grade of 100 and Feedback comments enabled".
   */
-class MoodleSheet private (val rows: List[List[String]], path: String) {
+class MoodleSheet private (val rows: List[List[String]], val path: String) {
   import MoodleSheet._
 
   val (course, term, assignment) = moodleGradingSheetRegex
