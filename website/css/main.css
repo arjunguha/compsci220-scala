@@ -1,11 +1,11 @@
 body {
-  min-height: 2000px;
   padding-top: 70px;
 }
 
 .arjun-content {
   font-family: Palatino, serif;
-  font-size: 12pt
+  font-size: 12pt;
+  padding-bottom: 2em
 }
 
 .navbar-default {
