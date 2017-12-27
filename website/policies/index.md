@@ -3,16 +3,12 @@ layout: default
 title: Policies
 ---
 
-<a name="electronics"></a>
-
-# No Electronics
+## No Electronics
 
 You cannot use electronics of any kind in class. (i.e., no laptops, cell phones,
 tablets, Google Glasses, Apple Watches, Microsoft HoloLenses, etc.)
 
-<a name="accomadations"></a>
-
-# Accomadations
+## Accomadations
 
 {% comment %}
 From Tim Richards' 187
@@ -24,9 +20,7 @@ of this course. This will give us time to plan accordingly to ensure that you
 get the help you need before it is too late. If you contact us after the two
 weeks we may not be able to provide you the help you need.
 
-<a name="honesty"></a>
-
-# Honesty Policy
+## Honesty Policy
 
 {% comment %}
 Adapted and tweaked from Emery Berger's course.
@@ -63,15 +57,13 @@ accessible directory, and take care when discarding printouts.
 In addition, you are subject to the university's [academic honesty policy]
 and [guidelines for classroom civility]. You must read both of these.
 
-<a name="questions"></a>
-
-# Asking Questions
+## Asking Questions
 
 {% comment %}
 From Tim's 187 and some adaptation
 {% endcomment %}
 
-## During Office Hours
+#### During Office Hours
 
 The course staff have scheduled office hours. They tend to get busy so use
 them wisely. As a general rule, we will restrict office hour visits to
@@ -85,7 +77,7 @@ explicitly ask you to do so.
 
 Most questions will get answered faster online than in person.
 
-## Online
+#### Online
 
 Use Piazza for **all online questions**. You can use Piazza to message the
 entire class, just the course staff, or even individual staff members.
@@ -109,9 +101,7 @@ entire class, just the course staff, or even individual staff members.
 
 Please do not send email. We will respond with "resend to Piazza".
 
-<a name="grading"></a>
-
-# Your Grades
+## Your Grades
 
 Several factors determine your grade in this course. They are weighted
 approximately as follows:
@@ -136,9 +126,7 @@ D+ (67-69), D (60-66), F (0-59).
 Your current grades are available on [Moodle]. You must track your own
 performance throughout the class.
 
-<a name="late"></a>
-
-# Late Homework
+## Late Homework
 
 You have four late days to use for any sort of emergency or party. Please do not
 tell us you’re submitting things late. We know how to program computers to track
@@ -153,8 +141,6 @@ consequences:
 - There is no point staying up late at night after the assignment is due. If you
   realize you're going to be late, go to sleep, come to class in the morning,
   and finish the assignment after class.
-
-
 
 
 **You lose 10% of your grade on an assignment for every 24 hours that an
@@ -177,9 +163,7 @@ In addition, once an assignment is late, you lose certain privileges:
 
 So, we strongly recommend not submitting homework late.
 
-<a name="attendance"></a>
-
-# Attendance
+## Attendance
 
 There is no guarantee that the assigned reading will cover everything discussed
 in class. Conversely, the reading may go into great depth on material the
@@ -188,10 +172,6 @@ actually matters!
 
 You have to complete and hand-in work in most discussion sections. Think of
 this as your "attendance grade".
-
-
-
-
 
 [academic honesty policy]: http://www.umass.edu/dean_students/codeofconduct/acadhonesty/
 

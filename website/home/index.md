@@ -3,23 +3,11 @@ layout: default
 title: Home
 ---
 
-Welcome to the Fall 2016 offering of COMPSCI220 Programming Methodology!
+Welcome to the Fall 2016 offering of COMPSCI220 Programming Methodology.
 
 You must read the entire [Course Policy] document.
 
 ## Course Locations
-
-<!--<table class="table table-striped">-->
-<!--<thead>-->
-  <!--<tr><th>What</th><th>When</th><th>Where</th></tr>-->
-<!--</thead>-->
-<!--<tbody>-->
-<!--<tr><td>Lecture</td><td>Tuesday, 2:30PM--3:45PM</td><td>Engineering Lab II, Room 119</td></tr>-->
-<!--<tr><td>Discussion AA</td><td>Wednesday, 9:05AM--9:55AM</td><td>Ag. Engineering Building, Room 119</td></tr>-->
-<!--<tr><td>Discussion AB</td><td>Wednesday, 10:10AM--11:00AM</td><td>Ag. Engineering Building, Room 119</td></tr>-->
-<!--<tr><td>Lecture</td><td>Thursday, 2:30PM--3:45PM</td><td>Engineering Lab II, Room 119</td></tr>-->
-<!--</tbody>-->
-<!--</table>-->
 
 | What                       | When                                | Where                                        |
 |:---------------------------|--------------------------------------|--------------------------------------------|
@@ -39,55 +27,79 @@ You must read the entire [Course Policy] document.
 | Time 4      |  Location 4    | People 4 |
 {: .table .table-striped :}
 
-<!--# Meet the Staff-->
+## Schedule
 
-<!--<div id="staff-pics">-->
-  <!--<div class="row">-->
-    <!--<div class="col-xs-12 col-sm-6 col-md-3 mugshot">-->
-      <!--<img src="../img/arjun.jpeg" class="mugshot-inner" alt="Arjun" width="250" height="250" />-->
-      <!--<h4 style="font-weight: bold;">Arjun Guha</h4>-->
-    <!--</div>-->
-    <!--<div class="col-xs-12 col-sm-6 col-md-3 mugshot">-->
-      <!--<img src="../img/jane.jpg" class="mugshot-inner" alt="Jane" width="250" height="250" />-->
-      <!--<h4 style="font-weight: bold;">Jane Tangen</h4>-->
-    <!--</div>-->
-    <!--<div class="col-xs-12 col-sm-6 col-md-3 mugshot">-->
-      <!--<img src="../img/jesse.jpg" class="mugshot-inner" alt="Jesse" width="250" height="250" />-->
-      <!--<h4 style="font-weight: bold;">Jesse Bartola</h4>-->
-    <!--</div>-->
-    <!--<div class="col-xs-12 col-sm-6 col-md-3 mugshot">-->
-      <!--<img src="../img/aaron.jpeg" class="mugshot-inner" alt="Aaron" width="250" height="250" />-->
-      <!--<h4 style="font-weight: bold;">Aaron Weiss</h4>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--<div class="row">-->
-    <!--<div class="col-xs-12 col-sm-6 col-md-3 mugshot">-->
-      <!--<img src="../img/john.png" class="mugshot-inner" alt="John" width="250" height="250" />-->
-      <!--<h4 style="font-weight: bold;">John Geenty</h4>-->
-    <!--</div>-->
-    <!--<div class="col-xs-12 col-sm-6 col-md-3 mugshot">-->
-      <!--<img src="../img/harsh.jpeg" class="mugshot-inner" alt="Harsh" width="250" height="250" />-->
-      <!--<h4 style="font-weight: bold;">Harsh Poddar</h4>-->
-    <!--</div>-->
-    <!--<div class="col-xs-12 col-sm-6 col-md-3 mugshot">-->
-      <!--<img src="../img/kyle.jpeg" class="mugshot-inner" alt="Kyle" width="250" height="250" />-->
-      <!--<h4 style="font-weight: bold;">Kyle Vedder</h4>-->
-    <!--</div>-->
-    <!--<div class="col-xs-12 col-sm-6 col-md-3 mugshot">-->
-      <!--<img src="../img/itamar.jpeg" class="mugshot-inner" alt="Itamar" width="250" height="250" />-->
-      <!--<h4 style="font-weight: bold;">Itamar Levy-Or</h4>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
+| Date              | Notes                                                                                           |
+|:------------------|-------------------------------------------------------------------------------------------------|
+| Tuesday, Sep 6    | Out: [HW1]. [Lecture Notes](../reading/lecture1.pdf).                                           |
+| Wednesday, Sep 7  | *Lab:* Scala technical support. No need to attend if you've setup Scala already.                |
+| Thursday, Sep 8   | [Lecture Notes](../reading/lecture2.pdf).                                                       |
+| Tuesday, Sep 13   | Due: [HW1]. Out: [HW2]. [Lecture Notes](../reading/lecture3.pdf).                               |
+| Wednesday, Sep 14 | *Lab:* Sketch of Steps 1 and 2 of [HW2].                                                        |
+| Thursday, Sep 15  | [Lecture Notes](../reading/lecture4.pdf).                                                       |
+| Tuesday, Sep 20   | Due: [HW2]. Out: [HW3]. [Lecture Notes](../reading/lecture5.pdf).                               |
+| Wednesday, Sep 21 | *Lab*: Sketch of Steps 1 and 4 of [HW3].                                                        |
+| Thursday, Sep 22  | [Lecture Notes](../reading/lecture6.pdf).                                                       |
+| Tuesday, Sep 27   | Due: [HW3]. Out: [HW4]. [Lecture Notes](../reading/gc.pdf)                                      |
+| Wednesday, Sep 28 | *Lab*:                                                                                          |
+| Thursday, Sep 29  | [Lecture Notes](../reading/lecture8.pdf)                                                        |
+| Tuesday, Oct 4    | Due: [HW4]. Out: [HW5]. [Lecture Notes](../reading/lecture9.pdf).                               |
+| Wednesday, Oct 5  | *Lab:*                                                                                          |
+| Thursday, Oct 6   | [Lecture Notes](../reading/lecture10.pdf)                                                       |
+| Tuesday, Oct 11   | **No class.** (Monday schedule.)                                                                |
+| Wednesday, Oct 12 | **No lab.** (Continue working on Tic Tac Toe.)                                                  |
+| Thursday, Oct 13  | [Lecture Notes](../reading/lecture11.pdf)                                                       |
+| Tuesday, Oct 18   | Due: [HW5]. Out: [HW6]. [Lecture Notes](../reading/lecture12.pdf)                               |
+| Wednesday, Oct 19 | *Lab:*                                                                                          |
+| Thursday, Oct 20  | [Lecture Notes](../reading/lecture13.pdf)                                                       |
+| Tuesday, Oct 25   | Due: [HW6]. Out: [HW7]. [Lecture Notes](../reading/lecture14.pdf)                               |
+| Wednesday, Oct 26 | *Lab:*                                                                                          |
+| Thursday, Oct 27  | **Class cancelled. Friday office hours cancelled.**                                             |
+| Tuesday, Nov 1    | [Lecture Notes](../reading/lecture16.pdf)                                                       |
+| Wednesday, Nov 2  | **No lab.** (Continue working on Sudoku.)                                                       |
+| Thursday, Nov 3   | [Lecture Notes](../reading/lecture17.pdf)                                                       |
+| Tuesday, Nov 8    | Due: [HW7]. Out: [HW8]. [Lecture Notes](../reading/lecture18.pdf).                              |
+| Wednesday, Nov 9  | *Lab:*                                                                                          |
+| Thursday, Nov 10  | [Lecture Notes](../reading/lecture19.pdf)                                                       |
+| Tuesday, Nov 15   | Due: [HW8]. [Lecture Notes](../reading/lecture20.pdf)                                           |
+| Wednesday, Nov 16 | **No lab.** (Friday schedule.)                                                                  |
+| Thursday, Nov 17  |                                                                                                 |
+| Tuesday, Nov 22   | **No class.** (Thanksgiving Recess.)                                                            |
+| Wednesday, Nov 23 | **No lab.** (Thanksgiving Recess.)                                                              |
+| Thursday, Nov 24  | **No class.** (Thanksgiving Recess.)                                                            |
+| Tuesday, Nov 29   | Reading: [Parser Combinators]. Out: [HW9].                                                      |
+| Wednesday, Nov 30 | *Lab:*                                                                                          |
+| Thursday, Dec 1   |                                                                                                 |
+| Tuesday, Dec 6    | Due: [HW9]. Out: [HW10].                                                                        |
+| Wednesday, Dec 7  | *Lab:*                                                                                          |
+| Thursday, Dec 8   |                                                                                                 |
+| Tuesday, Dec 13   | Due: [HW10].                                                                                    |
+| Wednesday, Dec 14 | **No lab.** (No assignment due.)                                                                |
+{: .table .table-striped :}
 
-## Textbook
+[HW1]: ../hw/hw1.pdf
+[HW2]: ../hw/hw2.pdf
+[HW3]: ../hw/hw3.pdf
+[HW4]: ../hw/hw4.pdf
+[HW5]: ../hw/hw5.pdf
+[HW6]: ../hw/hw6.pdf
+[HW7]: ../hw/hw7.pdf
+[HW8]: ../hw/hw8.pdf
+[HW9]: ../hw/hw9.pdf
+[HW10]: ../hw/hw10.pdf
 
-There is no required textbook. Instead, you must read the lecture notes posted on the
-schedule, which includes references to other online resources when appropriate.
+[Parser Combinators]: http://www.artima.com/pins1ed/combinator-parsing.html
+[Java Regular Expressions]: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
+[Scala Regular Expressions]: http://www.scala-lang.org/api/current/index.html#scala.util.matching.Regex
 
-If you want to read a book on Scala programming, we recommend the following book:
+<!--## Textbook-->
 
-[Programming in Scala: A Comprehensive Step-by-Step Guide (2nd Edition), Odersky, Spoon, Venners][textbook]
+<!--There is no required textbook. Instead, you must read the lecture notes posted on the-->
+<!--schedule, which includes references to other online resources when appropriate.-->
 
-[Course Policy]: ../policies
-[textbook]: http://www.amazon.com/Programming-Scala-Comprehensive-Step-Step/dp/0981531644
+<!--If you want to read a book on Scala programming, we recommend the following book:-->
+
+<!--[Programming in Scala: A Comprehensive Step-by-Step Guide (2nd Edition), Odersky, Spoon, Venners][textbook]-->
+
+<!--[Course Policy]: ../policies-->
+<!--[textbook]: http://www.amazon.com/Programming-Scala-Comprehensive-Step-Step/dp/0981531644-->
