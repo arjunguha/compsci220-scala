@@ -17,25 +17,10 @@
 
         <li><a href="https://moodle.umass.edu">Moodle</a></li>
         <li><a href="{{ site.data.config.discussion_url }}">{{ site.data.config.discussion_name }}</a></li>
-        <li {% if page.title == "Software" %}class="active"{% endif %}><a href="../software">Software</a></li>
+        <li><a href="../software">Software</a></li>
         <li><a href="../api">Scaladoc</a></li>
-        <li {% if page.title == "Policies" %}
-              class="active dropdown"
-            {% else %}
-              class="dropdown"
-            {% endif %}>
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Policies <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="../policies/#electronics">No Electronics</a></li>
-            <li><a href="../policies/#accomadations">Accomadations</a></li>
-            <li><a href="../policies/#honesty">Honesty Policy</a></li>
-            <li><a href="../policies/#questions">Asking Questions</a></li>
-            <li><a href="../policies/#grading">Your Grades</a></li>
-            <li><a href="../policies/#late">Late Homework</a></li>
-            <li><a href="../policies/#attendance">Attendance</a></li>
-          </ul>
-        </li>
-        <li {% if page.title == "Acknowledgements" %}class="active"{% endif %}><a href="../acknowledgements">Acknowledgements</a></li>
+        <li><a href="../policies">Policies</a></li>
+        <li><a href="../acknowledgements">Acknowledgements</a></li>
 
       </ul>
     </div><!--/.nav-collapse -->
