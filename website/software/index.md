@@ -4,35 +4,13 @@ title: Course Software
 ---
 
 To do the homework and projects for this class, you'll need Scala and some
-course-specific software. We recommend installing Scala on your
-own machine. If you have a lot of trouble, you can use the *virtual machine*
-discussed below.
+course-specific software. We **highly recommend** using an linux or a mac os
+environment. If you have a Windows environment, you can setup a *virtual
+machine*.
 
-## Windows
-
-1. [Install Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
-
-   If you already have Java installed, you need to ensure that it is Java 8
-   or higher.
-
-2. Install [SBT](http://www.scala-sbt.org)
-
-3. Install [Cygwin](http://www.cygwin.com).
-
-4. Verify that everything installed by typing `sbt` to start SBT from the
-   Cygwin terminal.
-
-### Known Issues:
-
-* `sbt command not found`
-
-    _Known Fix:_ Restart the computer
-
-* Backspace not working
-
-    _Known Fix:_ Left-Click on the top left corner of the Cygwin window (the Cygwin icon), then click on Options > Keys. Check the "Back arrow sends ^H"
-
-    <img src="cygwin_backspace_fix.png">
+Learning to work in a linux-like environment is an essential skill for a
+software developer. Additionally, several courses in the ciriculum asumme
+knowledge on linux.
 
 ## Mac OS X
 
@@ -49,6 +27,8 @@ discussed below.
       `brew install sbt`
 
 5. To verify that everything installed, type `sbt` to start SBT.
+
+* * *
 
 ## Linux (Ubuntu):
 
@@ -67,10 +47,13 @@ discussed below.
 
 3. To verify that everything installed, type `sbt` to start SBT.
 
+* * *
+
 ## Virtual Machine
 
 To use the [virtual machine], you will need at least 4 GB of RAM and a modern
-processor.
+processor. (For the curious, this virtual machine is running [Lubuntu] Linux
+14.04 32-bit.)
 
 1. Download and install [VirtualBox]
 
@@ -95,9 +78,36 @@ processor.
 
    <img src="vm-google-chrome.png">
 
-### More Information
+* * *
 
-For the curious, this virtual machine is running [Lubuntu] Linux 14.04 (32-bit).
+## Windows
+
+If you are having trouble setting up the virtual machine, you may also directly
+setup Scala on your windows machines.
+
+1. [Install Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
+
+   If you already have Java installed, you need to ensure that it is Java 8
+   or higher.
+
+2. Install [SBT](http://www.scala-sbt.org)
+
+3. Install [Cygwin](http://www.cygwin.com).
+
+4. Verify that everything installed by typing `sbt` to start SBT from the
+   Cygwin terminal.
+
+### Known Issues:
+
+* `sbt command not found`
+
+    _Known Fix:_ Restart the computer
+
+* Backspace not working
+
+    _Known Fix:_ Left-Click on the top left corner of the Cygwin window (the Cygwin icon), then click on Options > Keys. Check the "Back arrow sends ^H"
+
+    <img src="cygwin_backspace_fix.png">
 
 
 [virtual machine]: http://en.wikipedia.org/wiki/Virtual_machine
