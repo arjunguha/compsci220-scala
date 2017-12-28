@@ -28,5 +28,62 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="..//js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+// @param a String with first three letters of a Month
+// @returns a Number between 0 and 11
+function getMonth(month) {
+  switch(month) {
+    case "Jan": return 0
+    case "Feb": return 1
+    case "Mar": return 2
+    case "Apr": return 3
+    case "May": return 4
+    case "Jun": return 5
+    case "Jul": return 6
+    case "Aug": return 7
+    case "Sep": return 8
+    case "Oct": return 9
+    case "Nov": return 10
+    case "Dec": return 11
+  }
+}
+
+const today = new Date()
+
+// @param a String of the form: Weekday, Month Day
+// @returns a Date object
+function parseDate(date) {
+  if (date) {
+    const month_day = date.split(",")[1];
+    const [month, day] = month_day.trim().split(" ")
+    return new Date(today.getFullYear(), getMonth(month), day, 0, 0, 0, 0)
+  }
+}
+
+// If this page has a schedule, strikeout the dates that have passed.
+function strikeTable() {
+  const table = document.getElementById('schedule-table');
+  if (table) {
+    // table.children[0] is the table header.
+    // table.children[1] is the rest of the table.
+    const rows = table.children[1].children;
+    for (let ix = 0; ix < rows.length; ix ++) {
+      if (rows[ix].children) {
+        // Get the date from the table.
+        const date = rows[ix].children[0]
+        if (today > parseDate(date.innerHTML)) {
+          date.className += "datePassed"
+        }
+      }
+    }
+  }
+  else {
+    return
+  }
+}
+
+strikeTable()
+</script>
 </body>
 </html>

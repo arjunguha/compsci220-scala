@@ -9,8 +9,8 @@ You must read the entire [Course Policy] document.
 
 ## Course Locations
 
-| What                       | When                                | Where                                        |
-|:---------------------------|--------------------------------------|--------------------------------------------|
+| What     | When       | Where      |
+|:---------|------------|------------|
 | Lecture 1    | Time 1 |  Location 1
 | Lecture 2    | Time 2 |  Location 2
 | Discussion 1 | Time 3 |  Location 3
@@ -19,8 +19,8 @@ You must read the entire [Course Policy] document.
 
 ## Office Hours
 
-| When                       | Where                                | Who                                        |
-|:---------------------------|--------------------------------------|--------------------------------------------|
+| When       | Where    | Who   |
+|:-----------|----------|-------|
 | Time 1      |  Location 1    | People 1 |
 | Time 2      |  Location 2    | People 2 |
 | Time 3      |  Location 3    | People 3 |
@@ -75,7 +75,7 @@ You must read the entire [Course Policy] document.
 | Thursday, Dec 8   |                                                                                                 |
 | Tuesday, Dec 13   | Due: [HW10].                                                                                    |
 | Wednesday, Dec 14 | **No lab.** (No assignment due.)                                                                |
-{: .table .table-striped :}
+{: .table .table-striped #schedule-table :}
 
 [HW1]: ../hw/hw1.pdf
 [HW2]: ../hw/hw2.pdf

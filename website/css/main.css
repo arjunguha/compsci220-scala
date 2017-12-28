@@ -2,6 +2,10 @@ body {
   padding-top: 70px;
 }
 
+.datePassed {
+  color: grey;
+}
+
 .arjun-content {
   font-family: Palatino, serif;
   font-size: 12pt;
