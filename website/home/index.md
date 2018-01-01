@@ -15,25 +15,45 @@ If you want to read a book on Scala programming, we recommend the following book
 
 You must read the entire [Course Policy] document.
 
+***
+
 ## Course Locations
 
-| What     | When       | Where      |
-|:---------|------------|------------|
-| Lecture 1    | Time 1 |  Location 1
-| Lecture 2    | Time 2 |  Location 2
-| Discussion 1 | Time 3 |  Location 3
-| Discussion 2 | Time 4 |  Location 4
-{: .table .table-striped :}
+<table class="table table-striped">
+<tr>
+  <th>What</th>
+  <th>When</th>
+  <th>Where</th>
+</tr>
+{% for ix in site.data.course_locations %}
+<tr>
+  <td>{{ix.what}} </td>
+  <td>{{ix.when}}</td>
+  <td>{{ix.where}}</td>
+</tr>
+{% endfor %}
+</table>
+
+***
 
 ## Office Hours
 
-| When       | Where    | Who   |
-|:-----------|----------|-------|
-| Time 1      |  Location 1    | People 1 |
-| Time 2      |  Location 2    | People 2 |
-| Time 3      |  Location 3    | People 3 |
-| Time 4      |  Location 4    | People 4 |
-{: .table .table-striped :}
+<table class="table table-striped">
+<tr>
+  <th>When</th>
+  <th>Where</th>
+  <th>Who</th>
+</tr>
+{% for ix in site.data.office_hours %}
+<tr>
+  <td>{{ix.when}} </td>
+  <td>{{ix.where}}</td>
+  <td>{{ix.who}}</td>
+</tr>
+{% endfor %}
+</table>
+
+***
 
 ## Schedule
 
@@ -87,6 +107,7 @@ letters) Day. The default layout expects this format in the schedule table. -->
 | Tuesday, Dec 13   | Due: [HW10].                                                                                    |
 | Wednesday, Dec 14 | **No lab.** (No assignment due.)                                                                |
 {: .table .table-striped #schedule-table :}
+***
 
 [HW1]: ../hw/hw1.pdf
 [HW2]: ../hw/hw2.pdf
