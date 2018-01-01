@@ -3,7 +3,15 @@ layout: default
 title: Home
 ---
 
-Welcome to the Fall 2016 offering of COMPSCI220 Programming Methodology.
+Welcome to the {{ site.data.config.semester }} offering of COMPSCI220 Programming Methodology.
+
+**Textbook**: There is **no required textbook**. Instead, you must read the
+lecture notes posted on the schedule, which includes references to other online
+resources when appropriate.
+
+If you want to read a book on Scala programming, we recommend the following book:
+
+[Programming in Scala: A Comprehensive Step-by-Step Guide (2nd Edition), Odersky, Spoon, Venners][textbook]
 
 You must read the entire [Course Policy] document.
 
@@ -29,8 +37,11 @@ You must read the entire [Course Policy] document.
 
 ## Schedule
 
-| Date              | Notes                                                                                           |
-|:------------------|-------------------------------------------------------------------------------------------------|
+<!-- NOTE(rachit): The date should be in the format Weekday, Month (first three
+letters) Day. The default layout expects this format in the schedule table. -->
+
+| Date| Notes|
+|:--|--|
 | Tuesday, Sep 6    | Out: [HW1]. [Lecture Notes](../reading/lecture1.pdf).                                           |
 | Wednesday, Sep 7  | *Lab:* Scala technical support. No need to attend if you've setup Scala already.                |
 | Thursday, Sep 8   | [Lecture Notes](../reading/lecture2.pdf).                                                       |
@@ -91,15 +102,5 @@ You must read the entire [Course Policy] document.
 [Parser Combinators]: http://www.artima.com/pins1ed/combinator-parsing.html
 [Java Regular Expressions]: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
 [Scala Regular Expressions]: http://www.scala-lang.org/api/current/index.html#scala.util.matching.Regex
-
-<!--## Textbook-->
-
-<!--There is no required textbook. Instead, you must read the lecture notes posted on the-->
-<!--schedule, which includes references to other online resources when appropriate.-->
-
-<!--If you want to read a book on Scala programming, we recommend the following book:-->
-
-<!--[Programming in Scala: A Comprehensive Step-by-Step Guide (2nd Edition), Odersky, Spoon, Venners][textbook]-->
-
-<!--[Course Policy]: ../policies-->
-<!--[textbook]: http://www.amazon.com/Programming-Scala-Comprehensive-Step-Step/dp/0981531644-->
+[Course Policy]: ../policies
+[textbook]: http://www.amazon.com/Programming-Scala-Comprehensive-Step-Step/dp/0981531644
