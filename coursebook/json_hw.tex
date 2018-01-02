@@ -1,0 +1,141 @@
+\newhw{JSON Parser and Printer}
+
+\section{Introduction}
+As a software developer, you will often be required to implement standardized
+data encodings that allow different parts of your system to interact with
+each other. In this homework, we will be implement one such encoding called
+\textbf{JSON} or the \textbf{JavaScript Object Notation}. JSON is a
+\textit{text-based encoding}, i.e. it is written using simple strings and is
+meant to be human readable.
+\\ \\
+Here are some examples of the \textit{concrete syntax} of JSON:
+\begin{itemize}
+    \item \lstinline|{"dogs": 1, "cats": 2}|
+    \item \lstinline|{"cats": { "name": "Hilbert", "age": 4 }}|
+    \item \lstinline|{"numbers": [1, 2, 3, 4]}|
+    \item \lstinline|{"blue": true, "yellow": false, "red": null}|
+\end{itemize}
+The assignment is divided into four parts:
+\begin{enumerate}
+    \item \textbf{Representing JSON in Scala}: Since we want to leverage the
+    scala type system to make sure that a JSON object is well-formed, we will
+    represent them using case class in Scala. To complete this part, you will
+    read the JSON specification and come up with case classes in Scala.
+    \item \textbf{Parsing JSON}: For this part, we will make use of Scala's
+    parser combinators to implement a parser that reads in a JSON string and
+    converts it into our case classes.
+    \item \textbf{Printing JSON}: For this part, we will convert our case classes
+    back into a string. Note that since we make use of scala's case classes,
+    we are \textit{guaranteed} to only output valid JSON.
+    \item \textbf{Manipulating JSON}: For this part, you will be writing several
+    recursive functions that extract data from a given JSON object.
+\end{enumerate}
+
+\section{Programming Task}
+Read the \href{https://www.json.org/}{JSON Specification}. In order to keep
+parsing simple, we will be using the grammar specified below.
+Note that \texttt{true, false, null} are literal constants,
+i.e. they appear as exact identifier strings.
+\begin{verbatim}
+string := "[^"]*"
+
+number := -?[0-9]+(.[0-9]+)?
+
+pair := string : json
+
+members :=
+   | pair
+   | pair , members
+
+object :=
+   | {}
+   | { members }
+
+elements :=
+   | json
+   | json , elements
+
+array :=
+   | []
+   | [ elements ]
+
+json :=
+   | string
+   | number
+   | object
+   | array
+   | true
+   | false
+   | null
+\end{verbatim}
+To complete the assignment, You will need to fill out the following solution
+template:
+\scalafile{../hw/json_parsing/template/src/main/scala/Solution.scala}
+We suggest proceeding in the following order:
+\begin{enumerate}
+    \item Come up with an encoding for JSON in scala by defining a sealed trait
+    that extends \lstinline|JSONLike|. It should use case classes to encode
+    the entire JSON structure.
+    \item Implement \lstinline|JSONParser| by translating the grammar provided
+    above to Scala's parser combinators.
+    \item Implement \lstinline|JSONPrinter|.
+
+    \item Implement the JSON manipulation functions. Each of the functions
+    takes in a valid JSON string and returns a valid JSON string.
+    \begin{enumerate}
+        \item \textit{getAgeArrays}: Expects a JSON string that represents an
+        array of key-value pairs represented by a JSON object. Example:
+        \begin{scalacode}
+            [
+                { "name": "John", "age": 24 },
+                { "name": "Jane", "age": 23 },
+                { "name": "John", "age": 17 }
+            ]
+        \end{scalacode}
+        Returns a JSON with an object that associates names to arrays of ages.
+        \begin{scalacode}
+            {
+                "John" : [ 24, 17 ],
+                "Jane" : [ 23 ]
+            }
+        \end{scalacode}
+        \textbf{Note}: While we will make sure that the input JSON has the given
+        structure, you \textbf{should handle null} values properly.
+        If a name is \textbf{null}, exclude it from the table and if an age is
+        \textbf{null}, exclude it from the corresponding name array.
+
+        \item \textit{getHTMLTag}: This function expects a JSON encoding of a
+        tree and a string representing a node label. The tree has the
+        following properties:
+        \begin{itemize}
+            \item Every node is encoded as a key-value with the name of the
+            node being the key and the children of the node being the values.
+            \item Each node can be arbitrarily nested into one of the other
+            nodes.
+            \item The value of a node is either an array of nodes or a value (
+                string, number, booleans, etc.)
+            \item There are no \textbf{null}s in the tree.
+        \end{itemize}  Example:
+        \begin{scalacode}
+            [
+                "node1" :  [
+                    "node2" : "a string",
+                    "node2" : "another string"
+                ],
+                "node2" : "one more string"
+            ]
+        \end{scalacode}
+        Write a recursive function traverses this JSON encoded tree and
+        returns an array containing all the children of the given node label.
+        For example, given the above encoding and the label \textit{node2},
+        it returns:
+        \begin{scalacode}
+            [
+                "a string",
+                "another string",
+                "one more string"
+            ]
+        \end{scalacode}
+
+    \end{enumerate}
+\end{enumerate}
