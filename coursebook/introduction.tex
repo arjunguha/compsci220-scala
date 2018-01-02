@@ -1,15 +1,10 @@
-\newlecture
-
-\textbf{Course Description}: Development of individual skills necessary for
-designing, implementing, testing and modifying larger programs, including: use
-of integrated design environments, design strategies and patterns, testing,
-working with large code bases and libraries, code refactoring, and use of
-debuggers and tools for version control.
+\chapter{Introduction: Scala, the command-line, and pattern-matching}
+\startlecture
 
 \section{Introduction\classtime{15}}
 
-\emph{COMPSCI220 Programming Methodology} introduces you to all the concepts
-above in the context of a modern programming language:
+\emph{COMPSCI220 Programming Methodology} introduces to advanced programming
+techniques in the context of a modern programming language:
 \href{http://www.scala-lang.org/what-is-scala.html}{Scala}.
 You could use Scala to write exactly the same kind
 of object-oriented code that you've seen in Java. In fact, Scala code and Java
@@ -24,7 +19,7 @@ systems tend to use several programming languages. Therefore, to succeed in your
 computing career, you have to be familiar with several languages and be able to
 learn new languages on your own. Programming
 languages are constantly invented and abandoned\footnote{\href{http://www.oreillynet.com/pub/a/oreilly/news/languageposter_0504.html}{This poster} is a very incomplete history of the birth and death of programming languages.}
- and it is impossible to predict the next big language that everyone
+ and it is impossible to predict the next language that everyone
 will use or the language you'll need to learn for your first job.
 
 Scala is a big language with many unique features and we are not going to learn
@@ -82,8 +77,9 @@ the following broad ideas that are applicable to all software development:
 
 \item \emph{Command-line tools} such as compilers and build tools lie under the
   hood of sophisticated IDEs such as Eclipse. Learning to use the command-line
-  will make you a better IDE user. Moreover, since many new languages lack good
-  IDEs, we will emphasize the use of command-line tools in this course.
+  will make you a better IDE user. Moreover, many newer languages lack good
+  IDEs. Therefore, if you want to master the latest technologies, you will
+  need to master the command-line.
 
 \item \emph{Version control} software is critical for collaborative software
   development and used by all professional programmers. Although you will be
@@ -139,12 +135,13 @@ launching the \textbf{Terminal} application, which is in the
 
 \item If you're using Windows 10, you can use \textbf{Bash for Windows}.
 
-\item If you're using Windows, you can install and run \textbf{Cygwin}.
+\item If you're using an earlier version of Windows, you can install and
+run \textbf{Cygwin}.
 
 \end{itemize}
 
 Unless you're already familiar with the command-line, you must read
-\href{http://learncodethehardway.org/cli/book/cli-crash-course.html}{Zed Shaw's Command Line Crash Course},
+\href{https://learnpythonthehardway.org/python3/appendixa.html}{Zed Shaw's Command Line Crash Course},
 up to and including the chapter ``Removing a File (rm)''. Zed likes to swear at
 his own readers, so we'd like to apologize in advance on his behalf. The rest
 of these lecture notes assume that you are familiar with the command-line.
@@ -290,7 +287,7 @@ scala> def dist2(x: Double, y: Double): Double = {
 
 \section{\sbt{} Project Structure\classtime{5}}
 
-In principle, you can write a full-fleged program line-by-line in the Scala
+In principle, you can write a full-fledged program line-by-line in the Scala
 console. But, it makes a lot more sense to save large programs to files
 for a particular \emph{project}. To do so, we will being by creating a new directory
 for your project. Every time you create a new Scala program (e.g., for a homework
