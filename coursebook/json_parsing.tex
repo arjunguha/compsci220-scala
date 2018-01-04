@@ -28,8 +28,10 @@ The assignment is divided into two parts:
 \end{enumerate}
 
 \section{Programming Task}
-We will be using the grammar specified below. Note that \texttt{true, false,
-null} are literal constants, i.e. they appear as exact identifier strings.
+We will be using the grammar defined in \Cref{json-bnf}. Note that
+\texttt{true, false, null} are literal constants, i.e. they appear as exact
+identifier strings.
+\begin{figure}
 \begin{verbatim}
 string := "[^"]*"
 
@@ -62,12 +64,26 @@ json :=
    | false
    | null
 \end{verbatim}
+\caption{JSON BNF}\label{json-bnf}
+\end{figure}
 To complete the assignment, You will need to fill out the following solution
 template:
 \scalafile{../hw/json_parsing/template/src/main/scala/Solution.scala}
 We suggest proceeding in the following order:
 \begin{enumerate}
-    \item Implement \lstinline|JSONParser| by translating the grammar provided
-    above to Scala's parser combinators.
+    \item Implement \lstinline|JSONParser| using Scala's parser combinators.
     \item Implement \lstinline|JSONPrinter|.
 \end{enumerate}
+
+\section{Check Your Work}
+
+\begin{figure}
+\scalafile{../hw/json_parsing/template/src/test/scala/TrivialTests.scala}
+\caption{Your solution must pass this test suite with no modifications.}
+\label{parsing_tests}
+\end{figure}
+
+\Cref{parsing_tests} is a trivial test suite that simply ensures that you've
+defined the parser and printer with the right types.
+
+\input{handin}
