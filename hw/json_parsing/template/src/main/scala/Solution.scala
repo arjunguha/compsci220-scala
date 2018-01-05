@@ -1,14 +1,14 @@
 import hw.json._
 import scala.util.parsing.combinator._
 
-object JSONParser extends JSONParserLike {
+object JsonParser extends JsonParserLike {
 
-  def parseJSON(jsonString: String): JSONLike = ???
+  def parse(jsonString: String): Json = ???
 
 }
 
-object JSONPrinter extends JSONPrinterLike {
+object JsonPrinter extends JsonPrinterLike {
 
-  def printJSON(json: JSONLike): String = ???
+  def print(json: Json): String = ???
 
 }
