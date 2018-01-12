@@ -1,0 +1,37 @@
+{
+  "name": "food1",
+  "state": "CA",
+  "stars": 2,
+  "review_count": 17,
+  "attributes": {
+    "Ambience": {
+      "casual": true
+    }
+  },
+  "categories": [ "Food" ]
+}
+{
+  "name": "food2",
+  "state": "MA",
+  "stars": 3,
+  "review_count": 17,
+  "attributes": {
+  },
+  "categories": [ "Food" ]
+}
+{
+  "name": "place1",
+  "state": "MA",
+  "stars": 3.5,
+  "review_count": 17,
+  "attributes": null,
+  "categories": [ "Place" ]
+}
+{
+  "name": "food3",
+  "state": "CA",
+  "stars": 5,
+  "review_count": 17,
+  "attributes": null,
+  "categories": [ "Food" ]
+}

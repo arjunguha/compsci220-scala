@@ -1,0 +1,179 @@
+\newhw{Data Wrangling with Json}
+
+\noindent As a software engineer, you often have to work with large datasets.
+Such data is used in everything from large machine learning applications, to
+simple conversation bots. For this assignment you will be working
+with the JSON format. JSON (or JavaScript Object Notation)\footnote{While
+closely related to the JavaScript programming language, all major languages
+support working with JSON through external libraries} is a widely used format
+that encodes data in a readable textual format. You'll be working with
+\href{https://www.yelp.com/dataset}{Yelp's academic dataset} to answer vital
+questions such as ``What is the most popular restaurant in California?''.
+
+\section{Preliminaries}
+You should create a directory-tree that looks like this:
+\dirtree{%
+.1 ./wrangling.
+.2 build.sbt.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala\DTcomment{Yours tests go here}.
+}
+The \texttt{project/plugins.sbt} file must have exactly this line:
+\begin{scalacode}
+addSbtPlugin("edu.umass.cs" % "compsci220" % "1.0.0")
+\end{scalacode}
+
+You'll also need to download a shortened yelp dataset from the assignment page
+on moodle.
+
+\section{The Data}
+For this assignment, you'll we working with Json data encoded using Scala case
+classes. Json data can contain the following parts:
+\begin{itemize}
+    \item \textit{Constants}: Numbers, Strings (double quoted), Booleans, and
+    \texttt{null} can be directly represented in Json. Example: ``cat'', 1.0,
+    \texttt{true}.
+
+    \item \textit{null}: \texttt{null} is a special value in Json that
+    represents a missing field.
+
+    \item \textit{Arrays}: A Json array is an array that itself contains other
+    Json values. Json arrays are not type-constrained, that is, an array can
+    contain multiple types of Json values. Example: [1.0, 2, null]
+
+    \item \textit{Objects}: A Json object (or a Json dictionary) contains
+    \textit{pairs} of keys and values separated by commas. Each pair is
+    represented by a double quoted string followed by a colon followed by any
+    Json value. Example:
+    \begin{scalacode}
+    {
+        "array": [1,2,3],
+        "animal": "cat",
+        "range": { "start": 1, "end": 10 }
+    }
+    \end{scalacode}
+\end{itemize}
+
+\noindent The Scala case classed that encode these Json values can be found
+in the homework package documentation.
+\\ \\
+In the dataset file, each line has a Json object. Each Json object looks like
+this:
+    \begin{scalacode}
+    {
+        "name": "Jade Palace",
+        "city": "San Francisco",
+        "state": "CA",
+        "stars": 4.5,
+        "review_count": 1140,
+        "attributes": { ... },
+        "categories": [ "Chinese", "TakeOut" ],
+    }
+    \end{scalacode}
+The \texttt{build.sbt} file for this assignment is configured to load a library
+for reading Json files. For example, the following program reads in the dataset
+file and returns a list of \texttt{Json} objects:
+\begin{scalacode}
+import hw.json
+val data: List[json.Json] = json.fromFile("yelp.json")
+\end{scalacode}
+
+\section{Programming Task}
+
+Your programming task is to implement the functions described below. You should
+place all functions within an object called \texttt{Wrangling}.
+
+\begin{enumerate}
+    \item Write a function that consumes a list of Json objects and returns
+    those records from a given state (state codes are two letters).
+    \begin{scalacode}
+    def fromState(data: List[Json], state: String): List[Json]
+    \end{scalacode}
+
+    \item Write a function that consumes a list of Json objects and returns
+    those records that have rating less than or equal to the given bound:
+    \begin{scalacode}
+    def ratingLT(data: List[Json], rating: Int): List[Json]
+    \end{scalacode}
+
+    \item Write a function that consumes a list of Json objects and returns
+    those records that have rating more than or equal to the given bound:
+    \begin{scalacode}
+    def ratingGT(data: List[Json], rating: Int): List[Json]
+    \end{scalacode}
+
+    \item Write a function that consumes a list of Json objects and returns
+    those records that have the given category:
+    \begin{scalacode}
+    def category(data: List[Json], category: String): List[Json]
+    \end{scalacode}
+
+    \item Write a function that consumes a list of Json objects and returns
+    a list of Json objects grouped by their home state:
+    \begin{scalacode}
+    def groupByState(data: List[Json]): Map[String, List[Json]]
+    \end{scalacode}
+
+    \item Write a function that consumes a list of Json objects and returns
+    a list object grouped by their category. Note that if a restaurant has
+    multiple categories, it should occur in each pair.
+    \begin{scalacode}
+    def groupByCategory(data: List[Json]): Map[String, List[Json]]
+    \end{scalacode}
+
+    \item Write a function that consumes a list of Json objects and returns
+    the ``best'' establishment. The ``best'' establishment is the one that
+    has the highest score and the most number of reviews. Note that the
+    highest score in a list might not be 5.
+    \begin{scalacode}
+    def bestPlace(data: List[Json]): Json
+    \end{scalacode}
+
+    \item Each Json object contains an \texttt{attributes} field that
+    \textit{might} contain itself contain an \texttt{Ambiance} field which
+    itself is an object:
+    \begin{scalacode}
+    {   ...
+        "attributes": {
+            ...
+            "Ambience": {
+                "hipster": false,
+                "trendy": false,
+                "upscale": false,
+                "casual": false
+            }
+        }
+    }
+    \end{scalacode}
+    Write a function that consumes a list of Json objects and returns a list
+    of Json objects with a given ambience. If an object doesn't have an
+    \texttt{Ambience} field, exclude it from the list.
+    \begin{scalacode}
+    def hasAmbience(data: List[Json], ambience: String): List[Json]
+    \end{scalacode}
+
+\end{enumerate}
+
+\noindent You'll notice that many of the functions produce a list of Json
+objects. The key idea is that you can compose these functions together to
+pose complex queries. For example, suppose \texttt{yelpJson} holds the
+complete yelp data.
+
+\begin{itemize}
+\item The following query finds the best takeout restaurant in California:
+    \begin{scalacode}
+    bestPlace(category(fromState(yelpJson, "CA"), "takeout"))
+    \end{scalacode}
+
+\item The following query finds the best establishment in each state:
+    \begin{scalacode}
+    groupByState(yelpJson).map((state, els) => (s, best(els)))
+    \end{scalacode}
+\end{itemize}
+
+\input{handin}
