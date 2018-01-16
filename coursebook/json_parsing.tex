@@ -1,0 +1,89 @@
+\newhw{JSON Parser and Printer}
+
+\section{Introduction}
+In previous assignments, you've worked extensively with data in JSON format and
+have manipulated it using Scala's case classes. However, as you might have
+noticed, JSON is a text based encoding that needs to be \textit{parsed}. In
+this assignment you'll be writing a parser that takes in valid JSON text and
+converts it into Scala case classes. Since we will be using the JSON case
+classes from previous assignments, you will be able to plug in your parser and
+use it in place of ours!
+\\ \\
+To refresh your memory, here are some examples of the \textit{concrete syntax}
+of JSON:
+\begin{itemize}
+    \item \lstinline|{"dogs": 1, "cats": 2}|
+    \item \lstinline|{"cats": { "name": "Hilbert", "age": 4 }}|
+    \item \lstinline|{"numbers": [1, 2, 3, 4]}|
+    \item \lstinline|{"blue": true, "yellow": false, "red": null}|
+\end{itemize}
+The assignment is divided into two parts:
+\begin{enumerate}
+    \item \textbf{Parsing JSON}: For this part, we will make use of Scala's
+    parser combinators to implement a parser that reads in a JSON string and
+    converts it into our case classes.
+    \item \textbf{Printing JSON}: For this part, we will convert our case classes
+    back into a string. Note that since we make use of scala's case classes,
+    we are \textit{guaranteed} to only output valid JSON.
+\end{enumerate}
+
+\section{Programming Task}
+We will be using the grammar defined in \Cref{json-bnf}. Note that
+\texttt{true, false, null} are literal constants, i.e. they appear as exact
+identifier strings.
+\begin{figure}
+\begin{verbatim}
+string := "[^"]*"
+
+number := -?[0-9]+(.[0-9]+)?
+
+pair := string : json
+
+members :=
+   | pair
+   | pair , members
+
+object :=
+   | {}
+   | { members }
+
+elements :=
+   | json
+   | json , elements
+
+array :=
+   | []
+   | [ elements ]
+
+json :=
+   | string
+   | number
+   | object
+   | array
+   | true
+   | false
+   | null
+\end{verbatim}
+\caption{JSON BNF}\label{json-bnf}
+\end{figure}
+To complete the assignment, You will need to fill out the following solution
+template:
+\scalafile{../hw/json_parsing/template/src/main/scala/Solution.scala}
+We suggest proceeding in the following order:
+\begin{enumerate}
+    \item Implement \lstinline|JSONParser| using Scala's parser combinators.
+    \item Implement \lstinline|JSONPrinter|.
+\end{enumerate}
+
+\section{Check Your Work}
+
+\begin{figure}
+\scalafile{../hw/json_parsing/template/src/test/scala/TrivialTests.scala}
+\caption{Your solution must pass this test suite with no modifications.}
+\label{parsing_tests}
+\end{figure}
+
+\Cref{parsing_tests} is a trivial test suite that simply ensures that you've
+defined the parser and printer with the right types.
+
+\input{handin}
