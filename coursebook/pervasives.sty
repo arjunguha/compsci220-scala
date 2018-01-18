@@ -107,6 +107,8 @@
 \newcounter{lecture_num}
 \stepcounter{lecture_num}
 
+\newcommand{\savepdf}[1]{\pdfbookmark[0]{file:#1}{file:#1}}
+
 \newcommand{\startlecture}{%
 \pdfbookmark[0]{file:reading/lecture\the\value{lecture_num}}{file:reading/lecture\the\value{lecture_num}}%
 \stepcounter{lecture_num}%

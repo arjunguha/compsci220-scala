@@ -1,19 +1,1351 @@
+% !TEX root = student.tex
 \documentclass[9pt]{extbook}
 \usepackage{pervasives}
 
 \title{COMPSCI220 Course Book}
+\author{Arjun Guha and Rachit Nigam}
 
 \begin{document}
 
 \maketitle
 \tableofcontents
 
-\include{introduction}
-\include{lists_hw}
-\include{patterns}
+\chapter{Acknowledgements}
 
-\newdiscussion{Scala Technical Support}
+[FILL]
 
+- Dan Barowy for some discussions
+- Typos etc. from Cassian Corey, Aaron Weiss, ... ?
+
+This course could not have come together without materials and inspiration from
+several sources.
+
+Many lectures and reading materials are based on these texts:
+
+How to Design Programs by Felleisen, Findler, Flatt, and Krishnamurthi
+
+Pure Functional Data Structures by Okasaki
+
+Programming in Scala by Oderksy, Spoon, and Venners
+
+You should read these, even if you’ve taken this course.
+
+For several assignments, we use a graphics library based on the one documented in this article: A Functional I/O System by Felleisen, Findler, Flatt, and Krishnamurthi.
+
+Some of our assignments are adapted from other sources:
+
+The Join Lists assignment from CS19 at Brown University by Krishnamurthi, et al
+
+The Tic Tac Toe assignment is adapted from CMPSCI383 by Liberatore
+
+The Sudoku assignment is adapted from Solving Every Sudoku Puzzle by Norvig
+
+Thanks to Joseph Collard and Nimish Gupta for debugging several assignments.
+
+
+\chapter{Introduction: Scala, the command-line, and pattern-matching}
+\savepdf{intro}
+
+\section{Introduction\classtime{15}}
+
+\emph{COMPSCI220 Programming Methodology} introduces advanced programming
+techniques in the context of a modern programming language:
+\href{http://www.scala-lang.org/}{Scala}.
+You could use Scala to write exactly the same kind
+of object-oriented code that you've seen in Java. In fact, Scala code and Java
+code can seamlessly co-exist and interoperate in the same program; we'll
+leverage this feature later in the course. In fact, many of the design patterns
+that you will learn in this course will be applicable to Java and Scala.
+
+However, a key reason we're using Scala is to expose you to programming techniques
+and language features that are beyond the scope of Java. Most
+modern software systems are written in a plethora of languages. In fact, large
+systems tend to use several programming languages. Therefore, to succeed in your
+computing career, you have to be familiar with several languages and be able to
+learn new languages on your own. Programming
+languages are constantly invented and abandoned\footnote{\href{http://www.oreillynet.com/pub/a/oreilly/news/languageposter_0504.html}{This poster} is a very incomplete history of the birth and death of programming languages.}
+ and it is impossible to predict the next language that everyone
+will use or the language you'll need to learn for your first job.
+
+Scala is a big language with many unique features and we are not going to learn
+to use them all. Instead, we are going to focus on ideas that Scala shares with
+other modern programming languages. Here are some of the key ideas that we will
+cover in this course that go beyond Java:
+%
+\begin{itemize}
+
+\item \emph{First-class functions} are the cornerstone of \emph{functional programming}.
+  They are pervasive in JavaScript, Ruby, Python, Swift, and almost all modern
+  languages.
+  In fact, even \href{{http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html}}{Java} and
+  \href{https://docs.microsoft.com/en-us/cpp/cpp/lambda-expressions-in-cpp}{C++} recently
+  added support for first-class functions.
+
+\item \emph{Algebraic data types} are available in Apple Swift, Mozilla Rust,
+  Microsoft F\#, and several other programming languages. Programming with
+  algebraic data types is very different from programming in an object-oriented
+  style. We'll cover both styles of programming in this course and develop
+  a deep understanding of the tradeoffs.
+
+\item \emph{Type inference} is available in modern typed programming languages,
+  such as C\# and Swift, and even in a limited form in
+  \href{http://docs.oracle.com/javase/tutorial/java/generics/genTypeInference.html}{Java}.
+  As the name suggests, in a language with type inference, the compiler can
+  often ``infer'' or fill-in types that you omit. So, your programs become shorter, but
+  retain all the advantages of type checking.
+
+\end{itemize}
+
+The main themes of the course are not language-specific. We will emphasize
+the following broad ideas that are applicable to all software development:
+%
+\begin{itemize}
+
+\item \emph{Testing} is critical for building reliable software. You will learn how
+  to test complex functions and make effective use of testing tools and frameworks.
+  Every programming problem you solve in this course will have to be tested. We
+  expect you to write good tests yourself. The quality of your tests will be a
+  significant portion of your grade on every assignment.
+
+\item \emph{Design patterns} are recipes for solving typical programming
+  problems. This course will emphasize object-oriented and functional
+  design patterns. We will focus on design patterns that are applicable to
+  a variety of programming languages, and not Scala-specific design patterns.
+
+\item \emph{Refactoring} is a key concept that we emphasize throughout the
+  course. As we introduce new ideas, we will systematically refactor our old
+  code to exploit them.
+
+\item \emph{Debugging} is a necessary skill because even small programs often
+  have bugs.
+
+\item \emph{Command-line tools} such as compilers and build tools lie under the
+  hood of sophisticated IDEs such as Eclipse. Learning to use the command-line
+  will make you a better IDE user. Moreover, many newer languages lack good
+  IDEs. Therefore, if you want to master the latest technologies, you will
+  need to master the command-line.
+
+% Seriously, we do not teach this.
+
+% \item \emph{Version control} software is critical for collaborative software
+%   development and used by all professional programmers. Although you will be
+%   programming alone in the course, version control will still help you organize
+%   your programming and save you a lot of time if you accidentally delete or
+%   break your code.
+
+\item \emph{Using libraries} is critical for writing software that gets real
+  work done. Initially, you'll use libraries that were developed specifically
+  for this course, but you will eventually learn to discover and use
+  libraries from the Web.
+
+\end{itemize}
+
+The overarching goal of this course is to make you a better programmer,
+and an important part of that is to get familiar with programming terminology
+and culture. Unfortunately, there is a lot of misinformation on the Web
+about programming, but we will try to point you to sources that are reliable.
+Here are two good places to start:
+%
+\begin{itemize}
+
+  \item \href{http://paulgraham.com/articles.html}{Paul Graham's Essays}.
+  The earlier essays are particularly pertinent, E.g.,
+  \href{http://paulgraham.com/avg.html}{Beating the Averages} and
+  \href{http://paulgraham.com/popular.html}{Being Popular}.
+
+  \item \href{http://www.joelonsoftware.com}{Joel Spolsky's blog}. E.g.,
+  \href{http://www.joelonsoftware.com/articles/CollegeAdvice.html}
+  {Advice for Computer Science College Students}
+  and \href{http://www.joelonsoftware.com/articles/ResumeRead.html}
+  {Getting Your Resume Read}.
+
+\end{itemize}
+
+Finally, \href{http://xkcd.com}{XKCD} comics often make obscure programming
+references and this course will help you decipher some of them.
+
+\section{The Command-Line\classtime{5}}
+
+The \emph{\textsc{Unix} command-line}\footnote{The command-line is also known as a
+\emph{terminal} or \emph{shell}.} is  a critical part of this course:
+
+\begin{itemize}
+
+\item If you're
+using the course virtual-machine, you should use the program \textbf{LXTerminal}
+to start the command-line.
+
+\item If you're using macOS, you you get to command line by running the
+launching the \textbf{Terminal} application, which is in the
+\textbf{Applications} $\blacktriangleright$ \textbf{Utilities} folder.
+
+% \item If you're using Windows 10, you can use \textbf{Bash for Windows}.
+
+% \item If you're using an earlier version of Windows, you can install and
+% run \textbf{Cygwin}.
+
+\end{itemize}
+
+Unless you're already familiar with the command-line, you must read
+\href{https://learnpythonthehardway.org/python3/appendixa.html}{Zed Shaw's Command Line Crash Course},
+up to and including the chapter ``Removing a File (rm)''. Zed likes to swear at
+his own readers, so we'd like to apologize in advance on his behalf. The rest
+of these lecture notes assume that you are familiar with the command-line.
+
+\begin{instructor}
+\begin{itemize}
+
+\item Introduce the course VM.
+
+\item  Introduce the command line (\verb|mkdir|, \verb|cd|, and, \verb|ls|).
+\end{itemize}
+
+\end{instructor}
+
+\section{\sbt{} and the Scala REPL\classtime{5}}
+
+\sbt{} is the Swiss Army Knife of Scala programming. It is a command-line tool
+that can be use to run Scala programs, compile them, test them, package them
+deployment, publish them to the Web, and more. Like many modern programming
+languages, \sbt{} has a \emph{REPL} (read-eval-print loop), which you can use to
+type in and run one-line programs immediately, without the bother of creating
+files, etc.
+
+To start the Scala REPL, open a terminal,
+type in \verb|sbt console| and press enter. Your screen will look like this:
+%
+\consolefile{includes/sbtconsole.txt}
+
+The \verb|scala>| prompt indicates that you can type in Scala expressions.
+
+\section{Scala Basics\classtime{15}}
+
+\subsection{Simple Expressions and Names}
+
+Arithmetic in Scala is very similar to arithmetic in Java:
+
+\lstset{language=console}
+\begin{lstlisting}
+scala> 19 * 17
+res0: Int = 323
+\end{lstlisting}
+
+Strings in Scala will also look familiar:
+
+\begin{lstlisting}
+scala> "Hello, " + "world"
+res1: String = Hello, world
+\end{lstlisting}
+
+Boolean expressions will be familiar too:
+
+\begin{lstlisting}
+scala> true && false
+res2: Boolean = false
+\end{lstlisting}
+
+\lstset{language=scala}
+Let's examine the last interaction more closely. When you type \lstinline|true && false|,
+Scala prints three things:
+%
+\begin{itemize}
+\item An automatically-generated \emph{name} (\lstinline|res2|),
+\item The \emph{type} of the expression (\lstinline|Boolean|), and
+\item The \emph{value} of the expression (\lstinline|false|).
+\end{itemize}
+
+On the Scala REPL, you can use the generated name as a variable. But, you're
+better off picking meaningful names yourself using \lstinline|val|:
+\lstset{language=console}
+\begin{lstlisting}
+scala> val mersenne = 524287
+mersenne : Int = 524287
+scala> val courseName = "Programming Methodology"
+courseName : String = Programming Methodology
+\end{lstlisting}
+
+\subsection{Type Inference}
+
+You'll find that Scala programs are significantly shorter than their Java
+counterparts. A key feature of Scala that lets you write less code is \emph{type
+inference}. Notice in the variable definitions above, you did not have to write
+any types. Instead, Scala \emph{inferred} them for you. This feature is very helpful
+in large programs, where types can become long and complicated.
+
+Type inference is not magic; later in the course, you'll learn more about how it
+works and when it doesn't. For now, here's a rule of thumb: Scala can infer the
+type of variable named with \verb|val|. But, Scala \emph{cannot} infer the type of
+function parameters.
+
+\subsection{Functions}
+
+Here is a very simple Scala function:
+
+\begin{lstlisting}
+scala> def twice(n: Int): Int = n + n
+double: (n: Int)Int
+\end{lstlisting}
+
+\lstset{language=scala}
+This code defines a function called \lstinline|twice|, which takes an argument
+\lstinline|Int|. We can apply the function as follows:
+called \lstinline|n| of type \lstinline|Int| and returns a value of type
+\lstset{language=console}
+\begin{lstlisting}
+scala> twice(10)
+res3: Int = 20
+\end{lstlisting}
+\lstset{language=scala}
+The following function takes two arguments, \lstinline|x| and \lstinline|y| and calculates the
+distance from the point \lstinline|(x,y)| to the origin:
+\begin{lstlisting}
+scala> def dist(x: Double, y: Double): Double = math.sqrt(x * x + y * y)
+dist: (x: Double, y: Double)Double
+
+scala> dist(3.0, 4.0)
+res4: Double = 5.0
+\end{lstlisting}
+
+Notice that unlike variable definitions, we need \emph{type annotations}
+on function parameters and result types.
+
+If your function actually fits on a line (without scrolling off your window),
+you can define them very tersely as shown above. But, many interesting
+functions span several lines and need local variables.
+
+\subsection{Blocks and Local Variables}
+
+You can define local variables within a \emph{block}. A block is code delimited by
+curly-braces. For example:
+
+\begin{lstlisting}
+scala> def dist2(x: Double, y: Double): Double = {
+  val xSq = x * x
+  val ySq = y * y
+  math.sqrt(xSq + ySq)
+}
+\end{lstlisting}
+
+\begin{figure}
+\scalafile{code/Lecture1fac.scala}
+\caption{A Scala module}
+\label{lecture1code}
+\end{figure}
+
+\section{\sbt{} Project Structure\classtime{5}}
+\lstset{language=console}
+In principle, you can write a full-fledged program line-by-line in the Scala
+console. But, it makes a lot more sense to save large programs to files
+for a particular \emph{project}. To do so, we will being by creating a new directory
+for your project. Every time you create a new Scala program (e.g., for a homework
+assignment, you should create a new project.)
+
+First, exit the Scala console by typing \verb|:quit| and then exit \sbt{}
+by typing \verb|exit|. You should return to the command-line:
+%
+\begin{lstlisting}
+scala> :quit
+
+[success] Total time: 3 s, completed Jan 13, 2016 8:47:38 PM
+
+sbt> exit
+student@vm:~$
+\end{lstlisting}
+
+At the terminal, let's create a directory for the project:
+%
+\begin{lstlisting}
+student@vm:~$ mkdir lecture1
+\end{lstlisting}
+%
+Then, let's enter the directory:
+\begin{lstlisting}
+student@vm:~$ cd lecture1
+student@vm:~/lecture1$
+\end{lstlisting}
+Notice that the name of the directory is displayed on the command-line.
+
+Your Scala projects will have two kinds of files: test cases and your implementation.
+\sbt{} requires you to organize your files into the following directory
+structure:
+
+\begin{minipage}{0.5\textwidth}
+\dirtree{%
+.1 ~/lecture1.
+.2 src.
+.3 main.
+.4 scala\DTcomment{Implementation goes here}.
+.3 test.
+.4 scala\DTcomment{Tests go here}.
+}
+\end{minipage}
+
+You can create these directories by running the following commands:
+\consolefile{includes/mkdirs.txt}
+
+We will now see how to save Scala code to files. Using a text editor,
+create a file called \verb|Lecture1.scala| in the
+\verb|src/main/scala| directory, with the contents shown in \cref{lecture1code}.
+The code creates an object with a single function to calculate factorials.
+
+\begin{instructor}
+Scala wart: Do not \verb|extend App| because it can't be evaluated in console.
+\end{instructor}
+
+When you write functions in a Scala file, you \emph{have} to place it in
+an object. You cannot just write \lstinline|def fac ...| without an enclosing
+object. This is a peculiarity of Scala that we will explain later in the course.
+In this example, the name of the object is ``Lecture1'', but it can be anything
+you like.
+
+\lstset{language=console}
+Now that we've saved this function to a file, we can use it from the console:
+%
+\begin{lstlisting}
+sbt> console
+scala> import Lecture1._
+scala> fac(10)
+\end{lstlisting}
+
+\begin{figure}
+\lstset{language=scala}
+\begin{lstlisting}
+// src/main/scala/Lecture1Tests.scala
+import Lecture1._
+
+class Lecture1Tests extends org.scalatest.FunSuite {
+
+  test("fac -- base case") {
+    assert(fac(0) == 1)
+  }
+
+  test("fac -- inductive case") {
+    assert(fac(5) == 120)
+  }
+
+}
+\end{lstlisting}
+\caption{Unit tests for the code in \cref{lecture1code}}
+\label{lecture1tests}
+\end{figure}
+
+\section{Testing\classtime{5}}
+
+The \sbt{} console is a convenient way to experiment with new code or write
+a ``one off'' functionn. However, you must write \emph{unit tests} to test
+any actual code you write. \Cref{lecture1tests} shows an example of
+unit tests that use the \emph{ScalaTest} library. The code is quite self-explanatory:
+each test suite is a class that extends \lstinline|org.scalatest.FunSuite|.
+The body of the class has several test blocks, as shown in the figure.
+
+\begin{instructor}
+
+\begin{itemize}
+
+\item Propose a new function to write. Write the test-cases first, then
+the implementation and re-run \verb|sbt test|.
+
+\item Recap the development methodology: first write tests cases, then
+write the implementation, and re-test continuously. Show continuous
+testing with \verb|~test|.
+
+\end{itemize}
+
+
+\end{instructor}
+
+\section{Building and Pattern-Matching on Lists\classtime{25}}
+\lstset{language=scala}
+
+In this section, we will show you how to write simple list-processing functions.
+We will cover basic \emph{functional programming} and introduce \emph{pattern
+matching}. You should try out all the code yourself using the \sbt{} console.
+
+\subsection{Constructing Lists}
+
+The simplest list is the empty list, which is written in Scala as
+%
+\begin{lstlisting}
+Nil
+\end{lstlisting}
+%
+Given the empty list, we can construct larger lists using the \lstinline|::|
+operator (which is pronounced \emph{cons}). Here is a simple example that
+constructs a one-element list:
+%
+\begin{lstlisting}
+50 :: Nil
+\end{lstlisting}
+Given a one-element list, we can build a two-element list by using the
+\lstinline|::| operator again:
+%
+\begin{lstlisting}
+100 :: (50 :: Nil)
+\end{lstlisting}
+%
+We can use \lstinline|::| again to build a three-element list:
+%
+\begin{lstlisting}
+200 :: (100 :: (50 :: Nil))
+\end{lstlisting}
+%
+In an expression \lstinline|x :: y|,
+\lstinline|x| is known as the \emph{head} of the list and \lstinline|y| is
+known as the \emph{tail}. Note that the tail of a list is always a list itself,
+(though it may be the empty list \lstinline|Nil|).
+
+For example, consider the list below:
+\begin{lstlisting}
+val letters = "a" :: ("b" :: :: Nil)
+\end{lstlisting}
+%
+\begin{itemize}
+
+  \item The head of \lstinline|letters| is \lstinline|"a"|.
+
+  \item The tail of \lstinline|letters| is \lstinline|"b" :: Nil|.
+
+  \item The head of the tail of \lstinline|letters| is \lstinline|"b"|.
+
+  \item The tail of the tail of \lstinline|letters| is \lstinline|Nil|.
+
+  \item \lstinline|Nil| does not have a head or a tail.
+
+\end{itemize}
+
+In our examples so far, we've used parenthesis to make the head and tail clear.
+However, you can simply write \lstinline|"a" :: "b" :: "c" :: Nil|. Intuitively,
+everything to the right of a \lstinline|::| is the tail. If you get confused, write the parenthesis explicitly.
+
+It is usually easier to write lists in the following way:
+%
+\begin{itemize}
+
+  \item \lstinline|List("a", "b", "c")| is equivalent to
+  \lstinline|"a" :: ("b" :: ("c" :: Nil))|.
+
+  \item \lstinline|List()| is equivalent to \lstinline|Nil|.
+
+\end{itemize}
+%
+However, it is important to understand that this is just a convenient notation.
+Under the hood, Scala transforms these expressions to use \lstinline|::|
+and \lstinline|Nil|, as we described above.
+
+\paragraph{Lists and Type Inference}
+\lstset{language=console}
+Consider the following interaction, which you should try yourself:
+%
+\begin{lstlisting}
+scala> val lst = 1 :: 2 :: 3 :: Nil
+lst: List[Int] = List(1, 2, 3)
+\end{lstlisting}
+%
+\lstset{language=scala}
+
+As you can see, Scala prints lists using the shorthand notation,
+even if you explicitly use \lstinline|::| and \lstinline|Nil|.
+More significantly, Scala has inferred that the type of the list
+is \lstinline|List[Int]|. There was no need to explicitly state that
+is is the case.
+
+Here is another example, where Scala infers that the type of a list is
+\lstinline|List[String]|:
+%
+\lstset{language=console}
+\begin{lstlisting}
+scala> val lst = List("a", "b", "c")
+lst: List[String] = List("a", "b", "c")
+\end{lstlisting}
+
+\lstset{language=scala}
+Type inference is very convenient and spares you from having to explicitly
+specify the type of the element. However, type inference is not magic
+and can behave in unexpected ways. For example, in the interaction
+below, Scala infers that the type of the list is \lstinline|List[Any]|:
+%
+\lstset{language=console}
+\begin{lstlisting}
+scala> val lst = List("a", 10, "c")
+lst: List[Any] = List("a", 10, "c")
+\end{lstlisting}
+Although this is technically true, if you write this code, it is more
+likely that you made a mistake and intended to actually create a list of
+strings. If you're ever unsure, you can write the type explicitly, which
+would signal a type error in this case:
+\begin{lstlisting}
+scala> val lst = List[String]("a", 10, "c")
+<console>:10: error: type mismatch;
+ found   : Int(10)
+ required: String
+       val lst = List[String]("a", 10, "c")
+                                   ^
+\end{lstlisting}
+
+\begin{figure}
+\lstset{language=scala}
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{lstlisting}
+def countDown(n: Int): List[Int] = {
+  if (n == 0) {
+    Nil
+  }
+  else {
+    n :: countDown(n - 1)
+  }
+}
+\end{lstlisting}
+\caption{}
+\label{countDown}
+\end{subfigure}
+\hskip 2em
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{lstlisting}
+def fromTo(lo: Int, hi: Int): List[Int] = {
+  if (lo == hi) {
+    lo :: Nil
+  }
+  else {
+    lo :: fromTo(lo + 1, hi)
+  }
+}
+\end{lstlisting}
+\caption{}
+\label{fromTo}
+\end{subfigure}
+
+\caption{Functions that produce lists.}
+\label{listcons}
+\end{figure}
+
+\paragraph{Functions that produce lists}
+
+Now that we've seen how to construct lists explicitly, it is straightforward
+to write functions that produce lists. \Cref{listcons} shows some simple
+recursive functions that construct new lists.
+
+\begin{figure}
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{lstlisting}
+def product(alist: List[Int]): Int = {
+  alist match {
+    case Nil => 1
+    case n :: tail => n * product(tail)
+  }
+}
+\end{lstlisting}
+\caption{Calculate the product of a list of numbers.}
+\end{subfigure}
+\hskip 2em
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{lstlisting}
+def repeatTwice(alist: List[Int]): List[Int] = {
+  alist match {
+    case Nil => Nil
+    case n :: tail => n :: n :: repeatTwice(tail)
+  }
+}
+\end{lstlisting}
+\caption{Repeats every element of a list twice.}
+\end{subfigure}
+
+\caption{Two simple functions that consume lists.}
+\label{listconsumers}
+\end{figure}
+
+
+\subsection{Pattern Matching}
+
+Now that we've seen how to write functions that produce lists, we'll
+learn how to write functions that consume lists as arguments. We'll
+start by writing a simple function to calculate the sum of a list of numbers.
+Here are some examples of of \lstinline|sum| being used:
+%
+\begin{lstlisting}
+assert(sum(20 :: 30 :: Nil) == 50)
+assert(sum(1 :: 2 :: 3 :: Nil) == 6)
+\end{lstlisting}
+
+Intuitively, to calculate \lstinline|sum(1 :: 2 :: 3 :: Nil)|, we can
+can recursively calculate the sum of the tail and add that value to the
+head:
+\begin{lstlisting}
+   sum(1 :: 2 :: 3 :: Nil)
+== 1 + sum(2 :: 3 :: Nil)
+== 1 + (2 + sum(3 :: Nil))
+== 1 + (2 + (3 + sum(Nil)))
+\end{lstlisting}
+%
+The last line shows an important special case. Since the empty list
+doesn't have a head or a tail, we need to treat it differently. We'll say
+that \lstinline|sum(Nil)| is \lstinline|0|.
+
+We can write \lstinline|sum| by using a powerful feature of
+Scala called \emph{pattern matching}.
+%
+\begin{lstlisting}
+def sum(lst: List[Int]): Int = alist match {
+  case Nil => 0
+  case h :: t => h + sum(t)
+}
+\end{lstlisting}
+%
+This code makes it clear that the function is inspecting \lstinline|alist|
+and considering two \emph{cases}. When \lstinline|alist| is \lstinline|Nil|,
+it produces \lstinline|0| and when \lstinline{alist} is constructed with
+the \lstinline|::| operator, the function recurs on the tail and ands
+that result to the head. In this code,
+\lstinline|Nil| and \lstinline|h :: t| are called \emph{patterns}.
+
+\Cref{listconsumers} shows two more list-consuming functions that
+use pattern-matching. Notice that in \lstinline|::| cases, these functions
+use different variable names for the head and the tail. A pattern can use
+any variable to refer to the value of the head or the tail.
+
+\begin{figure}
+\begin{subfigure}[b]{0.45\textwidth}
+\lstset{language=scala}\begin{lstlisting}
+def countOnes(alist: List[Int]): Int = {
+  alist match {
+    case Nil => 0
+    case n :: tail => {
+      if (n == 1) {
+        1 + countOnes(tail)
+      }
+      else {
+        countOnes(tail)
+      }
+    }
+  }
+}
+\end{lstlisting}
+\caption{Counting ones using an if-expression.}
+\label{countonescomplex}
+\end{subfigure}
+\hskip 2em
+\begin{subfigure}[b]{0.45\textwidth}
+\lstset{language=scala}\begin{lstlisting}
+def countOnes(alist: List[Int]): Int = alist match {
+  case Nil => 0
+  case 1 :: tail => 1 + countOnes(tail)
+  case n :: tail => countOnes(tail)
+}
+\end{lstlisting}
+\caption{Counting ones using a composite pattern.}
+\label{countonessimple}
+\end{subfigure}
+
+\caption{Pattern matching can make complex conditionals clearer.}
+\end{figure}
+
+\paragraph{Complex Patterns}
+%
+Pattern-matching is extremely powerful and can be used to express
+complex conditionals. For example, \cref{countonescomplex} is a function
+that counts the number of \lstinline|1|s that occur in a list: it uses
+pattern matching as introduced above and then an if-expression to
+check if the head of the list is \lstinline|1|.
+
+\Cref{countonessimple}
+is the same function, rewritten to use pattern matching. This version is shorter
+and makes it clear that there are three cases. To do so, we exploit the fact
+that patterns can match \emph{almost} any value, including numbers,
+strings, lists, and user-defined data structures too (which we will see
+in a later class).
+
+\paragraph{Exhaustivity and Reachability Checking}
+%
+Here is another function that uses pattern matching to count the number
+of tens in a list:
+%
+\lstset{language=scala}\begin{lstlisting}
+def countTens(alist: List[Int]): Int = alist match {
+  case 10 :: tail => 1 + countTens(tail)
+  case n :: tail => countTens(tail)
+}
+\end{lstlisting}
+
+However, this function had a bug. Do you see it? If you type this into
+the console, Scala prints the following:
+%
+\lstset{language=console}\begin{lstlisting}
+<console>:10: warning: match may not be exhaustive.
+It would fail on the following input: Nil
+       def countTens(alist: List[Int]): Int = alist match {
+                                            ^
+\end{lstlisting}
+%
+Scala has detected that we forgot to write a case for \lstinline|Nil|.
+Scala ensures that your patterns are \emph{exhaustive}. Here is another
+buggy version of the function:
+%
+\lstset{language=scala}\begin{lstlisting}
+def countTens(alist: List[Int]): Int = alist match {
+  case n :: tail => 1 + countTens(tail)
+  case n :: tail => countTens(tail)
+  case Nil => 0
+}
+\end{lstlisting}
+%
+In this version, we wrote the patterns incorrectly, so the first and second
+patterns are identical. Scala reports the following error:
+\lstset{language=scala}\begin{lstlisting}
+<console>:13: warning: unreachable code
+         case n :: rest => countTens(rest)
+\end{lstlisting}
+%
+Scala ensures that all cases are \emph{reachable}.
+
+This automatic exhaustivity and reachability checking makes programs that
+use pattern-matching much more robust than programs that use complicated,
+nested if-statements. Pattern matching is a very powerful tool that you can
+exploit to make your programs more robust. We will emphasize pattern-matching
+over conditionals in this course.
+
+\section{Immutability \classtime{10}}
+
+We want to emphasize that all that functions that we've written to produce
+lists  \emph{produces a new list} and leaves the original list unchanged.
+
+You can observe this behavior in the Scala console:
+%
+\lstset{language=console}\begin{lstlisting}
+scala> val original = List(10, 20, 30)
+original: List[Int] = List(10, 20, 30)
+
+scala> val result = repeatTwice(original)
+result: List[Int] = List(10, 10, 20, 20, 30, 30)
+
+scala> original
+res0: List[Int] = List(10, 20, 30)
+
+scala> result
+res1: List[Int] = List(10, 10, 20, 20, 30, 30)
+\end{lstlisting}
+
+At no point did we change or \emph{mutate} the original list. In fact, lists in
+Scala are \emph{immutable} data structures. There is no way to update their
+head or tail. Programming with immutable data structures is a key part of
+\emph{functional programming}, which we will emphasize in the first half
+of this course.
+
+\chapter{Pattern Matching and Testing}
+\savepdf{pattern-matching}
+
+\begin{instructor}
+\lstset{language=scala}
+
+\section*{Lesson Plan}
+
+\begin{enumerate}
+
+  \item Previous lecture recap:
+
+\begin{enumerate}        
+
+  \item Slowly talk through the command-line commands involved in
+  creating, changing to it, and starting \sbt{}. Create
+  the \texttt{plugins.sbt} file with the line
+
+  \scalafile{../hw/lists/template/project/plugins.sbt}
+
+  \item Create a file with\lstinline|repeatTwice(alist: List[Int]): List[Int]|.
+
+  \item Create a test-suite for the function and run it using \sbt{}.
+
+  \item Emphasize immutability using the console.
+
+  \item Create \lstinline|countTens(alist: List[Int]): Int|.
+
+  \item Show exhuastivity check (forget a case) and reachability check (reorder cases).
+
+  \item Show complex patterns (e.g., matching 2nd item in a list).
+
+\end{enumerate}
+
+  \item \lstinline|Time| class in Java vs. Scala: it's a lot shorter
+
+  \item case classes: no need to write new, all fields public, toString and equals that make sense.
+
+  \item Write \lstinline|tick(atime: Time): Time| without pattern matching.
+  
+  \item Pattern matching on \lstinline|Time|:
+
+  \begin{scalacode}
+  def tick(atime: Time): Time = atime match {
+    case Time(23, 59, 59) => Time(0, 0, 0)
+    case Time(h, 59, 59) => Time(h + 1, 0, 0)
+    case Time(h, m, 59) => Time(h, m + 1, 0)
+    case Time(h, m, s) => Time(h, m, s + 1)
+  }
+  \end{scalacode}
+
+  \item Introduce \lstinline|Time12| and write \lstinline|during220(atime: Any): Boolean|.
+
+  \item Emphasize that we can get a runtime error if we mis-apply the function.
+
+  \item Introduce \lstinline|trait Timey| and change type.
+
+  \item Introduce \lstinline|sealed trait Timey| and show that we get exhaustivity checks.
+
+  \item Main point: your data structures can leverage
+  exhuastivity and pattern matching. It is not just for built-in
+  types.
+
+  \item Recursive types:
+
+  \begin{enumerate}
+
+  \item Define type \lstinline|BinTree| with string keys and integer values.
+
+  \item Write \lstinline|find| and \lstinline|insert| and think about properties.
+
+  \end{enumerate}
+
+ 
+\end{enumerate}
+
+\end{instructor}
+
+\begin{figure}
+\begin{subfigure}[b]{.45\textwidth}
+\begin{javacode}
+public class Point {
+
+  double x;
+  double y;
+
+  public Point(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
+
+}
+
+Point pt = new Point(1, 2)
+\end{javacode}
+\caption{A Java class that represents a point.}\label{javapoint}
+\end{subfigure}
+\quad\vrule\quad
+%
+\begin{subfigure}[b]{.45\textwidth}
+\begin{scalacode}
+class Point(x : Double, y : Double)
+val pt = new Point(1, 2)
+\end{scalacode}
+\caption{A Scala class that represents a point.}\label{scalapoint}
+\end{subfigure}
+\caption{Scala code is usually much shorter and simpler than Java code.}
+\end{figure}
+
+\section{Case Classes\classtime{10}}
+
+Scala classes tend to be shorter than their
+Java counterparts. For example, \cref{javapoint} shows a \scalainline{Point} class
+in Java and \cref{scalapoint} shows the equivalent class in Scala, which
+is much shorter!
+If we start adding methods, you'll have to write
+more code in Scala too. But, simple classes tend to be very short.
+But, we are not going to use classes yet. Instead, we are going to use
+\emph{case classes}, which are unique to Scala.
+
+If you write \scalainline{case class}---
+%
+\begin{scalacode}
+case class Point(x: Double, y: Double)
+\end{scalacode}
+---instead of just \scalainline{class}, you get several conveniences.
+First, you can create values without writing \scalainline{new}:
+%
+\begin{scalacode}
+val pt = Point(1, 2)
+\end{scalacode}
+%
+Second, case classes have an automatically generated \scalainline{toString}
+method that prints the fields:
+%
+\begin{console}
+scala> pt
+pt: Point = Point(1.0,2.0)
+\end{console}
+%
+Finally, all fields are public by default, so you can easily write simple
+functions, such as this one, without writing getters:
+%
+\begin{scalacode}
+def magnitude(pt: Point) : Double = {
+  math.sqrt(pt.x * pt.x + pt.y * pt.y)
+}
+
+test("3-4-5 triangles") {
+  assert(magnitude(Point(3, 4)) == 5)
+}
+\end{scalacode}
+
+\section{Sealed Case Classes\classtime{20}}
+
+Imagine you're a new age librarian, tasked with cataloging information on the
+Internet. There are many types of information. Here are some significant ones:
+
+\begin{scalacode}
+case class Tweet(user: String, number: Long)
+case class Xkcd(number: Int)
+case class HackerNews(item: Int, points: Int)
+\end{scalacode}
+
+Here are some examples:
+
+\begin{scalacode}
+// https://twitter.com/PLT_Borat/status/248038616654299136
+val tweet = Tweet("PLT_Borat", 248038616654299136L)
+// http://xkcd.com/1316/
+val comic = Xkcd(1316)
+// https://news.ycombinator.com/item?id=8169367
+val news = HackerNews(8169367, 305)
+\end{scalacode}
+
+Let's write a function called \verb|getURL| that maps these items to their URLs,
+which is easy to do with pattern matching.
+
+\begin{scalacode}
+def getURL(item: Any): String = item match {
+  case Tweet(user, number) => "https://twitter.com/" + user + "/status/" + number
+  case Xkcd(number) => "http://xkcd.com/" + number
+  case HackerNews(item, _) => "http://news.ycombinator.com/item?id=" + item
+  case _ => sys.error("not a library item")
+}
+\end{scalacode}
+
+This definition is unsatisfactory. \verb|getURL| takes values of
+\verb|Any|
+type. So, it is really easy to get a runtime error:
+\consolefile{includes/runtime-match-error.txt}
+
+To eliminate this kind of error, we need an \verb|Item| type:
+
+\begin{scalacode}
+sealed trait Item
+case class Tweet(user: String, number: Long) extends Item
+case class Xkcd(number: Int) extends Item
+case class HackerNews(item: Int, points: Int) extends Item
+\end{scalacode}
+
+A \emph{trait} in Scala is like an \emph{interface}. They're also much more
+versatile than interfaces, but we'll get into that later.
+
+Now, we can rewrite \verb|getURL|, restricting the argument type:
+
+\begin{scalacode}
+def getURL(item: Item): String = item match {
+  case Tweet(user, number) => "https://twitter.com/" + user + "/status/" + number
+  case Xkcd(number) => "http://xkcd.com/" + number
+  case HackerNews(item, _) => "http://news.ycombinator.com/item?id=" + item
+}
+\end{scalacode}
+
+This time, applying \verb|getURL| to a non-item produces a type error as expected:
+
+\begin{console}
+scala> item("hello")
+<console>:43: error: type mismatch;
+ found   : String("hello")
+ required: Item
+              getURL("hello")
+\end{console}
+
+A really nice feature of \scalainline{match} is that it checks to ensure you've handled all
+cases. For example, suppose we forgot to write the HackerNews case. Scala
+prints the following error:
+
+\begin{console}
+<console>:18: warning: match may not be exhaustive.
+It would fail on the following input: HackerNews(_, _)
+       def getURL(item: Item): String = item match {
+                                        ^
+error: No warnings can be incurred under -Xfatal-warnings.
+\end{console}
+
+\paragraph{More Pattern Matching}
+
+You can use \scalainline{match} to also match concrete values. For example, here is
+variant of getURL that censors a particular tweet from PLT Borat:
+
+\begin{scalacode}
+def getURL(item: Item): String = item match {
+  case Tweet("PLT_Borat", 301113983723794432L) => "http://disney.com"
+  case Tweet(user, number) => "https://twitter.com/" + user + "/status/" + number
+  case Xkcd(number) => "http://xkcd.com/" + number
+  case HackerNews(item, _) => "http://news.ycombinator.com/item?id=" + item
+}
+\end{scalacode}
+
+Imagine you'd added the censoring line, but accidentally removed the line
+that handles all other Tweets. Again, Scala will catch the error:
+
+\begin{console}
+<console>:62: warning: match may not be exhaustive.
+It would fail on the following inputs:
+  Tweet("PLT_Borat", (x: Long forSome x not in 301113983723794432L)),
+  Tweet((x: String forSome x not in "PLT_Borat"), 301113983723794432L),
+  Tweet((x: String forSome x not in "PLT_Borat"), _),
+  Tweet(_, (x: Long forSome x not in 301113983723794432L))
+       def getURL(item: Item): String = item match {
+                                        ^
+error: No warnings can be incurred under -Xfatal-warnings.
+\end{console}
+
+It is a long error message. But, if you read it carefully, you'll see that it is
+very precisely describing exactly the cases that are missing.
+
+\section{Binary Search Trees\classtime{20}}
+
+\begin{figure}
+\begin{scalacode}
+sealed trait SBinTree
+case class SNode(lhs: BinTree, key: Int, value: String, rhs: BinTree) extends SBinTree
+case class SLeaf() extends SBinTree
+
+def find(k: Int, t: SBinTree): String = t match {
+  case SLeaf() => sys.error("not found")
+  case SNode(_, key, value, _) if (k == key) => value
+  case SNode(lhs, key, _, _) if (k < key) => find(k, lhs)
+  case SNode(_, key, _, rhs) => find(k, rhs)
+}
+
+def insert(k: Int, v: String, t: SBinTree): SBinTree = t match {
+  case SLeaf() => SNode(SLeaf(), k, v, SLeaf())
+  case SNode(lhs, key, _, rhs) if (k == key) => SNode(lhs, key, v, rhs)
+  case SNode(lhs, key, value, rhs) if (k <= key) =>  SNode(insert(k, v, lhs), key, value, rhs)
+  case SNode(lhs, key, value, rhs) => SNode(lhs, key, value, insert(k, v, rhs))
+}
+
+def size(t: BinTree): SBinTree = t match {
+  case SLeaf() => 1
+  case SNode(lhs, k, v, rhs) => size(lhs) + size(rhs) + 1
+}
+\end{scalacode}
+
+\caption{Binary search trees.}
+\label{bintree}
+\end{figure}
+
+\Cref{bintree} shows a type definition for binary search trees, where
+keys are integers and values are strings (which is why we call them
+\scalainline{SBinTree}s). There are two
+kinds of binary trees: (1) empty trees, or \scalainline{SLeaf()}s, and (2)
+non-empty trees, or \scalainline{SNode(..)}s, which have a left-subtree,
+a numeric key, a string value, and a right-subtree.
+Given this definition, we can write canonical functions such
+as \scalainline{size}, \scalainline{find}, and \scalainline{insert},
+as shown in the same figure.
+We emphasize that the \scalainline{insert} function does not modify the
+original tree, and instead produces a new binary tree with the element added.
+
+
+\subsection{Testing}
+
+There is a lot of code in \cref{bintree} that needs to be tested and there
+are two categories of tests that we can write. First, we should \emph{test all the
+cases} of a function. For example, the \scalainline{insert} function has
+four cases and the four tests below are chosen to exercise each case:
+\begin{scalacode}
+test("insert into empty tree") {
+  assert(insert(200, "A", SLeaf()) == SNode(SLeaf(), 200, "A", SLeaf()))
+}
+
+test("insert into left-subtree") {
+  assert(insert(200, "A", SNode(SLeaf(), 500, "B", SLeaf()))
+    == SNode(SNode(SLeaf(), 200, "A", SLeaf()), 500, "B", SLeaf()))
+}
+
+test("insert into right-subtree") {
+  assert(insert(700, "A", SNode(SLeaf(), 500, "B", SLeaf()))
+    == SNode(Leaf(), 500, "B", SNode(SLeaf(), 700, "A", SLeaf())))
+}
+
+test("insert and replace") {
+  assert(insert(200, "A", SNode(SLeaf(), 200, "B", SLeaf()))
+    == SNode(SLeaf(), 200, "A", SLeaf()))
+}
+\end{scalacode}
+
+A robust test suite should exercise \scalainline{insert} on larger examples, but
+it is important to understand exactly what each case is doing, which is what the
+descriptive string states.
+
+The second kind if test is to \emph{test properties that relate functions
+to each other}. There isn't a neat recipe for these kinds of tests. You have
+to think hard about what your code is actually doing. But, here
+are some properties for binary trees.
+
+\begin{property}
+After we insert a key-value into a tree, we should be able to
+find it again.
+\end{property}
+
+The following tests check that this property holds on examples
+where a key-value is inserted on the left, inserted on the right, or replaces
+the root:
+%
+\begin{scalacode}
+val t1 = SNode(SLeaf(), 200, "A", SLeaf())
+
+test("find after insert on right") {
+  assert(find(500, insert(500, "B", t1)) == "B")
+}
+
+test("find after insert on left") {
+  assert(find(100, insert(100, "B", t1)) == "B")
+}
+
+test("find after insert replaces") {
+  assert(find(200, insert(200, "B", t1)) == "B")
+}
+\end{scalacode}
+
+\begin{property}
+Inserting a key-value into a binary tree produces a tree with size one
+greater than the original tree.
+\end{property}
+
+The following tests check that this property holds for the three
+cases of \scalainline{insert}:
+%
+\begin{scalacode}
+val t1 = SNode(SLeaf(), 200, "A", SLeaf())
+
+test("insert increases size (rhs)")
+  assert(size(insert(500, "B", t1) == size(t1) + 1)
+}
+
+test("insert increases size (lhs)") {
+  assert(size(insert(100, "B", t1) == size(t1) + 1)
+}
+
+test("insert increases size (replacement)") {
+  assert(size(insert(200, "B", t1) == size(t1) + 1)
+}
+\end{scalacode}
+
+Unfortunately, the third test case fails because the property is wrong.
+When \scalainline{insert} replaces a value in the tree, the size of the tree
+does not change. Here is a revised version of this property that accounts
+for this corner-case:
+
+\begin{property}
+Inserting a key-value into a binary tree either (1) produces a tree with
+size one greater than the original tree or (2) the size of the produced
+tree is the same and the key was present in the original tree.
+\end{property}
+
+We can write a function to test this property for any given $k$, $v$, and $t$
+and use it to write our tests compactly:
+
+\begin{scalacode}
+def check(k: Int, v: String, t: SBinTree): Boolean = {
+  if (size(insert(k, v, t)) == size(t) + 1) {
+    true
+  }
+  else {
+    try {
+      val r = find(k, t)
+      true
+    }
+    catch {
+      case exn:Exception => false
+    }
+  }
+}
+
+val t1 = SNode(SLeaf(), 200, "A", SLeaf())
+
+test("insert increases size (rhs)")
+  assert(check(500, "B", t1))
+}
+
+test("insert increases size (lhs)") {
+  assert(check(100, "B", t1))
+}
+
+test("insert increases size (replacement)") {
+  assert(check(200, "B", t1))
+}
+\end{scalacode}
+
+There are other properties that we can test. For example:
+%
+\begin{scalacode}
+insert(k, v, insert(k, v, t)) == insert(k, v, t)
+\end{scalacode}
+
+Moreover, if we write more functions to process binary trees, the number of
+interesting properties will keep growing.
+
+\section{Lists\classtime{10}}
+
+Although we've used Scala's builtin lists, we can use case classes to write
+very similar types. For example, we can write a type for lists of integers
+as follows:
+%
+\begin{scalacode}
+sealed trait IList
+case class INil() extends IList
+case class ICons(head: Int, tail: IList) extends IList
+\end{scalacode}
+
+The following function adds $n$ to every number in a list:
+%
+\begin{scalacode}
+def add(n: Int, lst: IList): IList = alist match {
+  case INil() => INil()
+  case ICons(head, tail) => ICons(head + n, add(n, tail))
+}
+\end{scalacode}
+
+A test suite should test the two cases in the function. Moreover, we can
+also test simple properties of this function alone.
+
+For example, for all \scalainline{m}, \scalainline{n}, and \scalainline{alist}:
+%
+\begin{scalacode}
+add(n, add(m, alist)) == add(m + n, alist)
+\end{scalacode}
+
+The following function appends two lists together:
+%
+\begin{scalacode}
+def append(alist1: IList, alist2: IList): IList = alist1 match {
+  case INil() => alist2
+  case ICons(head, tail) => ICons(head, append(tail, alist2))
+}
+\end{scalacode}
+
+Again, we should test the two cases of this function. But, there are
+several other properties that we can test. For example, if we append
+three lists together, the order in which we apply the function
+does not matter:
+%
+\begin{scalacode}
+append(alist1, append(alist2, alist3)) == append(append(alist1, alist2), alist3)
+\end{scalacode}
+i.e., \scalainline{append} is \emph{associative}.
+
+Here is another property of \scalainline{append}:
+\begin{scalacode}
+append(alist, INil()) == alist
+\end{scalacode}
+%
+Notice that this is \emph{not} a case of \scalainline{append}: the function
+pattern-matches on the first argument. This property shows that both cases
+of \scalainline{append} behave in a similar way when the second argument is
+\scalainline{INil()}.
+
+Finally, we can write properties that relate the \scalainline{add} and
+\scalainline{append} functions:
+%
+\begin{scalacode}
+append(add(n, alist1), add(n, alist2)) == add(n, append(alist1, alist2))
+\end{scalacode}
 
 \include{hof}
 \include{hof_hw}
@@ -22,13 +1354,87 @@
 
 \include{discussion_hof}
 \input{errors}
+
+\chapter{Shell Scripting and Function Composition}
+\savepdf{shell-scripting-and-composition}
+
+In this chapter, we will first take a small detour from Scala to learn basic
+\emph{shell scripting}. Shell scripts let you quickly automate repetitive tasks
+that frequently occur while programming. Therefore, knowing how to write shell
+scripts will make you a better programmer. Once we are done with shell
+scripting, we will study the design principles that underly shell scripting,
+known as \emph{combinators}, and see that they are applicable to a wide variety
+of problems.
+
+\section{Shell Scripting}
+
+- We've seen basics, e.g., to change directory, remove files, etc.
+
+- Many more commands: cat, sort, uniq, cut, grep, paste, head, tail
+
+- Redirecting standard out, e.g., ls > foo/bar
+
+- Redirecting standard in, e.g., 
+
+  sort < /filename
+
+- Pipes
+
+  sort file > out; head -n 5 out 
+
+   OR
+
+  sort file | head -n 5
+
+
+- Command-line arguments vs. standard in
+
+- Example:
+
+  - Getting student participation IDs out of a moodle.csv
+
+    cut -f 1 -d , | cut -f 2 -d ' '
+
+  - Creating directories for each student
+
+    cut -f 1 -d , | cut -f 2 -d ' ' | xargs mkdir
+
+  - Compile everyone's project
+
+    ls | xargs (cd {}; sbt build)
+
+  - Tackle errors:
+
+    ls | xargs (cd {}; sbt build || echo "Error building project")
+
+\section{Programming with Combinators}
+
+- define a class for operations String => List[String] and a
+  sequencing >>> operation
+  val numHi = words <input> >> filter (x => x == "hi") >> length
+
+- Why not just use objects? Answer: this way we can define new operations
+
+- Introduce the split combinator
+
+\chapter{Combinators}
+\savepdf{combinators-errors-callbacks}
+
+- Recap: the String => List[String] combinators
+
+- Combining functions that produce errors
+
+- Combinators for callbacks
+
+
+
+
 \input{wrangling_hw}
 \input{json_wrangling}
 
 \include{stack_machines}
 
 \include{gc}
-
 
 \include{fundata_hw}
 \include{expression_problem}
@@ -74,5 +1480,151 @@
 
 \input{regex_discussion}
 
+\chapter{Project: List Processing}
+\savepdf{project-list-processing}
+
+This assignment has several ``finger exercises'' that introduce you
+to functional programming in Scala.
+
+\section{Setup}
+
+Before you start programming, you need to complete a few preliminary steps.
+
+\begin{enumerate}
+
+\item Follow the directions on the course website to install Scala and SBT.
+
+\item Using the command-line, run the command
+\verb|sbt new umass-compsci220/scala-list-processing.g8|. When prompted for
+a project name, press ``Enter'' to accept the default name.
+This will create a directory called \verb|scala-list-processing|. 
+
+\item To verify that the previous step worked, enter the directory from
+the command-line using the command \verb|cd scala-list-processing|
+and then run the command \verb|sbt test|. You should
+see output that looks like this:
+
+\lstinputlisting[language=console]{../hw/lists/template/test-output.txt}
+
+\noindent \emph{There should be no errors or warnings printed.}
+
+\end{enumerate}
+
+\section{Exercises}
+
+For this assignment, you'll be write several list-processing
+functions. You must place these within the \verb|Lists| object in the
+file \verb|src/main/scala/Lists.scala|.
+You must write tests cases, within the \verb|TestSuite|
+class, which is in the file \verb|src/test/scala/Tests.scala|.
+
+\begin{enumerate}
+
+  \item Write a function called \scalainline{sumDouble} that consumes a
+  \scalainline{List[Int]} and produces an \scalainline{Int}. The produced
+  value should be double the sum of the list of integers.
+
+  \item Write a function called \scalainline{removeZeroes} that consumes a
+  \scalainline{List[Int]} and produces a \scalainline{List[Int]}.
+  The produced list should be the same as the input list, but with all zeroes
+  removed. The function must not change the order of elements.
+
+  \item Write a function called \scalainline{countEvens} that consumes a
+  \scalainline{List[Int]} and produces an \scalainline{Int} that represents
+  that number of even numbers in the input list.
+
+  \item Write a function called \scalainline{removeAlternating} that consumes a
+  \scalainline{List[String]} and produces a \scalainline{List[String]} that
+  has every other element in the input list.
+
+  The first element of the input list must be in the output list.
+  For example:
+  \begin{scalacode}
+  assert(removeAlternating(List("A", "B")) == List("A"))
+  assert(removeAlternating(List("A", "B")) != List("B"))
+  \end{scalacode}
+
+  The function must not change the order of elments.
+
+  \item Write a function called \scalainline{isAscending} that consumes a
+  \scalainline{List[Int]} and produces a \scalainline{Boolean} that is
+  \scalainline{true} if the numbers in the input list are in ascending order.
+  Note that the input may have repeated numbers.
+
+  \item Write a function called \scalainline{addSub} that consumes a
+  \scalainline{List[Int]} and produces an \scalainline{Int}. The
+  function should add all the elements in even position and subtract all the
+  elements in odd position.
+
+  Note that the first element of a list is considered
+  ``zeroth'' element, thus it is in even position.
+  For example, \scalainline{addSub(List(10, 20, 30, 40))} should be
+  \scalainline{10 - 20 + 30 - 40}.
+
+  \item Write a function called \scalainline{alternate} that consumes \emph{two}
+  \scalainline{List[Int]} arguments and produces a \scalainline{List[Int]}.
+  The elements of the resulting list should alternate between the elements of
+  the arguments. You may assume that the two arguments have the same
+  length.
+
+  For example:
+
+  \begin{scalacode}
+  assert(alternate(List(1, 3, 5), List(2, 4, 6)) == List(1, 2, 3, 4, 5, 6))
+  \end{scalacode}
+
+  \item Write a function called \scalainline{fromTo} that takes
+  two \scalainline{Int}s as arguments and produces a \scalainline{List[Int]}.
+  The value of \scalainline{fromTo(x, y)} should be the list of consecutive
+  integers that start from and include $x$, going up to and excluding $y$.
+  You may assume that $x < y$.
+
+  For example:
+  \begin{scalacode}
+  assert(fromTo(9, 13) == List(9, 10, 11, 12))
+  \end{scalacode}
+
+  \item Write the following function:
+
+  \begin{scalacode}
+  def insertOrdered(n: Int, lst: List[Int]): List[Int]
+  \end{scalacode}
+
+  Assuming that \scalainline{lst} is in ascending order,
+  \scalainline{insertOrdered} should produce a list that is the same as
+  the input, but with $n$ inserted such that the order is preserved.
+  For example, \scalainline{insertOrdered(5, List(1, 3, 7, 9))} should be
+  \scalainline{List(1, 3, 5, 7, 9)}.
+
+  You should assume that \scalainline{lst} is in ascending order. Your function
+   may produce any result or even throw an exception if it is not.
+
+   \item Write the following function:
+
+   \begin{scalacode}
+   def sort(lst: List[Int]): List[Int]
+   \end{scalacode}
+
+   The result should be the sorted input list.
+
+   \item \textbf{Not graded.} Write a function called \lstinline|allLT|
+   that consumes a list of integers and a value $n$ and produces all the numbers
+   in the list that are less than $n$.
+
+   \item \textbf{Not graded.} Write a function called \lstinline|allGTE|
+   that consumes a list of integers and a value $n$ and produces all the numbers
+   in the list that are greater than or equal $n$.
+
+   \item \textbf{Not graded.} Use the two functions that you wrote above
+   to implement the following function:
+   \begin{lstlisting}
+   def quickSort(alist: List[Int]): List[Int]
+   \end{lstlisting}
+
+\end{enumerate}
+
+\input{handin}
+
+\chapter{EOF}
 
 \end{document}
