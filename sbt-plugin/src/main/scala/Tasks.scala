@@ -5,9 +5,26 @@ object Tasks {
   import java.nio.file.{Files, Paths, Path}
   import sbt.Logger
   import FileUtils._
+  import spray.json._
 
   val scalastyleBytes = resourceToByteArray("scalastyle-config.xml")
 
+  def submitTask(): Unit = {
+
+    val files = findFiles("")(fileNameHasSuffix(_, ".scala"))
+    val tgz = TgzBuilder("submission.tar.gz")
+    for (file <- files) {
+      tgz.add(file)
+    }
+
+    val metadata = JsObject("time" -> JsNumber(System.currentTimeMillis))
+    tgz.write(".metadata", metadata.compactPrint.getBytes)
+
+    tgz.close()
+
+    println("Created submission.tar.gz. Upload this file to Moodle.")
+  }
+  
   def directoryWarnings(log: Logger): Unit = {
 
     val main = Paths.get("").resolve("src").resolve("main").resolve("scala")
@@ -64,7 +81,8 @@ object Tasks {
         streams = streams,
         refreshHours = 0,
         target = target,
-        urlCacheFile = null)
+        urlCacheFile = null,
+        failOnWarning = true)
     }
     finally {
       Files.deleteIfExists(p)
