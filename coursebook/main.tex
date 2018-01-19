@@ -192,16 +192,6 @@ up to and including the chapter ``Removing a File (rm)''. Zed likes to swear at
 his own readers, so we'd like to apologize in advance on his behalf. The rest
 of these lecture notes assume that you are familiar with the command-line.
 
-\begin{instructor}
-\begin{itemize}
-
-\item Introduce the course VM.
-
-\item  Introduce the command line (\verb|mkdir|, \verb|cd|, and, \verb|ls|).
-\end{itemize}
-
-\end{instructor}
-
 \section{\sbt{} and the Scala REPL\classtime{5}}
 
 \sbt{} is the Swiss Army Knife of Scala programming. It is a command-line tool
@@ -388,10 +378,6 @@ create a file called \verb|Lecture1.scala| in the
 \verb|src/main/scala| directory, with the contents shown in \cref{lecture1code}.
 The code creates an object with a single function to calculate factorials.
 
-\begin{instructor}
-Scala wart: Do not \verb|extend App| because it can't be evaluated in console.
-\end{instructor}
-
 When you write functions in a Scala file, you \emph{have} to place it in
 an object. You cannot just write \lstinline|def fac ...| without an enclosing
 object. This is a peculiarity of Scala that we will explain later in the course.
@@ -437,22 +423,6 @@ any actual code you write. \Cref{lecture1tests} shows an example of
 unit tests that use the \emph{ScalaTest} library. The code is quite self-explanatory:
 each test suite is a class that extends \lstinline|org.scalatest.FunSuite|.
 The body of the class has several test blocks, as shown in the figure.
-
-\begin{instructor}
-
-\begin{itemize}
-
-\item Propose a new function to write. Write the test-cases first, then
-the implementation and re-run \verb|sbt test|.
-
-\item Recap the development methodology: first write tests cases, then
-write the implementation, and re-test continuously. Show continuous
-testing with \verb|~test|.
-
-\end{itemize}
-
-
-\end{instructor}
 
 \section{Building and Pattern-Matching on Lists\classtime{25}}
 \lstset{language=scala}
@@ -832,80 +802,7 @@ of this course.
 \chapter{Pattern Matching and Testing}
 \savepdf{pattern-matching}
 
-\begin{instructor}
 \lstset{language=scala}
-
-\section*{Lesson Plan}
-
-\begin{enumerate}
-
-  \item Previous lecture recap:
-
-\begin{enumerate}        
-
-  \item Slowly talk through the command-line commands involved in
-  creating, changing to it, and starting \sbt{}. Create
-  the \texttt{plugins.sbt} file with the line
-
-  \scalafile{../hw/lists/template/project/plugins.sbt}
-
-  \item Create a file with\lstinline|repeatTwice(alist: List[Int]): List[Int]|.
-
-  \item Create a test-suite for the function and run it using \sbt{}.
-
-  \item Emphasize immutability using the console.
-
-  \item Create \lstinline|countTens(alist: List[Int]): Int|.
-
-  \item Show exhuastivity check (forget a case) and reachability check (reorder cases).
-
-  \item Show complex patterns (e.g., matching 2nd item in a list).
-
-\end{enumerate}
-
-  \item \lstinline|Time| class in Java vs. Scala: it's a lot shorter
-
-  \item case classes: no need to write new, all fields public, toString and equals that make sense.
-
-  \item Write \lstinline|tick(atime: Time): Time| without pattern matching.
-  
-  \item Pattern matching on \lstinline|Time|:
-
-  \begin{scalacode}
-  def tick(atime: Time): Time = atime match {
-    case Time(23, 59, 59) => Time(0, 0, 0)
-    case Time(h, 59, 59) => Time(h + 1, 0, 0)
-    case Time(h, m, 59) => Time(h, m + 1, 0)
-    case Time(h, m, s) => Time(h, m, s + 1)
-  }
-  \end{scalacode}
-
-  \item Introduce \lstinline|Time12| and write \lstinline|during220(atime: Any): Boolean|.
-
-  \item Emphasize that we can get a runtime error if we mis-apply the function.
-
-  \item Introduce \lstinline|trait Timey| and change type.
-
-  \item Introduce \lstinline|sealed trait Timey| and show that we get exhaustivity checks.
-
-  \item Main point: your data structures can leverage
-  exhuastivity and pattern matching. It is not just for built-in
-  types.
-
-  \item Recursive types:
-
-  \begin{enumerate}
-
-  \item Define type \lstinline|BinTree| with string keys and integer values.
-
-  \item Write \lstinline|find| and \lstinline|insert| and think about properties.
-
-  \end{enumerate}
-
- 
-\end{enumerate}
-
-\end{instructor}
 
 \begin{figure}
 \begin{subfigure}[b]{.45\textwidth}
@@ -1504,7 +1401,23 @@ the command-line using the command \verb|cd scala-list-processing|
 and then run the command \verb|sbt test|. You should
 see output that looks like this:
 
-\lstinputlisting[language=console]{../hw/lists/template/test-output.txt}
+\lstset{language=console}
+\begin{lstlisting}
+[info] Updating {file:/Users/arjun/Teaching/cmpsci220/hw/lists/template/}template...
+[info] Resolving jline#jline;2.12.1 ...
+[info] Done updating.
+[info] Compiling 1 Scala source to /Users/arjun/Teaching/cmpsci220/hw/lists/template/target/scala-2.11/classes...
+[info] Compiling 1 Scala source to /Users/arjun/Teaching/cmpsci220/hw/lists/template/target/scala-2.11/test-classes...
+[info] TestSuite:
+[info] - oddNumbers properly defined
+[info] Run completed in 421 milliseconds.
+[info] Total number of tests run: 1
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 1, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 7 s, completed Jan 17, 2016 11:52:54 AM
+\end{lstlisting}
+\lstset{language=scala}
 
 \noindent \emph{There should be no errors or warnings printed.}
 
@@ -1624,6 +1537,163 @@ class, which is in the file \verb|src/test/scala/Tests.scala|.
 \end{enumerate}
 
 \input{handin}
+
+\appendix
+
+\chapter{Lesson Plan: Introduction}
+\savepdf{instructor-intro}
+
+\begin{enumerate}
+
+\item Introduce the course VM.
+
+
+\item Briefly introduce the console and start \verb|sbt console|.
+
+\item Show basic boolean and arithmetic expressions.
+
+\item Declare a variable with \lstinline|val|. Talk through the output.
+Show \emph{type inference}.
+
+\item Define the \lstinline|twice| and \lstinline|double| functions.
+Do not use a block. Explain the notation.
+
+\item Declare a function with local variables, e.g., distance between
+two points.
+
+\item Introduce projects: in principle you can write a whole program
+line by line. But, we want to save files.
+
+\item  Introduce \verb|mkdir|, \verb|cd|, and, \verb|ls|
+
+\item Slowly talk through the command-line commands involved in
+creating, changing to it, and starting \sbt{}. Create
+the \texttt{plugins.sbt} file with the line
+
+\begin{lstlisting}
+addSbtPlugin("edu.umass.cs" % "compsci220" % "1.1.0")
+\end{lstlisting}
+
+\item Use a text editor to create a file with one of the function
+we wrote earlier. Handwave through the top-level object.
+ \textbf{Scala wart:} Do not \verb|extend App| because it can't be evaluated in console.
+
+\item Start SBT console and import the object. Show that its names
+are available.
+
+\item Propose a new function to write. Write the test-cases first, then
+the implementation and re-run \verb|sbt test|.
+
+\item Recap the development methodology: first write tests cases, then
+write the implementation, and re-test continuously. Show continuous
+testing with \verb|~test|.
+
+\item Lists and patterns
+
+\begin{enumerate}
+
+  \item Show the list constructors
+  \item Show the fully-parenthesized notation
+  \item Show the \lstinline|List| shorthand. Explain that all is the same.
+  \item Show that Scala is inferring types for the list.
+  \item Write a list-producing function, such as fromTo
+  \item Propose writing a list-consuming function, such as sum. There are two cases.
+  \item Show pattern matching
+  \item Write the count-ones function with a conditional
+  \item Make it shorter using complex patterns
+  \item Show exhaustivity checking by deleting a case
+  \item Show unreachability checking by deleting a case
+
+\end{enumerate}
+
+\item Immutability
+
+\begin{enumerate}
+
+  \item From the console: show that our list-producing functions do not
+  change the original list
+
+  \item Show that you cannot redefine vals in files
+
+\end{enumerate}
+\end{enumerate}
+
+\chapter{Lesson Plan: Pattern Matching and Testing}
+\savepdf{instructor-pattern-matching}
+
+\lstset{language=scala}
+
+\section*{Lesson Plan}
+
+\begin{enumerate}
+
+  \item Previous lecture recap:
+
+\begin{enumerate}
+
+  \item Slowly talk through the command-line commands involved in
+  creating, changing to it, and starting \sbt{}. Create
+  the \texttt{plugins.sbt} file with the line
+
+  \begin{lstlisting}
+  addSbtPlugin("edu.umass.cs" % "compsci220" % "1.1.0")
+  \end{lstlisting}
+
+  \item Create a file with\lstinline|repeatTwice(alist: List[Int]): List[Int]|.
+
+  \item Create a test-suite for the function and run it using \sbt{}.
+
+  \item Emphasize immutability using the console.
+
+  \item Create \lstinline|countTens(alist: List[Int]): Int|.
+
+  \item Show exhuastivity check (forget a case) and reachability check (reorder cases).
+
+  \item Show complex patterns (e.g., matching 2nd item in a list).
+
+\end{enumerate}
+
+  \item \lstinline|Time| class in Java vs. Scala: it's a lot shorter
+
+  \item case classes: no need to write new, all fields public, toString and equals that make sense.
+
+  \item Write \lstinline|tick(atime: Time): Time| without pattern matching.
+  
+  \item Pattern matching on \lstinline|Time|:
+
+  \begin{scalacode}
+  def tick(atime: Time): Time = atime match {
+    case Time(23, 59, 59) => Time(0, 0, 0)
+    case Time(h, 59, 59) => Time(h + 1, 0, 0)
+    case Time(h, m, 59) => Time(h, m + 1, 0)
+    case Time(h, m, s) => Time(h, m, s + 1)
+  }
+  \end{scalacode}
+
+  \item Introduce \lstinline|Time12| and write \lstinline|during220(atime: Any): Boolean|.
+
+  \item Emphasize that we can get a runtime error if we mis-apply the function.
+
+  \item Introduce \lstinline|trait Timey| and change type.
+
+  \item Introduce \lstinline|sealed trait Timey| and show that we get exhaustivity checks.
+
+  \item Main point: your data structures can leverage
+  exhuastivity and pattern matching. It is not just for built-in
+  types.
+
+  \item Recursive types:
+
+  \begin{enumerate}
+
+  \item Define type \lstinline|BinTree| with string keys and integer values.
+
+  \item Write \lstinline|find| and \lstinline|insert| and think about properties.
+
+  \end{enumerate}
+
+ 
+\end{enumerate}
 
 \chapter{EOF}
 
