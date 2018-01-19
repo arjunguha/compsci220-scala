@@ -6,8 +6,8 @@ licenses += ("BSD", url("https://opensource.org/licenses/BSD-3-Clause"))
 
 name := "compsci220"
 organization := "edu.umass.cs"
-version := "1.3.1"
-scalaVersion := "2.11.8"
+version := "1.4.0"
+scalaVersion := "2.12.4"
 autoAPIMappings := true
 
 scalacOptions in (Compile,doc) ++=
@@ -20,9 +20,9 @@ scalacOptions ++=
       "-feature",
       "-Xfatal-warnings")
 
-libraryDependencies ++=
-  Seq("org.scalatest" %% "scalatest" % "2.2.6" % "test",
-      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4")
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
+libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
+libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6"
 
 target in Compile in doc := baseDirectory.value / ".." / "website" / "api"
 
@@ -60,4 +60,4 @@ val javadocApiLink = """\"(http://docs\.oracle\.com/javase/8/docs/api/index\.htm
 
 def hasJavadocApiLink(f: File): Boolean = (javadocApiLink findFirstIn IO.read(f)).nonEmpty
 
-fixJavaLinksTask <<= fixJavaLinksTask triggeredBy (doc in Compile)
+fixJavaLinksTask := { fixJavaLinksTask triggeredBy (doc in Compile) }
