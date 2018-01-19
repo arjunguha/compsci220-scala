@@ -1,6 +1,11 @@
+// NOTE(arjun, 1/19/2018): I haven't verified that this solution is up to date.
+// It may be for an old version of the assignment.
+
 // Force students to write directly and not use builtin methods.
 // Just look for method calls to penalize students.
-object Solution {
+object Lists {
+
+  val oddNumbers = List(1, 3, 5)
 
   // Exercise 1
   def sumDouble(lst: List[Int]): Int = lst match {
@@ -49,7 +54,7 @@ object Solution {
     case Nil => Nil
     case x :: rest1 => lst2 match {
       case Nil => Nil
-      case y :: rest2 => x :: y :: intersperse(lst1, lst2)
+      case y :: rest2 => x :: y :: alternating(lst1, lst2)
     }
   }
 
@@ -74,7 +79,7 @@ object Solution {
   // Exercise 10
   def sort(lst: List[Int]): List[Int] = lst match {
     case Nil => Nil
-    case n :: rest => insertOrdered(n, insertionSort(rest))
+    case n :: rest => insertOrdered(n, sort(rest))
   }
 
 
