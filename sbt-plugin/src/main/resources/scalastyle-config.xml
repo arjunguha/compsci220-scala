@@ -7,7 +7,7 @@
    class="org.scalastyle.scalariform.NullChecker"
    enabled="true">
     <customMessage>
-    You must not use null. Consider using the Option[T] type instead.
+    You must not use null. The Option[T] type is a better alternative.
     </customMessage>
   </check>
 
@@ -47,5 +47,14 @@
      </customMessage>
   </check>
 
+  <check
+   enabled="true"
+   class="org.scalastyle.scalariform.ProcedureDeclarationChecker"
+   level="error">
+   <customMessage>
+   After the list of parameters, you need to write '=' followed by the function
+   body.
+   </customMessage>
+  </check>
 
 </scalastyle>
