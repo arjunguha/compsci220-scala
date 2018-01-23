@@ -175,7 +175,7 @@ The \emph{\textsc{Unix} command-line}\footnote{The command-line is also known as
 using the course virtual-machine, you should use the program \textbf{LXTerminal}
 to start the command-line.
 
-\item If you're using macOS, you you get to command line by running the
+\item If you're using macOS, you get to command line by running the
 launching the \textbf{Terminal} application, which is in the
 \textbf{Applications} $\blacktriangleright$ \textbf{Utilities} folder.
 
@@ -195,7 +195,7 @@ of these lecture notes assume that you are familiar with the command-line.
 \section{\sbt{} and the Scala REPL\classtime{5}}
 
 \sbt{} is the Swiss Army Knife of Scala programming. It is a command-line tool
-that can be use to run Scala programs, compile them, test them, package them
+that can be use to run Scala programs, compile them, test them, package them for
 deployment, publish them to the Web, and more. Like many modern programming
 languages, \sbt{} has a \emph{REPL} (read-eval-print loop), which you can use to
 type in and run one-line programs immediately, without the bother of creating
@@ -328,7 +328,7 @@ In principle, you can write a full-fledged program line-by-line in the Scala
 console. But, it makes a lot more sense to save large programs to files
 for a particular \emph{project}. To do so, we will being by creating a new directory
 for your project. Every time you create a new Scala program (e.g., for a homework
-assignment, you should create a new project.)
+assignment) you should create a new project.
 
 First, exit the Scala console by typing \verb|:quit| and then exit \sbt{}
 by typing \verb|exit|. You should return to the command-line:
@@ -466,7 +466,7 @@ known as the \emph{tail}. Note that the tail of a list is always a list itself,
 
 For example, consider the list below:
 \begin{lstlisting}
-val letters = "a" :: ("b" :: :: Nil)
+val letters = "a" :: ("b" :: Nil)
 \end{lstlisting}
 %
 \begin{itemize}
@@ -774,8 +774,8 @@ over conditionals in this course.
 
 \section{Immutability \classtime{10}}
 
-We want to emphasize that all that functions that we've written to produce
-lists  \emph{produces a new list} and leaves the original list unchanged.
+We want to emphasize that all the functions we've written to produce
+lists \emph{produce a new list} and leave the original list unchanged.
 
 You can observe this behavior in the Scala console:
 %
