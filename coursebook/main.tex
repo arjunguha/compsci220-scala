@@ -1553,33 +1553,12 @@ another part of the assignment.
 
 \section{Preliminaries}
 
-You should create a directory-tree that looks like this:
+Using the command-line, run the command
+\verb|sbt new umass-compsci220/scala-higher-order-functions.g8|. When prompted for
+a project name, press ``Enter'' to accept the default name.
 
-\dirtree{%
-.1 ./hof.
-.2 project.
-.3 plugins.sbt.
-.2 src.
-.3 main.
-.4 scala.\DTcomment{Your solution goes here}.
-.3 test.
-.4 scala\DTcomment{Yours tests go here}.
-}
-
-The \texttt{project/plugins.sbt} file must have exactly this line:
-
-\scalafile{../hw/hof/template/project/plugins.sbt}
-
-\section{Exercises}
-
-\begin{figure}
-\scalafile{../hw/hof/template/src/main/scala/HOF.scala}
-\caption{Solution template.}
-\label{hof_template}
-\end{figure}
-
-Within an object called \texttt{HOF}, implement the following functions.
-(You may use the template in \cref{hof_template})
+Within the file \verb|scala-higher-order-functions/src/main/scala/Main.scala|,
+implement the following functions.
 
 \begin{enumerate}
 
@@ -1588,15 +1567,11 @@ Write the \scalainline{map2} function, which maps over two lists:
 
 \begin{scalacode}
 def map2[A,B,C](f: (A, B) => C, alist1: List[A], alist2: List[B]): List[C]
-
-test("map2 with add") {
-  def add(x: Int, y: Int): Int = x + y
-  assert(map2(add, List(1, 2, 3), List(4, 5, 6)) == List(5, 7, 9))
-}
 \end{scalacode}
 
 You may assume that \scalainline{alist1} and \scalainline{alist2} have the same
-length (i.e., do whatever you think is reasonable).
+length. (i.e., do whatever you think is reasonable if they have different
+lengths).
 
 \item
 Scala lets you write \scalainline{(x, y)} to create \emph{tuples}. For example:
@@ -1616,15 +1591,6 @@ Write the \scalainline{zip} function, which tuples corresponding elements in a l
 
 \begin{scalacode}
 def zip[A,B](alist1: List[A], alist2: List[B]): List[(A, B)]
-
-test("zip test 1") {
-  assert(zip(List(1, 2, 3), List(4, 5, 6)) == List((1,4), (2, 5), (3, 6)))
-}
-
-test("zip test 2") {
-  assert(zip(List("George", "Teddy"), List("Washington", "Roosevelt")) ==
-         List(("George", "Washington"), ("Teddy", "Roosevelt")))
-}
 \end{scalacode}
 
 \item
@@ -1632,10 +1598,6 @@ Write the function \scalainline{flatten}, which flattens a nested list:
 
 \begin{scalacode}
 def flatten[A](alist: List[List[A]]): List[A]
-
-test("flatten test") {
-  assert(flatten(List(List(1, 2), List(3, 4))) == List(1, 2, 3, 4))
-}
 \end{scalacode}
 
 \item
@@ -1651,11 +1613,6 @@ element is determined by applying \scalainline{f} to the index of the element:
 
 \begin{scalacode}
 def buildList[A](length: Int, f: Int => A): List[A]
-
-test("buildList test") {
-  def f(x: Int) = x
-  assert(buildList(10, f) == List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
-}
 \end{scalacode}
 
 \item
@@ -1664,11 +1621,6 @@ the list of all results:
 
 \begin{scalacode}
 def mapList[A, B](alist: List[A], f: A => List[B]): List[B]
-
-test("mapList test") {
-  def f(n: Int): List[Int] = buildList(n, (_: Int) => n)
-  assert(mapList(List(1, 2, 3), f) == List(1, 2, 2, 3, 3, 3))
-}
 \end{scalacode}
 
 \item
@@ -1683,37 +1635,17 @@ as in \scalainline{alist}.
 
 \begin{scalacode}
 def partition[A](f: A => Boolean, alist: List[A]): (List[A], List[A])
-
-def isEven(n: Int): Boolean = n % 2 == 0
-
-test("partition test 1") {
-  assert(partition(isEven, List(1,2,3,4,5,6)) == (List(2,4,6), List(1,3,5)))
-}
-
-test("partition test 2") {
-  assert(partition(isEven, List(2,4,6)) == (List(2,4,6), Nil))
-
-test("partition test 3") {
-  assert(partition(isEven, List(1,3,5)) == (Nil, List(1,3,5)))
-}
 \end{scalacode}
 
 \item
 Write the \scalainline{merge(lessThan, alist1, alist2)} function, which merges
-the two elements of the two lists. You should assume that \scalainline{alist1}
+the elements of the two lists. You should assume that \scalainline{alist1}
 and \scalainline{alist2} are sorted by the ordering defined by \scalainline{lessThan}.
 the produced list should also be sorted by the same ordering.
 
 \begin{scalacode}
 def merge[A](lessThan: (A, A) => Boolean, alist1: List[A], alist2: List[A]): List[A]
-
-def lt(x: Int, y: Int): Boolean = x < y
-
-test("merge test 1") {
-  assert(merge(lt, List(5, 3, 1), List(10, 6, 0)) == List(10, 6, 5, 3, 1, 0))
-}
-\end{scalacode} 
-
+\end{scalacode}
 
 \item
 Write the \scalainline{sort(lessThan, alist)} function, which sorts \scalainline{alist} by the ordering
@@ -1721,14 +1653,66 @@ defined by \scalainline{lessThan}.
 
 \begin{scalacode}
 def sort[A](lessThan: (A, A) => Boolean, alist: List[A]): List[A]
-
-
-test("sort test 1") {
-  assert(sort(lt, List(5,1,2,3,4,5)) == List(5,5,4,3,2,1))
-}
 \end{scalacode}
 
+
+\item \textbf{(Not graded.)}  The lecture notes discuss the
+\lstinline|fold| function, which is reproduced below:
+\begin{lstlisting}
+def fold[A,B](baseCase: B, binOp: (A, B) => B, alist: List[A]): B = alist match {
+  case Nil => baseCase
+  case head :: tail => binOp(head, fold(baseCase, binOp, tail))
+}
+\end{lstlisting}
+
+Rewrite the following functions using \lstinline|fold|. (i.e., do not directly
+recur; let \lstinline|fold| handle recursion.)
+
+\begin{lstlisting}
+def length[A](alist: List[A]): Int = alist match {
+  case Nil => 0
+  case _ :: tail => 1 + length(tail)
+}
+  
+def filter[A](f: A => Boolean, alist: List[Int]): List[A] = alist match {
+  case Nil => Nil
+  case head :: tail => f(head) match {
+    case true => head :: filter(f, tail)
+    case false => filter(f, tail)
+  }
+}
+
+def map(f: Int => Int, alist: List[Int]): List[Int] = alist match {
+  case Nil => Nil
+  case h :: t => f(h) :: map(f, t)
+}
+\end{lstlisting}
+
+\item \textbf{(Not graded.)} A folding function collapses a list into a value.
+Conversely, an unfolding function builds a list from a sequence of values and
+terminates the list when a condition becomes true. The general recursive
+pattern of an unfolding function is shown below:
+
+\begin{lstlisting}
+def unfold[A,B](stop: B => Boolean, gen: B => (A, B), v: B): List[A] = {
+  if (stop(v)) {
+    Nil
+  }
+  else {
+    val (x, vNext) = gen(v)
+    x :: unfold(stop, gen, vNext)
+  }
+}
+\end{lstlisting}
+
+Use \lstinline|unfold| to write \lstinline|map| and \lstinline|filter|.
+
+\item \textbf{(Not graded.)} Write a \lstinline|sort| function that uses
+a combination of \lstinline|fold| and \lstinline|unfold| instead of direc
+recursion. You may need to use \lstinline|fold| and/or \lstinline|unfold| several times.
+
 \end{enumerate}
+
 
 \input{handin}
 

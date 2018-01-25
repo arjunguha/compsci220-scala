@@ -1,1 +1,1 @@
-addSbtPlugin("edu.umass.cs" % "cmpsci220" % "3.0.1")
+addSbtPlugin("edu.umass.cs" % "compsci220" % "1.1.0")
