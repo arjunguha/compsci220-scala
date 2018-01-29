@@ -18,5 +18,5 @@ autoScalaLibrary := false
 // library dependencies. (orginization name) % (project name) % (version)
 libraryDependencies ++= Seq(
   "com.google.code.gson" % "gson" % "2.8.2",
-  "com.amazonaws" % "aws-java-sdk-s3" % "1.11.269"
+  "com.ibm.cos" % "ibm-cos-java-sdk" % "2.0.0"
 )

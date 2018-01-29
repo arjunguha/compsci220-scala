@@ -1,57 +1,82 @@
 import java.io.File;
 import java.io.InputStream;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.GetObjectRequest;
+import java.util.List;
+
+import com.ibm.cloud.objectstorage.ClientConfiguration;
+import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
+import com.ibm.cloud.objectstorage.auth.AWSCredentials;
+import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
+import com.ibm.cloud.objectstorage.auth.AWSStaticCredentialsProvider;
+import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
+import com.ibm.cloud.objectstorage.client.builder.AwsClientBuilder.EndpointConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3ClientBuilder;
+import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
+import com.ibm.cloud.objectstorage.services.s3.model.ListObjectsRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectListing;
+import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
+import com.ibm.cloud.objectstorage.oauth.BasicIBMOAuthCredentials;
 
 import com.google.gson.JsonObject;
 
 public class RunTestsAction {
     
-    private static final String ENDPOINT = "https://s3.us-south.objectstorage.softlayer.net";
-    private static final String ENDPOINT_REGION = "us-south";
+    private static final String ENDPOINT = "https://s3-api.us-geo.objectstorage.softlayer.net";
+    private static final String ENDPOINT_REGION = "us";
+
+    public static void main(String[] args) {
+        // for testing purposes
+        main(new JsonObject());
+    }
 
     public static JsonObject main(JsonObject args) {
         // extract relevant information from input json
-        String accessKey = "";
-        String secretKey = "";
-        String sourceBucket = "";
+        String accessKey = "_ixYyqdFstiD7AAXizRcMtQZHrP9A8chQseJk";
+        String secretKey = "crn:v1:bluemix:public:cloud-object-storage:global:a/26e037c79ccb86eff52eb0bbcd4a8e8d:b72d161d-e0d2-491e-9832-19823b07f77c::";
+        String sourceBucket = "plasma-research";
         String sourceKey = "";
         String dest = "";
 
-        // pull jar from s3 storage and run tests
-        pullJar(accessKey, secretKey, sourceBucket, sourceKey, dest);
-        return runTests(dest);
+        AmazonS3 client = getClient(accessKey, secretKey);
+        // pullJar(client, sourceBucket, sourceKey, dest);
+        // return runTests(dest);
+
+        listBuckets(client);
+        return new JsonObject();
     }
 
-    private static void pullJar(String accessKey,
-                                String secretKey,
+    private static AmazonS3 getClient(String accessKey, String secretKey) {
+        SDKGlobalConfiguration.IAM_ENDPOINT = "https://iam.bluemix.net/oidc/token";
+
+        AWSCredentialsProvider credentials = new AWSStaticCredentialsProvider(
+            new BasicIBMOAuthCredentials(accessKey, secretKey));
+        EndpointConfiguration endpoint = new EndpointConfiguration(ENDPOINT, ENDPOINT_REGION);
+        ClientConfiguration clientConfig = new ClientConfiguration()
+            .withRequestTimeout(5000)
+            .withTcpKeepAlive(true);
+
+        // Construct the S3 client with configuration details
+        return AmazonS3Client.builder()
+            .withCredentials(credentials)
+            .withEndpointConfiguration(endpoint)
+            .withPathStyleAccessEnabled(true)
+            .withClientConfiguration(clientConfig)
+            .build();
+    }
+
+    private static void pullJar(AmazonS3 client,
                                 String sourceBucket,
                                 String sourceKey,
                                 String dest) {
-        AWSCredentialsProvider credentials = new AWSStaticCredentialsProvider(
-            new BasicAWSCredentials(accessKey, secretKey));
-        EndpointConfiguration endpoint = new EndpointConfiguration(ENDPOINT, ENDPOINT_REGION);
-
-        // Construct the S3 client with configuration details
-        AmazonS3 cos = AmazonS3Client.builder()
-            .withCredentials(credentials)
-            .withEndpointConfiguration(endpoint)
-            .build();
-
         // Create an execute request for file
         GetObjectRequest request = new GetObjectRequest(
             sourceBucket, // bucket name
             sourceKey     // object name
         );
-        cos.getObject(
+        client.getObject(
             request,
             new File(dest) // destination file
         );
@@ -85,5 +110,33 @@ public class RunTestsAction {
         response.addProperty("err", err);
         return response;
     }
+
+    /**
+     * @param bucketName
+     * @param s3Client
+     */
+    public static void listObjects(String bucketName, AmazonS3 s3Client)
+    {
+        System.out.println("Listing objects in bucket " + bucketName);
+        ObjectListing objectListing = s3Client.listObjects(new ListObjectsRequest().withBucketName(bucketName));
+        for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+            System.out.println(" - " + objectSummary.getKey() + "  " + "(size = " + objectSummary.getSize() + ")");
+        }
+        System.out.println();
+    }
+
+    /**
+     * @param s3Client
+     */
+    public static void listBuckets(AmazonS3 s3Client)
+    {
+        System.out.println("Listing buckets");
+        final List<Bucket> bucketList = s3Client.listBuckets();
+        for (final Bucket bucket : bucketList) {
+            System.out.println(bucket.getName());
+        }
+        System.out.println();
+    }
+
     
 }
