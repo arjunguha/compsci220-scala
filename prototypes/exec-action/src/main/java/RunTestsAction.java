@@ -23,120 +23,84 @@ import com.ibm.cloud.objectstorage.oauth.BasicIBMOAuthCredentials;
 import com.google.gson.JsonObject;
 
 public class RunTestsAction {
-    
-    private static final String ENDPOINT = "https://s3-api.us-geo.objectstorage.softlayer.net";
-    private static final String ENDPOINT_REGION = "us";
 
-    public static void main(String[] args) {
-        // for testing purposes
-        main(new JsonObject());
+  private static AmazonS3 _s3Client;
+
+  public static void main(String[] args)
+  {
+
+    SDKGlobalConfiguration.IAM_ENDPOINT = "https://iam.bluemix.net/oidc/token";
+
+    String bucketName = "plasma-research";
+    String api_key = "zyMKlXb7JP4GqMZzLfyukohohZsSVW-FYcznW_XNdkXy";
+    String service_instance_id = "crn:v1:bluemix:public:cloud-object-storage:global:a/26e037c79ccb86eff52eb0bbcd4a8e8d:b72d161d-e0d2-491e-9832-19823b07f77c::";
+    String endpoint_url = "https://s3-api.us-geo.objectstorage.softlayer.net";
+    String location = "us";
+
+    _s3Client =
+      createClient(api_key, service_instance_id, endpoint_url, location);
+
+    listBuckets(_s3Client);
+    System.out.println(_s3Client.doesBucketExist("compsci220"));
+    //listObjects(bucketName, _s3Client);
+  }
+
+
+  public static AmazonS3 createClient(
+      String api_key,
+      String service_instance_id,
+      String endpoint_url,
+      String location) {
+
+    AWSCredentials credentials;
+    if (endpoint_url.contains("objectstorage.softlayer.net")) {
+      credentials = new BasicIBMOAuthCredentials(api_key, service_instance_id);
+    } else {
+      String access_key = api_key;
+      String secret_key = service_instance_id;
+      credentials = new BasicAWSCredentials(access_key, secret_key);
     }
 
-    public static JsonObject main(JsonObject args) {
-        // extract relevant information from input json
-        String accessKey = "_ixYyqdFstiD7AAXizRcMtQZHrP9A8chQseJk";
-        String secretKey = "crn:v1:bluemix:public:cloud-object-storage:global:a/26e037c79ccb86eff52eb0bbcd4a8e8d:b72d161d-e0d2-491e-9832-19823b07f77c::";
-        String sourceBucket = "plasma-research";
-        String sourceKey = "";
-        String dest = "";
+    ClientConfiguration clientConfig =
+      new ClientConfiguration()
+      .withRequestTimeout(5000);
 
-        AmazonS3 client = getClient(accessKey, secretKey);
-        // pullJar(client, sourceBucket, sourceKey, dest);
-        // return runTests(dest);
+    clientConfig.setUseTcpKeepAlive(true);
 
-        listBuckets(client);
-        return new JsonObject();
+    AmazonS3 s3Client = AmazonS3ClientBuilder
+      .standard()
+      .withCredentials(new AWSStaticCredentialsProvider(credentials))
+      .withEndpointConfiguration(
+          new EndpointConfiguration(endpoint_url, location))
+      .withPathStyleAccessEnabled(true)
+      .withClientConfiguration(clientConfig)
+      .build();
+
+    return s3Client;
+  }
+
+  /**
+   * @param s3Client
+   */
+  public static void listBuckets(AmazonS3 s3Client) {
+    System.out.println("Listing buckets");
+    final List<Bucket> bucketList = s3Client.listBuckets();
+    for (final Bucket bucket : bucketList) {
+      System.out.println(bucket.getName());
+      listObjects(bucket.getName(), _s3Client);
     }
+    System.out.println();
+  }
 
-    private static AmazonS3 getClient(String accessKey, String secretKey) {
-        SDKGlobalConfiguration.IAM_ENDPOINT = "https://iam.bluemix.net/oidc/token";
+  public static void listObjects(String bucketName, AmazonS3 s3Client) {
+    System.out.println("Listing objects in bucket " + bucketName);
+    ObjectListing objectListing =
+      s3Client.listObjects(new ListObjectsRequest().withBucketName(bucketName));
 
-        AWSCredentialsProvider credentials = new AWSStaticCredentialsProvider(
-            new BasicIBMOAuthCredentials(accessKey, secretKey));
-        EndpointConfiguration endpoint = new EndpointConfiguration(ENDPOINT, ENDPOINT_REGION);
-        ClientConfiguration clientConfig = new ClientConfiguration()
-            .withRequestTimeout(5000)
-            .withTcpKeepAlive(true);
-
-        // Construct the S3 client with configuration details
-        return AmazonS3Client.builder()
-            .withCredentials(credentials)
-            .withEndpointConfiguration(endpoint)
-            .withPathStyleAccessEnabled(true)
-            .withClientConfiguration(clientConfig)
-            .build();
+    for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+      System.out.println(" - " + objectSummary.getKey());
     }
+    System.out.println();
+  }
 
-    private static void pullJar(AmazonS3 client,
-                                String sourceBucket,
-                                String sourceKey,
-                                String dest) {
-        // Create an execute request for file
-        GetObjectRequest request = new GetObjectRequest(
-            sourceBucket, // bucket name
-            sourceKey     // object name
-        );
-        client.getObject(
-            request,
-            new File(dest) // destination file
-        );
-    }
-    
-    private static JsonObject runTests(String jarPath) {
-        try {
-            Process proc = Runtime.getRuntime().exec("java -jar " + jarPath);
-            int code = proc.waitFor();
-            InputStream in = proc.getInputStream();
-            InputStream err = proc.getErrorStream();
-    
-            String stdLog, errLog;
-            byte b[]=new byte[in.available()];
-            in.read(b,0,b.length);
-            stdLog = new String(b);
-            byte c[]=new byte[err.available()];
-            err.read(c,0,c.length);
-            errLog = new String(c);
-            
-            return formatResults(code, stdLog, errLog);
-        } catch(Exception e) {
-            return formatResults(1, "", "Test execution failed");
-        }
-    }
-        
-    private static JsonObject formatResults(int resultCode, String std, String err) {
-        JsonObject response = new JsonObject();
-        response.addProperty("result", resultCode);
-        response.addProperty("std", std);
-        response.addProperty("err", err);
-        return response;
-    }
-
-    /**
-     * @param bucketName
-     * @param s3Client
-     */
-    public static void listObjects(String bucketName, AmazonS3 s3Client)
-    {
-        System.out.println("Listing objects in bucket " + bucketName);
-        ObjectListing objectListing = s3Client.listObjects(new ListObjectsRequest().withBucketName(bucketName));
-        for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
-            System.out.println(" - " + objectSummary.getKey() + "  " + "(size = " + objectSummary.getSize() + ")");
-        }
-        System.out.println();
-    }
-
-    /**
-     * @param s3Client
-     */
-    public static void listBuckets(AmazonS3 s3Client)
-    {
-        System.out.println("Listing buckets");
-        final List<Bucket> bucketList = s3Client.listBuckets();
-        for (final Bucket bucket : bucketList) {
-            System.out.println(bucket.getName());
-        }
-        System.out.println();
-    }
-
-    
 }
