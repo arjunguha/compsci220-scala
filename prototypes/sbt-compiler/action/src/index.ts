@@ -6,10 +6,14 @@
 
 import * as express from 'express'
 import * as bodyParser from 'body-parser';
-import * as AWS from 'ibm-cos-sdk'
 import * as util from 'util';
+import * as cp from 'child_process'
+import * as fs from 'fs';
+import * as path from 'path';
 
-//const cp = require('child_process');
+// NOTE(rachit): typings broken
+const AWS = require('ibm-cos-sdk')
+const bucket = 'compsci220'
 
 const app = express();
 const jsonParser = bodyParser.json()
@@ -50,18 +54,47 @@ app.post('/run', jsonParser, function(req, resp) {
   function doGetObject() {
     console.log('Retreiving object....')
     return cos.getObject({
-      Bucket: 'compsci220',
+      Bucket: bucket,
       Key: submission
     }).promise()
   }
 
+  function doCreateObject(data: Buffer) {
+    console.log('Creating object....');
+    return cos.putObject({
+      Bucket: bucket,
+      // TODO(rachit): This should be named for each student.
+      Key: 'rachit-test.jar',
+      Body: data
+    }).promise();
+  }
+
   return doGetObject()
-    .then(function (data) {
-      resp.status(200).send(
-        JSON.stringify({ data: 'Successfully received the object' }))
+    .then(function (data: any) {
+
+      // Generate the jar file.
+      const cmd = `bash ./extractAndCompile.sh ${path}`
+      cp.exec(cmd, { encoding: 'utf8' }, (err, stdout, stderr) => {
+        if(err) {
+          resp.status(404).send(JSON.stringify({
+            error: {
+              message: `error from ${cmd}`, stderr, stdout
+          }}))
+        }
+
+        const data = fs.readFileSync(path.join(__dirname, 'submission.jar'))
+
+        doCreateObject(data)
+          .then(function (data: any) {
+            resp.status(200).send(JSON.stringify({ data: 'Jar generated' }))
+          })
+          .catch(function (err: any) {
+            resp.status(404).send(JSON.stringify({ error: util.inspect(err) }))
+          })
+      })
     })
-    .catch(function (err) {
-      resp.status(200).send(JSON.stringify({ error: util.inspect(err) }))
+    .catch(function (err: any) {
+      resp.status(404).send(JSON.stringify({ error: util.inspect(err) }))
     })
 
 });

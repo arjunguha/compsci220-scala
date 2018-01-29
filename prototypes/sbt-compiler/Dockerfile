@@ -44,6 +44,7 @@ WORKDIR /home/student/scala-init
 RUN sbt run
 
 WORKDIR /home/student
+COPY ./extractAndCompile.sh /home/student
 
 COPY action /action
 
