@@ -47,4 +47,4 @@ WORKDIR /home/student
 
 COPY action /action
 
-ENTRYPOINT ["/usr/bin/node", "/action/js/index.js"]
+ENTRYPOINT ["/usr/bin/node", "/action/dist/index.js"]

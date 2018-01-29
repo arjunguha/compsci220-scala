@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "./dist",
+    "allowUnreachableCode": true,
+    "lib": ["es2016", "dom"],
+    "target": "es5",
+    "pretty": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "inlineSourceMap": true
+  },
+  "exclude": ["node_modules/*"]
+}
