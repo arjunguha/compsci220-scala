@@ -21,8 +21,8 @@ function complete() {
 }
 
 // TODO(rachit): Re-write this nonsense in TS
-function hasType(value, valueName, type) {
-  if (typeof value !== 'type') {
+function hasType(resp, value, valueName, type) {
+  if (typeof value !== type) {
     resp.status(404).send(JSON.stringify({
       error: `expected ${valueName} parameter of type ${type}`
     }));
@@ -44,7 +44,7 @@ app.post('/run', jsonParser, function(req, resp) {
 
   let { project, apiKey, serviceInstance } = req.body.value;
 
-  project = hasType(project, 'project', 'string')
+  project = hasType(resp, project, 'project', 'string')
 
   // TODO(rachit): Dont harcode these.
   //apiKey = hasType(apiKey, 'apiKey', 'string')
@@ -57,22 +57,22 @@ app.post('/run', jsonParser, function(req, resp) {
     serviceInstanceId: "crn:v1:bluemix:public:cloud-object-storage:global:a/26e037c79ccb86eff52eb0bbcd4a8e8d:b72d161d-e0d2-491e-9832-19823b07f77c::"
   }
 
-  const cos = AWS.S3(config);
+  const cos = new AWS.S3(config);
 
   function doGetObject() {
     console.log('Retreiving object....')
     return cos.getObject({
-      Bucket: 'plasma-research',
+      Bucket: 'compsci220',
       Key: project
     }).promise()
   }
 
   return doGetObject()
     .then(function (data) {
-      return { data: 'Successfully received the object' }
+      resp.status(200).send(JSON.stringify({ data: 'Successfully received the object' }))
     })
     .catch(function (err) {
-      return { error: util.inspect(err) }
+      resp.status(200).send(JSON.stringify({ error: util.inspect(err) }))
     })
 
   /*cp.exec(cmd,
