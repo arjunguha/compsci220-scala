@@ -5,7 +5,8 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "build": "./node_modules/.bin/tsc",
-    "extract": "node dist/extract.js"
+    "extract": "node dist/extract.js",
+    "overlay": "node dist/overlay.js"
   },
   "devDependencies": {
     "@types/fs-extra": "^5.0.0",
