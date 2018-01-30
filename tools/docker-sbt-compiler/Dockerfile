@@ -27,7 +27,6 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
 RUN adduser --disabled-password --gecos "" student
 USER student
 WORKDIR /home/student
-COPY ./extractAndCompile.sh /home/student
 
 # Pre-fetch typical dependencies
 RUN mkdir -p /home/student/scala-init/project
@@ -37,4 +36,7 @@ WORKDIR /home/student/scala-init
 RUN sbt run
 
 WORKDIR /home/student
-ENTRYPOINT ["/bin/bash", "./extractAndCompile.sh"]
+RUN mkdir /home/student/hw
+
+WORKDIR /home/student/hw
+ENTRYPOINT ["sbt", "assembly"]
