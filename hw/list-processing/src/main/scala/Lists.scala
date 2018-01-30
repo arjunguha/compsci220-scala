@@ -30,22 +30,21 @@ object Lists {
   // Exercise 4
   def removeAlternating(lst: List[String]): List[String] = lst match {
     case Nil => Nil
-    case _ :: Nil => Nil
-    case _ :: str :: rest => str :: removeAlternating(rest)
+    case x :: Nil => List(x)
+    case x :: _ :: rest => x :: removeAlternating(rest)
   }
 
   // Exercise 5
   def isAscending(lst: List[Int]): Boolean = lst match {
     case Nil => true
     case m :: n :: rest => m <= n && isAscending(n :: rest)
-    case _ :: Nil => false
+    case _ :: Nil => true
   }
 
   // Exercise 6
   def addSub(lst: List[Int]): Int = lst match {
     case Nil => 0
-    case x :: y :: z :: rest => x + y - z + addSub(rest)
-    case x :: y :: Nil => x + y
+    case x :: y :: rest => x - y + addSub(rest)
     case x :: Nil => x
   }
 
@@ -60,12 +59,7 @@ object Lists {
 
   // Exercise 8
   def fromTo(lo: Int, hi: Int): List[Int] = {
-    if (lo == hi) {
-      lo :: Nil
-    }
-    else {
-      lo :: fromTo(lo + 1, hi)
-    }
+    if (lo == hi) Nil else lo :: fromTo(lo + 1, hi)
   }
 
   // Exercise 9
