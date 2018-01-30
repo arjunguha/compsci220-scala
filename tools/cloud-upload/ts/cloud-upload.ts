@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import * as assert from 'assert';
 import * as archiver from 'archiver';
-const Storage = require('@google-cloud/storage');
+import * as Storage from '@google-cloud/storage';
 
 function main(projectsPath: string, bucketName: string, dest: string) {
   assert(fs.statSync(projectsPath).isDirectory, `${projectsPath} must be a directory`);
