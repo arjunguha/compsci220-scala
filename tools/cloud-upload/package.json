@@ -1,0 +1,20 @@
+{
+  "name": "cloud-upload",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "build": "./node_modules/.bin/tsc",
+    "cloud-upload": "node dist/cloud-upload.js"
+  },
+  "devDependencies": {
+    "@types/archiver": "^2.1.0",
+    "@types/fs-extra": "^5.0.0",
+    "typescript": "^2.6.2"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^1.5.2",
+    "archiver": "^2.1.1",
+    "fs-extra": "^5.0.0"
+  }
+}
