@@ -41,7 +41,7 @@ export function jarRunner(event: any, callback: any) {
         }), () => fs.unlinkSync(jarPath));
     })
     .then(result => {
-      const data = { ...result, ...metadata };
+      const data = { ...result, ...metadata, timestamp: Date.now() };
       return ds.save({ key: { kind: 'compsci220' }, data });
     })
     .then(() => callback())
