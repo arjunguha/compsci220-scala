@@ -39,4 +39,4 @@ WORKDIR /home/student
 RUN mkdir /home/student/hw
 
 WORKDIR /home/student/hw
-ENTRYPOINT ["sbt", "assembly"]
+ENTRYPOINT ["sbt", "-no-colors", "assembly"]
