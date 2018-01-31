@@ -34,3 +34,16 @@ export function attachIO(container: Docker.Container): Promise<ContainerIO> {
       };
     });
 };
+
+// Type faccade for function
+export function promiseFinally<T>(promise: Promise<T>,
+  finallyHandler: () => void): Promise<T> {
+  return promise.then(result => {
+    finallyHandler();
+    return result;
+  })
+  .catch(reason => {
+    finallyHandler();
+    throw reason;
+  });
+};

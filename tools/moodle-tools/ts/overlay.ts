@@ -42,11 +42,11 @@ function processOverlays(commands: string[]) {
   while(commands.length > 0) {
     const typ = commands.shift();
     if (typ === 'overlay') {
-      const path = commands.shift()!;      
+      const path = commands.shift()!;
       result = seqCommand(result, overlayCommand(path));
     }
     else if (typ === 'copy') {
-      const src = commands.shift()!;      
+      const src = commands.shift()!;
       const dst = commands.shift()!;
       result = seqCommand(result, copyCommand(src, dst));
     }
@@ -58,7 +58,9 @@ function processOverlays(commands: string[]) {
   return result;
 }
 
-const [ _, __, submissions, ...overlays ] = process.argv;
+const [ _, __, submissions, testFile ] = process.argv;
 
+const overlays = [ 'overlay', __dirname + '/../data/scala-grading-overlay',
+  'copy', testFile, 'src/main/scala/GradingTests.scala' ];
 
 main(submissions, processOverlays(overlays));

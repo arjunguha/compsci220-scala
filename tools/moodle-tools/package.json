@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "license": "BSD-3-Clause",
+  "bin": {
+    "moodle-extract": "./bin/extract.js",
+    "moodle-overlay": "./bin/overlay.js"
+  },
   "scripts": {
     "build": "./node_modules/.bin/tsc",
     "extract": "node dist/extract.js",

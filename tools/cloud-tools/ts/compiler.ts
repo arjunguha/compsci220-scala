@@ -37,19 +37,6 @@ class CompilerError {
   }
 }
 
-// Type faccade for function
-function promiseFinally<T>(promise: Promise<T>,
-  finallyHandler: () => void): Promise<T> {
-  return promise.then(result => {
-    finallyHandler();
-    return result;
-  })
-  .catch(reason => {
-    finallyHandler();
-    throw reason;
-  });
-};
-
 // Upload metadata from compilation to google datastore
 function uploadMetadata(data: UploadData) {
   const ds = new datastore({})
@@ -61,6 +48,7 @@ function uploadFile(filepath: string, metadata: MD) {
   const bucketObj = sto.bucket(bucket)
   const data = fs.readFileSync(filepath)
   return bucketObj.file(dest).save(data)
+    .then(_ => console.info(`uploaded ${filepath}`))
 }
 
 function downloadFile(metadata: MD): Promise<Buffer> {
@@ -134,7 +122,7 @@ function runContainer(docker: Docker, srcFile: Buffer): Promise<CompileResult> {
 
   return docker.createContainer(createContainerOpts)
     .then(container =>
-      promiseFinally(
+      util.promiseFinally(
         runMain(container),
         () => container.remove({ force: true })));
 }
@@ -144,10 +132,10 @@ const testingConn = {
   port: 2376
 }
 
-function main(metadata: MD) {
+export function main(docker: Docker, metadata: MD) {
   const { bucket, src, dest } = metadata
-  downloadFile(metadata)
-    .then(srcPath => runContainer(new Docker(testingConn), srcPath))
+  return downloadFile(metadata)
+    .then(srcPath => runContainer(docker, srcPath))
     .then(data => {
 
       const { statusCode, stdout, stderr, jarFile } = data;
@@ -172,19 +160,24 @@ function main(metadata: MD) {
     })
 }
 
-commander.option('--bucket <BUCKET>',
-  'name of bucket on Google Cloud Storage');
-commander.option('--src <src.tar.gz>',
-  'tar file containing the project to be compiled')
-commander.option('--dest <dest.jar>',
-  'name of the jar file to be uploaded to GCS')
 
-const args = commander.parse(process.argv);
 
-if (args.bucket && args.src && args.dest) {
-  main({ bucket: args.bucket, src: args.src, dest: args.dest })
-}
-else {
-  console.error('Incorrect args')
-  commander.outputHelp()
+function mainmain() {
+
+  commander.option('--bucket <BUCKET>',
+    'name of bucket on Google Cloud Storage');
+  commander.option('--src <src.tar.gz>',
+    'tar file containing the project to be compiled')
+  commander.option('--dest <dest.jar>',
+    'name of the jar file to be uploaded to GCS')
+
+  const args = commander.parse(process.argv);
+
+  if (args.bucket && args.src && args.dest) {
+    main(new Docker(testingConn), { bucket: args.bucket, src: args.src, dest: args.dest })
+  }
+  else {
+    console.error('Incorrect args')
+    commander.outputHelp()
+  }
 }
