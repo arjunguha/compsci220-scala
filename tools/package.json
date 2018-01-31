@@ -1,6 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "moodle-tools"
+    "moodle-tools",
+    "cloud-tools"
   ]
 }
