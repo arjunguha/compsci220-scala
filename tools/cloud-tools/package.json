@@ -4,21 +4,32 @@
   "main": "index.js",
   "license": "MIT",
   "bin": {
-    "cloud220-uploadZips": "./bin/cloud220-upload-zips.js"
+    "cloud220-uploadZips": "./bin/cloud220-upload-zips.js",
+    "cloud220-compile": "./bin/cloud220-compiler.js"
   },
   "scripts": {
     "build": "./node_modules/.bin/tsc"
   },
   "devDependencies": {
     "@types/archiver": "^2.1.0",
+    "@types/google-cloud__datastore": "^1.3.0",
     "typescript": "^2.6.2"
   },
   "dependencies": {
+    "@google-cloud/datastore": "^1.3.3",
     "@google-cloud/storage": "^1.5.2",
     "@types/dockerode": "^2.5.3",
     "@types/google-cloud__storage": "^1.1.7",
+    "@types/stream-buffers": "^3.0.2",
+    "@types/tar": "^4.0.0",
+    "@types/tmp": "^0.0.33",
     "archiver": "^2.1.1",
     "commander": "^2.13.0",
-    "dockerode": "^2.5.3"
+    "dockerode": "^2.5.3",
+    "memorystream": "^0.3.1",
+    "stream-buffers": "^3.0.1",
+    "tar": "^4.3.0",
+    "tar-fs": "^1.16.0",
+    "tmp": "^0.0.33"
   }
 }

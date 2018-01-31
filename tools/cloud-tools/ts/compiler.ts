@@ -8,9 +8,8 @@ import * as tmp from 'tmp';
 import * as commander from 'commander';
 import * as archiver from 'archiver';
 import * as StreamBuffers from 'stream-buffers';
-
-const tar = require('tar-fs')
-const MemoryStream = require('memorystream');
+import * as tar2 from 'tar';
+import * as util from './util';
 
 const sto = storage()
 
@@ -78,48 +77,41 @@ function downloadFile(metadata: MD): Promise<Buffer> {
     });
 }
 
+type CompileResult = {
+  stdout: string,
+  stderr: string,
+  statusCode: number,
+  jarFile?: string
+}
+
 // Function that takes a docker host and a tar src file containing scala project.
 // Compiles the project in a docker container and returns a destination path
 // of the jar file along with console output of the container.
-function runContainer(connector: { host: string, port: number }, srcFile: Buffer):
-  Promise<{stdout: string, stderr: string, status: number, destFile: string | null}> {
-
-  const { host, port } = connector;
-  const docker = new Docker({ host, port })
-
-  return docker.createContainer({
+function runContainer(docker: Docker, srcFile: Buffer): Promise<CompileResult> {
+  const createContainerOpts = {
     Image: "rachitnigam/compsci220",
     AttachStderr: true,
     AttachStdout: true
-  })
-  .then(container => {
-    return promiseFinally(container.putArchive(srcFile, {
+  };
+
+  function runMain(container: Docker.Container): Promise<CompileResult> {
+    const putArchiveOpts = {
       // NOTE(rachit): This hardcoded path is based on Dockerfile in docker-sbt-compiler
       path: '/home/student/hw',
-    })
+    };
+
+    return container.putArchive(srcFile, putArchiveOpts)
     .then(_ => container.start())
-    .then(_ => container.attach({ stream: true, stdout: true, stderr: true}))
-    .then(stream => {
-      let out: string = "";
-      let err: string = "";
-
-      // Need seperate streams for demuxing data.
-      let outStream = new MemoryStream()
-      let errStream = new MemoryStream()
-
-      outStream.on('data', (data: string) => out += data.toString()) 
-      errStream.on('data', (data: string) => err += data.toString()) 
-
-      container.modem.demuxStream(stream, outStream, errStream)
-
+    .then(_ => util.attachIO(container))
+    .then(containerIO => {
       return container.wait()
-      .then((status: { Error: object, StatusCode: number }) => {
+        .then((status: { Error: object, StatusCode: number }) => {
         if (status.StatusCode !== 0) {
-          throw new CompilerError({
-            stdout: out,
-            stderr: err,
-            status: status.StatusCode,
-          })
+          return Promise.resolve({
+            stdout: containerIO.stdout(),
+            stderr: containerIO.stderr(),
+            statusCode: status.StatusCode,
+          });
         }
         return container.getArchive({
           // NOTE(rachit): This hardcoded path is based on build.sbt in docker-sbt-compiler
@@ -127,30 +119,24 @@ function runContainer(connector: { host: string, port: number }, srcFile: Buffer
         })
         .then(stream => {
           const outputDir = tmp.dirSync().name
-          const jarFile = path.join(outputDir, '/project.jar')
-          stream.pipe(tar.extract(outputDir, {
-            entries: ['project.jar']
-          }))
-          return {
-            stdout: out,
-            stderr: err,
-            status: status.StatusCode,
-            destFile: jarFile
-          }
+          const jarFile = path.join(outputDir, '/project.jar');
+          return  util.onStreamClose(stream.pipe(tar2.x({ cwd: outputDir }, [ 'project.jar' ])))
+            .then(() => ({
+                stdout: containerIO.stdout(),
+                stderr: containerIO.stderr(),
+                statusCode: status.StatusCode,
+                jarFile: jarFile
+              }))
+            });
+          });
         })
-      })
-    }),
-    () => {
-      container.remove({ force: true })
-    })
-
-  })
-  .catch(err => {
-    if (err instanceof CompilerError) {
-      return Promise.resolve({...err.data, destFile: null})
     }
-    throw ("Container error: " + err)
-  })
+
+  return docker.createContainer(createContainerOpts)
+    .then(container =>
+      promiseFinally(
+        runMain(container),
+        () => container.remove({ force: true })));
 }
 
 const testingConn = {
@@ -161,17 +147,18 @@ const testingConn = {
 function main(metadata: MD) {
   const { bucket, src, dest } = metadata
   downloadFile(metadata)
-    .then(srcPath => runContainer(testingConn, srcPath))
+    .then(srcPath => runContainer(new Docker(testingConn), srcPath))
     .then(data => {
-      const { status, stdout, stderr, destFile } = data;
-      console.log(destFile)
-      const up = {
-        src, dest, status, stdout, stderr, metadata: {}, timestamp: Date.now()
+
+      const { statusCode, stdout, stderr, jarFile } = data;
+      console.log(jarFile);
+        const up = {
+        src, dest: jarFile || null, status: statusCode, stdout, stderr, metadata: {}, timestamp: Date.now()
       }
       uploadMetadata(up)
       .then(_ => {
-        if(status === 0 && destFile !== null) {
-          return uploadFile(destFile, metadata)
+        if(statusCode === 0 && jarFile) {
+          return uploadFile(jarFile, metadata)
         } else {
           return Promise.resolve()
         }
