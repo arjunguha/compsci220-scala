@@ -23,6 +23,8 @@ RUN wget http://dl.bintray.com/sbt/debian/sbt-0.13.11.deb && \
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   sudo apt-get install -yq nodejs
 
+RUN apt-get install -q unzip
+
 # Create user account
 RUN adduser --disabled-password --gecos "" student
 USER student
@@ -38,5 +40,5 @@ RUN sbt run
 WORKDIR /home/student
 RUN mkdir /home/student/hw
 
-WORKDIR /home/student/hw
-ENTRYPOINT ["sbt", "-no-colors", "assembly"]
+COPY /run.sh /home/student/run.sh
+CMD /home/student/run.sh
