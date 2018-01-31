@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as storage from '@google-cloud/storage';
 import * as datastore from '@google-cloud/datastore';
 import * as tmp from 'tmp';
+import * as commander from 'commander';
 
 const tar = require('tar-fs')
 const MemoryStream = require('memorystream');
@@ -53,14 +54,15 @@ function uploadMetadata(data: UploadData) {
   return ds.save({ key: { kind: 'sbt-compiler' }, data })
 }
 
-function uploadFile(filepath: string, metadata: MD, bucket: string) {
-  const { dest } = metadata;
+function uploadFile(filepath: string, metadata: MD) {
+  const { dest, bucket } = metadata;
   const bucketObj = sto.bucket(bucket)
-  return bucketObj.file(dest).save(path.join(__dirname, filepath))
+  const data = fs.readFileSync(filepath)
+  return bucketObj.file(dest).save(data)
 }
 
-function downloadFile(bucket: string, metadata: MD): Promise<string> {
-  const { src } = metadata
+function downloadFile(metadata: MD): Promise<string> {
+  const { bucket, src } = metadata
   const bucketObj = sto.bucket(bucket)
   return bucketObj.file(src).get()
     .then(([file]) => file.download())
@@ -123,7 +125,7 @@ function runContainer(connector: { host: string, port: number }, srcFile: string
         })
         .then(stream => {
           const outputDir = tmp.dirSync().name
-          const jarFile = path.join(outputDir, '/project.tar')
+          const jarFile = path.join(outputDir, '/project.jar')
           stream.pipe(tar.extract(outputDir, {
             entries: ['project.jar']
           }))
@@ -149,15 +151,51 @@ function runContainer(connector: { host: string, port: number }, srcFile: string
   })
 }
 
-const testingData = {
-  src: "../failed.tar.gz", 
-  dest: "../output.tar"
-}
-
 const testingConn = {
   host: "10.200.0.1",
   port: 2376
 }
 
-runContainer(testingConn, path.join(__dirname, "../failed.tar.gz"))
-  .then(data => console.log(data))
+function main(metadata: MD) {
+  const { bucket, src, dest } = metadata
+  downloadFile(metadata)
+    .then(srcPath => runContainer(testingConn, srcPath))
+    .then(data => {
+      const { status, stdout, stderr, destFile } = data;
+      console.log(destFile)
+      const up = {
+        src, dest, status, stdout, stderr, metadata: {}, timestamp: Date.now()
+      }
+      uploadMetadata(up)
+      .then(_ => {
+        if(status === 0 && destFile !== null) {
+          return uploadFile(destFile, metadata)
+        } else {
+          return Promise.resolve()
+        }
+      })
+      .catch(err => {
+        throw err
+      })
+    })
+    .catch(err => {
+      throw err
+    })
+}
+
+commander.option('--bucket <BUCKET>',
+  'name of bucket on Google Cloud Storage');
+commander.option('--src <src.tar.gz>',
+  'tar file containing the project to be compiled')
+commander.option('--dest <dest.jar>',
+  'name of the jar file to be uploaded to GCS')
+
+const args = commander.parse(process.argv);
+
+if (args.bucket && args.src && args.dest) {
+  main({ bucket: args.bucket, src: args.src, dest: args.dest })
+}
+else {
+  console.error('Incorrect args')
+  commander.outputHelp()
+}
