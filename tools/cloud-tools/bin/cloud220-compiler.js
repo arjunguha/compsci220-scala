@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../dist/compiler');
+require('../dist/compileAll');

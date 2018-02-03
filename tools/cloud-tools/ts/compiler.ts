@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import * as Docker from 'dockerode';
 import * as fs from 'fs-extra';
 import * as path from 'path';
@@ -11,36 +10,13 @@ import * as StreamBuffers from 'stream-buffers';
 import * as tar2 from 'tar';
 import * as util from './util';
 
-const sto = storage()
+const sto = storage();
+const ds = new datastore({});
 
 type MD = {
   src: string,
   dest: string,
   bucket: string
-}
-
-type UploadData = {
-  src: string,
-  dest: string | null,
-  status: number,
-  stdout: string,
-  stderr: string,
-  metadata: object,
-  timestamp: number
-}
-
-class CompilerError {
-  data: {stdout: string, stderr: string, status: number}
-
-  constructor(data: {stdout: string, stderr: string, status: number}) {
-    this.data = data
-  }
-}
-
-// Upload metadata from compilation to google datastore
-function uploadMetadata(data: UploadData) {
-  const ds = new datastore({})
-  return ds.save({ key: { kind: 'sbt-compiler' }, data })
 }
 
 function uploadFile(filepath: string, metadata: MD) {
@@ -75,109 +51,86 @@ type CompileResult = {
 // Function that takes a docker host and a tar src file containing scala project.
 // Compiles the project in a docker container and returns a destination path
 // of the jar file along with console output of the container.
-function runContainer(docker: Docker, srcFile: Buffer): Promise<CompileResult> {
+async function runContainer(docker: Docker, srcFile: Buffer): Promise<CompileResult> {
   const createContainerOpts = {
     Image: "rachitnigam/compsci220",
     AttachStderr: true,
     AttachStdout: true
   };
 
-  function runMain(container: Docker.Container): Promise<CompileResult> {
+  const container = await docker.createContainer(createContainerOpts);
+  try {
     const putArchiveOpts = {
       // NOTE(rachit): This hardcoded path is based on Dockerfile in docker-sbt-compiler
       path: '/home/student/hw',
     };
-
-    return container.putArchive(srcFile, putArchiveOpts)
-    .then(_ => container.start())
-    .then(_ => util.attachIO(container))
-    .then(containerIO => {
-      return container.wait()
-        .then((status: { Error: object, StatusCode: number }) => {
-        if (status.StatusCode !== 0) {
-          return Promise.resolve({
-            stdout: containerIO.stdout(),
-            stderr: containerIO.stderr(),
-            statusCode: status.StatusCode,
-          });
-        }
-        return container.getArchive({
-          // NOTE(rachit): This hardcoded path is based on build.sbt in docker-sbt-compiler
-          path: '/home/student/hw/project.jar'
-        })
-        .then(stream => {
-          const outputDir = tmp.dirSync().name
-          const jarFile = path.join(outputDir, '/project.jar');
-          return  util.onStreamClose(stream.pipe(tar2.x({ cwd: outputDir }, [ 'project.jar' ])))
-            .then(() => ({
-                stdout: containerIO.stdout(),
-                stderr: containerIO.stderr(),
-                statusCode: status.StatusCode,
-                jarFile: jarFile
-              }))
-            });
-          });
-        })
+    await container.putArchive(srcFile, putArchiveOpts);
+    await container.start();
+    const containerIO = await util.attachIO(container);
+    const status: { Error: object, StatusCode: number } = await container.wait();
+    let jarFile: string | undefined;
+    if (status.StatusCode === 0) {
+      const stream = await container.getArchive({ path: '/home/student/hw/project.jar' });
+      const outputDir = tmp.dirSync().name;
+      jarFile = path.join(outputDir, '/project.jar');
+      await util.onStreamClose(stream.pipe(tar2.x({ cwd: outputDir },
+        [ 'project.jar' ])));
     }
 
-  return docker.createContainer(createContainerOpts)
-    .then(container =>
-      util.promiseFinally(
-        runMain(container),
-        () => container.remove({ force: true })));
+    return {
+      stdout: containerIO.stdout(),
+      stderr: containerIO.stderr(),
+      statusCode: status.StatusCode,
+      jarFile: jarFile
+    };
+  }
+  finally {
+    await container.remove({ force: true });
+  }
 }
 
-const testingConn = {
-  host: "10.200.0.1",
-  port: 2376
-}
-
-export function main(docker: Docker, metadata: MD) {
-  const { bucket, src, dest } = metadata
-  return downloadFile(metadata)
-    .then(srcPath => runContainer(docker, srcPath))
-    .then(data => {
-
-      const { statusCode, stdout, stderr, jarFile } = data;
-      console.log(jarFile);
-        const up = {
-        src, dest: jarFile || null, status: statusCode, stdout, stderr, metadata: {}, timestamp: Date.now()
-      }
-      uploadMetadata(up)
-      .then(_ => {
-        if(statusCode === 0 && jarFile) {
-          return uploadFile(jarFile, metadata)
-        } else {
-          return Promise.resolve()
-        }
-      })
-      .catch(err => {
-        throw err
-      })
-    })
-    .catch(err => {
-      throw err
-    })
-}
-
-
-
-function mainmain() {
-
-  commander.option('--bucket <BUCKET>',
-    'name of bucket on Google Cloud Storage');
-  commander.option('--src <src.tar.gz>',
-    'tar file containing the project to be compiled')
-  commander.option('--dest <dest.jar>',
-    'name of the jar file to be uploaded to GCS')
-
-  const args = commander.parse(process.argv);
-
-  if (args.bucket && args.src && args.dest) {
-    main(new Docker(testingConn), { bucket: args.bucket, src: args.src, dest: args.dest })
+export async function main(docker: Docker, bucket: string, src: string,
+  dst: string) {
+  const srcPath = await downloadFile({ bucket, src, dest: dst });
+  const data = await runContainer(docker, srcPath);
+  if (data.statusCode === 0 && data.jarFile) {
+    await uploadFile(data.jarFile , { bucket, src, dest: dst })
   }
   else {
-    console.error('Incorrect args')
-    commander.outputHelp()
+    console.error(`Failed to compile gs://${bucket}/${src} (exit code ${data.statusCode})`);
   }
+  await ds.upsert({
+    key: ds.key([ 'sbt-compiler', 'default', 'bucket', bucket, 'zip', src ]),
+    excludeFromIndexes: [ 'stdout', 'stderr' ],
+    data: {
+      statusCode: data.statusCode,
+      stdout: data.stdout,
+      stderr: data.stderr,
+      zipFile: src,
+      jarFile: data.jarFile,
+      zipDir: path.dirname(src)
+    }
+  });
 }
+
+
+
+// function mainmain() {
+
+//   commander.option('--bucket <BUCKET>',
+//     'name of bucket on Google Cloud Storage');
+//   commander.option('--src <src.tar.gz>',
+//     'tar file containing the project to be compiled')
+//   commander.option('--dest <dest.jar>',
+//     'name of the jar file to be uploaded to GCS')
+
+//   const args = commander.parse(process.argv);
+
+//   if (args.bucket && args.src && args.dest) {
+//     main(new Docker(testingConn), { bucket: args.bucket, src: args.src, dest: args.dest })
+//   }
+//   else {
+//     console.error('Incorrect args')
+//     commander.outputHelp()
+//   }
+// }
