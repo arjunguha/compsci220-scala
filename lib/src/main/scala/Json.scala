@@ -1,30 +1,79 @@
 package hw.json
-
 import scala.util.parsing.combinator._
 
 /**
- * Companion object to Json. Contains parsing and printing methods.
+ * Companion object that contains helper function for printing and parsing Json
+ * values.
  */
 object Json {
-  def print = JPrinter.print _
-  def parse = JParser.parse _
-  def fromFile = JParser.fromFile _
+
+  /**
+   * Pretty print a Json value.
+   *
+   * @param json The Json value to be printed.
+   * @return Returns a string representing the Json objec.t
+   */
+  def print(json: hw.json.Json) = JPrinter.print(json)
+
+  /**
+   * Parse a string containing valid Json.
+   *
+   * @param str The string representing the Json value to be parsed.
+   * @return A [[Json]] value.
+   */
+  def parse(str: String) = JParser.parse(str)
+
+  /**
+   * Parse a file containing Json objects.
+   *
+   * @param path The path to the file relative to the project root.
+   * @return A list of [[Json]] objects
+   */
+  def fromFile(path: String): List[Json] = JParser.fromFile(path)
 }
 
+/**
+ * Trait that encodes Json values in Scala.
+ */
 sealed trait Json
+
+/**
+ * Case class to represent the `null` value in Json.
+ */
 case class JsonNull() extends Json
+/**
+ * Case class to reprent numbers in Json.
+ */
 case class JsonNumber(value: Double) extends Json
+/**
+ * Case class to reprent strings in Json.
+ */
 case class JsonString(value: String) extends Json {
   override def toString: String = "\"" + value + "\""
 }
+/**
+ * Case class to reprent booleans (`true` and `false`) in Json.
+ */
 case class JsonBool(value: Boolean) extends Json
+/**
+ * Case class to represent a Dictionary in Json.
+ */
 case class JsonDict(value: Map[String, Json]) extends Json
+/**
+ * Case class to represent an Array in Json.
+ */
 case class JsonArray(value: List[Json]) extends Json
 
+/**
+ * Trait defining an abstract implementation of a Json Parser.
+ */
 trait JsonParserLike extends RegexParsers with PackratParsers {
   def parse(str: String): Json
 }
 
+/**
+ * Trait defining an abstract implementation of a Json Printer.
+ */
 trait JsonPrinterLike {
   def print(e: Json): String
 }
