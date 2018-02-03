@@ -14,7 +14,9 @@ object Json {
 sealed trait Json
 case class JsonNull() extends Json
 case class JsonNumber(value: Double) extends Json
-case class JsonString(value: String) extends Json
+case class JsonString(value: String) extends Json {
+  override def toString: String = "\"" + value + "\""
+}
 case class JsonBool(value: Boolean) extends Json
 case class JsonDict(value: Map[String, Json]) extends Json
 case class JsonArray(value: List[Json]) extends Json
@@ -47,7 +49,7 @@ private object JParser extends JsonParserLike {
 
   type P[A] = PackratParser[A]
 
-  lazy val string: P[String] = "\"" ~> "[^\"]*".r <~ "\""
+  lazy val string: P[String] = "\"" ~> """([^"]|(?<=\\)")*""".r <~ "\""
   lazy val number: P[Double] = """[-]?\d+(\.\d+)?""".r ^^ (x => x.toDouble)
   lazy val bool: P[Boolean] = (
     "true" ^^ (_ => true) |
@@ -79,7 +81,7 @@ private object JParser extends JsonParserLike {
     case els => JsonArray(els)
   }
 
-  def parse(str: String): Json = parseAll(value, str) match {
+  def parse(str: String): Json = parseAll(value, str.trim) match {
     case Success(s, _) => s
     case m => throw new Exception(m.toString)
   }
