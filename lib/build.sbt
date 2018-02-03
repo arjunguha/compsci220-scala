@@ -12,7 +12,8 @@ autoAPIMappings := true
 
 scalacOptions in (Compile,doc) ++=
   Seq("-groups",
-      "-implicits")
+      "-implicits",
+      "-doc-root-content", baseDirectory.value + "/src/main/scala/rootdoc.txt")
 
 scalacOptions ++=
   Seq("-deprecation",

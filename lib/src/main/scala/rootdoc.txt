@@ -1,0 +1,2 @@
+This is the Scala documentation for computer science 220. Most of the classes
+are documented within the [[hw]] package.
