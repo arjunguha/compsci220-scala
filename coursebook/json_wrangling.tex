@@ -1,4 +1,5 @@
-\newhw{Data Wrangling with Json}
+\chapter{Project: Data Wrangling with Json}
+\savepdf{project-json-data-wrangling}
 
 \noindent As a software engineer, you often have to work with large datasets.
 Such data is used in everything from large machine learning applications, to
@@ -9,27 +10,8 @@ support working with JSON through external libraries} is a widely used format
 that encodes data in a readable textual format. You'll be working with
 \href{https://www.yelp.com/dataset}{Yelp's academic dataset} to answer vital
 questions such as ``What is the most popular restaurant in California?''.
-
-\section{Preliminaries}
-You should create a directory-tree that looks like this:
-\dirtree{%
-.1 ./wrangling.
-.2 build.sbt.
-.2 project.
-.3 plugins.sbt.
-.2 src.
-.3 main.
-.4 scala.\DTcomment{Your solution goes here}.
-.3 test.
-.4 scala\DTcomment{Yours tests go here}.
-}
-The \texttt{project/plugins.sbt} file must have exactly this line:
-\begin{scalacode}
-addSbtPlugin("edu.umass.cs" % "compsci220" % "1.0.0")
-\end{scalacode}
-
-You'll also need to download a shortened yelp dataset from the assignment page
-on moodle.
+\textbf{Note:} You are allowed to use Scala's builtin functions such as
+\verb|List.map| and \verb|List.groupBy|.
 
 \section{The Data}
 For this assignment, you'll we working with Json data encoded using Scala case
@@ -59,11 +41,8 @@ classes. Json data can contain the following parts:
     \end{scalacode}
 \end{itemize}
 
-\noindent The Scala case classed that encode these Json values can be found
-in the homework package documentation.
-\\ \\
-In the dataset file, each line has a Json object. Each Json object looks like
-this:
+The dataset file you'll be working with has one Json object on each line. Each
+Json object looks like this:
     \begin{scalacode}
     {
         "name": "Jade Palace",
@@ -75,13 +54,31 @@ this:
         "categories": [ "Chinese", "TakeOut" ],
     }
     \end{scalacode}
-The \texttt{build.sbt} file for this assignment is configured to load a library
-for reading Json files. For example, the following program reads in the dataset
-file and returns a list of \texttt{Json} objects:
+The course plugin provides the \lstinline|hw.json| package to work with Json
+values. The package defines several case classes that encode Json values. It
+also defines helper functions to read and print Json values. For example,
+the following code reads in the file \texttt{yelp.json} from the root of the
+project directory:
+\texttt{Json} objects:
 \begin{scalacode}
 import hw.json
-val data: List[json.Json] = json.fromFile("yelp.json")
+val data: List[json.Json] = Json.fromFile("yelp.json")
 \end{scalacode}
+
+All the case class and helper functions are documented in the `Course package
+documentation' link on moodle.
+
+\section{Preliminaries}
+
+Using the command-line, run the command
+\verb|sbt new umass-compsci220/scala-json-data-wrangling.g8|. When prompted for
+a project name, press ``Enter'' to accept the default name.
+
+\verb|scala-json-data-wrangling/yelp.json| is contains the dataset you'll be
+working with for this project.
+
+Within the file \verb|scala-json-data-wrangling/src/main/scala/Main.scala|,
+implement the functions described below.
 
 \section{Programming Task}
 
