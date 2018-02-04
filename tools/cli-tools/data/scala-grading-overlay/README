@@ -1,0 +1,3 @@
+We overlay this directory onto each submission. In addition, the
+assignment requires a test suite class called GradingTests in src/main/scala
+(i.e., *not* in the test directory).

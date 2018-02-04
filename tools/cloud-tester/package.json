@@ -1,0 +1,17 @@
+{
+  "name": "cloud-tester",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "build": "./node_modules/.bin/tsc",
+    "cloud-tester": "node dist/cloud-tester.js"
+  },
+  "devDependencies": {
+    "@types/google-cloud__storage": "^1.1.7",
+    "typescript": "^2.6.2"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^1.5.2"
+  }
+}
