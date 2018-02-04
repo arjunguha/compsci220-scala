@@ -1,1 +1,1 @@
-libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.5.2"
+libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.5.3"

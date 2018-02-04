@@ -55,7 +55,7 @@ object Wrangling extends WranglingLike {
     })
   }
 
-  def bestPlace(data: List[Json]): Json = {
+  def bestPlace(data: List[Json]): Option[Json] = {
     val starsGroup = data.groupBy(json => key(json, "stars") match {
       case Some(JsonNumber(n)) => n
       case _ => -100
@@ -63,13 +63,27 @@ object Wrangling extends WranglingLike {
 
     val maxRating = starsGroup.keys.max
 
-    val reviewsGroup = starsGroup(maxRating)
-      .groupBy(json => key(json, "review_count") match {
-        case Some(JsonNumber(n)) => n
-        case _ => -100
-      })
+    if (maxRating == -100) {
+      None
+    }
+    else {
+      val reviewsGroup = starsGroup(maxRating)
+        .groupBy(json => key(json, "review_count") match {
+          case Some(JsonNumber(n)) => n
+          case _ => -100
+        })
 
-    reviewsGroup(reviewsGroup.keys.max).head
+        val maxReviews = reviewsGroup.keys.max
+
+        if (maxRating == -100) {
+          None
+        }
+        else {
+          reviewsGroup(maxReviews).headOption
+        }
+
+    }
+
   }
 
   def hasAmbience(data: List[Json], ambience: String): List[Json] =

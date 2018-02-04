@@ -17,7 +17,7 @@ trait WranglingLike {
   def category(data: List[Json], category: String): List[Json]
   def groupByState(data: List[Json]): Map[String, List[Json]]
   def groupByCategory(data: List[Json]): Map[String, List[Json]]
-  def bestPlace(data: List[Json]): Json
+  def bestPlace(data: List[Json]): Option[Json]
   def hasAmbience(data: List[Json], ambience: String): List[Json]
 
 }

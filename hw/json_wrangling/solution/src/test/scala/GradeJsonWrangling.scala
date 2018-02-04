@@ -71,7 +71,7 @@ class TestSuite extends org.scalatest.FunSuite {
   }
 
   test("Does bestPlace work?") {
-    val r = bestPlace(data)
+    val r = bestPlace(data).get
     assert(getName(r) == "food3")
   }
 
