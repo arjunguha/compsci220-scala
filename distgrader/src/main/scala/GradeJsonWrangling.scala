@@ -43,6 +43,35 @@ class JsonWranglingGrading(val assignmentRoot: String, val selfIP: String) exten
     def body(root: TestCase): Unit = {
       val compiles = root.thenCompile("Check that object Wrangling is defined", "()")
 
+      val key = compiles.thenCompile(
+        "Does key have the right type?",
+        """def f(j: Json, s: String): Option[Json] = key(j, s)""",
+        score=0)
+
+      key.thenRun(
+        "Does key work when object is a JsonDict and has key?",
+        """
+        val json = JsonDict(Map(JsonString("a") -> 1))
+        assert(key(json,"a") == Some(1))
+        """,
+        score=0)
+
+      key.thenRun(
+        "Does key work when object is a JsonDict and does not have the key?",
+        """
+        val json = JsonDict(Map(JsonString("b") -> 1))
+        assert(key(json, "a") == Some(1))
+        """,
+        score=0)
+
+      key.thenRun(
+        "Does key work when object is not a JsonDict?",
+        """
+        val json = JsonString("a")
+        assert(key(json, "a") == None)
+        """,
+        score=0)
+
       val fromState = compiles.thenCompile(
         "Does fromState have the right type?",
         """def f(d: List[Json], s: String): List[Json] = fromState(d, s)""",

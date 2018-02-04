@@ -86,6 +86,14 @@ Your programming task is to implement the functions described below. You should
 place all functions within an object called \texttt{Wrangling}.
 
 \begin{enumerate}
+    \item Write a function that extracts a value associated to the given key
+    from a Json value. If the given json value is not a Object, or if the json
+    Object does not have the given key, return \verb|None|, otherwise return
+    the value wrapped in \verb|Some|
+    \begin{scalacode}
+    def key(json: Json, key: String): Option[Json]
+    \end{scalacode}
+
     \item Write a function that consumes a list of Json objects and returns
     those records from a given state (state codes are two letters).
     \begin{scalacode}
