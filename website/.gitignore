@@ -4,3 +4,4 @@ lib
 hw/*.zip
 for-staff/instructor.pdf
 api/
+*.pdf
