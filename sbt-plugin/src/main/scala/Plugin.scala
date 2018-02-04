@@ -54,7 +54,6 @@ object Plugin extends AutoPlugin {
       parallelExecution in Test := false,
       libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test",
       libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
-      libraryDependencies += "edu.umass.cs" %% "compsci220" % "1.4.0",
       findMisplacedFiles := findMisplacedFilesTask.value,
       directoryWarnings := directoryWarningsTask.value,
       // Run ScalaStyle after compilation succeeds. ScalaStyle displays

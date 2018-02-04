@@ -3,7 +3,7 @@ sbtPlugin := true
 scalaVersion := "2.12.4"
 name := "compsci220"
 organization := "edu.umass.cs"
-version := "1.1.0"
+version := "1.2.0"
 scalacOptions += "-feature"
 
 libraryDependencies ++= Seq(
