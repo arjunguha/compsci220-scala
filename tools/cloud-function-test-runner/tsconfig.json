@@ -3,7 +3,7 @@
         "module": "commonjs",
         "outDir": "./dist",
         "lib": ["es2016"],
-        "target": "es6",
+        "target": "es5",
         "pretty": true,
         "strict": true,
         "noImplicitReturns": true,
