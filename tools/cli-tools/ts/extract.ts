@@ -6,7 +6,7 @@ import * as tar from 'tar';
 
 const moodleSubmissionRegex = /^(?:[^_]*)_(\d+)_.*$/;
 
-function main(src: string, dst: string) {
+export function main(src: string, dst: string) {
   assert(fs.statSync(src).isFile, `${src} must be a file`);
   assert(fs.statSync(dst).isDirectory, `${dst} must be a directory`);
 
@@ -45,5 +45,3 @@ function main(src: string, dst: string) {
     .pipe(unzip.Parse())
     .on('entry', handleEntry);
 }
-
-main(process.argv[2], process.argv[3])

@@ -24,7 +24,7 @@ function uploadFile(filepath: string, metadata: MD) {
   const bucketObj = sto.bucket(bucket)
   const data = fs.readFileSync(filepath)
   return bucketObj.file(dest).save(data)
-    .then(_ => console.info(`uploaded ${filepath}`))
+    .then(_ => console.info(`uploaded gs://bucket:${dest}`))
 }
 
 function downloadFile(metadata: MD): Promise<Buffer> {
@@ -91,6 +91,7 @@ async function runContainer(docker: Docker, srcFile: Buffer): Promise<CompileRes
 
 export async function main(docker: Docker, bucket: string, src: string,
   dst: string) {
+  console.log(`Compiling gs://${bucket}/${src}`);
   const srcPath = await downloadFile({ bucket, src, dest: dst });
   const data = await runContainer(docker, srcPath);
   if (data.statusCode === 0 && data.jarFile) {

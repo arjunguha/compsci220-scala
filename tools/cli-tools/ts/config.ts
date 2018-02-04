@@ -22,8 +22,9 @@ function init() {
   return {
     bucket: jsonConfig.bucket as string,
     bucketDir: jsonConfig['bucket-directory'] as string,
-    tests: jsonConfig.tests as string[]
+    tests: jsonConfig.tests as string[],
+    overlay: jsonConfig.overlay as any[]
   }
 }
 
-export const { bucket, bucketDir, tests } = init();
+export const { overlay, bucket, bucketDir, tests } = init();
