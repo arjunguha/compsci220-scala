@@ -1,7 +1,6 @@
-object Lecture2 {
+object HOF {
 
-
-  def map2[A,B,C](f: (A, B) => C, lst1: List[A], lst2: List[B]): List[C] = {
+  def map2[A,B,C](f: (A, B) => C, lst1: List[A], lst2: List[B]): List[C] =  {
     (lst1, lst2) match {
       case (Nil, Nil) => Nil
       case (h1 :: t1, h2 :: t2) => f(h1, h2) :: map2(f, t1, t2)
@@ -19,7 +18,7 @@ object Lecture2 {
     case h :: tl => h :: append(tl, lst2)
   }
 
-  def flatten[A](lst: List[List[A]]): List[A] = lst match {
+  def flatten[A](lst: List[List[A]]): List[A] =  lst match {
     case Nil => Nil
     case h :: t => append(h, flatten(t))
   }
@@ -47,7 +46,7 @@ object Lecture2 {
     loop(0)
   }
 
-  def mapList[A, B](lst: List[A], f: A => List[B]): List[B] = {
+  def mapList[A, B](lst: List[A], f: A => List[B]): List[B] =  {
     flatten(map(f, lst))
   }
 
@@ -65,6 +64,31 @@ object Lecture2 {
     case (_, Nil) => alist1
     case (Nil, _) => alist2
     case (x :: xs, y :: ys) => if (lessThan(x, y)) x :: merge(lessThan, xs, y :: ys) else y :: merge(lessThan, x :: xs, ys)
+  }
+
+  def length[A](alist: List[A]): Int = alist match {
+    case Nil => 0
+    case _ :: tl => 1 + length(tl)
+  }
+
+  def splitAt[A](n: Int, alist: List[A]): (List[A], List[A]) = {
+    (n, alist) match {
+      case (0, _) => (Nil, alist)
+      case (n, Nil) => (Nil, Nil)
+      case (n, hd :: tl) => {
+        val (prefix, suffix) = splitAt(n - 1, tl)
+        (hd :: prefix, suffix)
+      }
+    }
+  }
+
+  def sort[A](lessThan: (A, A) => Boolean, alist: List[A]): List[A] = alist match {
+    case Nil => Nil
+    case x :: Nil => List(x)
+    case _ :: _ => {
+      val (prefix, suffix) = splitAt(length(alist) / 2, alist)
+      merge(lessThan, sort(lessThan, prefix), sort(lessThan, suffix))
+    }
   }
 
 }
