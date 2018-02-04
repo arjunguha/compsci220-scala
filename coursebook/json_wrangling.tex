@@ -147,7 +147,8 @@ place all functions within an object called \texttt{Wrangling}.
     \item Write a function that consumes a list of Json objects and returns the
     ``best'' establishment. To get the ``best'' establishment, first get a list
     of Json objects with the highest ``stars'', then select the establishment
-    with the highest ``review\_count'' from that list.
+    with the highest ``review\_count'' from that list. Return \texttt{None}
+    if there are no Json Objects in the input list that have these fields.
     \begin{scalacode}
     def bestPlace(data: List[Json]): Option[Json]
     \end{scalacode}
