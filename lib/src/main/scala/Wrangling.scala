@@ -1,3 +1,9 @@
+package hw.wrangling
+/**
+ * Defines the WranglingLike trait that needs to be implemented for
+ * the data wrangling assignment
+ */
+
 import hw.json.Json
 /**
  * Object containing functions to be implemented for Data Wrangling homework.
