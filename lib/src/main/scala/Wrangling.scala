@@ -12,8 +12,8 @@ trait WranglingLike {
 
   def key(json: Json, key: String): Option[Json]
   def fromState(data: List[Json], state: String): List[Json]
-  def ratingLT(data: List[Json], rating: Int): List[Json]
-  def ratingGT(data: List[Json], rating: Int): List[Json]
+  def ratingLT(data: List[Json], rating: Double): List[Json]
+  def ratingGT(data: List[Json], rating: Double): List[Json]
   def category(data: List[Json], category: String): List[Json]
   def groupByState(data: List[Json]): Map[String, List[Json]]
   def groupByCategory(data: List[Json]): Map[String, List[Json]]

@@ -2,10 +2,10 @@ package hw.json
 import scala.util.parsing.combinator._
 
 /**
- * Companion object that contains helper function for printing and parsing Json
+ * Object that contains helper function for printing and parsing Json
  * values.
  */
-object Json {
+object JsonHelper {
 
   /**
    * Pretty print a Json value.
@@ -58,7 +58,7 @@ case class JsonBool(value: Boolean) extends Json
 /**
  * Case class to represent a Dictionary in Json.
  */
-case class JsonDict(value: Map[String, Json]) extends Json
+case class JsonDict(value: Map[JsonString, Json]) extends Json
 /**
  * Case class to represent an Array in Json.
  */
@@ -67,14 +67,14 @@ case class JsonArray(value: List[Json]) extends Json
 /**
  * Trait defining an abstract implementation of a Json Parser.
  */
-trait JsonParserLike extends RegexParsers with PackratParsers {
+private trait JsonParserLike extends RegexParsers with PackratParsers {
   def parse(str: String): Json
 }
 
 /**
  * Trait defining an abstract implementation of a Json Printer.
  */
-trait JsonPrinterLike {
+private trait JsonPrinterLike {
   def print(e: Json): String
 }
 
@@ -118,8 +118,8 @@ private object JParser extends JsonParserLike {
     jsonArray  |
     jsonNull
 
-  lazy val field: P[(String, Json)] = string ~ ":" ~ value ^^ {
-    case s ~ _ ~ v => (s, v)
+  lazy val field: P[(JsonString, Json)] = string ~ ":" ~ value ^^ {
+    case s ~ _ ~ v => (JsonString(s), v)
   }
 
   lazy val jsonObject: P[Json] = "{" ~> repsep(field, ",") <~ "}" ^^ {
