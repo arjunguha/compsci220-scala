@@ -2786,159 +2786,177 @@ of problems.
 \chapter{Project: Data Wrangling with Json}
 \savepdf{project-json-data-wrangling}
 
-\noindent As a software engineer, you often have to work with large datasets.
-Such data is used in everything from large machine learning applications, to
-simple conversation bots. For this assignment you will be working
-with the JSON format. JSON (or JavaScript Object Notation)\footnote{While
-closely related to the JavaScript programming language, all major languages
-support working with JSON through external libraries} is a widely used format
-that encodes data in a readable textual format. You'll be working with
-\href{https://www.yelp.com/dataset}{Yelp's academic dataset} to answer vital
-questions such as ``What is the most popular restaurant in California?''.
-\textbf{Note:} You are allowed to use Scala's builtin functions such as
-\verb|List.map| and \verb|List.groupBy|.
+\section{Background}
 
-\section{The Data}
-For this assignment, you'll we working with Json data encoded using Scala case
-classes. Json data can contain the following parts:
-\begin{itemize}
-    \item \textit{Constants}: Numbers, Strings (double quoted), and Booleans
-    can be directly represented in Json. Example: ``cat'', 1.0, \texttt{true}.
-
-    \item \textit{null}: \texttt{null} is a special value in Json that
-    denotes a missing value.
-
-    \item \textit{Arrays}: A Json array is an array that itself contains other
-    Json values. Json arrays are not type-constrained, that is, an array can
-    contain multiple types of Json values. Example: [1.0, 2, null]
-
-    \item \textit{Objects}: A Json object (or a Json dictionary) contains
-    \textit{pairs} of keys and values separated by commas. Each pair is
-    represented by a double quoted string followed by a colon followed by any
-    Json value. Example:
-    \begin{scalacode}
-    {
-        "array": [1,2,3],
-        "animal": "cat",
-        "range": { "start": 1, "end": 10 }
+\emph{JavaScript Object Notation} (JSON) is format storing and
+exchanging data. It originated from JavaScript, but it is now supported by
+almost every programming language, including Scala. JSON is designed
+to be human-readable. For example, the following text is JSON:
+%
+\lstset{language=console}
+\begin{lstlisting}
+[
+  {
+    "Department": "Computer Science",
+    "Course Number": 220,
+    "Instructor": "Arjun Guha",
+    "Offered": true
+  },
+  {
+    "Department": "Computer Science",
+    "Course Number": 631,
+    "Instructor": "Arjun Guha",
+    "Offered": false
+  }
+]
+\end{lstlisting}
+%
+This example shows a JSON array with two elements, where each element is a
+JSON dictionary. Each JSON dictionary has a set of keys---which are strings---and
+values---which are JSON values themselves. The example shows that JSON values include
+strings, numbers, and booleans. Note that arrays and objects are JSON values
+themselves. Therefore, arrays and dictionary may be nested:
+\lstset{language=console}
+\begin{lstlisting}
+[
+  {
+    "x": {
+      "y": [ 1, 2, 3 ]
     }
-    \end{scalacode}
-\end{itemize}
+  },
+  "Something else"
+]
+\end{lstlisting}
+%
+The example above also shows that JSON arrays may be \emph{heterogenous}:
+the two elements of the array are an object and a string.
+Finally, JSON has a special value called \lstinline|null|.
 
-The dataset file you'll be working with has one Json object on each line. Each
-Json object looks like this:
-    \begin{scalacode}
-    {
-        "name": "Jade Palace",
-        "city": "San Francisco",
-        "state": "CA",
-        "stars": 4.5,
-        "review_count": 1140,
-        "attributes": { ... },
-        "categories": [ "Chinese", "TakeOut" ],
-    }
-    \end{scalacode}
-The course plugin provides the \lstinline|hw.json| package to work with Json
-values. The package defines several case classes that encode Json values. It
-also defines helper functions to read and print Json values. For example,
-the following code reads in the file \texttt{yelp.json} from the root of the
-project directory:
-\texttt{Json} objects:
-\begin{scalacode}
-import hw.json
-val data: List[json.Json] = JsonHelper.fromFile("yelp.json")
-\end{scalacode}
+\lstset{language=scala}
+To work with a JSON file in Scala, we need to first read it (as a string)
+and turn it into a data structure. The course library defines
+a type called \lstinline|Json| and a function to read JSON files:
+\begin{lstlisting}
+import hw.json._
 
-\noindent All the case class and helper functions are documented in the `Course
-package documentation' link on moodle.
+val result: Json = JsonHelper.parse("yelp.json")
+\end{lstlisting}
+%
+The type \lstinline|JSON| is a \lstinline|sealed trait| with a
+\lstinline|case class| for each type of JSON value:
+\begin{lstlisting}
+sealed trait Json
+case class JsonNull() extends Json
+case class JsonNumber(value: Double) extends Json
+case class JsonString(value: String) extends Json
+case class JsonBool(value: Boolean) extends Json
+case class JsonDict(value: Map[JsonString, Json]) extends Json
+case class JsonArray(value: List[Json]) extends Json
+\end{lstlisting}
+
+Note that you should not define these types yourself. They are part of the
+\lstinline|hw.json| package. All the case class and functions are documented in
+the \emph{Course package documentation} link on Moodle.
+
+\section{The Yelp Dataset}
+
+The restaurant review site Yelp releases a large dataset of restaurants
+(and other businesses) in a
+JSON format. In this assignment, you will use this dataset to answer vital
+questions such as \emph{``What is the most popular restaurant in
+California?''}. Unfortunately, the full dataset is nearly 7GB, which is too
+large for most computers. Therefore, you will instead use a subset of the Yelp
+data. Each review is a JSON object that looks like this:
+\begin{lstlisting}
+{
+    "name": "Jade Palace",
+    "city": "San Francisco",
+    "state": "CA",
+    "stars": 4.5,
+    "review_count": 1140,
+    "attributes": { ... },
+    "categories": [ "Chinese", "TakeOut" ],
+}
+\end{lstlisting}
 
 \section{Preliminaries}
 
 Using the command-line, run the command
 \verb|sbt new umass-compsci220/scala-json-data-wrangling.g8|. When prompted for
 a project name, press ``Enter'' to accept the default name. This will create
-the directory \verb|scala-json-data-wrangling|.
-\\
-\noindent You will also need to download \verb|yelp.json| provided with the
-assignment and place it in the project directory. You can do this either by
-manually moving the file after the download, or running the command:
-\begin{verbatim}
-mv ~/Downloads/yelp.json ~/scala-json-data-wrangling
-\end{verbatim}
+a directory called \verb|scala-json-data-wrangling|.
+You also need to download \verb|yelp.json| from the assignment page
+and place it in the project directory.
 
-\noindent Within the file \verb|scala-json-data-wrangling/src/main/scala/Main.scala|,
-implement the functions described below.
 
 \section{Programming Task}
 
-Before starting, make note of two things:
 
-\begin{itemize}
-\item Since a lot of the functions given make use of strings, it is
-\textit{very easy to make a mistake}. Therefore, it is critical that you test
-these functions before submission.
-
-\item All functions take a \texttt{Json} value, not a \texttt{JsonDict} value.
-Make sure you handle the case where the input value in a function is not
-a \texttt{JsonDict} in every function. If the function returns a list of
-Json values, simply exclude such a Json value from the list.
-\end{itemize}
-
-Your programming task is to implement the functions described below. You should
-place all functions within an object called \texttt{Wrangling}.
+Within the file \verb|scala-json-data-wrangling/src/main/scala/Main.scala|,
+implement the following functions:
 
 \begin{enumerate}
-    \item Write a function that extracts a value associated to the given key
-    from a Json value. If the given json value is not a JsonDict, or if the
-    JsonDict does not have the given key, return \verb|None|, otherwise return
-    the value wrapped in \verb|Some|.
+
+    \item Write a function that takes a key as an argument and produces the
+    value associated with that key. If the provided argument is not a JSON
+    dictory, or if the key does not exist, the function should produce
+    \lstinline|None|.
     \begin{scalacode}
     def key(json: Json, key: String): Option[Json]
     \end{scalacode}
+
     \item \textbf{(Covered in discussion.)} Write a function that consumes a
-    list of Json objects and returns those records from a given state (state
-    codes are two capital letters, "CA", "MA". Take a look at yelp.json for
-    more examples).
+    list of restaurants and only produces reviews of restaurants in the given
+    state.
     \begin{scalacode}
     def fromState(data: List[Json], state: String): List[Json]
     \end{scalacode}
-    \item Write a function that consumes a list of Json objects and returns
-    those records that have rating less than or equal to the given bound:
+
+    \item Write a function that consumes a list of restaurants and only
+    produces those restaurants that are rated less than
+    or equal to \lstinline|rating|.
     \begin{scalacode}
     def ratingLT(data: List[Json], rating: Double): List[Json]
     \end{scalacode}
-    \item Write a function that consumes a list of Json objects and returns
-    those records that have rating more than or equal to the given bound:
+
+    \item Write a function that consumes a list of restaurants
+    and returns only those restaurants that are rated greater than
+    or equal to \lstinline|rating|.
     \begin{scalacode}
     def ratingGT(data: List[Json], rating: Double): List[Json]
     \end{scalacode}
-    \item Write a function that consumes a list of Json objects and returns
-    those records that have the given category:
+
+    \item Write a function that consumes a list of rrestaurants
+     and produces only those restaurants
+    that have the given category.
     \begin{scalacode}
     def category(data: List[Json], category: String): List[Json]
     \end{scalacode}
+
     \item \textbf{(Covered in discussion.)} Write a function that consumes a
-    list of Json objects and returns a Map from state to a list of Json values
-    from that state.
+    list of restaurants and returns a \lstinline|Map| from states to
+    restaurants in that state.
     \begin{scalacode}
     def groupByState(data: List[Json]): Map[String, List[Json]]
     \end{scalacode}
-    \item Write a function that consumes a list of Json objects and returns a
-    map from category to a list of Json values from that category. Note that if
-    a restaurant has multiple categories, it should occur in each pair.
+
+    \item Write a function that consumes a list of restaurants and returns a
+    map from categories to restaurants in that category.
+    \textbf{Note:} If a rerestaurant has multiple categories, it should
+    occur multiple times in the output.
     \begin{scalacode}
     def groupByCategory(data: List[Json]): Map[String, List[Json]]
     \end{scalacode}
-    \item Write a function that consumes a list of Json objects and returns the
-    ``best'' establishment. To get the ``best'' establishment, first get a list
-    of Json objects with the highest ``stars'', then select the establishment
-    with the highest ``review\_count'' from that list. Return \texttt{None}
-    if there are no Json Objects in the input list that have these fields.
+
+    \item Write a function that consumes a list of restaurants and returns the
+    ``best'' restaurant. The ``best'' restaurant is has the highest rated
+    restaurant. If there is a tie, pick the one with the most reviews.
     \begin{scalacode}
     def bestPlace(data: List[Json]): Option[Json]
     \end{scalacode}
-    \item Each Json object contains an \texttt{attributes} key that
-    \textit{might} itself contain an \texttt{Ambience} (notice case) key which
+
+    \item Each restaurant record contains an \texttt{attributes} key that
+    \textit{may} contain an \texttt{Ambience} key, which
     itself is an object:
     \begin{scalacode}
     {   ...
@@ -2953,25 +2971,23 @@ place all functions within an object called \texttt{Wrangling}.
         }
     }
     \end{scalacode}
-    Write a function that consumes a list of Json objects and returns a list
-    of Json objects with a given ambience. If an object doesn't have an
-    \texttt{Ambience} key, exclude it from the list.
+    Write a function that consumes a list of restaurants and produces those
+    restaurants that have the given ambience.
     \begin{scalacode}
     def hasAmbience(data: List[Json], ambience: String): List[Json]
     \end{scalacode}
-    \item \textbf{(Not graded.)} For the Json object we currently have, there
-    is no way to uniquely identifying an object. Write a function that adds a
-    new key called "uid" to every Json object. The value associated to the
-    key should be unique to each object. \textbf{Do not} use variables,
-    mutation, or the Scala's builtin random function to implement this. Do not
-    modify the given list, instead produce a new list.
+
+    \item \textbf{(Not graded.)} There
+    is no way to uniquely identify the restaurants in the dataset. 
+    Write a function that adds a
+    new key called \verb|uid| to every restaurant record.
     \begin{scalacode}
     def addUid(json: List[Json]): List[Json]
     \end{scalacode}
 
 \end{enumerate}
 
-\noindent You'll notice that many of the functions produce a list of Json
+You'll notice that many of the functions produce a list of JSON
 objects. The key idea is that you can compose these functions together to
 pose complex queries. For example, suppose \texttt{yelpJson} holds the
 complete yelp data.
