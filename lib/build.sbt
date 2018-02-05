@@ -6,7 +6,7 @@ licenses += ("BSD", url("https://opensource.org/licenses/BSD-3-Clause"))
 
 name := "compsci220"
 organization := "edu.umass.cs"
-version := "1.5.3"
+version := "1.6.0"
 scalaVersion := "2.12.4"
 autoAPIMappings := true
 
