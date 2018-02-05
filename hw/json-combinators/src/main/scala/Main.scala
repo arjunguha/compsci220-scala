@@ -24,6 +24,11 @@ object Combinators extends CombinatorLike {
     case _ => Nil
   })
 
+  def string: JsonProc[Json, String] = new JsonProc(json => json match {
+    case JsonString(s) => List(s)
+    case _ => Nil
+  })
+
   def addAll(json: Json): Double =
     (iter >>> number).func(json).foldRight(0.0)((acc: Double, x: Double) => x + acc)
 
@@ -53,5 +58,20 @@ object Combinators extends CombinatorLike {
   }
 
   def combine[A]: JsonProc[(A, A), A] = new JsonProc(tup => List(tup._1, tup._2))
+
+  def extractNameAndAge(json: Json): Option[(Json, Json)] = {
+    val name = key("name")
+    val age = key("age")
+    val extract: JsonProc[Json, (Json, Json)] =
+      split[Json] >>> first(name) >>> second(age)
+    extract.func(json).headOption
+  }
+
+  def calculateAge(json: Json): Option[Double] = {
+    val extract: JsonProc[Json, (Double, Double)] =
+      split[Json] >>> first(key("born") >>> number) >>> second(key("died") >>> number)
+
+    extract.func(json).headOption.map({ case (b, d) => d - b })
+  }
 
 }

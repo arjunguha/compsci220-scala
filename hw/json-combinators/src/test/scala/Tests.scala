@@ -44,5 +44,52 @@ class TestSuite extends org.scalatest.FunSuite {
     assert(addAll(arr) === 6)
   }
 
+  val ageAndName = JsonHelper.parse("""
+  {
+    "age": 20,
+    "name": "rachit"
+  }""" )
+
+  val justAge = JsonHelper.parse("""
+  {
+    "age": 20
+  }""" )
+
+
+  test("Does extractNameAndAge work with valid JsonDict") {
+    assert(extractNameAndAge(ageAndName) ===
+      Some(JsonString("rachit"), JsonNumber(20)))
+  }
+
+  test("Does extractNameAndAge work with JsonDict that only has age") {
+    assert(extractNameAndAge(justAge) === None)
+  }
+
+  test("Does extractNameAndAge work with invalid JsonDict") {
+    assert(extractNameAndAge(dict) === None)
+  }
+
+  val bornAndDied = JsonHelper.parse("""
+  {
+    "born": 1997,
+    "died": 2018
+  }""" )
+
+  val justBorn = JsonHelper.parse("""
+  {
+    "born": 1997
+  }""" )
+
+  test("Does calculateAge work with valid JsonDict") {
+    assert(calculateAge(bornAndDied) === Some(21))
+  }
+
+  test("Does calculateAge work with JsonDict that only has age") {
+    assert(calculateAge(justBorn) === None)
+  }
+
+  test("Does calculateAge work with invalid JsonDict") {
+    assert(calculateAge(dict) === None)
+  }
 
 }
