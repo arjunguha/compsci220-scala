@@ -44,6 +44,21 @@ class TestSuite extends org.scalatest.FunSuite {
     assert(addAll(arr) === 6)
   }
 
+  val nestedNumbers = JsonHelper.parse("""
+  {
+    "age": 20,
+    "arr": [1,2],
+    "dict": {
+      "num": 10,
+      "arr2": [3,4]
+    },
+    "bool": true
+  }""" )
+
+  test("Does allNumbers work. Order does not matter") {
+    assert(allNumbers(nestedNumbers).toSet === List(20, 1, 2, 10, 3, 4).toSet)
+  }
+
   val ageAndName = JsonHelper.parse("""
   {
     "age": 20,
