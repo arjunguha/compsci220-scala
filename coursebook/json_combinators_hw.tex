@@ -100,6 +100,13 @@ various extractors on Json values.
     def iter: JsonProc[Json,Json]
     \end{scalacode}
 
+    \item Implement a combinator that extracts all the leaf values from an
+    input Json value. Leaf values can only be \texttt{JsonNull},
+    \texttt{JsonString}, \texttt{JsonNumber}, and \texttt{JsonBool}.
+    \begin{scalacode}
+    def recur: JsonProc[Json, Json]
+    \end{scalacode}
+
     % Getting students to use >>> to make sure they understand JsonProcs
     \item Using the combinators defined so far and the \texttt{>>>} method,
     implement a function that takes a \texttt{JsonArray} and adds all the
@@ -109,11 +116,14 @@ various extractors on Json values.
     def addAll(json: Json): Double
     \end{scalacode}
 
-    \item Implement a combinator that extracts all the leaf values from an
-    input Json value. Leaf values can only be \texttt{JsonNull},
-    \texttt{JsonString}, \texttt{JsonNumber}, and \texttt{JsonBool}.
+    \item Implement the function allNumbers that extracts all the numbers from
+    an arbitrarily nested Json value. The function should return a list containing
+    all the numbers in the input Json value. The order of numbers does not
+    matter. \textbf{You may not use pattern matching or recursion to
+    implement this function}. You may only use
+    combinators.
     \begin{scalacode}
-    def recur: JsonProc[Json, Json]
+    def allNumbers(json: Json): List[Double]
     \end{scalacode}
 
     \item Implement a generic combinator that returns tuple that contains
