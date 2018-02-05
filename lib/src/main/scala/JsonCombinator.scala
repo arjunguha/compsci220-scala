@@ -67,6 +67,9 @@ trait CombinatorLike {
   import hw.json.Json
 
   def addAll(json: Json): Double
+  def allNumbers(json: Json): List[Double]
+  def extractNameAndAge(json: Json): Option[(Json, Json)]
+  def calculateAge(json: Json): Option[Double]
 
   def key(k: String): JsonProc[Json,Json]
   def index(n: Int): JsonProc[Json,Json]
