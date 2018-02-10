@@ -8,14 +8,6 @@ import scala.util.parsing.combinator._
 object JsonHelper {
 
   /**
-   * Pretty print a Json value.
-   *
-   * @param json The Json value to be printed.
-   * @return Returns a string representing the Json objec.t
-   */
-  def print(json: hw.json.Json) = JPrinter.print(json)
-
-  /**
    * Parse a string containing valid Json.
    *
    * @param str The string representing the Json value to be parsed.
@@ -48,9 +40,8 @@ case class JsonNumber(value: Double) extends Json
 /**
  * Case class to reprent strings in Json.
  */
-case class JsonString(value: String) extends Json {
-  override def toString: String = "\"" + value + "\""
-}
+case class JsonString(value: String) extends Json
+
 /**
  * Case class to reprent booleans (`true` and `false`) in Json.
  */
@@ -64,35 +55,7 @@ case class JsonDict(value: Map[JsonString, Json]) extends Json
  */
 case class JsonArray(value: List[Json]) extends Json
 
-/**
- * Trait defining an abstract implementation of a Json Parser.
- */
-private trait JsonParserLike extends RegexParsers with PackratParsers {
-  def parse(str: String): Json
-}
-
-/**
- * Trait defining an abstract implementation of a Json Printer.
- */
-private trait JsonPrinterLike {
-  def print(e: Json): String
-}
-
-private object JPrinter extends JsonPrinterLike {
-  def print(json: Json): String = json match {
-    case JsonNull() => "null"
-    case JsonNumber(n) => n.toString()
-    case JsonBool(b) => b.toString()
-    case JsonString(s) => "\"" + s + "\""
-    case JsonArray(els) => s"[${els.map(print).mkString(", ")}]"
-    case JsonDict(map) => {
-      val pairs = map.toList.map({ case (k, v) => s""""${k}": ${print(v)}""" })
-      "{" + pairs.mkString(", ") + "}"
-    }
-  }
-}
-
-private object JParser extends JsonParserLike {
+private object JParser extends RegexParsers with PackratParsers {
 
   import scala.util.parsing.combinator._
 
