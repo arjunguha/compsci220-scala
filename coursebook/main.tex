@@ -2733,8 +2733,6 @@ of problems.
 
 - Combinators for callbacks
 
-\input{wrangling_hw}
-
 \include{stack_machines}
 
 \include{gc}
@@ -3895,8 +3893,271 @@ recursion. You may need to use \lstinline|fold| and/or \lstinline|unfold| severa
 
 \end{enumerate}
 
+\input{handin}
+
+\chapter{CSV Wrangling}
+\savepdf{project-csv-wrangling}
+
+The Social Security Administration (SSA) releases data dating back to
+1880 on newborn babies' first names, genders, and the
+popularity of these names.\footnote{\url{https://www.ssa.gov/oact/babynames/limits.html}}
+The Centers for Disease Control (CDC) releases data on life expectancy
+in the United States.\footnote{\url{http://www.cdc.gov/nchs/products/life_tables.htm}}.
+In this assignment, you'll be putting these two data sources together
+to answer questions such as
+\emph{``What is the most popular baby name in 2007?''},
+\emph{``Approximately how many Emmas are alive today?''}, and so on.
+Both these datasets are in a format called CSV (\emph{comma-separated values}),
+which is the format in which a lot of public datasets are released.
+
+In this assignment, you will learn about CSV files and use Scala's builtin
+data structures (lists, sets, and maps) to write several data-processing functions.
+You may write all these functions directly using recursion, but the
+the point of the assignment is to sequence Scala's built-in methods together
+to write them quickly and compactly. Most of the functions only need
+one line of code, if you exploit the right built-in methods.
+
+\section{Preliminaries}
+
+Using the command-line, run the following command:
+\begin{lstlisting}
+sbt new umass-compsci220/scala-csv-wrangling.g8
+\end{lstlisting}
+When prompted for a project name, press ``Enter'' to accept the default name.
+This will create a directory with the following contents:
+
+\dirtree{%
+.1 ./scala-csv-wrangling.
+.2 cdc-life-expectancy.csv\DTcomment{The CDC dataset.}.
+.2 ssa-births.csv\DTcomment{A subset of the SSA dataset.}.
+.2 build.sbt.
+.2 project.
+.3 plugins.sbt.
+.3 build.properties.
+.2 src.
+.3 main.
+.4 scala.
+.5 Main.scala\DTcomment{Your solution goes here.}.
+.3 test.
+.4 scala.
+.5 Tests.scala\DTcomment{Your test cases go here.}.
+}
+
+\section{Background: Comma Separated Values}
+
+In a CSV file, each line has a row of data, where each row
+has a sequence of columns, separated by a commas. For example, the
+first few rows of \texttt{ssa-births.csv} are:
+
+\begin{verbatim}
+1880,Mary,F,7065
+1880,Anna,F,2604
+1880,Emma,F,2003
+1880,Elizabeth,F,1939
+\end{verbatim}
+
+We can interpret this data as ``In the year 1880, 7065 female babies were born
+named Mary; in the year 1880, 2604 female babies were born named Anna'' and so on.
+In fact, the file has over 180,000 lines of rows like this, with data
+as recent as 2014.\footnote{The original dataset has over 1.8 million rows.
+We have removed several rows to ensure that it isn't too large for your
+computer.}
+
+The file \texttt{cdc-life-expectancy.csv} is much shorter and has entries
+that look like this:
+
+\begin{verbatim}
+2010,76,81
+2009,75,80
+2008,75,80
+\end{verbatim}
+
+We can interpret this data as ``The average life expectancy of U.S. babies born
+in 2010 is 76 years for males and 81 years for females'', and so
+on.\footnote{The CDC releases more precise statistics. The numbers have been
+cleaned up to make the assignment a little easier.}
+
+The support code for this assignment includes a library for reading
+CSV Files. For example, the expression
+\begin{scalacode}
+hw.csv..CSVReader.fromFile("ssa-births.csv")
+\end{scalacode}
+Produces the value:
+\begin{scalacode}
+List(
+  List("1880", "Mary", "F", "7065"),
+  List("1880", "Anna", "F", "2604"),
+  List("1880", "Emma", "F", "2003"),
+  List("1880", "Elizabeth", "F", "1939"),
+  ...)
+\end{scalacode}
+Notice that the type of the value is \lstinline|List[List[String]|---
+each row is an element of the outer list and each row is a list of strings.
+In particular, even the numbers in the file are read as strings. You will
+have to convert these strings to numbers. In Scala, strings have a 
+\lstinline|.toInt| method that you can use to do so.
+
+Finally, it is cumbersome to work with lists of strings,
+when in fact each row has a simple structure. The template code defines
+the following types, which you should not change:
+
+\begin{lstlisting}
+sealed trait Gender
+case class Male() extends Gender
+case class Female() extends Gender
+
+case class SSARow(birthYear Int, name: String, gender: Gender, count: Int)
+
+case class CDCRow(birthYear: Int, maleLifeExpectancy: Int, femaleLifeExpectancy: Int)
+\end{lstlisting}
+
+Your first step will be to write functions to convert a
+row (represented as a list of strings) into these types.
+Doing so will make the rest of the programming task significantly simpler.
+
+
+\section{Programming Task}
+
+Your programming task is to implement the functions in \texttt{Main.scala},
+which we describe below.
+
+\begin{enumerate}
+
+  \item The function \lstinline|readSSARow| takes a single line of data 
+  \texttt{ssa-births.csv} and produces an \lstinline|SSARow| value.
+
+  \item The function \lstinline|readCDCRow| takes a single line of data 
+  \texttt{cdc-life-expectancy.csv} and produces a \lstinline|CDCRow| value.
+
+  \item Write a function that consumes a list of SSA rows and only produces
+  those rows from a given year:
+  \begin{scalacode}
+  def yearIs(data: List[SSARow], n: Int): List[SSARow]
+  \end{scalacode}
+
+  \item Write a function that consumes a list of SSA rows and only produces
+  those rows for years greater than the given bound:
+  \begin{scalacode}
+  def yearGT(data: List[SSARow], bound: Int): List[SSARow]
+  \end{scalacode}
+
+  \item Write a function that consumes a list of SSA rows and only produces
+  those rows for years lower than the given bound:
+  \begin{scalacode}
+  def yearLT(data: List[SSARow], bound: Int): List[SSARow]
+  \end{scalacode}
+
+  \item Write a function that consumes a list of SSA rows and only produces
+  rows with the given name:
+  \begin{scalacode}
+  def onlyName(data: List[SSARow], name: String): List[SSARow]
+  \end{scalacode}
+
+  \item Write a function to calculate the most popular name in the given dataset
+  and the \emph{total} number of children born with that name.
+
+  \begin{scalacode}
+  def mostPopular(data: List[SSARow]): (String, Int)
+  \end{scalacode}
+
+  \textbf{Hint:} It is likely that children are born with the same
+      name in several years. So, you should first calculate the total
+      number of childen with each name.
+  
+  \item Write a function to calculate the number of children born in the given dataset.
+  \begin{scalacode}
+  def count(data: List[SSARow]): Int
+  \end{scalacode}
+
+  \item Write a function that produces a tuple with the number of girls and boys
+   respectively.
+  \begin{scalacode}
+  def countGirlsAndBoys(data: List[List[String]]): (Int, Int)
+  \end{scalacode}
+
+  \item Writen a function to calculate the set of names that are given to both girls and boys.
+  \begin{scalacode}
+  def genderNeutralNames(data: List[List[String]]): Set[String]
+  \end{scalacode}
+
+
+  \item Write a function to determine if a person with the specified gender and birth year
+    is expected to be alive in the year  \texttt{currentYear}):
+
+  \begin{scalacode}
+  def expectedAlive(gender: Gender, birthYear: Int, currentYear: Int, lifeExpectancies: List[CDCRow]): Boolean 
+  \end{scalacode}
+
+  If \texttt{currentYear} is the last year the person is estimated to be alive, be
+  optimistic and produce \texttt{true}.
+
+  You will need the CDC life expectancy dataset, which you should provide as an
+  argument to the function (\lstinline|lifeExpectancies|).
+  i.e., do not use
+  \lstinline|CSVReader.fromFile| within this function.
+
+  The CDC data only ranges from 1930---2010. Therefore, assume that
+    \texttt{birthYear} is in this range too.
+
+
+  \item Write a function to estimate how many people from the given dataset
+  will be alive in a particular year:
+
+  \begin{scalacode}
+  def estimatePopulation(data: List[SSARow], year: Int, lifeExpectancies: List[CDCRow]): Int
+  \end{scalacode}
+
+  You will need the CDC life expectancy dataset, which you should provide as an
+  argument to the function (\lstinline|lifeExpectancies|). i.e., do not use
+  \lstinline|CSVReader.fromFile| within this function.
+
+
+\end{enumerate}
+
+
+
+You'll notice that many functions
+consume and produce a list of births. The key idea is that you can
+compose these functions together to pose complex queries. For example,
+suppose \scalainline{allBirths} holds the complete list of births:
+
+\begin{scalacode}
+val allBirths = CSVReader.fromFile("ssa-births.csv")
+\end{scalacode}
+
+\begin{itemize}
+
+  \item The following query calculates how many girls and boys were born between 1990
+  and 2000:
+
+  \begin{scalacode}
+  countGirlsAndBoys(yearGT(yearLT(allBirths, 2001), 1989))
+  \end{scalacode}
+
+  \item The following query tells is if there were more Emma's born in 2010 than
+  in 2009:
+
+  \begin{scalacode}
+  count(onlyName(yearIs(2010, allBirths), "Emma")) > count(onlyName(yearIs(2009, allBirths), "Emma"))
+  \end{scalacode}
+
+  \item The following query reports the most popular name of 2013:
+
+  \begin{scalacode}
+  mostPopular(yearIs(2013, allBirths))
+  \end{scalacode}
+
+  \item The following query estimates the number of John's alive today who
+  were born after 1980:
+
+  \begin{scalacode}
+  estimatePopulation(yearGT(allBirths, 1980), 2015, CSVReader.fromFile("cdc-life-expectancy.csv"))
+  \end{scalacode}
+
+\end{itemize}
 
 \input{handin}
+
 
 \appendix
 

@@ -6,7 +6,7 @@ licenses += ("BSD", url("https://opensource.org/licenses/BSD-3-Clause"))
 
 name := "compsci220"
 organization := "edu.umass.cs"
-version := "1.7.0"
+version := "1.8.0"
 scalaVersion := "2.12.4"
 autoAPIMappings := true
 
@@ -24,6 +24,7 @@ scalacOptions ++=
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
 libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6"
+libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.5"
 
 target in Compile in doc := baseDirectory.value / ".." / "website" / "api"
 
