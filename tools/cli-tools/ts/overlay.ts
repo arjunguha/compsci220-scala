@@ -3,17 +3,18 @@ import * as assert from 'assert';
 import * as cp from 'child_process';
 import * as unzip from 'unzip';
 import * as tar from 'tar';
+import * as config from './config';
 
 const moodleSubmissionRegex = /^(?:[^_]*)_(\d+)_.*$/;
 
-function main(dir: string, prepare: (dir: string) => void) {
+export function main(dir: string) {
   fs.ensureDirSync(dir);
-  overlays.forEach(x => fs.ensureDirSync(x));
+  const overlay = processOverlays(config.overlay);
 
   for (const p of fs.readdirSync(dir)) {
     const submissionDir = `${dir}/${p}`;
-    if (fs.statSync(submissionDir)) {
-      prepare(submissionDir);
+    if (fs.statSync(submissionDir).isDirectory()) {
+      overlay(submissionDir);
     }
   }
 }
@@ -37,30 +38,18 @@ function copyCommand(srcPath: string, dst: string) {
   }
 }
 
-function processOverlays(commands: string[]) {
+function processOverlays(overlays: any[]) {
   var result = function(dir: string) { };
-  while(commands.length > 0) {
-    const typ = commands.shift();
-    if (typ === 'overlay') {
-      const path = commands.shift()!;
-      result = seqCommand(result, overlayCommand(path));
+  for (const overlay of overlays) {
+    if (overlay.type === 'overlay') {
+      result = seqCommand(result, overlayCommand(overlay.src));
     }
-    else if (typ === 'copy') {
-      const src = commands.shift()!;
-      const dst = commands.shift()!;
-      result = seqCommand(result, copyCommand(src, dst));
+    else if (overlay.type === 'copy') {
+      result = seqCommand(result, copyCommand(overlay.src, overlay.dst));
     }
     else {
       throw 'bad';
     }
   }
-  assert(commands.length === 0);
   return result;
 }
-
-const [ _, __, submissions, testFile ] = process.argv;
-
-const overlays = [ 'overlay', __dirname + '/../data/scala-grading-overlay',
-  'copy', testFile, 'src/main/scala/GradingTests.scala' ];
-
-main(submissions, processOverlays(overlays));
