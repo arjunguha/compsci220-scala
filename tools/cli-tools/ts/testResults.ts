@@ -13,7 +13,7 @@ const sto = storage();
 const dsKind = 'compsci220-test-runner';
 
 
-async function main() {
+async function asyncMain() {
   const [r] = await ds.createQuery('testName')
     .filter('bucket', '=', config.bucket)
     .run();
@@ -56,8 +56,10 @@ async function main() {
 }
 
 
-main()
-  .catch(reason => {
-    console.error(reason);
-    process.exit(1);
-  });
+export function main() {
+  asyncMain()
+    .catch(reason => {
+      console.error(reason);
+      process.exit(1);
+    });
+  }

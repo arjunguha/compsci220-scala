@@ -3,10 +3,11 @@ import * as commander from 'commander';
 import * as util from './util';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as config from './config';
 
 const ds = new datastore({});
 
-export async function main(bucketName: string, bucketDir: string) {
+async function mainAsync(bucketName: string, bucketDir: string) {
   const [results] = await ds.createQuery('zip')
     .filter('zipDir', '=', bucketDir)
     .run();
@@ -18,6 +19,7 @@ export async function main(bucketName: string, bucketDir: string) {
       if ((await fs.stat(submissionDir)).isDirectory()) {
         await fs.writeFile(`${submissionDir}/compile-error.txt`,
           r.stdout + '\n' + r.stderr);
+        console.log(`${submissionDir}/compile-error.txt`);
       }
       else {
         console.log(`Compile failed on ${r.zipFile} but no directory found`);
@@ -26,19 +28,10 @@ export async function main(bucketName: string, bucketDir: string) {
   }
 }
 
-commander.option('--bucket <BUCKET>',
-  'name of bucket on Google Cloud Storage',
-  'compsci220-grading');
-commander.option('--bucket-dir <PATH>',
-  'name of directory in <BUCKET> that will hold the .zip files');
-
-const args = commander.parse(process.argv);
-
-util.assertExit(typeof args.bucketDir === 'string', '--bucket-dir expected');
-
-
-main(args.bucket, args.bucketDir)
-  .catch(reason => {
-    console.error(reason);
-    process.exit(1);
-  });
+export function main() {
+  mainAsync(config.bucket, config.bucketDir)
+    .catch(reason => {
+      console.error(reason);
+      process.exit(1);
+    });
+  }

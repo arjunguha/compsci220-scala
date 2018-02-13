@@ -5,6 +5,7 @@ import * as commander from 'commander';
 import * as storage from '@google-cloud/storage';
 import * as Docker from 'dockerode';
 import * as util from './util';
+import * as config from './config';
 
 const ds = new datastore({});
 const sto = storage();
@@ -20,7 +21,7 @@ async function getAlreadyCompiled(bucketDir: string): Promise<string[]> {
   return results.map((x: any) => x.zipFile);
 }
 
-async function main(bucketName: string, bucketDir: string,
+async function asyncMain(bucketName: string, bucketDir: string,
   dockerHosts: [Docker.DockerOptions, number][])  {
   const pool = new dockerPool.DockerPool(dockerHosts);
 
@@ -47,9 +48,14 @@ async function main(bucketName: string, bucketDir: string,
   return Promise.all(zipFiles.map(compileZip));
 }
 
-main('compsci220-grading', '2018S-list-processing',
+export function main() {
+  asyncMain(config.bucket, config.bucketDir,
   [
     [{ host: "10.200.0.1",  port: 2376 }, 10],
     [{ host: "10.200.0.6",  port: 2376 }, 10],
-    // [{ host: "10.200.0.11",  port: 2376 }, 10]
-  ]);
+    [{ host: "10.200.0.11",  port: 2376 }, 10]
+  ]).catch(reason => {
+    console.error(reason);
+    process.exit(1);
+  });
+};

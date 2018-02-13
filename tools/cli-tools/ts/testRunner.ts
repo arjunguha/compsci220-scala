@@ -57,13 +57,11 @@ async function testAll(bucketName: string, bucketDir: string) {
   console.log(`Started ${count} test cases`);
 }
 
-function main(bucketName: string, bucketDir: string, testFiles: string) {
-
-
-}
-
-testAll(config.bucket, config.bucketDir)
+export function main() {
+  testAll(config.bucket, config.bucketDir)
   .catch(reason => {
     console.error(reason);
     process.exit(1);
   });
+}
+
