@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "bin": {
-    "cloud220-uploadZips": "./bin/cloud220-upload-zips.js",
     "cloud220-compile": "./bin/cloud220-compiler.js",
     "cloud220-compile-errors": "./bin/cloud220-compile-errors.js",
     "cloud220-run-tests": "./bin/cloud220-run-tests.js",

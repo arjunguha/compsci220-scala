@@ -70,12 +70,10 @@ async function mainAsync(projectsPath: string, bucketName: string, dest: string)
   }
 }
 
-function main(projectsPath: string, bucketName: string, dest: string) {
-  mainAsync(projectsPath, bucketName, dest)
+export function main() {
+  mainAsync('.', config.bucket, config.bucketDir)
     .catch(reason => {
       console.error(reason);
       process.exit(1);
     });
 }
-
-main('.', config.bucket, config.bucketDir);
