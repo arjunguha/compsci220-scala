@@ -3,7 +3,7 @@ import hw.json._
 
 class GradingTests extends org.scalatest.FunSuite {
 
-  val data = JsonHelper.fromFile("dataset.json")
+  val data = JsonHelper.fromFile("yelp.json")
 
   def getName(json: Json): String = json match {
     case JsonDict(map) => map(JsonString("name")) match {
