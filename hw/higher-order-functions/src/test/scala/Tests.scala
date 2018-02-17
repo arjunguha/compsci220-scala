@@ -1,7 +1,7 @@
 import HOF._
 
 // NOTE: The test cases for sort and merge support lessThan and !lessThan
-class TestSuite extends org.scalatest.FunSuite {
+class GradingTests extends org.scalatest.FunSuite {
 
   case class A(x: Int)
   case class B(y: Int)
