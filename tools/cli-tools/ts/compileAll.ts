@@ -52,8 +52,8 @@ export function main() {
   asyncMain(config.bucket, config.bucketDir,
   [
     [{ host: "10.200.0.1",  port: 2376 }, 10],
-    [{ host: "10.200.0.6",  port: 2376 }, 10],
-    [{ host: "10.200.0.11",  port: 2376 }, 10]
+    [{ host: "10.200.0.6",  port: 2376 }, 10]
+//    [{ host: "10.200.0.11",  port: 2376 }, 10]
   ]).catch(reason => {
     console.error(reason);
     process.exit(1);

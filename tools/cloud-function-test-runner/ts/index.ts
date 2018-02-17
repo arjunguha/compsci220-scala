@@ -10,7 +10,7 @@ import { DatastoreTransaction } from '@google-cloud/datastore/transaction';
 import { read } from 'fs-extra';
 
 const dsKind = 'compsci220-test-runner';
-const javaPath = 'java'; // path.resolve(__dirname + '/bin/java');
+const javaPath = path.resolve(__dirname + '/bin/java');
 
 export function sleep(ms: number): Promise<null> {
   return new Promise((resolve, reject) => {
@@ -105,6 +105,7 @@ export function jarRunner(event: any, callback: any) {
     .then(() => callback())
     .catch(reason => {
       console.error(reason);
+      console.error(`Request key is ${JSON.stringify(requestKey(reqData))}`);
       callback(reason);
     });
 }
