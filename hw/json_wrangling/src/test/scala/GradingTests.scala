@@ -1,7 +1,7 @@
 import Wrangling._
 import hw.json._
 
-class TestSuite extends org.scalatest.FunSuite {
+class GradingTests extends org.scalatest.FunSuite {
 
   val data = JsonHelper.fromFile("dataset.json")
 
@@ -20,12 +20,12 @@ class TestSuite extends org.scalatest.FunSuite {
     assert(key(json,"a") == Some(JsonNumber(1)))
   }
 
-  test("Does key work when object is a JsonDict and does not have the key?") {
+  test("Does key produce Node when object is a JsonDict and does not have the key?") {
     val json = JsonDict(Map(JsonString("b") -> JsonNumber(1)))
     assert(key(json, "a") == None)
   }
 
-  test("Does key work when object is not a JsonDict?") {
+  test("Does key produce None when object is not a JsonDict?") {
     val json = JsonString("a")
     assert(key(json, "a") == None)
   }
