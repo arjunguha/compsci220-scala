@@ -4023,13 +4023,13 @@ which we describe below.
 
 \begin{enumerate}
 
-  \item The function \lstinline|readSSARow| takes a single line of data 
+  \item \textbf{(Covered in discussion).} The function \lstinline|readSSARow| takes a single line of data 
   \texttt{ssa-births.csv} and produces an \lstinline|SSARow| value.
 
-  \item The function \lstinline|readCDCRow| takes a single line of data 
+  \item  \textbf{(Covered in discussion).} The function \lstinline|readCDCRow| takes a single line of data 
   \texttt{cdc-life-expectancy.csv} and produces a \lstinline|CDCRow| value.
 
-  \item Write a function that consumes a list of SSA rows and only produces
+  \item  \textbf{(Covered in discussion).} Write a function that consumes a list of SSA rows and only produces
   those rows from a given year:
   \begin{scalacode}
   def yearIs(data: List[SSARow], n: Int): List[SSARow]
@@ -4072,12 +4072,12 @@ which we describe below.
   \item Write a function that produces a tuple with the number of girls and boys
    respectively.
   \begin{scalacode}
-  def countGirlsAndBoys(data: List[List[String]]): (Int, Int)
+  def countGirlsAndBoys(data: List[SSARow]): (Int, Int)
   \end{scalacode}
 
   \item Writen a function to calculate the set of names that are given to both girls and boys.
   \begin{scalacode}
-  def genderNeutralNames(data: List[List[String]]): Set[String]
+  def genderNeutralNames(data: List[SSARow]): Set[String]
   \end{scalacode}
 
 
