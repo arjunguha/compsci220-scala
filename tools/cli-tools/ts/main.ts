@@ -7,6 +7,7 @@ import * as compileAll from './compileAll';
 import * as compileFailures from './compileFailures';
 import * as testRunner from './testRunner';
 import * as testResults from './testResults';
+import * as forgetTests from './forgetTests';
 
 commander.command('extract')
   .option('--src <FILE>', '.zip file from Moodle')
@@ -30,7 +31,7 @@ commander.command('compile-failures')
   .action(() => compileFailures.main());
 
 commander.command('test-all')
-  .action(() => testRunner.main());
+  .action((...args) => testRunner.main(args.slice(0, args.length - 1)));
 
   commander.command('test-results')
   .action(() => testResults.main());
@@ -38,4 +39,7 @@ commander.command('test-all')
 commander.command('fill-moodle-csv')
   .action(() => fillMoodleCsv.main());
 
+commander.command('forget-tests')
+  .action((...args) => forgetTests.main(args.slice(0, args.length - 1)));
+  
 const opts = commander.parse(process.argv);

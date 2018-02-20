@@ -53,7 +53,7 @@ type CompileResult = {
 // of the jar file along with console output of the container.
 async function runContainer(docker: Docker, srcFile: Buffer): Promise<CompileResult> {
   const createContainerOpts = {
-    Image: "rachitnigam/compsci220",
+    Image: "arjunguha/compsci220",
     AttachStderr: true,
     AttachStdout: true
   };
@@ -91,27 +91,33 @@ async function runContainer(docker: Docker, srcFile: Buffer): Promise<CompileRes
 
 export async function main(docker: Docker, bucket: string, src: string,
   dst: string) {
-  console.log(`Compiling gs://${bucket}/${src}`);
-  const srcPath = await downloadFile({ bucket, src, dest: dst });
-  const data = await runContainer(docker, srcPath);
-  if (data.statusCode === 0 && data.jarFile) {
-    await uploadFile(data.jarFile , { bucket, src, dest: dst })
-  }
-  else {
-    console.error(`Failed to compile gs://${bucket}/${src} (exit code ${data.statusCode})`);
-  }
-  await ds.upsert({
-    key: ds.key([ 'sbt-compiler', 'default', 'bucket', bucket, 'zip', src ]),
-    excludeFromIndexes: [ 'stdout', 'stderr' ],
-    data: {
-      statusCode: data.statusCode,
-      stdout: data.stdout,
-      stderr: data.stderr,
-      zipFile: src,
-      jarFile: data.jarFile,
-      zipDir: path.dirname(src)
+  try {
+    console.log(`Compiling gs://${bucket}/${src}`);
+    const srcPath = await downloadFile({ bucket, src, dest: dst });
+    const data = await runContainer(docker, srcPath);
+    if (data.statusCode === 0 && data.jarFile) {
+      await uploadFile(data.jarFile , { bucket, src, dest: dst })
     }
-  });
+    else {
+      console.error(`Failed to compile gs://${bucket}/${src} (exit code ${data.statusCode})`);
+    }
+    await ds.upsert({
+      key: ds.key([ 'sbt-compiler', 'default', 'bucket', bucket, 'zip', src ]),
+      excludeFromIndexes: [ 'stdout', 'stderr' ],
+      data: {
+        statusCode: data.statusCode,
+        stdout: data.stdout,
+        stderr: data.stderr,
+        zipFile: src,
+        jarFile: data.jarFile,
+        zipDir: path.dirname(src)
+      }
+    });
+  }
+  catch (exn) {
+    console.log(`Error compiling gs://${bucket}/${src}`);
+    console.log(exn);
+  }
 }
 
 

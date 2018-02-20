@@ -26,6 +26,12 @@ async function asyncMain() {
   for (const group of groupedResults) {
     const jarName = path.basename(group[0].jar);
     const tests = group.filter(test => test.exitCode === 0);
+    const failedTests = group.filter(test => test.exitCode === 1);
+    for (const t of failedTests) {
+      console.log(`Failed to ${t.jar} ${t.testName}`);
+      console.log(t.stderr);
+      console.log(t.stderr);
+    }
 
     const dir = jarName.slice(0, jarName.length - 4);
     if (tests.length < numTests) {

@@ -80,7 +80,7 @@ export async function main(reqData: RequestData) {
     //const result = cp.spawnSync(javaPath, args, spawnOpts);
     console.info(`exited with code ${result}`);
 
-    ds.upsert({
+    return ds.upsert({
       key: reqKey,
       excludeFromIndexes: [ 'stdout', 'stderr', 'exitCode' ],
       data: {

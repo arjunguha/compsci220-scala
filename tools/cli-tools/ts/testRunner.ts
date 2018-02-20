@@ -37,10 +37,21 @@ export async function testJar(bucket: string, jar: string) {
   return remainingTestNames.length;
 }
 
-async function testAll(bucketName: string, bucketDir: string) {
+function jarName(path: string): string {
+  const m = /(\d+).jar/.exec(path);
+  if (m === null) {
+    throw new Error(`Did not match ${path}`);
+  }
+  return m[1];
+}
+
+async function testAll(names: string[], bucketName: string, bucketDir: string) {
   const bucket = sto.bucket(bucketName);
   const [allFiles] = await bucket.getFiles({ prefix: bucketDir });
-  const jarFiles = allFiles.filter(x => x.name.endsWith('.jar'));
+  let jarFiles = allFiles.filter(x => x.name.endsWith('.jar'));
+  if (names.length > 0) {
+    jarFiles = jarFiles.filter(x => names.includes(jarName(x.name)));
+  }
   console.log(`${jarFiles.length} submissions`);
 
   let count = 0;
@@ -57,8 +68,8 @@ async function testAll(bucketName: string, bucketDir: string) {
   console.log(`Started ${count} test cases`);
 }
 
-export function main() {
-  testAll(config.bucket, config.bucketDir)
+export function main(names: string[]) {
+  testAll(names, config.bucket, config.bucketDir)
   .catch(reason => {
     console.error(reason);
     process.exit(1);

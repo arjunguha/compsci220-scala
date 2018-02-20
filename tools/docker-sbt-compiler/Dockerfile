@@ -34,6 +34,7 @@ WORKDIR /home/student
 RUN mkdir -p /home/student/scala-init/project
 COPY project/ /home/student/scala-init/project/
 COPY Init.scala /home/student/scala-init/
+COPY build.sbt /home/student/scala-init/
 WORKDIR /home/student/scala-init
 RUN sbt run
 

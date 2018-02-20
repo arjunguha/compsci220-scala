@@ -1,1 +1,1 @@
-docker build -t rachitnigam/compsci220 .
+docker build -t arjunguha/compsci220 .

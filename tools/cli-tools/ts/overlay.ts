@@ -34,9 +34,7 @@ function overlayCommand(overlayDir: string) {
 
 function copyCommand(srcPath: string, dst: string) {
   return (dstDir: string) => {
-    if (!fs.existsSync(`${dstDir}/${dst}`)) {
-      fs.copySync(srcPath, `${dstDir}/${dst}`);
-    }
+    fs.copySync(srcPath, `${dstDir}/${dst}`);
   }
 }
 

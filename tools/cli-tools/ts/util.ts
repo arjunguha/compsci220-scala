@@ -6,7 +6,7 @@ import * as Storage from '@google-cloud/storage';
 export type TestResult = {
   jar: string,
   testName: string,
-  exitCode: 0,
+  exitCode: number,
   stdout: string,
   stderr: string
 };
