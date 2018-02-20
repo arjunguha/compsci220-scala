@@ -3,7 +3,44 @@ import hw.json._
 
 class GradingTests extends org.scalatest.FunSuite {
 
-  val data = JsonHelper.fromFile("yelp.json")
+  val data = List[Json](
+    JsonHelper.parse("""{
+  "name": "food1",
+  "state": "CA",
+  "stars": 2,
+  "review_count": 17,
+  "attributes": {
+    "Ambience": {
+      "casual": true
+    }
+  },
+  "categories": [ "Food" ]
+}"""),JsonHelper.parse("""
+{
+  "name": "food2",
+  "state": "MA",
+  "stars": 3,
+  "review_count": 17,
+  "attributes": {
+  },
+  "categories": [ "Food" ]
+}"""), JsonHelper.parse("""
+{
+  "name": "place1",
+  "state": "MA",
+  "stars": 3.5,
+  "review_count": 17,
+  "attributes": null,
+  "categories": [ "Place" ]
+}"""), JsonHelper.parse("""
+{
+  "name": "food3",
+  "state": "CA",
+  "stars": 5,
+  "review_count": 17,
+  "attributes": null,
+  "categories": [ "Food" ]
+}"""))
 
   def getName(json: Json): String = json match {
     case JsonDict(map) => map(JsonString("name")) match {
