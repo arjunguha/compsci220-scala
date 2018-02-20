@@ -2,7 +2,7 @@ import hw.csv._
 import Main._
 
 // NOTE: The test cases for sort and merge support lessThan and !lessThan
-class TestSuite extends org.scalatest.FunSuite {
+class GradingTests extends org.scalatest.FunSuite {
 
   val gradingBirthsString = """1880,DeadWoman,F,900
 1881,DeadMan,M,200
