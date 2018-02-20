@@ -82,10 +82,12 @@ export async function main(reqData: RequestData) {
 
     return ds.upsert({
       key: reqKey,
-      excludeFromIndexes: [ 'stdout', 'stderr', 'exitCode' ],
+      excludeFromIndexes: [ 'stdout', 'stderr' ],
       data: {
         stdout: stdout.get(),
         stderr: stderr.get(),
+        dirname: path.dirname(reqData.jar),
+        basename: path.basename(reqData.jar),
         exitCode: result,
         bucket: reqData.bucket,
         jar: reqData.jar,
