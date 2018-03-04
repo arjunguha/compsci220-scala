@@ -3292,19 +3292,1090 @@ one style is better than the other. What matters is how you expect your code
 to be used (and extended). One could argue that a language that forces you to
 pick one style of programming limits the kinds of code re-use that are possible.
 
+\chapter{Subtyping}
+\savepdf{subtyping}
+
+\section{Reading}
+
+Programming in Scala, Chapters 12 and 19.\footnote{\url{http://www.artima.com/pins1ed/}}
+
+\section{The Singleton Pattern}
+
+\begin{figure}
+\begin{javacode}
+public class Singleton {
+  private static Singleton instance = null;
+
+  private Singleton() { }
+
+  public static Singleton getInstance() {
+    if(instance == null) {
+      instance = new ClassicSingleton();
+    }
+    return instance;
+  }
+
+  void myMethod() {
+    System.out.println("It works")
+  }
+
+}
+\end{javacode}
+\caption{The Singleton Pattern in Java}
+\label{javasingleton}
+\end{figure}
+
+At times, it is often desirable to only have a single instance of a particular
+class. For example, if you have a class that lets you read input from the
+user, it doesn't make sense to have two instances, since the user just has
+one keyboard. You can create a singleton object in Java by following the
+design pattern in \cref{javasingleton}. The only instance of \javainline{Singleton}
+that can exist is the one stored in the private field. (Notice that the constructor
+is private.) The only way to get
+the singleton is by calling the \scalainline{Singleton.getInstance} method.
+
+Here is the equivalent in Scala:
+
+\begin{scalacode}
+object Singleton {
+  def myMethod() = println("It works")
+}
+\end{scalacode}
+
+So, all the top-level functions we've created so far (in class and in
+assignment) can be thought of as methods of singleton objects.
+
+\section{Case Objects}
+
+We've seen several examples of case classes that take no arguments. For example,
+to represent binary trees with values at nodes (and not at the leaves), we could
+write the following type:
+%
+\begin{scalacode}
+sealed trait BinTree
+case class BinTree(lhs: BinTree, value: Int, rhs: BinTree) extends BinTree
+case class Leaf() extends BinTree
+\end{scalacode}
+
+However, we can also represent leaves using a \emph{case object}, which is essentially
+a singleton that can be used in pattern-matching:
+%
+\begin{scalacode}
+sealed trait BinTree
+case class BinTree(lhs: BinTree, value: Int, rhs: BinTree) extends BinTree
+case object Leaf extends BinTree
+\end{scalacode}
+
+Since \scalainline{Leaf} is an object and not a class, it \emph{cannot}
+take any arguments, which why we can simply write \scalainline{Leaf} instead
+of \scalainline{Leaf()}. Scala uses case objects extensively. For example,
+\scalainline{Nil} and \scalainline{None} are case objects. If they
+were case classes, we've have to write \scalainline{Nil()} and
+\scalainline{None()} instead.
+
+\section{Subtyping}
+
+Subtyping in Scala is very similar to subtyping in Java.
+
+\begin{notation}
+We write $A <: B$ to mean $A$ is a subtype of $B$.
+\end{notation}
+
+The intuition behind subtyping is that a subtype always ``adds more features''
+to its super-type, and doesn't ``subtract features''. Therefore, if $A <: B$,
+then $A$ can be used in any context where $B$ is expected. The context simply
+won't try to use the extra features of $A$. However, $B$ \emph{cannot}
+be used in contexts where $A$ is expected, because the context may rely on
+the ``added features'' of $A$ that $B$ does not provide.
+
+For example, consider the following hierarchy of types, all of which
+implement the \scalainline{Animal} trait\footnote{Think of a trait as an interface in Java. Traits
+are actually more flexible, but we are only going to use them like interfaces for now.}
+%
+\begin{scalacode}
+trait Animal {
+  def sound(): String
+}
+
+class Dog extends Animal {
+  def sound() = "woof"
+  def bite() = "ouch"
+}
+
+class Poodle extends Dog {
+  override def sound() = "yelp"
+}
+
+class Cat extends Animal {
+  def sound() = "purr"
+  def scratch() = "yow"
+}
+\end{scalacode}
+
+A function that expects an \scalainline{Animal} can be applied to an object
+of any class defined above. Similarly, a function that expects a \scalainline{Dog}
+can be applied to a \scalainline{Dog} or a \scalainline{Poodle}, but not to a
+\scalainline{Cat}. For example, the following function takes dogs and makes
+them bite:
+\begin{scalacode}
+def dontBite(x: Dog) = {
+  x.bite()
+}
+\end{scalacode}
+
+The expression \scalainline{dontBite(new Cat())} will not type-check, which
+is good, because cats don't have a \scalainline{bite} method.
+
+Given the traits and types defined above, we can say that:
+\begin{itemize}
+
+  \item \scalainline{Dog <: Animal} because \scalainline{Dog extends Animal}
+
+  \item \scalainline{Poodle <: Dog} because \scalainline{Poodle extends Dog}
+
+  \item \scalainline{Cat <: Animal} because \scalainline{Cat extends Animal}
+
+  \item \scalainline{Poodle <: Animal} because \scalainline{Poodle <: Dog} and
+  \scalainline{Dog <: Animal} (subtyping is transitive),
+
+  \item \scalainline{X <: X} for all $X$ (subtyping is reflexive).
+
+\end{itemize}
+%
+In addition, scala has two special types:
+%
+\begin{itemize}
+
+  \item \scalainline{X <: Any} for all types X.
+
+  \item \scalainline{Nothing <: X} for all types X.
+
+\end{itemize}
+
+A peculiar property of \scalainline{Nothing} is that
+\emph{there are no values with type} \scalainline{Nothing}!
+It may seem pointless to have a type with no values. For example, the following
+function cannot be applied to anything (not even to \scalainline{null}):
+\begin{scalacode}
+def useless(x: Nothing): Unit = {
+  println("Cannot call me")
+}
+\end{scalacode}
+
+But, we'll see why \scalainline{Nothing} is useful in a moment.
+
+\section{Generics and Subtyping}
+
+\begin{figure}
+\begin{subfigure}[b]{0.26\textwidth}
+\begin{scalacode}
+def useDog(c: C[Dog]) = {
+  c.get().bite()
+}
+
+useDog(new C(new Cat()))
+\end{scalacode}
+\caption{Cats can't bite.}
+\label{catdog1}
+\end{subfigure}
+~\vrule~
+\begin{subfigure}[b]{0.33\textwidth}
+\begin{scalacode}
+def useAnimal(c: C[Animal]) = {
+  c.get().sound()
+}
+
+val c = new C[Dog](new Dog())
+useAnimal(c)
+\end{scalacode}
+\label{catdog2}
+\caption{Scala is being conservative.}
+\end{subfigure}
+~\vrule~
+\begin{subfigure}[b]{0.31\textwidth}
+\begin{scalacode}
+def useAnimal2(c: C[Animal]) = {
+  c.set(new Cat())
+  c.get().sound()
+}
+
+val c = new C[Dog](new Dog())
+useAnimal2(c)
+c.get().bite()
+\end{scalacode}
+\label{catdog3}
+\caption{Sneaky function confuses our code.}
+\end{subfigure}
+\caption{None of these programs type-check.}
+\end{figure}
+
+Subtyping becomes more complicated when we working with generics types, such
+as lists, sets, or any other container type. To illustrate, we'll work
+with the following generic type, which is the simplest possible container:
+%
+\begin{scalacode}
+class C[T](private var x: T) {
+  def get(): T = x
+  def set(newX: T): Unit = x = newX
+}
+
+val c1: C[Dog] = new C(new Dog)
+c1.set(new Poodle)
+\end{scalacode}
+
+Unsurprisingly, we can't store cats in \scalainline{c1}. If we did, a function
+that consumes a container with a dog, might try to \scalainline{.get} the
+dog and call the \scalainline{bite} method, which cats don't have.
+Therefore, the code in \cref{catdog1} does not type-check.
+However, since \scalainline{Dog <: Animal}, can we send a dog-container
+to a function that expects an animal container. For example, \cref{catdog2}
+appears to be safe. Unfortunately, this code does not type-check either. Although this particular example
+is safe, consider the variation in \cref{catdog3}.
+
+The problem above is that \scalainline{useAnimal2} sneakily stores a cat in
+the container. After the function returns, \scalainline{c.get} would produce
+a cat even though the type indicates that it should produce a dog.
+Therefore, the Scala type-checker does not allow this program to type-check.
+
+Unfortunately, \cref{catdog2} (which was safe) does not type-check either, just so that
+this kind of unsafe example can be ruled out. Individual methods and functions
+are type-checked only once. Similarly, when a function or method call is type-checked,
+the body of the function is not re-examined.
+
+\section{Variance}
+
+However, lists and other immutable data structures in Scala are not constrained
+this way. For example, the following code does type-check:
+
+\begin{scalacode}
+def useAnimals(alist: List[Animal]) = {
+  alist.map(animal => animal.sound()).mkString(", ")
+}
+
+val alist: List[Cat] = List(new Cat(), new Cat())
+useAnimals(alist)
+\end{scalacode}
+
+The reason this works is because there are no methods on lists to update
+their contents. The problem with our \scalainline{Container[T]} class is
+that it writes to \scalainline{T}-typed values. However, if we had a functional
+container class, we can use a \emph{covariance annotation} to indicate
+that \scalainline{T}-typed values are never updated.
+
+\begin{scalacode}
+class Container[+T](private val x: T) {
+  def get(): T = x
+}
+\end{scalacode}
+
+The \scalainline{+T} annotation indicates \scalainline{Container[A] <:
+Container[B]} when \scalainline{A <: B}. For this to be safe,
+Scala ensures that \scalainline{T}-typed values are never updated
+by the class.\footnote{Coavariance is actually more subtle than this. The reading discusses it in more depth, but you don't have to remember all the details.} (The class may have other kind of state, but it can't
+update \scalainline{T}s.)
+
+As a rule of thumb, almost any immutable data structure can be made
+covariant, which makes it more flexible. E.g., we can a \scalainline{Set[Cat]}
+where a \scalainline{Set[Animal]} is expected or a \scalainline{List[Dog]}
+where a \scalainline{List[Animal]} is expected.
+
+In fact, the list type in Scala is covariant:
+%
+\begin{scalacode}
+sealed trait List[+A]
+\end{scalacode}
+Cons is easy to define as follows:
+\begin{scalacode}
+case class ::[A](head: A, tail: List[A]) extends List[A]
+\end{scalacode}
+However, the definition of \scalainline{Nil} is trickier. If it were a case-class,
+we could write:
+\begin{scalacode}
+case class Nil[A]() extends List[A]
+\end{scalacode}
+However, recall that \scalainline{Nil} is a case-object. So, we may try to
+write this:
+\begin{scalacode}
+case object Nil[A] extends List[A]
+\end{scalacode}
+However, objects can't have type parameters (or any parameters for that matter).
+
+As discussed earlier, Scala has a special type \scalainline{Nothing} that has no values
+and is the subtype of all other types: i.e.,
+\scalainline{Nothing <: A}. Therefore, by covariance of lists, \scalainline{List[Nil] <: List[A]}, so
+we can write:
+\begin{scalacode}
+case object Nil extends List[Nothing]
+\end{scalacode}
+Although there a no values of type \scalainline{Nothing}, an empty list of
+of type \scalainline{List[A]} doesn't contain any values of type \scalainline{A}.
+Therefore, the \scalainline{Nil} object can be given the type \scalainline{List[Nothing]}.
+
+\chapter{Variance and Method Arguments}
+\savepdf{variance-2}
+
+\begin{instructor}
+
+\section*{Lecture Outline}
+\classtime{15}
+
+\begin{enumerate}
+
+  \item Recap:
+\begin{itemize}
+  
+  \item The notation \scalainline{A <: B}.
+  \item \emph{Invariance}: typically \scalainline{A <: B} does not imply that \scalainline{Container[A] <: Container[B]}, because the container may have a method that writes to a value of type A.
+  \item \emph{Covariance}: If the class is annotated \scalainline{Container[+T]}, then the type-checker ensures we can't write to values of type \scalainline{T} within the class.
+  \item Traits can take type parameters too, just like classes. When we extend a trait, we need to supply the type parameters.
+  \item Bounded quantification: The type parameter\scalainline{C[A]} means that \scalainline{A} could be any type. We can write \scalainline{C[A <: B]} to restrict it to types that extend \scalainline{B}, which allows us to invoke \scalainline{B}-methods on values of type \scalainline{A}.
+\end{itemize}
+
+\item Define hierarchy with \lstinline|Dog| and \lstinline|Poodle|. Poodles should have a \lstinline|bite| method
+  that dogs do not.
+
+\item Define container of two objects \lstinline|class Two[+T](x: T, y: T)|, thus \lstinline|Two[A] <: Two[B]| if \lstinline|A <: B|.
+
+\item Add functional update operations, \emph{but do not compile}.
+
+\item This code fragment would go wrong:
+
+\begin{lstlisting}
+def storeDog[A <: Two[Dog]](x: A): A = x.update1(new Dog)
+val twoPoodles = new Two[Poodle](new Poodle(), new Poodle())
+val aPoodle = storeDog(twoPoodles).get1() // Produces a Dog, not a Poodle!
+aPoodle.bite() // Crash! Dogs don't have a .bite() method.
+\end{lstlisting}
+
+\item The problem is that when a \lstinline|Two[A]| is treated as a
+  \lstinline|Two[B]| (where A <: B), we can update the container to
+  store a B, which breaks code that expects A-typed values.
+
+\item Solution:
+
+  \begin{lstlisting}
+    def update1[S >: T](newX: T): Two[S] = new Two(newX, y)
+  \end{lstlisting}
+
+  Reason through the types when updating with a Dog or a Poodle.
+
+\item The same problem exists with list-append.
+
+\item A model of type-checking:
+
+  \begin{itemize}
+
+  \item Define AST for numbers, booleans, and let-binding (called EVal). Include pretty-printer.
+  \item Define types: ints and bools
+  \item Define a type-checker without an environment.
+  \item Add the environment.     
+
+  \end{itemize}
+
+\end{enumerate}
+\end{instructor}
+
+\section{Variance and method arguments\classtime{20}}
+
+Earlier, we wrote the simplest container we could imagine that only stored
+a single value. The following container slightly more sophisticated, because
+it can store two values:
+\begin{scalacode}
+class Two[+T](private val x: T, private val y: T) {
+  def get1(): T = x
+  def get2(): T = y
+}
+\end{scalacode}
+This container uses a covariance annotation, so when \scalainline{A <: B},
+we have \scalainline{Two[A] <: Two[B]}. Recall that the
+intuition for subtyping is that \scalainline{Two[A]} can be used
+wherever a \scalainline{Two[B]} is expected. Now, suppose we modify the class to
+add functional update methods:
+\begin{scalacode}
+class Two[+T](private val x: T, private val y: T) {
+  ...
+  def update1(newX: T): Two[T] = new Two(newX, y)
+  def update2(newY: T): Two[T] = new Two(x, newY)
+}
+\end{scalacode}
+This is a natural operation on containers and we should be able to write it.
+But, let's ensure that even with this operation, \scalainline{Two[A]} can
+be used whenever a \scalainline{Two[B]} is expected.
+
+Concretely, consider the following two classes:
+\begin{scalacode}
+class Dog {
+  def makeSound(): String = "woof"
+}
+
+class Poodle extends Dog {
+  def bite(): String = "nip"
+}
+\end{scalacode}
+
+We should be able to use a \scalainline{Two[Poodle]} in all contexts where
+a \scalainline{Two[Dog]} is expected.
+
+
+Consider the following function, which simply updates a container to
+store a \scalainline{Dog}:
+\begin{scalacode}
+def storeDog[A <: Two[Dog]](x: A): A = x.update1(new Dog)
+\end{scalacode}
+However, it uses bounded-quantification to any subtype of
+\scalainline{Two[Dog]}. Therefore, we can apply it to a \scalainline{Poodle}
+container and know that the result is still a \scalainline{Poodle}
+container. Of course, this isn't true, since the function stores
+a \scalainline{Dog}. Therefore, the following code goes wrong:
+\begin{scalacode}
+val twoPoodles = new Two[Poodle](new Poodle(), new Poodle())
+val aPoodle = storeDog(twoPoodles).get1() // Produces a Dog, not a Poodle!
+aPoodle.bite() // Crash! Dogs don't have a .bite() method.
+\end{scalacode}
+
+Naturally, Scala (and Java) won't allow this to happen. In general, when
+a class has a covariant type parameter \scalainline{T}, its methods can
+produce values of type \scalainline{T}, but methods' arguments cannot consume
+values of type \scalainline{T} (because of the error described above). Therefore, the type-checker
+will not allow us to write the update methods, because they use
+a covariant type parameter as the type of a method argument.
+
+\paragraph{A solution}
+The problem with the code above is that when a \scalainline{Two[A]}
+is treated as a \scalainline{Two[B]}, we can update the container to
+store any \scalainline{B}-typed value, which then breaks code that expects
+\scalainline{A}-typed values. Instead, we need to ensure that we can only store
+subtypes of \scalainline{A} in the container. We can express this constraint
+using bounded-quantification:
+
+\begin{scalacode}
+class Two[+T](private val x: T, private val y: T) {
+  ...
+  def update1[S >: T](newX: T): Two[S] = new Two(newX, y)
+  def update2[S >: T](newY: T): Two[S] = new Two(x, newY)
+}
+\end{scalacode}
+This version of the class does type-check.
+
+If we have a Poodle-container:
+\begin{scalacode}
+val x = new Two[Poodle](new Poodle, new Poodle)
+\end{scalacode}
+And we update one of the poodles:
+\begin{scalacode}
+x.update1[Poodle](new Poodle)
+\end{scalacode}
+The type-parameter \scalainline{S} is bound to the type \scalainline{Poodle},
+so the return type is \scalainline{Two[Poodle]}. However, we can also
+update the the container with a \scalainline{Dog}:
+\begin{scalacode}
+x.update1[Dog](new Dog)
+\end{scalacode}
+However, in this case, the return type is \scalainline{Two[Dog]} (although one
+of the dogs is a poodle).
+
+\paragraph{Appending Lists}
+A similar problem arises with list concatenation. Since lists are covariant,
+they cannot have an append method with this type:
+\begin{scalacode}
+sealed trait List[A] {
+  def append[A](other: List[A]): List[A] = ...
+  ...
+}
+\end{scalacode}
+
+However, we can use the same trick we used above to write an append
+method with the following type:
+
+\begin{scalacode}
+sealed trait List[A] {
+  def append[B :> A](other: List[B]): List[B] = alist match {
+    case Nil => Nil
+    case hd :: tl => hd :: tl.append(other)
+  }
+  ...
+}
+\end{scalacode}
+
+\section{A Model of Type-Checking\classtime{40}}
+
+\begin{figure}
+\scalafile{includes/ScalaFragment.scala}
+\caption{A subset of Scala expressions}\label{scalafragment}
+\end{figure}
+
+\begin{instructor}
+This section is quite rough. I'd start by getting students to derive the expression data-structure from examples.
+\end{instructor}
+
+
+To understand generics, we've had to develop an intuition for how the Scala
+type-checker works. A deep understanding of the Scala (or Java) type system is
+beyond the scope of this class. However, it is important to have a reasonably
+accurate mental model of type-checking to understand and debug type-errors.
+
+\Cref{scalafragment} is a data structure that represents a fragment of
+Scala expressions, including numbers, boolean, addition, the less-than operator,
+if-expressions, and identifiers (bound with \scalainline{val}). Since
+the only values in this fragment are integers and booleans, we can represent
+types as follows:
+
+\begin{scalacode}
+sealed trait Type
+case object TInt extends Type
+case object TBool extends Type
+\end{scalacode}
+
+Ignoring identifiers, we can write a simple recursive function to type-check
+programs in this fragment, as shown in \cref{simpletc}.
+
+\begin{figure}
+\begin{scalacode}
+object TypeError extends RuntimeException("Type error")
+
+object TypeChecker {
+
+  def tc(expr: Expr): Type = expr match {
+    case EInt(_) => TInt
+    case EBool(_) => TBool
+    case EAdd(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TInt
+      case _ => throw TypeError
+    }
+    case ELT(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TBool
+      case _ => throw TypeError
+    }
+    case EIf(e1, e2, e3) => (tc(e1), tc(e2), tc(e3)) match {
+      case (TBool, t1, t2) if (t1 == t2) => t1
+      case _ => throw TypeError
+    }
+  }
+}
+\end{scalacode}
+\caption{Type-checking, excluding identifiers}\label{simpletc}
+\end{figure}
+
+Type-checking identifiers is a little trickier. When we see an identifier,
+there is way to determine its type, unless we remember the type
+of the expression it was bound to. Therefore, we need an auxiliary
+parameter, known as the environment, to ``remember'' the type of identifiers
+so that we can recall them later (\cref{tcid}).
+
+\begin{figure}
+\begin{scalacode}
+object TypeChecker {
+  def tc(env: Map[String, Type], expr: Expr): Type = expr match {
+    case EInt(_) => TInt
+    case EBool(_) => TBool
+    case EAdd(e1, e2) => (tc(env, e1), tc(env, e2)) match {
+      case (TInt, TInt) => TInt
+      case _ => throw TypeError
+    }
+    case ELT(e1, e2) => (tc(env, e1), tc(env, e2)) match {
+      case (TInt, TInt) => TBool
+      case _ => throw TypeError
+    }
+    case EIf(e1, e2, e3) => (tc(env, e1), tc(env, e2), tc(env, e3)) match {
+      case (TBool, t1, t2) if (t1 == t2) => t1
+      case _ => throw TypeError
+    }
+    case EVal(x, e1, e2) => tc(env + (x -> tc(env, e1)), e2)
+    case EId(x) => env.getOrElse(x, throw TypeError)
+  }
+}
+\end{scalacode}
+\caption{Type-checking identifiers.}\label{tcid}
+\end{figure}
+
+The actual Scala type-checker is vastly more complicated. But, it follows
+this basic design.
+
+
+\chapter{Lecture: Generators}
+\savepdf{generators}
+
+\section{The \emph{Same Fringe} Problem}
+
+
+
+\begin{figure}
+\begin{scalacode}
+def fringe[A](t: BinTree[A]): List[A] = t match { case Leaf(x) =>
+  List(x) case Node(lhs, rhs) => fringe(lhs) ++ fringe(rhs) }
+\end{scalacode}
+\caption{Recursively calculating the fringe of a binary tree.}
+\label{fringeRec}
+\end{figure}
+
+Given a binary tree:
+
+\begin{scalacode}
+sealed trait BinTree[+A]
+case class Node[A](lhs: BinTree[A], rhs: BinTree[A]) extends BinTree[A]
+case class Leaf[A](x: A) extends BinTree[A]
+\end{scalacode}
+
+The \emph{fringe} of a binary tree are the values in left-to-right order. For
+example, the fringe of the following tree:
+\begin{scalacode}
+val t1 = Node(Leaf(10), Node(Leaf(20), Leaf(40)))
+\end{scalacode}
+is $10$, $20$, and $40$, in that order. The \emph{same-fringe problem} is to write
+a function to determine if two trees have the same fringe. For
+example the following tree:
+%
+\begin{scalacode}
+val t2 = Node(Node(Leaf(10), Leaf(20)), Leaf(40))
+\end{scalacode}
+Has the same fringe as \scalainline{t1}.
+
+We can write a simple recursive function to calculate the fringe of a tree,
+as shown in \cref{fringeRec}, so a simple solution to the same-fringe problem
+is:
+\begin{scalacode}
+fringe(t1) == fringe(t2)
+\end{scalacode}
+
+But, this is not a very efficient solution:
+\begin{itemize}
+
+  \item If the trees are very large, we'll spend a lot of time appending
+  lists, and
+
+  \item If the fringes are different, we'll generate the entire fringe instead
+  of terminating as soon as a difference is detected.
+
+\end{itemize}
+
+\section{An Imperative Solution}
+
+\begin{figure}
+\begin{scalacode}
+class FringeIterator[A](tree: BinTree[A]) extends Iterator[A] {
+  private val stack = collection.mutable.Stack(tree)
+  def hasNext = stack.isEmpty
+  def next() = {
+    val top = stack.pop()
+    top match {
+      case Leaf(x) => x
+      case Node(lhs, rhs) => { stack.push(rhs); stack.push(lhs); next() }
+    }
+  }
+}
+
+def sameFringe[A](t1: BinTree[A], t2: BinTree[A]): Boolean = {
+  val iter1 = new FringeIterator(t1)
+  val iter2 = new FringeIterator(t2)
+  while (iter1.hasNext && iter2.hasNext) {
+    val x = iter1.next
+    val y = iter2.next
+    if (x != y) {
+      return false
+    }
+  }
+  return !iter1.hasNext && !iter2.hasNext
+}
+\end{scalacode}
+\caption{An imperative solution.}
+\label{samefringe_imperative}
+\end{figure}
+
+A typical Java solution to this problem, which is straightforward to
+reproduce in Scala, is to use an iterator. You've seen simple
+iterators for lists and arrays before.  You can also write an iterator
+that iterates over the fringe of a tree.  The key idea is this:
+before we descend into the left-hand side of a node to generate its
+fringe, we need to store the right-hand side of the node in a variable so that
+we don't forget to generate its fringe. Since the tree may be arbitrarily deep, we
+may need to remember a stack of nodes.
+
+\begin{think}
+What would happen if we used a queue of nodes?
+\end{think}
+
+An iterator that uses this idea is shown in \cref{samefringe_imperative} along with a
+solution to the same-fringe problem that doesn't have the two issues we identified
+above. An unusual feature of this solution is that it uses two iterators simultaneously
+in a single loop.
+
+What's interesting about this problem is that the solution seems to be fundamentally
+imperative. In particular, each invocaation of \verb|.next| returns the next value, which
+means that the iterators \emph{must} use mutable state internally. Is it possible to solve
+this problem without state?
+
+\begin{think}
+  Try to solve the problem before proceeding further.
+\end{think}
+
+\section{By-Name Arguments}
+
+\begin{figure}
+\begin{scalacode}
+def g(): Int = {
+  println("Evaluating g")
+  10
+}
+
+def f1(x: Int) = {
+  println("Evaluating f1")
+  x + 10
+}
+f1(g())
+\end{scalacode}
+\caption{Which line prints first?}
+\label{evalorder1}
+\end{figure}
+
+When you apply a function in Scala (and in most other programming languages), the argument
+of the function is first reduced to a value and then that value is passed to the function.
+For example, in \scalainline{f(2 + 3)}, the expression \scalainline{2 + 3} is first reduced
+to the value \scalainline{5} and then \scalainline{f(5)} is applied.
+
+\begin{think}
+  Is the statement above true? Can you think of a way to experimentally validate the
+  claim that arguments are reduced to values before they are passed to functions?
+ \end{think}
+
+Consider the two functions in \cref{evalorder1} and the expression
+\scalainline{f1(g())}.  If the argument is evaluated first, then
+``Evaluating g'' will print before ``evaluating f''. Conversely, if
+the expression \scalainline{g()} is passed to \scalainline{f1} unevaluated
+and only evaluated when it is needed, then we'd expect the lines to print in the opposite
+order. If you try this out, you'll find that the former is true, thus validating the
+claim.
+
+However, Scala allows you to change the order of evaluation.
+In the following function, the \scalainline{=>} annotation means that the argument
+is only evaluated when it is \emph{needed}:
+\begin{scalacode}
+def f2(x: => Int) = {
+  println("Evaluating f2")
+  x + 10
+}
+\end{scalacode}
+Therefore, the expression \scalainline{f2(g())} prints ``Evaluating f2'' before it prints
+``Evaluating g'', since the value of \scalainline{g()} is not needed until after
+``Evaluating f2'' is printed.
+
+The following function ignores its argument:
+\begin{scalacode}
+def f3(x: => Int) = {
+  println("Evaluating f3")
+  10
+}
+\end{scalacode}
+
+Therefore, \scalainline{f3(g())} does not evaluate \scalainline{g()}
+at all, so ``Evaluating g'' is not printed. In fact, you can even
+write \scalainline{f3(throw new Exception("bad"))} and the exception
+will not be thrown.
+
+By-name arguments have several applications and are used extensively in the
+Scala standard library. For example, Scala maps have a \scalainline{.get} method
+that optionally returns a value stored in a map:
+\begin{scalacode}
+val m = Map("X" -> 1 )
+val v = m.get(key) // produces Some(1) if key is "X", otherwise None
+val v2 = m.get("Z") // produces None
+\end{scalacode}
+Suppose we were using maps in a program and that we wanted to return a default value 0
+instead of \scalainline{None}. We could write:
+\begin{scalacode}
+m.get(key) match {
+  case Some(v) => v
+  case None => 0
+}
+\end{scalacode}
+Alternatively, we could simply write \scalainline{m.getOrElse(key, 0)}. It turns out
+that the second argument of this method is a by-name argument. Therefore, we can
+write \scalainline{m.getOrElse(key, f())} and be assured that \scalainline{f} will not
+be applied unless it is needed. It is safe to write, even if \scalainline{f()} is
+an expensive computation that should only be run if \scalainline{key} is not
+in the map. We could even write \scalainline{m.getOrElse(key, throw new Exception(...))}
+to throw a custom exception if \scalainline{key} is not found.
+
+\section{Functional Generators}
+
+The reason that iterators cannot be functional is evident in the type for iterators. The
+\verb|Iterator<T>| interface is part of the Java standard library and it corresponds to
+the following Scala trait:
+\begin{scalacode}
+trait Iterator[T] {
+  def hasNext(): Boolean
+  def next(): T
+  def remove(): Unit // not relevant for our discussion
+}
+\end{scalacode}
+Recall that a key property of functional programs is that a function (or method) always produces
+the same result when applies to the same arguments. In this interface, the \scalainline{next()} method
+takes zero arguments. Therefore, if an implementation of \scalainline{Iterator[T]} were written
+functionally, it could only ever produce one result.
+
+To allow functional programming to work, we're going to have to work with a new kind of iterator,
+which we'll call a \emph{generator}, where the \scalainline{next} method produces the next value
+and \emph{a new generator that generates the rest of the collection}:
+%
+\begin{scalacode}
+trait Generator[T] {
+  def hasNext(): Boolean
+  def next(): (T, Generator[T])
+}
+\end{scalacode}
+
+An important detail of iterators that isn't obvious from the type, is that the \scalainline{next} method
+will throw an exception if \scalainline{hasNext} produces \scalainline{false}.  Instead of throwing an exception,
+we can make this behavior manifest in the type, by eliminating \scalainline{hasNext} method and changing the type
+of \scalainline{next} to optionally produce an element and a generator.
+%
+\begin{scalacode}
+trait Generator[T] {
+  def next(): Option[(T, Generator[T])]
+}
+\end{scalacode}
+
+We can now write some a functional generator. For example, here is a generator that produces three numbers:
+\begin{scalacode}
+val agen = new Generator[Int] {
+  def next() = Some((1, new Generator[Int] {
+                          def next() = Some((2, new Generator[Int] {
+                                                 def next() = Some((3, new Generator[Int] {
+                                                                        def next() = None
+                                                                       }))
+                                                }))
+                        }))
+}
+\end{scalacode}
+
+Here is a simple function that prints all the elements generated by any generator, including the
+one above:
+\begin{scalacode}
+def printAll[T](gen: Generator[T]): Unit = gen.next() match {
+  case None => ()
+  case Some((x, rest)) => println(x); printAll(rest)
+}
+\end{scalacode}
+
+\paragraph{Combining Generators} You probably agree that the definition of \scalainline{agen} is 
+too unwieldy. To make generators easier to write, we are going to define three generator building
+functions:
+
+\begin{enumerate}
+
+  \item The function \scalainline{zero[T]()} produces a generator that generates zero values of type \scalainline{T}:
+
+  \begin{scalacode}
+  def zero[T](): Generator[T] = new Generator[T] { def next() = None }
+  \end{scalacode}
+
+  \item The function \scalainline{one(x)} produces a generator that only generates the value \scalainline{x}:
+
+  \begin{scalacode}
+  def one[T](x: T): Generator[T] = new Generator[T] { def next() = Some((x, zero[T]())) }
+  \end{scalacode}
+
+  \item The function \scalainline{append(gen1, gen2)} takes two generators as arguments and first generates the
+  values of \scalainline{gen1} and then the values of \scalainline{gen2}. Furthermore, to avoid generating values
+  we don't need, the arguments are passed by-name:
+
+\begin{scalacode}
+def append[T](gen1: => Generator[T], gen2: => Generator[T]): Generator[T] = new Generator[T] { 
+  def next() = gen1.next match {
+    case None => gen2.next
+    case Some((x, gen1Rest)) => Some((x, append(gen1Rest, gen2)))
+  }
+}
+\end{scalacode}
+
+To make \scalainline{append} easier to use, we can modify the \scalainline{Generator[T]} trait to include an operator
+that invokes \scalainline{append}:
+\begin{scalacode}
+trait Generator[T] {
+  def next(): Option[(T, Generator[T])] // as before
+  def ++(other: => Generator[T]): Generator[T] = append(this, other)
+}
+\end{scalacode}
+
+\end{enumerate}
+
+Using these functions, we can write a generator that generates the fringe of a binary tree:
+%
+\begin{scalacode}
+def fringe[T](t: BinTree[T]): Generator[T] = t match {
+  case Leaf(x) => one(x)
+  case Node(lhs, rhs) => fringe(lhs) ++ fringe(rhs)
+}
+\end{scalacode}
+%
+Notice that it is very similar to the function that generates the fringe as a list. However, it behaves quite differently.
+Since the append (\scalainline{++}) operation evaluates its arguments only when needed, it doesn't immediately visit all the
+leaves of the tree, which was the problem with the original function.
+
+The following function takes two generators and produces \scalainline{true} if the  generate exactly the same values:
+\begin{scalacode}
+def sameGen[T](gen1: Generator[T], gen2: Generator[T]): Boolean = (gen1.next, gen2.next) match {
+  case (None, None) => true
+  case (Some((x, rest1)), Some((y, rest2))) => x == y && sameGen(rest1, rest2)
+  case _ => false
+}
+\end{scalacode}
+If the supplied generators only generate values on need, the \scalainline{sameGen} function will abort early and produce
+\scalainline{false} if (1) it  encounters two values \scalainline{x != y} or (2) one generator runs out of values before 
+the other. Notice that \scalainline{sameGen} has the exactly the same structure as the obvious recursive function that
+checks if two lists are equal.
+
+Finally, we can write the \scalainline{sameFringe} function that we wanted as follows:
+\begin{scalacode}
+def sameFringe[T](t1: BinTree[T], t2: BinTree[T]) = sameGen(fringe(t1), fringe(t2))
+\end{scalacode}
+
+\begin{think}
+How would you verify that this version of \scalainline{sameFringe} truly aborts early and doesn't incorrectly traverse both
+trees when it isn't necessary?
+\end{think}
+
+\paragraph{More Generators}
+
+It is staightforward to define other handy generator-building functions. For example, it is easy to define functions
+that are analogous to \scalainline{map}, \scalainline{filter}, and \scalainline{fold} for lists. You can even write
+a function to flatten a generator-generator into a simple generator:
+\begin{scalacode}
+def flatten[T](gen: Generator[Generator[T]]): Generator[T] = new Generator[T] {
+  def next() = gen.next match {
+    case None => None
+    case Some((x, rest)) => (x ++ flatten(rest)).next
+  }
+}
+\end{scalacode}
+
+\chapter{Lecture: Streams}
+\savepdf{streams}
+
+A \emph{stream} is a data structure that is very similar to a list. We write \lstinline|Stream.Empty| instead
+of \lstinline|Nil| to denote the empty stream, and we construct streams using \lstinline|#::| instead of
+\lstinline|::|. For example, the following expression is a stream of numbers 1, 2, 3:
+
+\begin{lstlisting}
+  1 #:: 2 #:: 3 #:: Stream.Empty
+\end{lstlisting}
+
+However, the crucial different between streams and lists is that the tail of a stream (i.e., the right-hand side
+of \lstinline|#::| is only evaluated when it is \emph{needed}. For example, the function in
+\cref{fromToL} produces a list a numbers and prints to the screen on each recursive call.
+If we evaluate \lstinline|fromToL(0, 100)|, we get a list of numbers and 100 lines of output
+since the entire list is created immediately.
+
+In contrast, the function \cref{fromToS} produces a
+stream of numbers. The expression \lstinline|val astream = fromToS(0, 100)| produces only one
+line of output. Instead, each time we evaluate \lstinline|astream.tail|, \lstinline|astream.tail.tail|,
+and so on, we get one additional line of output. However, evaluating \lstinline|astream.tail| a second
+time doesn't produce any output: i.e., the tail is not re-evaluated.
+
+\begin{figure}
+\begin{subfigure}{.45\textwidth}
+\begin{scalacode}
+def fromToL(m: Int, n: Int): List[Int] = {
+  println(s"within fromToL($m, $n)")
+  if (m > n)  Nil
+  else m :: fromToL(m + 1, n)
+}
+\end{scalacode}
+\caption{Generating a list of numbers.}\label{fromToL}
+\end{subfigure}
+  \quad
+  \vrule
+  \quad
+  \begin{subfigure}{.45\textwidth}
+\begin{scalacode}
+def fromToS(m: Int, n: Int): Stream[Int] = {
+  println(s"within fromToS($m, $n)")
+  if (m > n) Stream.Empty
+  else m #:: fromTo(m + 1, n)
+}
+
+\end{scalacode}
+\caption{Generating a stream of numbers.}\label{fromToS}
+  \end{subfigure}
+\end{figure}
+
+\section{Infinite Streams}
+
+We can exploit the fact that the tail is only evaluated when needed to create
+an infinite stream of numbers:
+
+\begin{scalacode}
+def from(n: Int): Stream[Int] = n #:: from(n + 1)
+
+val positives = from(1)
+\end{scalacode}
+
+This cannot be done with lists! Morever, the Scala console shows exactly what has
+been evaluated:
+
+\begin{console}
+scala> positives.tail.tail.tail.tail
+res2: scala.collection.immutable.Stream[Int] = Stream(5, ?)
+scala> positives
+res3: Stream[Int] = Stream(1, 2, 3, 4, 5, ?)
+\end{console}
+
+You can work with infinite streams freely, so long as you don't try to access
+all the values (your program won't halt--there are inifinitely many values).
+E.g., \lstinline|positives.length| does not terminate.
+
+
+\section{Stream Transformations}
+
+Streams have methods such as \lstinline|.map|, \lstinline|.filter|, \lstinline|.flatMap|, etc.
+just like lists. However, they also produce streams. For example, the following expression
+produces a stream of even numbers:
+
+\begin{scalacode}
+val evens = from(1).filter(n => n % 2 == 0)
+\end{scalacode}
+
+However, we have to careful when we use filter. If we filter an infinite stream with a
+predicate that matches none of the values in the stream, we will get an infinite loop.
+E.g., the following expression is an infinite loop:
+
+\begin{scalacode}
+  from(1).filter(n => n < 0)
+\end{scalacode}
+
+\section{Fibonnaci Numbers}
+
+The following code produces an infinite stream of fibonnaci numbers:
+
+\begin{scalacode}
+def nthFib(nPredPred: Stream[Int], nPred: Stream[Int]): Stream[Int] = {
+  (nPredPred.head + nPred.head) #:: nthFib(nPredPred.tail, nPred.tail)
+}
+
+val fibs: Stream[Int] = 0 #:: 1 #:: nthFib(fibs, fibs.tail)
+\end{scalacode}
+
+\chapter{Streams: Enumerating the Rationals}
+\savepdf{enumerating-rationals}
+
+In this lecture, we discussed two sophisticated uses of streams that are presented in the following
+article:
+
+\href{http://dl.acm.org/citation.cfm?id=1132893}{http://dl.acm.org/citation.cfm?id=1132893}
+
+If you're off-campus, you may not be able to access the article. (It will prompt you to buy it.) You can visit this address
+when you're connected to \emph{eduroam} or any other on-campus network to get the article for free. We only discussed Sections 1 and 2.
+
+The code from class is included below. It simply translates the code in the article to Scala
+
+\scalafile{code/Rationals.scala}
+
 \include{error_handling_discussion}
 
-\include{tictactoe_hw}
-
-\include{subtyping}
 \include{tictactoe_discussion}
 \include{bounded_quantification}
 \include{generics_hw}
 
-\include{variance_and_tc}
-
 \include{scalacheck}
-\input{samefringe}
 \input{nqueens}
 \input{gadts}
 
@@ -3314,8 +4385,6 @@ pick one style of programming limits the kinds of code re-use that are possible.
 
 \input{sudoku_discussion}
 
-\input{streams}
-\input{streams2}
 
 \input{regex}
 
@@ -4158,6 +5227,262 @@ val allBirths = CSVReader.fromFile("ssa-births.csv")
 
 \input{handin}
 
+\chapter{Project: Generalized Tic Tac Toe}
+\savepdf{project-tictactoe}
+
+For this assignment, you will write a program that given an $n \times n$
+tic-tac-toe board,
+determines which player will win, or if the game will be a draw.
+You're going to make significant use of Scala collections and learn the
+\emph{Minimax algorithm}, which is a form of \emph{backtracking search}.
+
+\section{Preliminaries}
+
+Using the command-line, run the following command:
+
+\begin{lstlisting}
+sbt new umass-compsci220/scala-tictactoe.g8
+\end{lstlisting}
+
+When prompted for a project name, press “Enter” to accept the default name.
+This will create a directory with the following contents:
+
+You should create a directory-tree that looks like this:
+
+\dirtree{%
+.1 ./scala-tictactoe.
+.2 build.sbt.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.
+.5 Main.scala\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala.
+.5 Tests.scala\DTcomment{Yours tests go here}.
+}
+
+\section{Representing a Tic Tac Toe Board}
+
+We assume you know how to play Tic Tac Toe. This section talks about
+the representation of tic-tac-toe boards that you will use. All
+the types mentioned below are in the \scalainline{hw.tictactoe} package.
+
+The \scalainline{sealed trait Player} has two constructors,
+\scalainline{O} and \scalainline{X}, that represent the
+two players.
+
+A typical $3 \times 3$ board can be thought of as a $3 \times 3$ matrix,
+where $(0, 0)$ is
+the coordinate of the top-left corner and $(2,2)$ is the coordinate of
+the bottom-right corner:
+
+\begin{tikzpicture}
+\draw[step=1cm,black,very thin] (0,0) grid (3,3);
+\node at (0.5,0.5) {$(0, 2)$};
+\node at (1.5,0.5) {$(1, 2)$};
+\node at (2.5,0.5) {$(2, 2)$};
+\node at (0.5,1.5) {$(0, 1)$};
+\node at (1.5,1.5) {$(1, 1)$};
+\node at (2.5,1.5) {$(2, 1)$};
+\node at (0.5,2.5) {$(0, 0)$};
+\node at (1.5,2.5) {$(1, 0)$};
+\node at (2.5,2.5) {$(2, 0)$};
+\end{tikzpicture}
+
+The \scalainline{Solution.createGame} function, which you need to implement,
+takes as input the player who makes the first move, the
+value $n$ that specifies the dimensions of the board, and a map from coordinates to \scalainline{Player}s
+that indicates where the pieces are.
+
+For example:
+
+\begin{itemize}
+
+  \item In generalized tic-tac-toe, either player may make the first move.
+  Therefore, given an empty board:
+
+  \begin{tikzpicture}
+  \draw[step=1cm,black,very thin] (0,0) grid (3,3);
+  \end{tikzpicture}
+
+  We can call the function in two ways:
+
+  \begin{scalacode}
+  Solution.createGame(O, 3, Map())
+  Solution.createGame(X, 3, Map())
+  \end{scalacode}
+
+\item This board:
+
+\begin{tikzpicture}
+\draw[step=1cm,black,very thin] (0,0) grid (3,3);
+\node (a) at (2.5,0.5) {\textsf{O}};
+\node (b) at (0.5,2.5) {\textsf{X}};
+\end{tikzpicture}
+
+Can be represented as:
+\begin{scalacode}
+Solution.createGame(X, 3, Map((0, 0) -> X, (2, 2) -> O))
+\end{scalacode}
+Alternatively, we could have O make the next move.
+
+\item This board:
+
+\begin{tikzpicture}
+\draw[step=1cm,black,very thin] (0,0) grid (3,3);
+\node (a) at (0.5,0.5) {\textsf{X}};
+\node (b) at (0.5,2.5) {\textsf{X}};
+\node (c) at (2.5,.5) {\textsf{O}};
+\end{tikzpicture}
+
+Can be represented as:
+\begin{scalacode}
+Solution.createGame(X, 3, Map((0, 0) -> X, (0, 2) -> X, (2, 2) -> O))
+\end{scalacode}
+Alternatively, we could have O make the next move.
+
+\item This board, which is $4 \times 4$:
+
+\begin{tikzpicture}
+\draw[step=1cm,black,very thin] (0,0) grid (4,4);
+\node (a) at (0.5,3.5) {\textsf{X}};
+\node (b) at (2.5,1.5) {\textsf{O}};
+\node (c) at (3.5, 0.5) {\textsf{X}};
+\end{tikzpicture}
+
+Can be represented as:
+\begin{scalacode}
+Solution.createGame(O, 4, Map((0, 0) -> X, (2, 2) -> O, (3, 3) -> X))
+\end{scalacode}
+Alternatively, we could have X start first too.
+
+\end{itemize}
+
+\section{The Minimax Algorithm}
+
+\emph{Minimax} is an algorithm to determine who will win (or draw)
+a two-player game, if both players are playing perfectly. To do so, Minimax
+searches all possible game-states that are reachable from a given inital
+state. Here is an outline of a recursive implementation of Minimax:
+
+\begin{scalacode}
+def minimax(game: Game): Option[Player] = {
+
+  /*
+  If it is Xs turn:
+
+    1. If X has won the game, return Some(X).
+    2. If the game is a draw, return None. (If all squares are filled
+       and nobody has won, then the game is a draw. However, you are
+       free to detect a draw earlier, if you wish.)
+    3. Recursively apply minimax to all the successor states of game
+       - If any recursive call produces X, return Some(X)
+       - Or, if any recursive call produces None, return None
+       - Or, return Some(O)
+
+  The case for Os turn is similar.
+  */
+
+}
+\end{scalacode}
+
+You can find several other descriptions of Minimax on the Web. But, Minimax
+ is a very straightforward function to write, if you follow the programming directions below
+and implement (and test) everything leading up to Minimax.
+
+\section{Programming Task}
+
+Your task is to implement a representation of boards, by implementing
+the \scalainline{GameLike} trait, provided in the template code.
+Your code must be able to implement arbitrary $n \times n$ boards for
+all $n > 2$. However, your implementation of the Minimax algorithm
+(the \scalainline{MinimaxLike} trait) only needs to be fast enough for
+ $n \le 4$.\footnote{If you want to do better, lookup \emph{alpha-beta pruning} on the web.}
+
+I recommend proceeding in the following way, using
+\texttt{Solution.scala} as a template:
+
+\begin{enumerate}
+
+\item
+   Add fields to the \scalainline{Game} class to represent the state of the game and
+   fill in the body of the \scalainline{Solution.createGame(turn, dim, board)} function.
+   You may assume that \scalainline{dim >= 2} and that all the pieces described
+   in \scalainline{board} are within bounds. However, \emph{The board may be in an
+   arbitrary, even illegal state}. For example, the board may have seven Xs.
+   Similarly, the \scalainline{turn} could be either X or O.
+
+
+\item Implement the \scalainline{Game.isFinished} method. This method
+  should produce \scalainline{true} when there are $n$ Xs or Os in a row
+  or the game ends in a draw.
+
+
+\item Implement the \scalainline{getWinner} method.
+
+\item Implement the \scalainline{nextBoards} method, which returns a list of
+   boards that represent all the moves the next player could make.
+
+   For example, if the current board looks like this:
+
+\begin{tikzpicture}
+\draw[step=1cm,black,very thin] (0,0) grid (3,3);
+\node at (0.5,0.5) {\textsf{X}};
+\node at (1.5,0.5) {\textsf{O}};
+\node at (2.5,0.5) {\textsf{O}};
+\node at (1.5,1.5) {\textsf{O}};
+\node at (0.5,2.5) {\textsf{X}};
+\node at (1.5,2.5) {\textsf{X}};
+\end{tikzpicture}
+
+And if it is \emph{O}'s turn, then these are the three possible next boards:
+
+\begin{tikzpicture}
+\draw[step=1cm,black,very thin] (0,0) grid (3,3);
+\node at (0.5,0.5) {\textsf{X}};
+\node at (1.5,0.5) {\textsf{O}};
+\node at (2.5,0.5) {\textsf{O}};
+\node at (0.5,1.5) {\textsf{O}};
+\node at (1.5,1.5) {\textsf{O}};
+\node at (0.5,2.5) {\textsf{X}};
+\node at (1.5,2.5) {\textsf{X}};
+\end{tikzpicture}
+\quad
+\begin{tikzpicture}
+\draw[step=1cm,black,very thin] (0,0) grid (3,3);
+\node at (0.5,0.5) {\textsf{X}};
+\node at (1.5,0.5) {\textsf{O}};
+\node at (2.5,0.5) {\textsf{O}};
+\node at (1.5,1.5) {\textsf{O}};
+\node at (2.5,1.5) {\textsf{O}};
+\node at (0.5,2.5) {\textsf{X}};
+\node at (1.5,2.5) {\textsf{X}};
+\end{tikzpicture}
+\quad
+\begin{tikzpicture}
+\draw[step=1cm,black,very thin] (0,0) grid (3,3);
+\node at (0.5,0.5) {\textsf{X}};
+\node at (1.5,0.5) {\textsf{O}};
+\node at (2.5,0.5) {\textsf{O}};
+\node at (1.5,1.5) {\textsf{O}};
+\node at (0.5,2.5) {\textsf{X}};
+\node at (1.5,2.5) {\textsf{X}};
+\node at (2.5,2.5) {\textsf{O}};
+\end{tikzpicture}
+
+\item\textbf{(Not Graded.)} Minimax is too slow to solve boards larger than
+$4 \times 4$. Look up \emph{alpha-beta pruning} and implement it instead
+of Minimax.
+
+\end{enumerate}
+
+As you implement each successive step, you may need to revisit design
+decisisions you made earlier.
+
+\input{handin}
+
 
 \appendix
 
@@ -4546,6 +5871,155 @@ def makePoint(x: Double, y: Double): Point = ...
     anticipate needing to make. What if you want to do both? You're screwed!
 
 \end{enumerate}
+
+\chapter{Lesson Plan: Subtyping}
+\savepdf{instructor-subtyping}
+
+\begin{itemize}
+
+  \item Show singleton pattern in Java and then in Scala.
+  \item Show case objects, using \lstinline|Leaf| of a binary tree as an example.
+  \item Introduce $A <: B$ notation.
+  \item Intuition: the subtype can add more behavior, but cannot contradict or remove behavior.
+  \item Example hierarchy: \lstinline|Animal| with \lstinline|sound| method. \lstinline|Dog extends Animal| and defines \lstinline|bite|.
+    \lstinline|Cat extends Animal| and defines \lstinline|scratch|. \lstinline|Poodle extends Dog| and overrides \lstinline|sound|.
+  \item Write out several subtyping relations and give examples of programs that do not typecheck.
+  \item Introduce the \lstinline|Any| and \lstinline|Nothing| types and their relationship to all other types.
+  \item Introduce a generic container with a single cell and get/set methods.
+  \item Cannot stores cats in a \lstinline|C[Dog]|, since we may try to extract and \lstinline|.bite|.
+  \item Cannot pass a \lstinline|C[Dog]| to a function that expects a \lstinline|C[Animal]|.
+  \item We are going to do \emph{declarative-site variance}.
+  \item Show that a Scala list of dogs can be treated as a list of animals.
+  \item Introduce the co-variance annotation: \lstinline|+T|. This makes the setter untypable.
+  \item Define the \lstinline|List| type in the right way with \lstinline|Nil| as a case object.
+  \end{itemize}
+
+\chapter{Lesson Plan: Streams}
+\savepdf{instructor-streams}
+
+Note that we don't have any assignment that requires
+streams. Apparently, Programming in Scala 2nd ed. doesn't mention
+streams at all.
+   
+\section*{Lecture Outline}
+
+\begin{enumerate}
+
+\item Show the function \lstinline|def fromTo(m: Int, n: Int): Stream[Int]|
+  with \lstinline|println|s in the body to show that the body is only evaluated
+  on need. Constrast to \lstinline|def fromTo(m: Int, n: Int): List[Int]|.
+
+\item Show the function \lstinline|def from(n: Int): Stream[Int]| and use
+  it to define a stream of positive numbers.
+
+\item Define \lstinline|def nthFib(nPredPred: Stream[Int], nPred: Stream[Int]): Stream[Int]|.
+
+\item Show stream combinators, such as map, filter, etc.
+
+\item Show that filter can produce an infinite loop if nothing in the stream
+  matches the predicate.
+
+\item Generate all elements from an infinite stream by interleaving.
+
+\end{enumerate}
+
+
+\chapter{Lesson Plan: Enumerating the Rationals}
+\savepdf{instructor-enumerating-rationals}
+
+\begin{enumerate}
+
+\item We can use \lstinline|Stream.from(n)| to produce an infinite stream of integers.
+
+\item We can also produce an infinite stream of fractions:
+
+  \begin{lstlisting}
+  Stream.from(1).map(m => Stream.from(1).map(n => s"$m/$n")).flatten
+  \end{lstlisting}
+
+\item This stream starts with the sequence \lstinline|1/1|, \lstinline|1/2|, \lstinline|1/3|, etc.
+  so we will never reach \lstinline|2/1|.
+
+\item Draw a few rows of the table of fractions and show that we need to walk the diagonals.
+
+\item Intuition: don't flatten the stream of streams above by waiting for the first inner stream
+  to terminate. Instead, produce one element from the first stream, then one element from the
+  first two streams each, then one element from the first three streams each, and so on.
+
+  \begin{lstlisting}
+def diags[A](xss: Stream[Stream[A]], yss: Stream[Stream[A]]): Stream[A] = {
+  if (yss.isEmpty) xss.map(_.head) #::: diags(xss.map(_.tail), yss)
+  else xss.map(_.head) #::: diags(yss.head #:: xss.map(_.tail), yss.tail)
+}
+
+val rats1 = diags(Stream(), nats.map(m => nats.map(n => Rat(m, n))))
+  \end{lstlisting}
+
+\item Unfortunately, this produces repeated numbers!
+
+\item Enumerating the rationals directly produces duplicates. So, we
+  need to map rationals to some other object such that two equal rationals map to the
+  same object and enumerate those objects.
+
+\item Consider the GCD. Calculate GCD by hand for 3 equal rationals. Show that GCD is different
+  but operations are the same.
+
+\item Consider instrumented version of GCD that produces a trace:
+
+  \begin{lstlisting}
+    def igcd(m: Int, n: Int): (Int, List[Boolean]) = {
+      if (m < n) igcd(m, n - m).map { case (r, trace) => (r, false :: trace) }
+      else if (m > n) igcd(m - n, n).map { case (r, trace) => (r, true :: trace) }
+      else (m, Nil)
+    }
+  \end{lstlisting}
+
+  Two equal rationals always have the same trace (but different GCDs)
+
+\item We can invert the function
+
+  \begin{lstlisting}
+  def ungcd(r: Int, trace: List[Boolean]): (Int, Int) = trace match {
+    case Nil => (r, r)
+    case false :: rest => ungcd(r, rest).map { case (m, n) => (m, n + m) }
+    case true :: rest => ungcd(r, rest).map { case (m, n) => (m + n, n) }
+  }
+  \end{lstlisting}
+
+\item If we fix $r = 1$ (or any other value) and we enumerate boolean strings, it is easy to
+  solve the problem.
+
+\end{enumerate}
+
+
+\chapter{Lesson Plan: Generators}
+\savepdf{instructor-generators}
+  
+  \begin{enumerate}
+  
+  \item Define \lstinline|BinTree[+A]|.
+  
+  \item Define \lstinline|def fringe[A](atree: BinTree[A]): List[A]| and write \lstinline|sameFringe| naively. Explain what's wrong with it.
+  
+  \item Define \lstinline|class FringeIterator[A](atree: BinTree[A] extends Iterator[A]| and write \lstinline|sameFringe| efficiently.
+  
+  \item The problem seems fundamentally imperative, isn't it?
+  
+  \item Introduce by-name arguments, using \lstinline|println| to observe the order of operations.
+  
+  \item Define \lstinline|Generator[T]| with \lstinline|hasNext| and \lstinline|next| methods. Refactor \lstinline|next| to produce \lstinline|Option[(T, Generator[T])]|.
+  
+  \item Write a generator of three values manually.
+  
+  \item Introduce the functions \lstinline|zero|, \lstinline|one|, and \lstinline|append| (using by-name arguments).
+  
+  \item Add the \lstinline|++| method to \lstinline|Generator[T]|.
+  
+  \item Write the fringe-generator.
+  
+  \item Notice that the fringe generator looks a lot like the function that returns the fringe as a list!
+  
+  \end{enumerate}  
 
 \chapter{EOF}
 
