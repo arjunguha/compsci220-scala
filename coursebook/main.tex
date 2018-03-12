@@ -6557,7 +6557,99 @@ res0.asInstanceOf[(Int, Int, Int) => Int](1, 2, 3)
   and \lstinline|compile(e: Expr): List[Instruction]|
   
 \end{enumerate}
+
+\chapter{Lesson Plan: Shell Scripting and String Processing Combinators}
+\savepdf{instructor-shell-scripting}
+
+\chapter{Shell Scripting and Function Composition}
+\savepdf{shell-scripting-and-composition}
+
+\textbf{Required materials:} A Moodle sheet \emph{without grades}.
+
+\section{Shell Scripting}
+
+\begin{enumerate}
+
+  \item We will first take a small detour from Scala to learn basic
+\emph{shell scripting}. Shell scripts let you quickly automate repetitive tasks
+that frequently occur while programming. Therefore, knowing how to write shell
+scripts will make you a better programmer. Once we are done with shell
+scripting, we will study the design principles that underly shell scripting,
+known as \emph{combinators}, and see that they are applicable to a wide variety
+of problems.
+
+
+  \item Recap basic shell scripting functions, i.e., \lstinline|cd|, \lstinline|mkdir|, \lstinline|rm|, etc.
+
+  \item Review additional commands. i.e., \lstinline|cat|, \lstinline|uniq|,
+  \lstinline|uniq|, \lstinline|sort|, \lstinline|cut|, \lstinline|grep|,
+  \lstinline|paste| (similar to zip), \lstinline|head|, \lstinline|tail|.
+
+
+  \item Show redirecting output, \lstinline|ls > output.txt|.
+
+  \item show redirecting input \lstinline|sort < input.txt|
+
+  \item \emph{Example:} Suppose we want to sort \lstinline|moodle.csv| by name:
+
+  \begin{lstlisting}
+  sort -k 2 -t , ~/Downloads/moodle.csv
+  \end{lstlisting}
+
+  \item \emph{Example:} Support we want to get the first five names (in alphabetical)
+  order.
+
+
+  \begin{lstlisting}
+  sort -k 2 -t , ~/Downloads/moodle.csv > temp; head -n 5 tmp
+  \end{lstlisting}
+
+  alternatively
+
+  \begin{lstlisting}
+  sort -k 2 -t , ~/Downloads/moodle.csv | head -n 5
+  \end{lstlisting}
   
+
+  \item \emph{Example:} Getting student IDs out of \lstinline|moodle.csv|:
+
+  \begin{lstlisting}
+  cut -f 1 -d , | cut -f 2 -d ' '
+  \end{lstlisting}
+
+  
+  \item \emph{Example:} Creating directories for each student
+
+  \begin{lstlisting}
+  cut -f 1 -d , | cut -f 2 -d ' ' | xargs mkdir
+  \end{lstlisting}
+
+  \item Show an example of handling errors with $\|$.
+
+  \item Key operators: concatenate results, sequence operations, try one then
+  another.
+
+\end{enumerate}
+
+\section{Programming with Combinators}
+
+\textbf{See includes/streams}
+
+\begin{itemize}
+
+  \item Define a class for operations of type \lstinline|List[String] => Option[List[String]]|
+
+  \item Show that we can read all lines from a file using NIO
+
+  \item Define some atomic operations, filter, sort, head, tail, cut, uniq
+
+  \item Define higher-order operators: concatenation, sequence, orElse
+
+  \item \emph{Alternate design}: why not use objects, this way we can define
+  new operations.
+
+\end{itemize}
+
 \chapter{EOF}
 
 \end{document}
