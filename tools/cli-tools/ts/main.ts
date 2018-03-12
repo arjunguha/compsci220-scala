@@ -18,7 +18,7 @@ commander.command('extract')
 
 commander.command('overlay')
   .action((...args) => {
-    overlay.main('.');
+    overlay.main('.', args.slice(0, args.length - 1));
   });
 
 commander.command('upload-zips')

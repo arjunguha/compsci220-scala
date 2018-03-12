@@ -53,11 +53,6 @@ export async function main(reqData: RequestData) {
   const reqKey = requestKey(reqData);
   console.info(`(v3) Test ${reqData.testName} for ${reqData.jar}`);
 
-  if ((await ds.get(reqKey))[0] !== undefined) {
-    console.log(`Already tested.`);
-    return;
-  }
-
   const bucket = sto.bucket(reqData.bucket);
   const [file] = await bucket.file(reqData.jar).get();
   const [buf] = await file.download();
@@ -76,7 +71,7 @@ export async function main(reqData: RequestData) {
     if (result === null) {
       child.kill('SIGKILL');
     }
-    
+
     //const result = cp.spawnSync(javaPath, args, spawnOpts);
     console.info(`exited with code ${result}`);
 

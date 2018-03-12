@@ -1,0 +1,43 @@
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+\definecolor{kwcolor}{rgb}{0,0.4,0.2}
+\definecolor{commentcolor}{rgb}{0.0,0.3,0.6}
+
+\lstset{
+  showstringspaces=false,
+  keywordstyle=\color{kwcolor},
+  commentstyle=\color{commentcolor}
+}
+
+\lstdefinelanguage{console}{
+  basicstyle=\ttfamily\footnotesize,
+  mathescape=false,
+  breaklines=true,
+  keywordstyle=\color{blue},
+  morekeywords={student@vm,scala>},
+  alsoletter={:~$},
+  morekeywords=[2]{student@vm:},
+  keywordstyle=[2]{\color{red}},
+  literate={\$}{{\textcolor{red}{\$}}}1
+           {:}{{\textcolor{red}{:}}}1
+           {~}{{\textcolor{red}{\textasciitilde}}}1,
+}
+
+\lstdefinelanguage{scala}{
+  basicstyle=\ttfamily\footnotesize,
+  mathescape=false,
+  morekeywords={abstract,case,catch,class,def,%
+    do,else,extends,false,final,finally,%
+    for,if,implicit,import,match,mixin,%
+    new,null,object,override,package,%
+    private,protected,requires,return,sealed,%
+    super,this,throw,trait,true,try,%
+    type,val,var,while,with,yield},
+  otherkeywords={=>,<-,<\%,<:,>:,\#,@},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[n]{/*}{*/},
+  morestring=[b]",
+  morestring=[b]',
+  morestring=[b]"""
+}

@@ -7,11 +7,15 @@ import * as config from './config';
 
 const moodleSubmissionRegex = /^(?:[^_]*)_(\d+)_.*$/;
 
-export function main(dir: string) {
+export function main(dir: string, only: string[]) {
   fs.ensureDirSync(dir);
+  console.log(JSON.stringify(only));
   const overlay = processOverlays(config.overlay);
 
   for (const p of fs.readdirSync(dir)) {
+    if (only.length > 0 && !only.includes(p)) {
+      continue;
+    }
     const submissionDir = `${dir}/${p}`;
     if (fs.statSync(submissionDir).isDirectory()) {
       overlay(submissionDir);

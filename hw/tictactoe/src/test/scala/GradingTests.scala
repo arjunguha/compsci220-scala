@@ -1,30 +1,34 @@
-class GradingTestSuite extends org.scalatest.FunSuite {
+import hw.tictactoe._
+
+class GradingTests extends org.scalatest.FunSuite {
 
   import Solution._
 
   // for tic tac toe, these are whitespace characters that are ignored. They
   // let us write the board in 2D
-  val whitespaces = "|\n -".toList
+  val whitespaces = "|\n\r -".toList
 
   // A . indicates a blank square
   val validChars = "XO.".toList
 
-  def parse(str: String): Map[(Int, Int), Player] = {
+  def parse(str: String): (Map[(Int, Int), Player], Int) = {
     val lst = str.toList.filter(ch => !whitespaces.contains(ch))
-    require(lst.length == 9)
-    require(lst.forall(ch => validChars.contains(ch)))
-    val coords = for (y <- 0.to(2); x <-0.to(2)) yield { (x, y) }
-    coords.zip(lst).foldLeft(Map[(Int, Int), Player]()) {
+    val dim = math.sqrt(lst.length).toInt
+    require(dim >= 3, "dimension error")
+    require(lst.forall(ch => validChars.contains(ch)) , s"invalid characters in $lst")
+    val coords = for (y <- 0.until(dim); x <-0.until(dim)) yield { (x, y) }
+    val board = coords.zip(lst).foldLeft(Map[(Int, Int), Player]()) {
       case (matrix, ((x, y), 'X')) => matrix + ((x, y) -> X)
       case (matrix, ((x, y), 'O')) => matrix + ((x, y) -> O)
       case (matrix, ((x, y), '.')) => matrix
       case _ => sys.error("should never happen")
     }
+    (board, dim)
   }
 
   private def myCreateGame(str: String, turn: Player) = {
-    val b = parse(str)
-    createGame(turn, 3, b)
+    val (b, dim) = parse(str)
+    createGame(turn, dim, b)
   }
 
   test("Does isFinished produce true on a full board?") {
@@ -34,8 +38,13 @@ class GradingTestSuite extends org.scalatest.FunSuite {
     assert(b.isFinished)
   }
 
-  test("Does isFinished produce false on an empty board?") {
+  test("Does isFinished produce false on an empty 3x3 board?") {
     val b = myCreateGame(".........", X)
+    assert(!b.isFinished)
+  }
+
+  test("Does isFinished produce false on an empty 4x4 board?") {
+    val b = myCreateGame("." * 16, X)
     assert(!b.isFinished)
   }
 
@@ -60,10 +69,18 @@ class GradingTestSuite extends org.scalatest.FunSuite {
     assert(b.getWinner == Some(X))
   }
 
-  test("Does getWinner find a winner on the  diagonal?") {
+  test("Does getWinner find a winner on the diagonal?") {
     val b = myCreateGame("""XOO
                             XXO
                             ..X""", X)
+    assert(b.getWinner == Some(X))
+  }
+
+  test("Does getWinner find a winner in a row on a 4x4 board?") {
+    val b = myCreateGame("""O.O.
+                            XXXX
+                            .O..
+                            ....""", X)
     assert(b.getWinner == Some(X))
   }
 
@@ -74,11 +91,24 @@ class GradingTestSuite extends org.scalatest.FunSuite {
     assert(b.nextBoards.length == 9)
   }
 
+  test("Does nextBoards project 16 next-boards for the empty 4x4 board?") {
+    val b = myCreateGame("." * 16, X)
+    assert(b.nextBoards.length === 16)
+  }
+
   test("Does nextBoards produce 3 next-boards when there are three spots left?") {
     val b = myCreateGame("""XOX
                             XOX
                             ...""", O)
     assert(b.nextBoards.length == 3)
+  }
+
+  test("Does nextBoards produce 4 next-boards when there are four spots left on a 4x4 board?") {
+    val b = myCreateGame("""XOXO
+                            XOXO
+                            XOXO
+                            ....""", O)
+    assert(b.nextBoards.length == 4)
   }
 
   test("Does minimax report draw on the empty board?") {
@@ -88,13 +118,13 @@ class GradingTestSuite extends org.scalatest.FunSuite {
     assert(minimax(b) == None)
   }
 
-  test("Does minimax report X as winner on this board (in one move)?") {
+  test("Does minimax report X as winner on a board (in one move by X)?") {
     val b = myCreateGame("""XOX
                             OXO
                             .XO""", X)
   }
 
-  test("Does minimax report X as winner on this board (in two moves by X)?") {
+  test("Does minimax report X as winner on a board (in two moves by X)?") {
     val b = myCreateGame("""X.X
                             .O.
                             X.O""", O)

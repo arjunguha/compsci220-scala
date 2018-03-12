@@ -1,29 +1,4 @@
-// You'll need to read and understand this file, but don't change its contents.
-// Do not change the contents of this file
-
-sealed trait Player
-case object X extends Player
-case object O extends Player
-
-trait GameLike[T <: GameLike[T]] {
-
-  def isFinished(): Boolean
-
-  /** Assume that isFinished} is true. */
-  def getWinner(): Option[Player]
-
-  def nextBoards(): List[T]
-}
-
-trait MinimaxLike {
-
-  type T <: GameLike[T]
-
-  def createGame(turn: Player, dim: Int, board: Map[(Int, Int), Player]): T
-
-  def minimax(board: T): Option[Player]
-
-}
+import hw.tictactoe._
 
 class Matrix[A] private(val dim: Int, default: A, values: Map[(Int, Int), A]) {
 
@@ -119,6 +94,92 @@ object Matrix {
       require(y >= 0 && y < dim)
     }
     new Matrix(dim, default, values)
+  }
+
+}
+
+// Assumes matrix is consistent: at most 1 player has one, difference
+// between  Xs and Os is 0, -1, +1
+class Board(val turn: Player, matrix: Matrix[Option[Player]]) extends GameLike[Board] {
+
+  def hasPlayerWon(player: Player): Boolean = {
+    matrix.rows.exists { row => row.forall { cell => cell == Some(player) } } ||
+    matrix.cols.exists { col => col.forall { cell => cell == Some(player) } } ||
+    matrix.mainDiagonal.forall { cell => cell == Some(player) } ||
+    matrix.antiDiagonal.forall { cell => cell == Some(player) }
+  }
+
+  def isDraw(): Boolean = {
+    matrix.rows.forall { row =>
+      row.forall { cell => !cell.isEmpty }
+    }
+  }
+
+  def isFinished(): Boolean = {
+    hasPlayerWon(X) || hasPlayerWon(O) || isDraw()
+  }
+
+  // Assumes isFinalState() is true.
+  // None indicates draw.
+  def getWinner(): Option[Player] = {
+    if (hasPlayerWon(X)) {
+      Some(X)
+    }
+    else if (hasPlayerWon(O)) {
+      Some(O)
+    }
+    else {
+      None
+    }
+  }
+
+  def otherPlayer(p: Player) = p match {
+    case O => X
+    case X => O
+  }
+
+  // Should return empty list if isFinalState
+  def nextBoards(): List[Board] = {
+    val nextStates: List[Option[Board]] = matrix.toList { (x, y, value) => value match {
+      case Some(_) => None
+      case None => {
+        val newMatrix = matrix.set(x, y, Some(turn))
+        Some(new Board(otherPlayer(turn), newMatrix))
+      }
+    } }
+    nextStates.filter(board => !board.isEmpty).map(board => board.get)
+  }
+
+}
+
+object Solution extends MinimaxLike {
+
+  type T = Board
+
+  def createGame(turn: Player, dim: Int, board: Map[(Int, Int), Player]): Board = {
+      new Board(turn, Matrix.fromMap(dim, None, board.mapValues(p => Some(p))))
+  }
+
+  def minimax(board: Board): Option[Player] = {
+    import board._
+    if (hasPlayerWon(otherPlayer(turn))) {
+      Some(otherPlayer(turn))
+    }
+    else if (isDraw()) {
+      None
+    }
+    else {
+      val children = nextBoards.map(minimax)
+      if (children.contains(Some(turn))) {
+        Some(turn)
+      }
+      else if (children.contains(None)) {
+        None
+      }
+      else {
+        Some(otherPlayer(turn))
+      }
+    }
   }
 
 }
