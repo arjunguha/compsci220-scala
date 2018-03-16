@@ -106,7 +106,7 @@ val e4 = EIf(ELT(EInt(1), EInt(20)), EInt(10), EInt(20))
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Arithmetic Expressions, Boolean Expressions, and Variables}
+\frametitle{Type Checking}
 
 \begin{lstlisting}
 sealed trait Expr
@@ -120,20 +120,252 @@ case class EId(x: String) extends Expr
 \end{lstlisting}
 \pause
 \begin{lstlisting}
-
-// Example: to represent
-//    val x = 10
-//    x + 20
-val e5 = EVal("x", EInt(10), EAdd(EId("x"), EInt(20)))
+sealed trait Type
+case object TInt extends Type
+case object TBool extends Type
 \end{lstlisting}
 \pause
-
 \begin{lstlisting}
-val e6 = EVal("x", EInt(10), EVal("y", EInt(20), EAdd(EId("x"), EId("y"))))
+object TypeChecker {
+  def tc(expr: Expr): Type = expr match {
+    case EInt(n) => TInt
+    case EBool(b) => TBool
+    case EAdd(e1, e2) => TInt
+    case ELT(e1, e2) => TBool
+  }
+}
 \end{lstlisting}
 
+\pause
+\begin{lstlisting}
+TypeChecker.tc(EAdd(EBool(true), EInt(10))) // produces EInt, which is wrong!
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Type Checking}
+
+\begin{lstlisting}
+sealed trait Expr
+case class EInt(n: Int) extends Expr
+case class EAdd(e1: Expr, e2: Expr) extends Expr
+case class EBool(b: Boolean) extends Expr
+case class ELT(e1: Expr, e2: Expr) extends Expr
+case class EIf(e1: Expr, e2: Expr, e3: Expr) extends Expr
+case class EVal(x: String, e1: Expr, e2: Expr) extends Expr
+case class EId(x: String) extends Expr
+
+sealed trait Type
+case object TInt extends Type
+case object TBool extends Type
+
+object TypeError extends RuntimeException("Type error")
+
+object TypeChecker {
+  def tc(expr: Expr): Type = expr match {
+    case EInt(n) => TInt
+    case EBool(b) => TBool
+    case EAdd(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TInt
+      case _ => throw TypeError
+    }
+    case ELT(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TBool
+      case _ => throw TypeError
+    }
+  }
+}
+\end{lstlisting}
+
+\pause
+\begin{lstlisting}
+TypeChecker.tc(EAdd(EBool(true), EInt(10))) // throws TypeError
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Type Checking}
+
+\begin{lstlisting}
+object TypeChecker {
+  def tc(expr: Expr): Type = expr match {
+    case EInt(n) => TInt
+    case EBool(b) => TBool
+    case EAdd(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TInt
+      case _ => throw TypeError
+    }
+    case ELT(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TBool
+      case _ => throw TypeError
+    }
+    case EIf(e1, e2, e3) => (tc(e1), tc(e2), tc(e3)) match {
+      case(t1, t2, t3) => ???
+    }
+  }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Type Checking}
+
+\begin{lstlisting}
+object TypeChecker {
+  def tc(expr: Expr): Type = expr match {
+    case EInt(n) => TInt
+    case EBool(b) => TBool
+    case EAdd(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TInt
+      case _ => throw TypeError
+    }
+    case ELT(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TBool
+      case _ => throw TypeError
+    }
+    case EIf(e1, e2, e3) => (tc(e1), tc(e2), tc(e3)) match {
+      case(t1, t2, t3) => if (t2 == t3) t2 else throw TypeError
+    }
+  }
+}
+\end{lstlisting}
+\pause
+\begin{lstlisting}
+// Example A: if (true) 10 else true
+TypeChecker.tc(EIf(EBool(true), EInt(10), EBool(true)))
+
+// Example B: if (10) 20 else 30
+TypeChecker.tc(EIf(EInt(10), EInt(20), EInt(30)))
+\end{lstlisting}
 
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Type Checking}
+  
+\begin{lstlisting}
+object TypeChecker {
+  def tc(expr: Expr): Type = expr match {
+    case EInt(n) => TInt
+    case EBool(b) => TBool
+    case EAdd(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TInt
+      case _ => throw TypeError
+    }
+    case ELT(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TBool
+      case _ => throw TypeError
+    }
+    case EIf(e1, e2, e3) => (tc(e1), tc(e2), tc(e3)) match {
+      case (TBool, t2, t3) => if (t2 == t3) t2 else throw TypeError
+      case _ => throw TypeError // tc(e1) is not TBool
+    }
+  }
+}
 
+// Example A: if (true) 10 else true
+TypeChecker.tc(EIf(EBool(true), EInt(10), EBool(true)))
+
+// Example B: if (10) 20 else 30
+TypeChecker.tc(EIf(EInt(10), EInt(20), EInt(30)))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Type Checking}
+  
+\begin{lstlisting}
+object TypeChecker {
+  def tc(expr: Expr): Type = expr match {
+    case EInt(n) => TInt
+    case EBool(b) => TBool
+    case EAdd(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TInt
+      case _ => throw TypeError
+    }
+    case ELT(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TBool
+      case _ => throw TypeError
+    }
+    case EIf(e1, e2, e3) => (tc(e1), tc(e2), tc(e3)) match {
+      case (TBool, t2, t3) => if (t2 == t3) t2 else throw TypeError
+      case _ => throw TypeError // tc(e1) is not TBool
+    }
+    case EVal(x, e1, e2) => {
+      tc(e1)
+      tc(e2)
+    }
+    case EId(x) => ???
+  }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Type Checking}
+
+\begin{lstlisting}
+object TypeChecker {
+  def tc(env: Map[String, Type], expr: Expr): Type = expr match {
+    case EInt(n) => TInt
+    case EBool(b) => TBool
+    case EAdd(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TInt
+      case _ => throw TypeError
+    }
+    case ELT(e1, e2) => (tc(e1), tc(e2)) match {
+      case (TInt, TInt) => TBool
+      case _ => throw TypeError
+    }
+    case EIf(e1, e2, e3) => (tc(e1), tc(e2), tc(e3)) match {
+      case (TBool, t2, t3) => if (t2 == t3) t2 else throw TypeError
+      case _ => throw TypeError // tc(e1) is not TBool
+    }
+    case EVal(x, e1, e2) => {
+      val xType = tc(env, e1)
+      tc(env + (x -> xType), e2)
+    }
+    case EId(x) => env.get(x) match {
+      case Some(xType) => xType
+      case None => throw TypeError
+    }
+  }
+}
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Type Checking}
+
+\begin{lstlisting}
+object TypeChecker {
+  def tc(env: Map[String, Type], expr: Expr): Type = expr match {
+    case EInt(n) => TInt
+    case EBool(b) => TBool
+    case EAdd(e1, e2) => (tc(env, e1), tc(env, e2)) match {
+      case (TInt, TInt) => TInt
+      case _ => throw TypeError
+    }
+    case ELT(e1, e2) => (tc(env, e1), tc(env, e2)) match {
+      case (TInt, TInt) => TBool
+      case _ => throw TypeError
+    }
+    case EIf(e1, e2, e3) => (tc(env, e1), tc(env, e2), tc(env, e3)) match {
+      case (TBool, t2, t3) => if (t2 == t3) t2 else throw TypeError
+      case _ => throw TypeError // tc(e1) is not TBool
+    }
+    case EVal(x, e1, e2) => {
+      val xType = tc(env, e1)
+      tc(env + (x -> xType), e2)
+    }
+    case EId(x) => env.get(x) match {
+      case Some(xType) => xType
+      case None => throw TypeError
+    }
+  }
+}
+\end{lstlisting}
+\end{frame}
+  
 \end{document}
