@@ -1,4 +1,4 @@
-class ProvidedTests extends org.scalatest.FunSuite {
+class Tests extends org.scalatest.FunSuite {
 
   import java.nio.file.{Paths, Files}
   import PathImplicits._

@@ -4659,6 +4659,189 @@ The code from class is included below. It simply translates the code in the arti
 
 \scalafile{code/Rationals.scala}
 
+\chapter{Implicit Classes}
+\savepdf{implicits}
+
+\begin{figure}
+\begin{subfigure}{.45\textwidth}
+\scalafile{includes/implicits/Vector2D.java}
+\caption{A simple vector library in Java.}
+\label{vector2d}
+\end{subfigure}
+\quad\vrule\quad
+\begin{subfigure}{.45\textwidth}
+\begin{scalacode}
+class Vector2D(x: Double, y: Double) {
+  def +(other: Vector2D): Vector2D = {
+    new Vector2D(this.x + other.x,
+                 this.y + other.y)
+  }
+
+  def *(factor: Double): Vector2D = {
+    new Vector2D(factor * x,
+                 factor * y)
+  }
+
+  def unary_- = new Vector2D(-x, -y)
+}
+\end{scalacode}
+\caption{A similar library in Scala.}
+\label{vector2dscala}
+\end{subfigure}
+\end{figure}
+
+
+A powerful feature of Scala is that can interoperate almost seamlessly with
+Java code. So, we can use any Java library from Scala.
+
+Imagine we were using a Java library for vectors, such as the one shown in
+\cref{vector2d}. Although this is high-quality Java code, it can feel
+very cumbersome to use from Scala. Compared to the terse Scala programs
+we've been writing, we have to write lots of verbose method calls:
+\begin{scalacode}
+val v1 = new Vector2D(2, 3)
+val v2 = v1.add(v1).mul(3)
+\end{scalacode}
+If the library had been written in Scala, it may look more like the
+code in \cref{vector2dscala}, which would allow us to write the
+following code instead:
+\begin{scalacode}
+val v1 = new Vector2D(2, 3)
+val v2 = (v1 + v1) * 3
+\end{scalacode}
+Imagine that this is a large, full-featured, and well-tested library, so
+it would be foolish to rewrite the whole thing, just to get a nicer
+API.
+
+One solution is to ``wrap'' the Java API in Scala class, as shown below:
+
+\begin{scalacode}
+class VecAdaptor(vec: Vector2D) {
+  def +(other: VecAdaptor)= new VecAdaptor(vec.add(other.vec))
+  def *(factor: Double) = new VecAdaptor(vec.mul(factor))
+  def unary_- = new VecAdaptor(vec.neg())
+}
+\end{scalacode}
+
+This is an example of the \emph{adaptor pattern}. Imagine that
+the Java class had several other methods that we had not bothered
+to adapt. If we wanted to use them too, we'd have to either
+add adaptor methods for all them (which would be a lot of code),
+or we'd have to continuously wrap and un-wrap in Scala, which would
+very tiresome.
+
+\section{Implicit Classes}
+
+In principle, we want to take an existing class, \scalainline{Vector2D}, and add
+the methods \scalainline{+}, \scalainline{*}, etc. to  it.
+ However, classes cannot be modified after they are declared, so we need to
+ create a wrapper. However, instead of explicitly wrapping the class,
+ we can create an \emph{implicit class} as follows:
+\begin{scalacode}
+implicit class RichVector2D(vec: Vector2D) {
+  def +(other: Vector2D): Vector2D = vec.add(other)
+  def *(factor: Double): Vector2D = vec.mul(factor)
+  def unary_- = vec.neg()
+}
+\end{scalacode}
+Given this definition, when Scala sees the following code:
+\begin{scalacode}
+val v1 = new Vector2D(2, 3)
+val v2 = (v1 + v1) * 3
+\end{scalacode}
+It will automatically insert the wrapper and turn it into the following:
+\begin{scalacode}
+val v1 = new Vector2D(2, 3)
+val v2 = new RichVector2D(new RichVector2D(v1) + v1) * 3
+\end{scalacode}
+
+Here is a simpler example:
+\begin{scalacode}
+(new Vector2D(50, 60)) * 30
+\end{scalacode}
+Normally, this expression would not type-check, since \scalainline{Vector2D}
+does not have a method \scalainline{*} that accepts integers. However, there is
+an implicit class that wraps \scalainline{Vector2D} that does accept
+integers, so the expression is transformed to:
+\begin{scalacode}
+(new RichVector2D(new Vector2D(50, 60))) * 30
+\end{scalacode}
+
+The \scalainline{RichVector2D} implicit class lets us write
+\scalainline{(new Vector2D(50, 60)) * 30}, but we can't write
+\scalainline{30 * (new Vector2D(50, 60))}, as it assumes that builtin
+integers have a \scalainline{*} method that accepts vectors. However,
+we can create an implicit class that wraps built-in integers too:
+
+\begin{scalacode}
+implicit class RichInt(n: Int) {
+  def *(v: Vector2D): Vector2D = v.mul(n)
+}
+\end{scalacode}
+
+Scala's type-checker rewrites \scalainline{3 * ...} to \scalainline{(new RichInt(3)) * ...}.
+Notably, we didn't have to make any changes to the built-in \scalainline{Int}
+type. (Not that we could, since it is truly built in to Scala.)
+
+\section{Implicit Functions}
+
+Although we can use standard mathematical notation to manipulate
+vectors, we are still stuck creating constant vectors as follows:
+\begin{scalacode}
+val v1 = new Vector2D(2, 3)
+\end{scalacode}
+Suppose we wanted to just write \scalainline{(2, 3)} to denote a vector.
+However, we aren't invoking a method in above, implicit classes can't help.
+
+However, can use implicit functions:
+\begin{scalacode}
+implicit def pointToVector2D(pt: (Int, Int)): Vector2D = {
+  new Vector2D(pt._1, pt._2)
+}
+
+val v1: Vector2D = (2, 3)
+\end{scalacode}
+
+\section{Warning}
+
+\begin{figure}
+\scalafile{includes/implicits/Implicits.scala}
+\caption{Implicits should be placed in their own object.}
+\label{vectorimplicits}
+\end{figure}
+
+
+Code that uses a lot of implicit conversions can become
+very unreadable very quickly. So, you should use them with care.
+Moreover, when there are several implicit classes available,
+it may be ambiguous which conversion is used. When there is
+ambiguity, Scala will simply signal an error.
+When designing Scala APIs, it is considered good practice to place implicits in
+their own object, so that users have to opt-in to using them. For example,
+we may declare our implicit conversions for vectors as shown in
+\cref{vectorimplicits}. Now, to use these implicits, we would have to
+write:
+\begin{scalacode}
+import Implicits._
+\end{scalacode}
+This is a signal to the reader that implicit conversions are being used.
+
+\begin{think}
+If you know an untyped language such as JavaScript or Python, think about what
+it would take to do something similar to implicit classes.
+\end{think}
+
+\section{Built-in Implicits in Scala}
+
+Scala has several implicits that are available by default. Many of these
+implicits are used to add features to builtin Java classes that Scala
+also uses. For example, Scala arrays are just Java arrays. However,
+you can use methods such as \scalainline{.map} on arrays in Scala.
+This is achieved using implicits conversions.  From the Scala console,
+if you enter \lstinline[language=console]{:implicits -v}, you can see the complete
+list of implicits that are available.
+
+
 \include{error_handling_discussion}
 
 \include{tictactoe_discussion}
@@ -4669,16 +4852,12 @@ The code from class is included below. It simply translates the code in the arti
 \input{nqueens}
 \input{gadts}
 
-\input{implicit_classes}
-
 \input{sudoku}
 
 \input{sudoku_discussion}
 
 
 \input{regex}
-
-\input{implicits_hw}
 
 \input{regex2}
 
@@ -6148,7 +6327,144 @@ various extractors on Json values.
 
 \input{handin}
 
-\part{Lesson Plans}
+\chapter{Project: Implicit Classes}
+\savepdf{project-implicits}
+
+In this assignment, you'll first learn how to use two modern Java APIs on your 
+own and then make them more ``Scala-like'' using implicits. Before you start 
+directly working on the assignment, you will have to read the API documentation 
+and online tutorials to learn how the APIs work. We encourage you to freely use
+ any resource from the web for this assignment.
+
+\textbf{Note:} This assignment can be done using implicit classes exclusively. 
+Scala also supports implicit arguments and implicit functions, but you don't 
+need them for this assignment.
+
+\section{Preliminaries}
+
+Using the command-line, run the following command:
+
+\begin{lstlisting}
+sbt new umass-compsci220/scala-implicits.g8
+\end{lstlisting}
+
+When prompted, press ``Enter'' to accept the default directory name. This will
+create a directory tree with the following contents:
+
+\dirtree{%
+.1 ./scala-implicits.
+.2 build.sbt.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.
+.5 Main.scala\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala.
+.5 Tests.scala\DTcomment{Yours tests go here}.
+}
+
+
+\section{Java NIO}
+
+The \href{https://docs.oracle.com/javase/7/docs/api/java/nio/file/package-summary.html#package_description}{java.nio.file} classes are a new (since 2011) API for working with files and directories that is a lot easier to use than the legacy API, which dates back to the early days of Java. For example, the static methods \scalainline{Files.readAllBytes} and \scalainline{Files.write} let you read and write to files with just one line of code.
+
+Moreover, the \scalainline{java.nio.file.Paths} object is easier to use than \scalainline{java.io.File}. For example, to get a reference to the directory \texttt{"a/b/c"}, we can simply write:
+%
+\begin{scalacode}
+import java.nio.file.Paths
+Paths.get("a").resolve("b").resolve("c")
+\end{scalacode}
+%
+The ``method call chain'' above is lot easier to write and read than the nested constructors in the legacy code below:
+%
+\begin{scalacode}
+import java.io.File
+new File(new File("a", "b"), "c")
+\end{scalacode}
+
+However, we ought to be able to do better in Scala. It would be really convenient if we could simply create a \scalainline{java.nio.file.Path} object by writing:
+%
+\begin{scalacode}
+"a" / "b" / "c"	
+\end{scalacode}
+The expression above should be the same as \scalainline{Paths.get("a").resolve("b").resolve("c")}.
+The first part of this assignment is to ``Scala-ize'' the Java NIO file API in this manner.
+
+\subsection{Programming Task}
+
+Add code to the \lstinline|PathImplicits| object (defined in \texttt{Main.scala}),
+such that when a block of code begins with \scalainline{import PathImplicits._}, 
+we should be able to write the following:
+
+\begin{enumerate}
+
+  \item We should be able to construct paths by using the slash-operator to separate strings. For example, the expression \scalainline{"usr" / "bin" / "scala"} should be equivalent to the expression \scalainline{Paths.get("usr", "bin", "scala")}. 
+  \item Similarly, given two paths, we should be able to join them using the slash-operator. For example, if \scalainline{p1} is \scalainline{"usr" / "local"} and \scalainline{p2} is \scalainline{"bin" / "scala"} then \scalainline{p1 / p2} should be equivalent to \scalainline{Paths.get("usr", "local", "bin", "scala")}. 
+  \item Paths should have a \scalainline{write} method to create files, where \scalainline{write} takes a string to write to the file. For example, the following program should create a file called \texttt{greeting.txt} with just the line \texttt{Hello, world}: %
+\begin{scalacode}
+val p = Paths.get("greeting.txt")
+p.write("Hello, world\n")
+\end{scalacode}	
+
+  \item Paths should also have a \scalainline{read} method that returns the contents of the file as a string. For example, after creating the file above, the expression \scalainline{p.read()} should produce \verb|"Hello, world\n"|.
+
+  \item Finally, paths should have an \scalainline{append} method that appends to the end of a file. For example, after evaluating  \scalainline{p.append("Hello, again")}, the file \texttt{greeting.txt} should contain:
+
+\begin{verbatim}
+Hello, world
+Hello, again
+\end{verbatim}
+
+    \textbf{For convenience, the append method should create a new file if no file exists.}
+
+\end{enumerate}
+
+\section{The Java 8 Time API}
+
+Java 8, which was released in 2014, introduced a new API for working with dates and times, which is much easier to use than the old \texttt{java.util.Calendar} API (from 1997) and the \texttt{java.util.Date} API (from 1996 and deprecated). Notably, the new \texttt{java.time} API uses immutable objects exclusively, unlike the older APIs, which are exemplars of bad imperative design. For this assignment, we are going to focus on the \href{https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html}{java.time.LocalDate} class, which just represents a date, without a timezone or time of day.
+
+For example, we can create a date that represents Jan 31 2018 as follows:
+\begin{scalacode}
+import java.time.LocalDate
+val date = LocalDate.of(2018, 1, 31)
+\end{scalacode}
+
+We can add days to a date as follows:
+\begin{scalacode}
+val feb2 = date.plusDays(2)
+\end{scalacode}
+
+Note that the expression above does not modify the original \scalainline{date}
+object, but produces a new object. In fact, the \scalainline{LocalDate} class
+is immutable and the API is designed in a functional way. However, we can make
+it even easier to use. It would be more convenient if we could write
+\scalainline{31 jan 2018} in Scala code to mean \scalainline{LocalDate.of(2018,1, 31)} 
+and \scalainline{(31 jan 2018) + 2.days} to mean \scalainline{2 feb 2018}, and so on.
+
+\subsection{Programming Task}
+
+Add code to the \lstinline|DateImplicits| object, such that when
+a block of code begins with \scalainline{import DateImplicits._}, 
+we should be able to write the following:
+
+\begin{enumerate}
+
+  \setcounter{enumi}{5}
+
+  \item We should be able to write \scalainline{15.jan}, \scalainline{4.feb}, \scalainline{20.dec}, and so on to create \scalainline{LocalDate} objects that represent dates in the current year. (i.e., the year in which the code is running.) \textbf{This kind of code should work for all months of the year, with the usual three-letter abbreviations of month names.}
+
+  \item To create \scalainline{LocalDate} objects that represent dates in other years, we should be able to write \scalainline{15.oct(1989)}. Note that this is the same as writing \scalainline{15 oct 1989}.
+
+  \item \textbf{(Tricky)}. If \scalainline{x} is a  \scalainline{LocalDate}, we should be able to add days, months, and years in the following way: \scalainline{x + 10.days}, \scalainline{x + 2.months}, and \scalainline{x + 5.years}.
+
+\end{enumerate}
+
+We should be able to combine both notations. For example, \scalainline{(31 jan 2016) + 2.days} should be equal to \scalainline{LocalDate.of(2016, 2, 2)}. Note that the parentheses around the date are necessary because \scalainline{1 jan 2016 + 2.days} is interpreted as \scalainline{1 jan (2016 + 2.days)}. 
+
+\input{handin}
+
 
 \chapter{Lesson Plan: Introduction}
 \savepdf{instructor-intro}
@@ -6915,6 +7231,100 @@ test("testing from") {
 \end{lstlisting}
 
 \end{enumerate}
+
+\chapter{Lesson Plan: Implicit Classes}
+\savepdf{instructor-implicits}
+
+\begin{enumerate}
+
+\item Create a Java file with  a \lstinline|Vector2D| class that has
+  \lstinline|add| and \lstinline|mul| methods.
+
+\item Show that we can use the Java class in Scala code, but it doesn't feel very
+  Scala-like. 9Show the Scala version.)
+
+\item One solution: write an an \emph{adaptor}. Problem: we'd have to wrap
+  every single method (and there could be many, many methods).
+
+\item In principle, we want to modify the existing class, but classes cannot
+  be modified after they are defined.
+
+\item Show the implicit class \lstinline|RichVector2D|.
+
+\item Show how a simple expression with vectors is elaborated.
+
+\item However, we can write \lstinline|vec * 3|, but not \lstinline|3 * vec|.
+Fix this by introducing \lstinline|RichInt|.
+
+\item Show an implicit function that converts int-tuples to vectors. Warn that 
+  this is a bad idea.
+
+\item Explain that implicits should be in their own object.
+
+\item Show the \lstinline|process| and \lstinline|duration| DSLs.
+
+\end{enumerate}
+
+\chapter{Lesson Plan: Implicits Lab}
+\savepdf{instructor-implicits-lab}
+
+This lab will cover the first two questions of the Implicits project, 
+which asks you to use Scala implicits to wrap ``ugly'' Java interfaces with ``pretty'' Scala interfaces.
+
+\section{What you need to do}
+
+Complete the first two programming tasks of the Implicits project in the lab.
+The two tasks are reproduced below:
+
+\begin{enumerate}
+
+  \item We should be able to construct paths by using the slash-operator to separate strings. 
+  For example, the expression \scalainline{"usr" / "bin" / "scala"} should be equivalent to the expression \scalainline{Paths.get("usr", "bin", "scala")}. 
+  
+  \item Similarly, given two paths, we should be able to join them using the slash-operator. 
+  For example, if \scalainline{p1} is \scalainline{"usr" / "local"} and \scalainline{p2} is \scalainline{"bin" / "scala"} then \scalainline{p1 / p2} should be equivalent to \scalainline{Paths.get("usr", "local", "bin", "scala")}. 
+\end{enumerate}
+
+\section{Hints}
+
+First hint: this assignment requires \emph{neither} Scala implicit functions 
+to work \emph{nor} Scala implicit function parameters.  
+You \emph{only} need Scala implicit classes.  If you do not 
+remember the difference between these sorts of implicits, I strongly 
+suggest that you familiarize yourself with their definitions.
+
+Second hint: remember that Scala implicit classes require a few ingredients
+ in order to work.  The most important ingredients are described here, but 
+ you can find the complete list of rules at: \url{https://www.artima.com/pins1ed/implicit-conversions-and-parameters.html#21.2}
+
+\begin{enumerate}
+  \item You must create a class and mark it as \scalainline{implicit}.
+  \item Implicit classes must be defined inside an \scalainline{object}.
+  \item The implicit class must be visible from the scope of the expression that you want rewritten.
+  \item The compiler \emph{will not} attempt to rewrite an expression to use an
+   implicit class if it type-checks as-is.  In other words, the expression must 
+   fail to type check \emph{unless} the compiler can find an implicit class in scope that causes the type check to succeed.
+\end{enumerate}
+
+\section{Solutions}
+
+This is a solution to the first two programming tasks.
+
+\begin{scalacode}
+  import java.nio.file._
+
+  object PathImplicits {  
+    implicit class RichPath(p: Path) {
+      def /(p2: String) : Path = p.resolve(p2)
+      def /(p2: Path) : Path = p.resolve(p2)
+    }
+
+    implicit class RichString(s: String) {
+      def /(s2: String) : Path = Paths.get(s).resolve(s2)
+      def /(p2: Path) : Path = Paths.get(s).resolve(p2)
+    }
+  }
+\end{scalacode}
 
 \chapter{EOF}
 
