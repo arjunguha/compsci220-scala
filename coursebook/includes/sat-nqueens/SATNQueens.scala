@@ -1,7 +1,7 @@
 /*
-  Save this file as SAT-NQueens.scala and run
+  Save this file as SATNQueens.scala and run
 
-  scala SAT-NQueens N | z3 -in -smt2
+  scala SATNQueens.scala N | z3 -in -smt2
 
   On my laptop, this solves for N = 100 in a few seconds.
 

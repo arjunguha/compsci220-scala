@@ -5496,7 +5496,6 @@ defined.
 
 \include{generics_hw}
 
-\include{scalacheck}
 \input{gadts}
 
 \input{sudoku}
@@ -8074,6 +8073,72 @@ class C4[A](head: A, tail: C4[A]) extends T[???, ???, ???] {
 \item Show bounded quantification in Java and Scala standard libraries.
 
 \end{itemize}
+
+\chapter{Property-based Testing}
+\savepdf{instructor-scalacheck}
+
+
+\begin{enumerate}
+
+\item  Sometimes, writing individual test cases isn't enough or isn't desirable.
+  It can help to think of properties instead of test cases.
+
+\item Work through the split and join example. 
+
+\item Write some list processing functions: reverse, concat, map
+
+\item Some properties of list processing functions: reverse and concat,
+  concat distributes over map, reverse reverse is identity. \emph{Write these
+    as functions}.
+
+\item Show ScalaCheck. Show the generators generating things.
+
+\item Write a tail recursive fibonnaci and check that the two implementations
+are equivalent.
+
+\item Write properties of join lists.
+
+\end{enumerate}
+
+\begin{lstlisting}
+import org.scalatest.FunSuite
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalacheck._
+
+class ListTestSuite extends FunSuite with GeneratorDrivenPropertyChecks {
+
+  test("reverse-reverse") {
+    forAll { (alist: List[Int]) =>
+      assert(alist.reverse.reverse == alist)
+    }
+  }
+}
+\end{lstlisting}
+
+\begin{figure}
+\begin{lstlisting}
+def split(sep: Char, astring: String): List[String] = {
+  def splitRec(chars: List[Char]): List[String] = {
+    val prefix = chars.takeWhile(ch => ch != sep).mkString
+    chars.dropWhile(ch => ch != sep) match {
+      case Nil => Nil
+      case _ :: suffix => prefix :: splitRec(suffix)
+    }
+  }
+  splitRec(astring.toList)
+}
+
+def join(sep: Char, strings: List[String]): String = strings match {
+  case Nil => ""
+  case List(x) => x
+  case x1 :: x2 :: xs => x1 + sep + join(sep, x2 :: xs)
+}
+\end{lstlisting}
+\caption{Splitting a string on a separator.}\label{split_buggy}
+\end{figure}
+
+
+
 
 \chapter{EOF}
 
