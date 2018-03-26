@@ -54,12 +54,14 @@ class GradingTestsTests extends org.scalatest.FunSuite {
     assert(gradingTake(pow, 5) == List(1, 2, 4, 8, 16))
   }
 
-  test("nth(x, 0) produces the first value of the stream") {
-    assert(nth(gradingFrom(10), 0) == 10)
+  test("nth(x, 1) produces the first/second value of the stream") {
+    val r = nth(gradingFrom(10), 1)
+    assert(r == 10 || r == 11)
   }
 
-  test("nth(x, 10) produces the 11th value of the stream") {
-    assert(nth(gradingFrom(10), 10) == 20)
+  test("nth(x, 10) produces the 11th/10th value of the stream") {
+    val r = nth(gradingFrom(10), 10)
+    assert(r == 10 || r == 9)
   }
 
   test("filter(isEven, from(0)) produces only even numbers") {
@@ -70,6 +72,12 @@ class GradingTestsTests extends org.scalatest.FunSuite {
   test("filter(isOdd, from(0)) produces only odd numbers") {
     assert(gradingTake(filter((x: Int) => x % 2 == 1, gradingFrom(0)), 5) ==
       List(1, 3, 5, 7, 9))
+  }
+
+  test("filter(x == 2, from(0)) produces 2") {
+    val gen = filter((x: Int) => x == 2, gradingFrom(0))
+    val (x, _) = gen.next()
+    assert(x == 2)
   }
 
   test("sift(2, from(0)) produces only odd numbers") {
