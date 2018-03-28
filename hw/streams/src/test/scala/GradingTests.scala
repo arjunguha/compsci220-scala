@@ -1,6 +1,6 @@
 import Main._
 import hw.streams._
-class GradingTestsTests extends org.scalatest.FunSuite {
+class GradingTests extends org.scalatest.FunSuite {
 
   // This is the solution to nth. In case students get this wrong, we use
   // this definition to test.
@@ -60,7 +60,7 @@ class GradingTestsTests extends org.scalatest.FunSuite {
   }
 
   test("nth(x, 10) produces the 11th/10th value of the stream") {
-    val r = nth(gradingFrom(10), 10)
+    val r = nth(gradingFrom(0), 10)
     assert(r == 10 || r == 9)
   }
 
@@ -74,7 +74,7 @@ class GradingTestsTests extends org.scalatest.FunSuite {
       List(1, 3, 5, 7, 9))
   }
 
-  test("filter(x == 2, from(0)) produces 2") {
+  ignore("filter(x == 2, from(0)) produces 2") {
     val gen = filter((x: Int) => x == 2, gradingFrom(0))
     val (x, _) = gen.next()
     assert(x == 2)

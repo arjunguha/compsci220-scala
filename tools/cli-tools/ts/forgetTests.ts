@@ -14,7 +14,8 @@ function jarName(path: string): string {
 
 async function testAll(names: string[], bucketName: string, bucketDir: string) {
   const [completedTests] = await ds.createQuery('testName')
-    .filter('bucket', '=', bucketName).run();
+    .filter('bucket', '=', bucketName)
+    .filter('dirname', '=', config.bucketDir).run();
   let toForget = completedTests.filter((obj: any) => obj.jar.startsWith(bucketDir))
     .filter((obj: any) => names.length === 0 || names.includes(jarName(obj.jar)))
     .map((obj: any) => obj[ds.KEY]);

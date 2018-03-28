@@ -16,6 +16,7 @@ const dsKind = 'compsci220-test-runner';
 async function asyncMain() {
   const [r] = await ds.createQuery('testName')
     .filter('bucket', '=', config.bucket)
+    .filter('dirname', '=', config.bucketDir)
     .run();
   console.log("Filtering bogus tests...");
   const results = (r as util.TestResult[]).filter(r => config.tests.includes(r.testName));

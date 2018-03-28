@@ -159,6 +159,11 @@ class GradingTests extends org.scalatest.FunSuite {
     assert(countGirlsAndBoys(gradingBirths) == (24140, 2460))
   }
 
+  test("countGirlsAndBoys -- partial credit for swapping order of results") {
+    val r = countGirlsAndBoys(gradingBirths)
+    assert(r == (24140, 2460) || r == (2460, 24140))
+  }
+
   test("Does genderNeutralNames work?") {
     assert(genderNeutralNames(gradingBirths) == Set("Unisex A", "Unisex B"))
   }
