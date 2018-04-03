@@ -1,7 +1,7 @@
 object Main extends App {
   import pdf._
   val base = "../website"
-  PDF.loan(PDF.open("student.pdf")) { pdf =>
+  PDF.loan(PDF.open("main.pdf")) { pdf =>
     val pageRanges = pdf.toc
       .map({ bookmark => (bookmark.title, bookmark.pageNumber) })
       .sliding(2)

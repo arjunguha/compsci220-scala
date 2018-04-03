@@ -1,4 +1,5 @@
-% !TEX root = student.tex
+\newif\ifinstructormode
+\instructormodefalse
 \documentclass[9pt]{extbook}
 \usepackage{pervasives}
 
@@ -5498,11 +5499,6 @@ defined.
 
 \input{gadts}
 
-\input{sudoku}
-
-\input{sudoku_discussion}
-
-
 \input{regex}
 
 \input{regex2}
@@ -7111,6 +7107,293 @@ We should be able to combine both notations. For example, \scalainline{(31 jan 2
 
 \input{handin}
 
+\chapter{Project: Sudoku}
+\savepdf{sudoku-project}
+
+For this assignment, you will write a Sudoku solver. To do so, you will
+(1) use Scala collections extensively, (2) implement a \emph{backtracking
+search} algorithm, and (3) implement \emph{constraint propagation}.
+
+\section{Preliminaries}
+
+We assume you know how to play Sudoku. If you don't, you should play a few
+games by hand, before attempting this assignment.
+Using the command-line, run the following command:
+
+\begin{lstlisting}
+sbt new umass-compsci220/scala-sudoku.g8
+\end{lstlisting}
+
+When prompted, press ``Enter'' to accept the default directory name. This will
+create a directory tree with the following contents:
+
+\dirtree{%
+.1 ./sudoku.
+.2 build.sbt.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.
+.5 Main.scala\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala.
+.5 Tests.scala\DTcomment{Yours tests go here}.
+}
+
+
+\section{Overview}
+
+A Sudoku board is a 9-by-9 grid, where each cell is either blank or has a
+value in the range 1--9. For this assignment, we'll use strings of length
+81 to represent Sudoku boards, where each block of nine characters
+represents a successive row. For example, the following string:
+
+\begin{scalacode}
+val puzzle =
+  "....8.3...6..7..84.3.5..2.9...1.54.8.........4.27.6...3.1..7.4.72..4..6...4.1...3"
+\end{scalacode}
+
+Represents the following board:
+\[
+\small
+\begin{array}{|c|c|c||c|c|c||c|c|c|}
+\hline
+  &   &   &   & 8 &   & 3 &    & \\
+\hline
+  & 6 &   &   & 7 &   &   & 8 & 4 \\
+\hline
+  & 3 &   & 5 &   &   & 2 &   & 9 \\
+\hline \hline
+  &   &   & 1 &   & 5 & 4 &   & 8 \\
+\hline
+  &   &   &   &   &   &   &   &   \\
+\hline
+4 &   & 2 & 7 &   & 6 &   &   &   \\
+\hline \hline
+3 &   & 1 &   &   & 7 &   & 4 &   \\
+\hline
+7 & 2 &   &   & 4 &   &   & 6 &   \\
+\hline
+  &   & 4 &   & 1 &   &   &   & 3 \\
+\hline
+\end{array}
+\]
+
+Here are some more examples:
+
+\begin{scalacode}
+".43.8.25.6.............1.949....4.7....6.8....1.2....382.5.............5.34.9.71."
+"2...8.3...6..7..84.3.5..2.9...1.54.8.........4.27.6...3.1..7.4.72..4..6...4.1...3"
+"..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3.."
+"1..92....524.1...........7..5...81.2.........4.27...9..6...........3.945....71..6"
+\end{scalacode}
+
+Your first task is to parse strings that represent Sudoku boards. You may
+assume that all strings represent solvable boards and that the string has
+exactly 81 characters. This part of the assignment should be trivial.
+
+Solving Sudoku puzzles is much harder, but we'll walk you through it.
+
+\emph{Backtracking search} is a recursive algorithm that operates as
+follows. Given a a Sudoku board, $B$:
+
+\begin{itemize}
+\item If $B$ is already filled completely and a solution, return the solution.
+\item If $B$ is an invalid board (e.g., two 2s in a row), abort.
+\item Otherwise, generate a list of all boards that fill in one more square of
+  $B$. For each generated board, recursively apply the search function:
+  \begin{itemize}
+  \item If any board produces a valid solution, return that board
+  \item If no board produces a solution, abort and return
+  \end{itemize}
+\end{itemize}
+
+
+This approach will work in principle. But, in practice there are too many
+boards to search: there are 81 squares, and each square can hold 10 values
+(a digit or blank). Therefore, there are $10^{81}$ possible boards, which
+exceeds the
+\href{http://en.wikipedia.org/wiki/Observable_universe#Matter_content_.E2.80.94_number_of_atoms}{number of atoms in the observable universe}.
+
+To actually solve Sudoku problems, we need to combine backtracking search
+with \emph{constraint propogation}. When you play Sudoku yourself, every
+time you fill a digit into a cell, you can eliminate that digit from
+several other cells. For example, if you fill 2 into the top-left corner
+of the board above, you can eliminate 2 from the first row, first column,
+and first box. i.e., there is no point even trying to place 2 in those
+spots, since the 2 in the corner \emph{constrains} those cells.
+
+
+We'll augment backtracking search with constraint propagation, which
+implements this intuition. The key idea is to store 
+the \emph{set of values} that may be placed in a cell, instead of only storing
+a single value in a cell. For
+example, on the empty board the values 1---9 may be placed at any cell:
+
+\[
+\small
+\begin{array}{|c|c|c||c|c|c||c|c|c|}
+\hline
+123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline \hline
+123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline \hline
+123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+\end{array}
+\]
+
+With this representation, when we place a value at a cell, we eliminate it
+from the other cells in the same row, column, and box (collectively known
+as the \emph{peers} of a cell). For example, if we place 5 at the top-
+left corner of the empty board, we can eliminate 5 from the peers of the
+top-left corner:
+
+
+\[
+\small
+\begin{array}{|c|c|c||c|c|c||c|c|c|}
+\hline
+5 & 1234~6789 & 1234~6789 & 1234~6789 & 1234~6789 & 1234~6789 & 1234~6789 & 1234~6789 & 1234~6789 \\
+\hline
+1234~6789 & 1234~6789 & 1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+1234~6789 & 1234~6789 & 1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline \hline
+1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline \hline
+1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+1234~6789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 & 123456789 \\
+\hline
+\end{array}
+\]
+
+This procedure will significantly reduce the number of boards that need to
+be visited.
+\section{Programming Task}
+
+
+Your task is to implement the \scalainline{SolutionLike} and
+\scalainline{BoardLike} traits.
+We recommend proceeding in this order and testing as you go along:
+
+\begin{enumerate}
+
+\item Implement the \scalainline{peers} function in the \lstinline|Solution|
+object.
+\scalainline{peers(r, c)}  produces the coordinates of all cells in the same row as \scalainline{r}, 
+same column as \scalainline{c}, and same block as \scalainline{(r,c)}.
+
+   Do not include \scalainline{(r, c)} in the set of its own peers. i.e., the value of
+   the expression
+   \scalainline{peers(r,c).contains((r, c))} should be \scalainline{false}.
+
+\item Implement \scalainline{Solution.parse} You should assume that the input 
+string has exactly 81 characters, where each character is a digit or a period. 
+Each successively block of nine characters represents a row (i.e., row-major order).
+
+   As the template suggests, you need to store the set of available values at
+   each cell instead of the value at the cell. You'll need to define
+   the empty board as the map with all values available at each cell and
+   implement \scalainline{parse} using \scalainline{peers} as a helper function.
+
+\item Implement \scalainline{Board.valueAt}. You should produce the digit stored 
+at the given row and column or \scalainline{None} if it is blank.
+
+\item Implement \scalainline{Board.isSolved} and \scalainline{Board.isUnsolvable}. You may assume
+   that the constraints represented by \scalainline{available} are valid. Therefore, a board
+   is solved if every cell is constrained to exactly one value. Similarly,
+   a board is unsolvable if any cell is constrained to the empty set of values
+   (i.e., nothing can be placed in that cell).
+
+\item Implement \scalainline{Board.place}. The application 
+\scalainline{place(row, col, value)} produces a new board with
+   \scalainline{value} placed at \scalainline{(row, col)} of \scalainline{this}
+    board.  You may assume that
+   the predicate \scalainline{availableValuesAt(row, col).contains(value)} is true.
+
+   For the new board to be valid, you'll have to:
+
+   \begin{enumerate}
+   \item Remove \scalainline{value} from set of available values of each peer
+      (i.e., \scalainline{peers(row, col)}).
+   \item While doing (1), if a peer is constrained to exactly 1 value, remove
+      that value from its peers.
+   \end{enumerate}
+
+\item Implement \scalainline{nextStates}, which returns the list of all boards that have
+   exactly one additional value placed on the board.
+
+   You should sort the returned list: ensure that boards with fewer available
+   values occur earlier in the list.
+
+\item Implement \scalainline{solve}. If \scalainline{this.isSolved} is true, then return \scalainline{Some(this)}.
+   If not, iterate through the list of \scalainline{nextStates}, applying \scalainline{solve} to
+   board. Return the first solution that you find. If no solution is found,
+   return \scalainline{None}.
+
+\end{enumerate}
+
+
+\section{Solvable Boards}
+
+Your solver will not be able to solve arbitrary Sudoku boards. But,
+here are some boards that should work:
+
+\begin{scalacode}
+val fromCS121_1 = 
+  "85....4.1......67...21....3..85....7...982...3....15..5....43...37......2.9....58"
+val fromCS121_2 = 
+  ".1.....2..3..9..1656..7...33.7..8..........89....6......6.254..9.5..1..7..3.....2"
+val puz1 = 
+  ".43.8.25.6.............1.949....4.7....6.8....1.2....382.5.............5.34.9.71."
+val puz2 = 
+  "2...8.3...6..7..84.3.5..2.9...1.54.8.........4.27.6...3.1..7.4.72..4..6...4.1...3"
+\end{scalacode}
+
+There are several sources of Sudoku puzzles on the Web. There are
+50 purportedly easy puzzles on Peter Norvig's webpage:
+
+\url{http://norvig.com/easy50.txt}
+
+You can use this terminal command to translate them into the format for this assignment:
+
+\consolefile{includes/curl-norvig}
+
+\textbf{In addition, we encourage you to share solvable puzzles with each other on Piazza.}
+
+\section{Check Your Work}
+
+Here is a trivial test suite that simply checks to see if you've defined
+the \scalainline{Solution} object with the right type:
+
+\scalafile{../hw/sudoku/template/src/test/scala/TrivialTestSuite.scala}
+
+You should place this test suite in \texttt{src/test/scala/TrivialTestSuite.scala}. This test suite must run as-is, or you may receive no credit for your solution.
+
+\input{handin}
+
+
 
 \chapter{Lesson Plan: Introduction}
 \savepdf{instructor-intro}
@@ -8137,6 +8420,78 @@ def join(sep: Char, strings: List[String]): String = strings match {
 \caption{Splitting a string on a separator.}\label{split_buggy}
 \end{figure}
 
+\chapter{Lesson Plan: Sudoku Lab}
+\savepdf{instructor-sudoku-lab}
+
+This discussion will cover task 1 and 2 in the Sudoku lab. Students are
+expected to have read the assignment beforehand, so you do not need to
+introduce the assignment at the beginning of class.  Furthermore, no new
+Scala concepts have been introduced, so you should not need to introduce
+language features.
+
+I suggest doing something like this:  have students pair up and then ask
+them to start working on a task.  If a student reports that they have
+already completed the task, then ask them to pair up anyway to assist
+another student.  After 15 minutes, break, and then guide them briefly
+through the solution on the chalkboard.
+
+\section{Homework \#6 Programming Task}
+
+This task is to implement the \scalainline{peers} method.
+
+After 25 minutes, stop the class to discuss the solution. Use the
+remaining 25 minutes to discuss the solution (ours is below). If no one
+volunteers their own solution for discussion, you can lead them to ours.
+It may be useful to start with a list of integers from 0 to 8 and have
+them get to \scalainline{rowPeers}.
+
+Note: 
+
+\begin{enumerate}
+  \item \scalainline{peers(r, c)} produces the coordinates of all cells in the same
+    row as \scalainline{r}, same column as \scalainline{c}, and same block as 
+    \scalainline{(r,c)}. 
+  \item Do not include \scalainline{(r, c)} in the set of its peers. i.e., 
+    \scalainline{peers(r,c).contains((r, c)) == false}
+\end{enumerate}
+
+Our \scalainline{peers} (and helper methods) look like:
+
+\begin{scalacode}
+  def calcPeers(row: Int, col: Int): List[(Int, Int)] = {
+    val rowPeers = 0.to(8).map { r => (r,col) }
+    val colPeers = 0.to(8).map { c => (row, c) }
+    val boxRow: Int = (row / 3) * 3
+    val boxCol: Int = (col / 3) * 3
+    val boxPeers = boxRow.to(boxRow + 2).flatMap { r =>
+      boxCol.to(boxCol + 2).map { c =>
+        (r, c)
+      }
+    }
+    (rowPeers ++ colPeers ++ boxPeers).filterNot {
+      case (r, c) => r == row && col == c
+    }.toList.distinct
+  }
+
+  val peersTbl = Map((0.to(8).flatMap { r =>
+    0.to(8).map { c =>
+      ((r, c) -> calcPeers(r, c))
+    }
+  }) :_*)
+
+  def peers(row: Int, col: Int): Seq[(Int, Int)] = peersTbl((row, col))
+\end{scalacode}
+
+\scalainline{peersTbl} is a table of all of the peers for each
+coordinate in the Sudoku grid.  It is constructed using
+\scalainline{calcPeers}. The \scalainline{calcPeers} method creates 3
+lists: \scalainline{rowPeers}, \scalainline{colPeers}, and
+\scalainline{boxPeers}, using \scalainline{map} and
+\scalainline{flatMap}. For example, the integers from 0 to 8 are mapped
+to the 8 coordinates in the given row to calculate
+\scalainline{rowPeers}. Similar methods are used for the other 2 lists.
+The lists are combined, the given coordinate is filtered out, and
+duplicates are ignored.
 
 
 

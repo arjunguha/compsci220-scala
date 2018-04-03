@@ -1,4 +1,4 @@
-import cmpsci220.hw.sudoku._
+import hw.sudoku._
 
 object Solution extends SudokuLike {
 

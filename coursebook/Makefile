@@ -1,7 +1,7 @@
 all: latex
 
 latex:
-	latexmk student
+	latexmk main
 	sbt run
 
 clean:
