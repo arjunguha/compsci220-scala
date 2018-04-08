@@ -6,38 +6,38 @@ object Solution extends SudokuLike {
 
   val oneTo9 = 1.to(9).toList
 
-  def parse(str: String): SudokuBoard = {
-    require(str.length == 81)
-    var board = emptyBoard
-    for (row <- 0.to(8); col <- 0.to(8)) {
-      str(row * 9 + col) match {
-        case '.' => ()
-        case ch => board = board.place(row, col, ch.toString.toInt)
-      }
-    }
-    board
+  def calcAllPos(ix: Int): List[(Int, Int)] = {
+    if (ix == 81) Nil else (ix / 9, ix % 9) :: calcAllPos(ix + 1)
   }
+
+  val allPos = calcAllPos(0)
+
+  def parseHelper(alist: List[(Char, (Int, Int))]): SudokuBoard = alist match {
+    case Nil => emptyBoard
+    case ('.', _) :: rest => parseHelper(rest)
+    case (digit, (row, col)) :: rest => {
+      val n = digit.toString.toInt
+      parseHelper(rest).place(row, col, n)
+    }
+  }
+
+  def parse(str: String): SudokuBoard = parseHelper(str.toList.zip(allPos))
 
   def calcPeers(row: Int, col: Int): List[(Int, Int)] = {
-    val rowPeers = 0.to(8).map { r => (r,col) }
-    val colPeers = 0.to(8).map { c => (row, c) }
-    val boxRow: Int = (row / 3) * 3
-    val boxCol: Int = (col / 3) * 3
-    val boxPeers = boxRow.to(boxRow + 2).flatMap { r =>
-      boxCol.to(boxCol + 2).map { c =>
-        (r, c)
-      }
-    }
-    (rowPeers ++ colPeers ++ boxPeers).filterNot {
-      case (r, c) => r == row && col == c
-    }.toList.distinct
+    val rowPeers = 0.to(8).map(r => (r,col))
+    val colPeers = 0.to(8).map(c => (row, c))
+    val boxRow = (row / 3) * 3
+    val boxCol = (col / 3) * 3
+    val boxPeers = boxRow.to(boxRow + 2).flatMap(r =>
+      boxCol.to(boxCol + 2).map(c => (r, c)))
+    // Remove duplicates and (row, col)
+    (rowPeers ++ colPeers ++ boxPeers).toSet.diff(Set((row, col))).toList
   }
 
-  val peersTbl = Map((0.to(8).flatMap { r =>
-    0.to(8).map { c =>
-      ((r, c) -> calcPeers(r, c))
-    }
-  }) :_*)
+  val peersTbl = allPos.map(pos => {
+    val (row, col) = pos
+    pos -> calcPeers(row, col)
+  }).toMap
 
   def peers(row: Int, col: Int): Seq[(Int, Int)] = peersTbl((row, col))
 
@@ -102,14 +102,14 @@ class SudokuBoard(val available: Map[(Int, Int), List[Int]]) extends BoardLike[S
     }
   }
 
-  def nextStates(): Iterable[SudokuBoard] = {
+  def nextStates(): List[SudokuBoard] = {
     val nexts = for (row <- 0.to(8);
                      col <- 0.to(8);
                      value <- availableValuesAt(row, col);
                      if availableValuesAt(row, col).size > 1) yield {
       place(row, col, value)
     }
-    nexts.sortWith((x, y) => x.score < y.score)
+    nexts.sortWith((x, y) => x.score < y.score).toList
   }
 
   def place(row: Int, col: Int, value: Int): SudokuBoard = {
@@ -122,6 +122,13 @@ class SudokuBoard(val available: Map[(Int, Int), List[Int]]) extends BoardLike[S
     new SudokuBoard(newAvailable)
   }
 
+  def solveRec(alist: List[SudokuBoard]): Option[SudokuBoard] = alist match {
+    case Nil => None
+    case head :: tail => head.solve() match {
+      case Some(result) => Some(result)
+      case None => solveRec(tail)
+    }
+  }
   def solve(): Option[SudokuBoard] = {
     if (isSolved) {
       Some(this)
@@ -130,31 +137,8 @@ class SudokuBoard(val available: Map[(Int, Int), List[Int]]) extends BoardLike[S
       None
     }
     else {
-      for (board <- nextStates()) {
-        board.solve() match {
-          case Some(board) => {
-            return Some(board)
-          }
-          case None => ()
-        }
-      }
-      return None
+      solveRec(nextStates())
     }
   }
 
-  // def subproblemOf(parent: SudokuBoard): Boolean = {
-  //   0.to(8).forall { row =>
-  //     0.to(8).forall { col =>
-  //       availableValuesAt(row, col).subsetOf(parent.availableValuesAt(row, col))
-  //     }
-  //   }
-  // }
-}
-
-object Main extends App {
-
- val puz = "85...24..72......9..4.........1.7..23.5...9...4...........8..7..17..........36.4."
- val board = Solution.parse(puz)
- println(s"Trying to solve:\n$board\n-----------------")
- println(board.solve())
 }
