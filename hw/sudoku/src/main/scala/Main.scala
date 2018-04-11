@@ -4,8 +4,6 @@ object Solution extends SudokuLike {
 
   type T = SudokuBoard
 
-  val oneTo9 = 1.to(9).toList
-
   def calcAllPos(ix: Int): List[(Int, Int)] = {
     if (ix == 81) Nil else (ix / 9, ix % 9) :: calcAllPos(ix + 1)
   }
@@ -66,8 +64,8 @@ object Solution extends SudokuLike {
     }
   }
 
-
-  val emptyBoard = new SudokuBoard(available = Map())
+  val oneTo9 = 1.to(9).toList
+  val emptyBoard = new SudokuBoard(allPos.map(coord => coord -> oneTo9).toMap)
 
 }
 
@@ -92,7 +90,7 @@ class SudokuBoard(val available: Map[(Int, Int), List[Int]]) extends BoardLike[S
   }
 
   def availableValuesAt(row: Int, col: Int): List[Int] = {
-    available.getOrElse((row, col), oneTo9)
+    available.get((row, col))
   }
 
   def valueAt(row: Int, col: Int): Option[Int] = {
