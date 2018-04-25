@@ -5613,12 +5613,6 @@ The following regular expression matches all even numbers:
 
 \input{gadts}
 
-\input{regex2}
-
-\include{parsing}
-
-\input{regex_hw}
-
 \input{json_parsing}
 
 \input{implicits_discussion}
@@ -7505,6 +7499,199 @@ You should place this test suite in \texttt{src/test/scala/TrivialTestSuite.scal
 
 \input{handin}
 
+\chapter{Project: Regular Expressions}
+\savepdf{regex-project}
+
+In this assignment, you'll write several handy regular expressions. The 
+assignment concludes with some more challenging problems that illustrate the 
+kind of computations that are possible with regular expressions.
+
+\section{Preliminaries}
+
+Using the command-line, run the following command:
+
+\begin{lstlisting}
+sbt new umass-compsci220/scala-regex.g8
+\end{lstlisting}
+
+When prompted, press ``Enter'' to accept the default directory name. This will
+create a directory tree with the following contents:
+
+\dirtree{%
+.1 ./regex.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.
+.5 Solution.scala\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala
+.5 Tests.scala\DTcomment{Yours tests go here}.
+}
+
+\section{Programming Tasks}
+
+
+You may assume that your regular expressions will only be used to match 
+complete strings. Therefore, you don't need to use the \texttt{\^} and \texttt{\$} 
+metacharacters. A simple way to test if a regular expression \scalainline{regex} 
+exactly matches a string \scalainline{str}, is to write 
+\scalainline{regex.pattern.matcher(str).matches()}.
+
+Define the following regular expressions:
+
+\begin{enumerate}
+
+  \item Define the regular expression \scalainline{notAlphanumeric}, which only
+   matches strings that don't contain any letter or digit.
+
+  \item Define the regular expression \scalainline{time}, which only matches
+  times written as five-character strings \texttt{HH:MM}, where the hours 
+  range from 00--23 and the minutes from 00--59.
+
+  \item Define the regular expression \scalainline{phone}, which only matches 
+  phone numbers in the format \texttt{(XXX) XXX-XXXX}, where the letter \texttt{X} is a placeholder for a digit.
+
+  \item Define the regular expression \scalainline{zip}, which matches either 
+  five-digit or nine-digit ZIP codes. i.e., strings in the format \texttt{XXXXX} or \texttt{XXXXX-XXXX}.
+
+  \item  Define the regular expression \scalainline{comment}, which only matches
+  strings that start with \texttt{/*} and end with \texttt{*/}.
+
+  \item Define the regular expression \scalainline{numberPhrase}, which only 
+  matches the strings \texttt{twenty}, \scalainline{twenty-one}, 
+  \scalainline{twenty-three}, $\cdots$, \scalainline{ninety-nine} (don't forget the hyphen).
+
+  \item Define the regular expression \scalainline{roman}, which only 
+  matches strings that represent the numbers 0---39 in roman numerals. i.e., 
+  the string may only contain the characters \texttt{I}, \texttt{V}, 
+  and \texttt{X}, with the usual constraints on roman numerals.
+
+
+  \item Define the regular expression \scalainline{date}, which only matches 
+  dates written as ten-character strings \texttt{YYYY-MM-DD}. For example,
+   \texttt{2016-04-01} represents April 1 2016, whereas \texttt{2016-04-31} is 
+   not a valid date. You should account for leap years by assuming that Feb 29th 
+   is valid if the year is evenly divisible by four.\footnote{This is not the 
+   complete rule for leap years, but we won't bother with the complete rule
+   for this project.}  E.g., \texttt{2016-02-29} is a valid date but 
+   \texttt{2017-02-29} is invalid.
+
+  \item The \emph{parity} of a number is the sum of the digits of the number. 
+  For example, the parity of $203$ is $2 + 0 + 3 = 5$ (odd) and the parity of 
+  $307$ is $3 + 0 + 7 = 10$ (even). Define the regular expression 
+  \scalainline{evenParity} that only matches numbers with even parity. 
+  You may find it convenient to accept numbers with leading zeroes.
+
+\end{enumerate}
+
+\input{handin}
+
+\chapter{Project: Parsing, Printing, and Evaluation}
+\savepdf{project-parsing}
+
+For this assignment, you will write a parser, printer, and evaluator for 
+arithmetic expressions.  To do so, you will (1) learn how to read a 
+\emph{BNF grammar}, (2) learn how to use Scala's parser-combinator library, and 
+(3) use property-based testing, using ScalaCheck.
+
+\section{Preliminaries}
+
+Using the command-line, run the following command:
+
+\begin{lstlisting}
+sbt new umass-compsci220/scala-parsing.g8
+\end{lstlisting}
+
+When prompted, press ``Enter'' to accept the default directory name. This will
+create a directory tree with the following contents:
+
+You should create a directory-tree that looks like this:
+
+\dirtree{%
+.1 ./scala-parsing.
+.2 build.sbt.
+.2 project.
+.3 plugins.sbt.
+.2 src.
+.3 main.
+.4 scala.
+.5 Solution.scala\DTcomment{Your solution goes here}.
+.3 test.
+.4 scala.
+.5 Tests.scala\DTcomment{Your tests go here}.
+}
+
+\section{Overview}
+
+For this assignment, you will work with a language of arithmetic expressions: 
+numbers, addition, subtraction, multiplication, and division. Here are some
+examples of the \emph{concrete syntax} of the language:
+
+\begin{itemize}
+  \item \texttt{1 + 2}
+  \item \texttt{10}
+  \item \texttt{2 * 3 + 5 * -10}
+  \item \texttt{2 * (3 + 5) * -10}
+  \item \verb|2 * (3 + 5) ^ 2 * -10|
+\end{itemize}
+
+More formally, the concrete syntax of the language is defined using the grammar in \cref{parsing_grammar}.
+
+\begin{figure}
+\(
+\begin{array}{rcl}
+\mathit{number} & ::= & \texttt{-}?[\texttt{0}-\texttt{9}]+ (\texttt{.}[\texttt{0}-\texttt{9}]+)? \\
+\mathit{atom} & ::= & \mathit{number} \\
+              & \mid & \texttt{(} \mathit{expr} \texttt{)}  \\
+\mathit{exponent} & ::= & \mathit{atom} \\
+                 & \mid & \mathit{exponent} \texttt{\textasciicircum} \mathit{atom} \\
+\mathit{mul} & ::= & \mathit{exponent} \\
+& \mid & \mathit{mul} \texttt{*} \mathit{exponent} \\
+& \mid & \mathit{mul} \texttt{/} \mathit{exponent} \\
+\mathit{add} & ::= & \mathit{mul} \\
+& \mid & \mathit{add} \texttt{+} \mathit{mul} \\
+& \mid & \mathit{add} \texttt{-} \mathit{mul} \\
+\mathit{expr} & ::= & \mathit{add}
+\end{array}
+\)
+\caption{Grammar of arithmetic expressions}
+\label{parsing_grammar}
+\end{figure}
+
+Your first task is to implement a parser that parses strings to the \scalainline{Expr} type. For example, \scalainline{parse("1 + 2")} should produce \scalainline{Add(Num(1), Num(2))}. To do so, you will use Scala's parser combinator library with Packrat parsing.
+
+Your second task is to implement a printer, which returns strings that represent arithmetic expressions. An important property of the printer is its relationship with the parser:
+
+\scalainline{parseExpr(print(e)) == e}, for all expressions $e$.
+
+It is tedious to write test cases for this property, since there are so many different kinds of expressions. Instead, we will use \emph{ScalaCheck} to test this property on randomly generated expressions.
+
+Finally, for completeness, you'll write an evaluator for arithmetic expressions.
+
+
+\section{Programming Task}
+
+We suggest proceeding in the following order:
+
+\begin{enumerate}
+
+\item Implement \scalainline{ArithEval}. This is a simple recursive function.
+
+\item Implement \scalainline{ArithParser} by translating the grammar provided above to Scala's parser combinators.
+
+\item Implement \scalainline{ArithPrinter}.
+
+\end{enumerate}
+
+We suggest using ScalaCheck to test these functions. (You'll have to define generators as part of your test suite.)
+
+\section{Check Your Work}
+
+\Cref{parsing_tests} is a trivial test suite that simply ensures that you've defined the parser, printer, and evaluator with the right types.
+
+\input{handin}
 
 
 \chapter{Lesson Plan: Introduction}
@@ -8634,6 +8821,185 @@ duplicates are ignored.
 
 \end{enumerate}
 
+\chapter{Lesson Plan: Inside Regular Expressions}
+\savepdf{instructor-inside-regex}
+
+\begin{itemize}
+
+\item Password strength: at least three letters
+
+\begin{verbatim}
+.*[A-Z].*[A-Z].*[A-Z].*
+\end{verbatim}
+
+At least two numbers:
+
+\begin{verbatim}
+.*[0-9].*[0-9].*
+\end{verbatim}
+
+Three letters and two numbers:
+
+\item Grouping (e.g., dates):
+
+\begin{scalacode}
+    val date = """(\d\d\d\d)-(\d\d)-(\d\d)""".r
+    "2004-01-20" match {
+      case date(year, month, day) => year + " was a good year for PLs."
+    }
+\end{scalacode}
+
+\item Replacement:
+
+\begin{scalacode}
+"Jan|January".r.replaceAllIn(str, "01")
+\end{scalacode}
+
+\item Reduce derived regular expressions to a core using identities
+
+\item Show regular expressions as an ADT
+
+\item Write a back-tracking matcher
+
+\item Write a string generator for regular expressions using streams
+
+\end{itemize}
+
+\begin{scalacode}
+sealed trait Regex {
+
+  def >>(other: Regex): Regex = (this, other) match {
+    case (Zero, _) => Zero
+    case (_, Zero) => Zero
+    case (re1, One) => re1
+    case (One, re2) => re2
+    case (re1, re2) => Seq(re1, re2)
+  }
+
+  def |(other: Regex): Regex = (this, other) match {
+    case (Zero, re2) => re2
+    case (re1, Zero) => re1
+    case (re1, re2) => if (re1 == re2) re1 else Alt(re1, re2)
+  }
+}
+
+case class Character(ch: Char) extends Regex
+case class Seq(re1: Regex, re2: Regex) extends Regex
+case class Alt(re1: Regex, re2: Regex) extends Regex
+case class Star(re: Regex) extends Regex
+/** Accepts no strings. */
+case object Zero extends Regex
+/** Accepts the empty string. */
+case object One extends Regex
+
+object Macther {
+
+  def empty(re: Regex): Regex = re match {
+    case Character(_) => Zero
+    case Alt(re1, re2) => empty(re1) | empty(re2)
+    case Seq(re1, re2) => empty(re1) >> empty(re2)
+    case Star(_) => One
+    case One => One
+    case Zero => Zero
+  }
+
+  def deriv(regex: Regex, ch: Char): Regex = regex match {
+    case Character(ch_) => if (ch == ch_) One else Zero
+    case One => Zero
+    case Zero => Zero
+    case Alt(re1, re2) => deriv(re1, ch) | deriv(re2, ch)
+    case Seq(re1, re2) => (deriv(re1, ch) >> re2) | (empty(re1) >> deriv(re2, ch))
+    case Star(r) => deriv(r, ch) >> Star(r)
+  }
+
+  def reMatch(regex: Regex, str: List[Char]): Boolean = str match {
+    case Nil => empty(regex) == One
+    case ch :: rest => reMatch(deriv(regex, ch), rest)
+  }
+
+}
+\end{scalacode}
+
+\chapter{Lesson Plan: Introduction to Parser Combinators}
+\savepdf{instructor-parsing}
+
+Explain how to parse to a data structure
+
+\begin{scalacode}
+  sealed trait Regex
+  case class Character(ch: Char) extends Regex
+  case class Seq(e1: Regex, e2: Regex) extends Regex
+  case class Alt(e1: Regex, e2: Regex) extends Regex
+  case class Star(e: Regex) extends Regex
+  case object One extends Regex
+  case object Zero extends Regex
+\end{scalacode}
+
+- Explain how to dis-ambiguate a grammar
+
+\begin{verbatim}
+
+    char ::= "a" | "b" | "c" | ...
+
+    e ::= e1 e2
+        | e1 "|" e2
+        | e "*"
+        | char
+        | "(" e ")"
+\end{verbatim}
+
+Unambiguous Grammar:
+
+\begin{verbatim}
+    a ::= char
+        | a "|" a
+        | "(" e ")"
+
+    s ::= s s
+        | a
+
+    e ::= s
+\end{verbatim}
+
+Write a pretty-printer
+
+
+Write a generator (without using for .. yield):
+
+\begin{scalacode}
+  import org.scalacheck._
+  import Gen._
+  import Arbitrary.arbitrary
+
+  object GenExpr {
+
+    def genNum: Gen[Expr] = for {
+      n <- choose(-100, 100)
+    } yield Num(n)
+
+    def genAdd(size: Int): Gen[Expr] = for {
+      lhs <- genExpr(size / 2)
+      rhs <- genExpr(size / 2)
+    } yield (Add(lhs, rhs))
+
+    def genSub(size: Int): Gen[Expr] = for {
+      lhs <- genExpr(size / 2)
+      rhs <- genExpr(size / 2)
+    } yield (Sub(lhs, rhs))
+
+    def genExpr(size: Int): Gen[Expr] = {
+      if (size <= 1) {
+        genNum
+      }
+      else {
+        oneOf(genAdd(size), genSub(size), genNum)
+      }
+    }
+
+    def apply(): Gen[Expr] = sized(genExpr)
+
+  }
+\end{scalacode}
 
 \chapter{EOF}
 
