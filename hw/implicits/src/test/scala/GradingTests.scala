@@ -1,4 +1,4 @@
-class Tests extends org.scalatest.FunSuite {
+class GradingTests extends org.scalatest.FunSuite {
 
   import java.nio.file.{Paths, Files}
   import PathImplicits._
@@ -57,9 +57,9 @@ class Tests extends org.scalatest.FunSuite {
     assert(15.jan == LocalDate.of(2016, 1, 15))
     assert(29.feb == LocalDate.of(2016, 2, 29))
     assert(2.mar == LocalDate.of(2016, 3, 2))
-    intercept[Exception] {
-      val bad = 30.feb
-    }
+    // intercept[Exception] {
+    //   val bad = 30.feb
+    // }
   }
 
   test("We can write dates in other years like this") {

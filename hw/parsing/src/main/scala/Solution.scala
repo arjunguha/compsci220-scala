@@ -5,7 +5,7 @@ object ArithParser extends ArithParserLike {
 
   lazy val atom: PackratParser[Expr] = {
     number ^^ { n => Num(n) } |
-    "(" ~ expr ~ ")" ^^ { case "(" ~ e ~ ")" => e }
+    "(" ~ expr ~ ")" ^^ { case _ ~ e ~ _ => e }
   }
 
   lazy val exponent: PackratParser[Expr] = {
