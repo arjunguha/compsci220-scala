@@ -8,6 +8,7 @@ import * as compileFailures from './compileFailures';
 import * as testRunner from './testRunner';
 import * as testResults from './testResults';
 import * as forgetTests from './forgetTests';
+import * as lateDays from './lateDays';
 
 commander.command('extract')
   .option('--src <FILE>', '.zip file from Moodle')
@@ -41,5 +42,8 @@ commander.command('fill-moodle-csv')
 
 commander.command('forget-tests')
   .action((...args) => forgetTests.main(args.slice(0, args.length - 1)));
+
+commander.command('late-days')
+  .action((...args) => lateDays.main());
   
 const opts = commander.parse(process.argv);

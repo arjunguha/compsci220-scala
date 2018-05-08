@@ -30,8 +30,8 @@ async function asyncMain() {
     const failedTests = group.filter(test => test.exitCode === 1);
     for (const t of failedTests) {
       console.log(`Failed to ${t.jar} ${t.testName}`);
-      console.log(t.stderr);
-      console.log(t.stderr);
+      console.log(t.stdout.slice(0, 500));
+      console.log(t.stderr.slice(0, 500));
     }
 
     const dir = jarName.slice(0, jarName.length - 4);
@@ -42,7 +42,7 @@ async function asyncMain() {
     if (fs.existsSync(dir) && fs.statSync(dir).isDirectory) {
 
       // stdout prints the test name, OK / Error, and a newline.
-      let description = tests.map(x => x.stdout).join('');
+      let description = tests.map(x => x.stdout.slice(0, 500)).join('');
 
       const completedTestNames = tests.map(x => x.testName);
       let timeoutTests = config.tests
