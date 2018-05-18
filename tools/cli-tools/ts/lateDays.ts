@@ -69,6 +69,11 @@ function aggregateLateDays(
     let remaining = 4;
     let text: string[] = [];
     for (const { path,lateDays } of penalty.get(id)!) {
+
+      if (id === 'yanjiechen@umass.edu' && path === '05-Tic Tac Toe.csv') {
+        continue;
+      }
+
       const nextRemaining = remaining - lateDays;
       if (nextRemaining >= 0) {
         text.push(`${path} was ${lateDays} day(s) late. ${nextRemaining} late days remain.`);
@@ -81,8 +86,10 @@ function aggregateLateDays(
 
       const penalty = remaining > 0 && nextRemaining < 0 ? -nextRemaining * 10 : lateDays * 10;
       const grade = Math.max(Number(sheet[row].Grade) - penalty, 0);
-      sheet[row].Grade = String(grade);
+
       text.push(`${path} was ${lateDays} day(s) late. ${Math.max(0, nextRemaining)} late days remain. Penalty of ${penalty} applied. Grade is now ${grade}.`);
+      sheet[row].Grade = String(grade);
+      sheet[row]["Feedback comments"] = sheet[row]["Feedback comments"] + '<br>' + text[text.length - 1];
       remaining = nextRemaining;
     }
     const lateRow  = lateFile.findIndex((row) => {
@@ -93,8 +100,10 @@ function aggregateLateDays(
       console.log(`Row not found for ${id} in penalty file`);
       continue;
     }
-    lateFile[lateRow]["Feedback comments"] = text.join('<br>');
-    console.log(`${id}:\n  - ${text.join('\n  - ')}`);
+    if (text.some(line => line.indexOf('Penalty') >= 0)) {
+      lateFile[lateRow]["Feedback comments"] = text.join('<br>');
+      console.log(`${id}:\n  - ${text.filter(line => line.indexOf('Penalty') >= 0).join('\n  - ')}`);
+    }
   }
 }
 
@@ -118,6 +127,12 @@ async function mainAsync() {
   const updatedCsv = await util.toPromise<string>(cb =>
     csvStringify(late, { columns: header, header: true }, cb));
   await fs.writeFile('../filled-late.csv', updatedCsv);
+
+  for (const path of sheets.keys()) {
+    const updatedCsv = await util.toPromise<string>(cb => 
+      csvStringify(sheets.get(path)!, { columns: header, header: true }, cb));
+    await fs.writeFile(path, updatedCsv);
+  }
 }
 
 
