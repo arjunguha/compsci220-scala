@@ -1,5 +1,10 @@
 # COMPSCI220 Course Materials
 
+This is the repository for COMPSCI 220 (Fall 2014 -- Spring 2018), which was
+taught in Scala. The course is no longer offered, so all materials are now
+available.
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.
 
 # Requirements
 
